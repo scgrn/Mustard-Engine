@@ -1,0 +1,153 @@
+/**
+
+zlib License
+
+(C) 2020 Andrew Krause
+
+This software is provided 'as-is', without any express or implied
+warranty.  In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+
+**/
+
+#include "../pch.h"
+
+#include "perlin.h"
+#include "random.h"
+
+namespace AB {
+
+PerlinNoise::PerlinNoise() {
+    init();
+}
+
+PerlinNoise::PerlinNoise(int seed) {
+    rndSeed(seed);
+    init();
+}
+
+PerlinNoise::~PerlinNoise() {
+}
+
+float PerlinNoise::fade(float t) {
+    return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
+}
+
+float PerlinNoise::lerp(float a, float b, float x) {
+    return a + x * (b - a);
+}
+
+float PerlinNoise::noise(float x, float y, float z, int octaves, float persistence) {
+    float total = 0.0f;
+    float frequency = 1.0f;
+    float amplitude = 1.0f;
+    float maxValue = 0.0f;
+
+    for (int i = 0; i < octaves; i++) {
+        total += sample(x * frequency, y * frequency, z * frequency) * amplitude;
+
+        maxValue += amplitude;
+
+        amplitude *= persistence;
+        frequency *= 2.0f;
+    }
+
+    return total / maxValue;
+}
+
+float PerlinNoise::sample(float x, float y, float z) {
+    const int SAMPLE_MASK = PerlinNoise::SAMPLE_SIZE - 1;
+
+    //  calculate nearest vertices and offset into cubic lattice
+    int xi = (int)floor(x) & SAMPLE_MASK;
+    int yi = (int)floor(y) & SAMPLE_MASK;
+    int zi = (int)floor(z) & SAMPLE_MASK;
+    float xf = x - floor(x);
+    float yf = y - floor(y);
+    float zf = z - floor(z);
+    float u = fade(xf);
+    float v = fade(yf);
+    float w = fade(zf);
+
+    //  create hash
+    int aaa, aba, aab, abb, baa, bba, bab, bbb;
+    aaa = p[p[p[xi] + yi] + zi];
+    aba = p[p[p[xi] + (yi+ 1)] + zi];
+    aab = p[p[p[xi] + yi] + (zi+ 1)];
+    abb = p[p[p[xi] + (yi+ 1)] + (zi+ 1)];
+    baa = p[p[p[(xi+ 1)] + yi] + zi];
+    bba = p[p[p[(xi+ 1)] + (yi+ 1)] + zi];
+    bab = p[p[p[(xi+ 1)] + yi] + (zi+ 1)];
+    bbb = p[p[p[(xi+ 1)] + (yi+ 1)] + (zi+ 1)];
+
+    //  interpolate gradients
+    float x1, x2, y1, y2;
+    x1 = lerp(grad(aaa, xf, yf, zf), grad(baa, xf - 1, yf, zf), u);
+    x2 = lerp(grad(aba, xf, yf - 1, zf), grad(bba, xf - 1, yf - 1, zf), u);
+    y1 = lerp(x1, x2, v);
+
+    x1 = lerp(grad(aab, xf, yf, zf - 1), grad(bab, xf - 1, yf, zf - 1), u);
+    x2 = lerp(grad(abb, xf, yf - 1, zf - 1), grad(bbb, xf - 1, yf - 1, zf - 1), u);
+    y2 = lerp(x1, x2, v);
+
+    return (lerp(y1, y2, w) + 1.0f) / 2.0f;
+}
+
+float PerlinNoise::grad(int hash, float x, float y, float z) {
+    switch (hash & 0xF) {
+        case 0x0: return  x + y;
+        case 0x1: return -x + y;
+        case 0x2: return  x - y;
+        case 0x3: return -x - y;
+        case 0x4: return  x + x;
+        case 0x5: return -x + x;
+        case 0x6: return  x - x;
+        case 0x7: return -x - x;
+        case 0x8: return  y + x;
+        case 0x9: return -y + x;
+        case 0xA: return  y - x;
+        case 0xB: return -y - x;
+        case 0xC: return  y + z;
+        case 0xD: return -y + x;
+        case 0xE: return  y - x;
+        case 0xF: return -y - z;
+
+        default: return 0.0f;
+    }
+}
+
+void PerlinNoise::init() {
+    //  initialize permutation table
+    for (int i = 0; i < SAMPLE_SIZE; i++) {
+        p[i] = i;
+    }
+
+    //  Fisher-Yates shuffle
+    for (int i = SAMPLE_SIZE - 1; i >= 1; i--) {
+        int j = rnd(i);
+        int temp = p[i];
+        p[i] = p[j];
+        p[j] = temp;
+    }
+
+    //  double permutation table to avoid overflow
+    for (int i = 0; i < SAMPLE_SIZE; i++) {
+        p[i + SAMPLE_SIZE] = p[i];
+    }
+}
+
+}   //  namespace
+
+

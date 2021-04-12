@@ -1,0 +1,141 @@
+	Mustard Engine Lua API
+	
+	callbacks:
+		AB.onToggleFullscreen()
+		AB.onFocusLost()
+		AB.onFocusGained()
+		AB.onWindowClose()
+
+		AB.onKeyPressed(scanCode)
+		AB.onKeyReleased(scanCode)
+
+		AB.onBackPressed()
+		AB.onTouchPressed()
+		AB.onTouchReleased()
+		AB.onTouchMoved()
+
+		AB.onMousePressed()
+		AB.onMouseReleased()
+		AB.onMouseMoved()
+		AB.onMouseWheelMoved()
+
+		AB.onGamepadConnected(gamepadIndex)
+		AB.onGamepadDisonnected(gamepadIndex)
+		AB.onGamepadPressed(gamepadIndex, button)
+		AB.onGamepadReleased(gamepadIndex, button)
+		AB.onGamepadAxisMoved(gamepadIndex, axis, value)
+		
+		AB.loadConfig()
+		AB.init()
+		AB.update()
+		AB.render()
+
+	AB.system
+		log()
+		loadScript(filename)
+		loadData()
+		saveData()
+		getTime() -- MS since start
+		resync()
+		openURL()
+		getOS()
+		quit()
+		
+	AB.font
+		handle = loadFont()
+		printString()
+		stringLength()
+		
+	AB.collision
+		collides()
+		lineSegmentIntersection()
+		
+	AB.input
+		keyWasPressed()
+		keyPressed()
+		keyWasReleased()
+		keyName()
+
+		numGamepads()
+		boolean gamepadPressed(gamepadIndex)
+		number = gamepadAxis(gamepadIndex, axis)
+		buttonName(index)
+		
+		showCursor(boolean)
+		x, y, button1, button2, button3 = getMouseState()
+		setMousePosition(x, y)
+		
+		vibrate(ms, strength)
+		
+	AB.math
+		randomSeed(seed)
+		random
+		noiseSeed
+		noise
+
+	AB.graphics
+		resetVideo
+		createCanvas(width, height)
+		resizeCanvas
+		
+		createPixelBuffer(width, height)
+		putPixel(x, y, color)
+		getPixel(x, y)
+		renderPixelBuffer(x, y, scale, rotation)
+		clearPixelBuffer(r, g, b)
+		
+		-- generates closestColor and secondClosestColor textures for dither shader
+		-- text format r g b
+		--	need rgb <-> hsv functions in misc.h
+		loadPalette()
+
+		loadShader
+		setShader
+		setDefaultShader
+		setCanvasShader
+
+		loadSprite
+		addToAtlas
+		buildAtlas
+		
+		renderSprite
+		renderSpriteUV
+		spriteWidth
+		spriteHeight
+
+		setColor
+		setLineWidth
+
+		beginBatch
+		addVertex(x, y, u, v, r, g, b, a)
+		endBatch(primitiveType)
+		
+		renderTri
+		renderQuad
+		renderCircle
+		renderArc
+		setScissor
+		flushGraphics
+		
+	AB.I18N
+		[language constants]
+
+		init(filename)
+		setLanguage
+		getString(id)
+		
+	AB.audio
+		loadSound
+		playSound
+
+		loadMusic
+		playMusic
+		pauseMusic
+		resumeMusic
+		fadeMusicIn
+		fadeMusicOut
+		stopMusic
+
+		setSoundVolume
+		setMusicVolume
+		setMasterVolume?
