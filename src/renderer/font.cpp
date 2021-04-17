@@ -265,7 +265,7 @@ void Font::buildDefault() {
     this->height = 5;
 }
 
-void Font::printString(int renderGroup, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string) {
+void Font::printString(BatchRenderer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string) {
     // glBindTexture(GL_TEXTURE_2D, texture.get()->glHandle); // not needed?
 
 	float tx;
@@ -285,7 +285,7 @@ void Font::printString(int renderGroup, GLfloat x, GLfloat y, GLfloat scale, Ali
                 cx += (chars[ascii]->width / 2.0f) * scale;
                 cy += (chars[ascii]->height / 2.0f) * scale;
                 
-				chars[ascii]->render(renderGroup, glm::vec3(cx, cy, -1.0f), 0, scale, color);
+				chars[ascii]->render(renderer, glm::vec3(cx, cy, -1.0f), 0, scale, color);
 				
                 tx += chars[ascii]->xAdvance * scale;
             } else {

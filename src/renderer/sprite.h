@@ -32,6 +32,7 @@ freely, subject to the following restrictions:
 #include "../core/resourceManager.h"
 #include "texture.h"
 #include "image.h"
+#include "batchRenderer.h"
 
 namespace AB {
 
@@ -56,7 +57,7 @@ class Sprite : public Resource {
 
 		void buildCollisionMask();
 		void uploadToGPU();
-		void render(int renderGroup, glm::vec3 pos, float rotation = 0.0f, float scale = 1.0f, glm::vec4 color = glm::vec4(1.0f));
+		void render(BatchRenderer *renderer, glm::vec3 pos, float rotation = 0.0f, float scale = 1.0f, glm::vec4 color = glm::vec4(1.0f));
 		
 		std::shared_ptr<Texture> texture;
 

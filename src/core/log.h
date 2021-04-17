@@ -40,6 +40,19 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <sstream>
 
+enum {
+	LOG_FATAL,
+	LOG_ERROR,
+	LOG_WARN,
+	LOG_INDO,
+
+	// (V debug builds V)
+	LOG_DEBUG,
+	LOG_TRACE
+};
+
+// switches for warn...trace
+
 namespace AB {
 
 #ifdef ANDROID

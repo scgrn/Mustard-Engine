@@ -115,8 +115,8 @@ void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u
     }
 }
 
-void Sprite::render(int renderGroup, glm::vec3 pos, float rotation, float scale, glm::vec4 color) {
-	Renderer::RenderQuad quad;
+void Sprite::render(BatchRenderer *renderer, glm::vec3 pos, float rotation, float scale, glm::vec4 color) {
+	BatchRenderer::Quad quad;
 	
 	quad.pos = pos;
 	quad.size = glm::vec2(width, height);
@@ -126,7 +126,7 @@ void Sprite::render(int renderGroup, glm::vec3 pos, float rotation, float scale,
 	quad.textureID = texture->glHandle;
 	quad.color = color;
 
-	renderer.renderQuad(renderGroup, quad);
+	renderer->renderQuad(quad);
 }
 
 struct Scan {

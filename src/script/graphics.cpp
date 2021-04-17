@@ -29,7 +29,7 @@ Graphics state and rendering
 #include "../pch.h"
 
 #include "script.h"
-#include "../renderer/spriteAtalas.h"
+#include "../renderer/spriteAtlas.h"
 
 namespace AB {
 

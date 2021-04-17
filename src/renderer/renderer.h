@@ -53,14 +53,13 @@ freely, subject to the following restrictions:
 #include "textureCache.h"
 #include "colorTransform.h"
 
-
 namespace AB {
-	
+
 class Renderer : public SubSystem {
 	public:
 		// a 64 svelte bytes
 		// TODO: constructor to set defaults
-		struct RenderQuad {
+		struct Quad {
 			glm::vec3 pos;
 			glm::vec2 size;
 			float scale;
@@ -73,46 +72,27 @@ class Renderer : public SubSystem {
 		bool startup();
 		void shutdown();
 		
-		// typically called once per frame from the main game loop.
-		// only needed per perspective changes, ie 3d game scene followed by a 2d overlay
-		// basically just for top-level compositing.
-		void beginScene(const Camera& camera);
+		virtual void beginScene(const Camera& camera);
 		
 		// pass in state, render command (VAO, primitive type)
 		// void submit(const RenderCommand& command);
 		
-		void defineRenderGroup(int index, Shader *shader, glm::mat4 colorTransform = glm::mat4(1.0f), bool depthSorting = false);
+//		void defineRenderGroup(int index, Shader *shader, glm::mat4 colorTransform = glm::mat4(1.0f), bool depthSorting = false);
+		void renderQuad(const Quad& quad);
 		
-		void renderQuad(const int renderGroup, const RenderQuad& quad);
-		void renderQuad(const RenderQuad& quad);
+		virtual void endScene();
+		
+		static TextureCache textureCache;
+        static GLuint whiteTexture;
+		
+	protected:
+		// common quad mesh
+		static GLfloat quadVertices[];
+		static GLuint quadElements[];
+		
+		bool inScene = false;
 
-		//	renders the scene.
-		void endScene();
-		
-		TextureCache textureCache;
-		Shader defaultShader;
-
-		
 	private:
-		//	for std::sort
-		static inline bool cmp(const RenderQuad& a, const RenderQuad& b) {
-			return a.textureID < b.textureID;
-		}
-
-		static inline bool cmpDepth(const RenderQuad& a, const RenderQuad& b) {
-			if (a.pos.z == b.pos.z) {
-				return a.textureID < b.textureID;
-			} else {
-				return a.pos.z < b.pos.z;
-			}
-		}
-		
-		GLuint vao;		//	vertex array object
-		GLuint vbo;		//	vertex buffer
-		GLuint ebo;		//	element buffer
-		GLuint ibo;		//	per-instance vertex buffer
-		GLuint ubo;		//	uniform buffer
-
 		// no samplers in uniform blocks :(
 		struct Uniforms {
             glm::mat4 projectionMatrix;
@@ -121,21 +101,10 @@ class Renderer : public SubSystem {
             int timer;
             float randomSeed;
 		} uniforms;
-
-		struct RenderGroup {
-			std::vector<RenderQuad> renderBatch;
-			Shader *shader;
-			bool depthSorting;
-			glm::mat4 colorTransform;
-		};
-		std::unordered_map<int, RenderGroup> renderGroups;
 		
-		void flush(RenderGroup *renderGroup, int begin, int end);
-
 		//std::vector<RenderCommand> commandQueue;
-		bool inScene = false;
 
-        GLuint whiteTexture;
+		GLuint ubo;		//	uniform buffer
 
 };
 

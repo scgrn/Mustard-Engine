@@ -72,6 +72,8 @@ RenderTarget::RenderTarget(int width, int height, bool depthStencil) {
 
 		// TODO: clean up
 	}
+
+	CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
 RenderTarget::~RenderTarget() {

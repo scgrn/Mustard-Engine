@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include "core/application.h"
 
 #include "renderer/renderer.h"
+#include "renderer/batchRenderer.h"
 #include "audio/audio.h"
 #include "script/script.h"
 #include "input/input.h"

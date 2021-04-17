@@ -69,7 +69,7 @@ class Font : public Resource {
         *    @param align alignment of string (LEFT, RIGHT, CENTER)
         *    @param string the string to print
         */
-		void printString(int renderGroup, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string);
+		void printString(BatchRenderer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string);
 
         /**
         *    Returns pixel-width of string

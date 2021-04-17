@@ -50,7 +50,7 @@ mshta "javascript:code(close((V=(v=new ActiveXObject('SAPI.SpVoice')).GetVoices(
 
 :: Echo/| CHOICE /N 2> nul & rem BEL
 
-PAUSE
+:: PAUSE
 
 ENDLOCAL
 

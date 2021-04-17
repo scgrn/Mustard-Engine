@@ -25,8 +25,6 @@ freely, subject to the following restrictions:
 //  can't use c++17 std::filesystem because of this bullshit:
 //      https://sourceforge.net/p/mingw-w64/bugs/737/
 
-//  https://stackoverflow.com/questions/36972968/how-can-use-mingw-w64-and-msys2-with-any-ide-like-eclipse-or-codeblocks
-
 #include <filesystem>
 #include <iostream>
 #include <algorithm>
