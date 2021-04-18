@@ -76,8 +76,9 @@
 	AB.graphics
 		resetVideo
 		createCanvas(width, height)
-		resizeCanvas
+		useCanvas(0)
 		
+		-- hmmmm i don't like these
 		createPixelBuffer(width, height)
 		putPixel(x, y, color)
 		getPixel(x, y)
@@ -90,9 +91,7 @@
 		loadPalette()
 
 		loadShader
-		setShader
-		setDefaultShader
-		setCanvasShader
+		useShader
 
 		loadSprite
 		addToAtlas
@@ -115,7 +114,7 @@
 		renderCircle
 		renderArc
 		setScissor
-		flushGraphics
+		-- flushGraphics
 		
 	AB.I18N
 		[language constants]

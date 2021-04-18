@@ -104,10 +104,6 @@ void Renderer::shutdown() {
 void Renderer::beginScene(const Camera& camera) {
 	assert(!inScene);
 
-	//	set transformation uniforms
-	//	defaultShader.bind();
-	//defaultShader.setMat4("projection", camera.getProjectionMatrix());
-	
 	inScene = true;
 }
 /*

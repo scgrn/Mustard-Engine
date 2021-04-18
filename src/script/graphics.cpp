@@ -29,70 +29,22 @@ Graphics state and rendering
 #include "../pch.h"
 
 #include "script.h"
+#include "../core/window.h"
 #include "../renderer/spriteAtlas.h"
 
 namespace AB {
 
 extern Script script;
+extern Window window;
+
+//	not sure if i like these here...
+ResourceManager<Sprite> sprites;
+ResourceManager<Shader> shaders;
+std::map<int, BatchRenderer> batchRenderers;
 
 //----------------------------------------------------------------- Graphics state --------------------------------
-
-#if 0
-
 static int luaResetVideo(lua_State* luaVM) {
     window.setVideoMode(NULL);
-
-    return 0;
-}
-
-static int luaResizeCanvas(lua_State* luaVM) {
-    int width = (int)lua_tonumber(luaVM, 1);
-    int height = (int)lua_tonumber(luaVM, 2);
-
-    graphics->resizeFBO(width, height);
-
-    return 0;
-}
-
-static int luaSetDefaultShader(lua_State* luaVM) {
-    int index = (int)lua_tonumber(luaVM, 1);
-    graphics->setDefaultShader(index);
-
-    return 0;
-}
-
-static int luaSetCanvasShader(lua_State* luaVM) {
-    int index = (int)lua_tonumber(luaVM, 1);
-    graphics->setPostProcessShader(index);
-
-    return 0;
-}
-
-static int luaInvalidateTextureCache(lua_State* luaVM) {
-    graphics->invalidateTextureCache();
-
-    return 0;
-}
-
-static int luaSetColor(lua_State* luaVM) {
-    float r = (float)lua_tonumber(luaVM, 1) / 255.0f;
-    float g = (float)lua_tonumber(luaVM, 2) / 255.0f;
-    float b = (float)lua_tonumber(luaVM, 3) / 255.0f;
-
-    float a = 1.0f;
-    if (lua_gettop(luaVM) >= 4) {
-        a = (float)lua_tonumber(luaVM, 4) / 255.0f;
-    }
-
-    graphics->setColor(r, g, b, a);
-
-    return 0;
-}
-
-static int luaSetLineWidth(lua_State* luaVM) {
-    float width = (float)lua_tonumber(luaVM, 1);
-    CALL_GL(glLineWidth(width));
-    graphics->setLineWidth(width);
 
     return 0;
 }
@@ -108,9 +60,9 @@ static int luaLoadSprite(lua_State* luaVM) {
         createMask = (bool)lua_toboolean(luaVM, 3);
     }
 
-    graphics->sprites.mapResource(index, filename);
+    sprites.mapResource(index, filename);
     if (createMask) {
-        graphics->sprites.get(index)->buildCollisionMask();
+        sprites.get(index)->buildCollisionMask();
     }
 
     return 0;
@@ -141,7 +93,7 @@ static int luaRenderSprite(lua_State* luaVM) {
     } else {
         scaleY = scaleX;
     }
-
+/*
     bool batch = false;
     if (lua_gettop(luaVM) >= 8) {
         batch = (bool)lua_toboolean(luaVM, 8);
@@ -152,221 +104,80 @@ static int luaRenderSprite(lua_State* luaVM) {
         graphics->spriteBatchAlpha->render();
         graphics->spriteBatchAlpha->clear();
     }
-
+*/
     return 0;
 }
 
-// renderSpriteUV(index, x, y, z, w, h, u1, v1, u2, v2, r = 0, sx = 1, sy = 1, additive = false)
-static int luaRenderSpriteUV(lua_State* luaVM) {
-    int frame = (int)lua_tonumber(luaVM, 1);
-    float x = (float)lua_tonumber(luaVM, 2);
-    float y = (float)lua_tonumber(luaVM, 3);
-    float z = (float)lua_tonumber(luaVM, 4);
-
-    float w = (float)lua_tonumber(luaVM, 5);
-    float h = (float)lua_tonumber(luaVM, 6);
-    float u1 = (float)lua_tonumber(luaVM, 7);
-    float v1 = (float)lua_tonumber(luaVM, 8);
-    float u2 = (float)lua_tonumber(luaVM, 9);
-    float v2 = (float)lua_tonumber(luaVM, 10);
-
-    float angle = 0.0f;
-    float scaleX = 1.0f;
-    float scaleY = 1.0f;
-
-    if (lua_gettop(luaVM) >= 11) {
-		angle = (float)lua_tonumber(luaVM, 11);
-    }
-    if (lua_gettop(luaVM) >= 12) {
-		scaleX = (float)lua_tonumber(luaVM, 12);
-    }
-    if (lua_gettop(luaVM) >= 13) {
-		scaleY = (float)lua_tonumber(luaVM, 13);
-    } else {
-        scaleY = scaleX;
-    }
-
-    Sprite *sprite = graphics->sprites.get(frame);
-    if (sprite->texture.get() == 0) {
-        sprite->uploadToGPU();
-    }
-    GLuint tex = sprite->texture.get()->glHandle;
-
-    graphics->spriteBatchAlpha->add(tex, x, y, z, w, h, u1, v1, u2, v2, angle, scaleX, scaleY);
-
-    return 0;
-}
 
 static int luaAddToAtlas(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-    addToAtlas(graphics->sprites.get(index));
+    addToAtlas(sprites.get(index));
 
     return 0;
 }
 
+/// Builds a sprite atlas. Call this after several calls to AB.graphics.addToAtlas
+// @function AB.graphics.buildAtlas
 static int luaBuildAtlas(lua_State* luaVM) {
     buildAtlas();
 
     return 0;
 }
 
+/// Returns width of a sprite
+// @param index Sprite index
+// @return width
+// @function AB.graphics.spriteWidth
 static int luaSpriteWidth(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-    int width = graphics->sprites.get(index)->width;
+    int width = sprites.get(index)->width;
 
     lua_pushinteger(luaVM, width);
 
     return 1;
 }
 
+/// Returns height of a sprite
+// @param index Sprite index
+// @return height
+// @function AB.graphics.spriteHeight
 static int luaSpriteHeight(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-    int height = graphics->sprites.get(index)->height;
+    int height = sprites.get(index)->height;
 
     lua_pushinteger(luaVM, height);
 
     return 1;
 }
 
-static int luaBeginBatch(lua_State* luaVM) {
-    //  TODO: maybe pass primitive type from lua?
-    graphics->preRenderVBO();
+/// Creates a new rendering layer. (BatchRenderer internally). Layers are renderered back to front, largest indices first. A default layer of 0 is provided
+// @param index Layer index
+// @function AB.graphics.addLayer
+static int luaAddLayer(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
 
-    return 0;
+	return 0;
 }
-
-static int luaEndBatch(lua_State* luaVM) {
-    graphics->postRenderVBO(GL_TRIANGLES);
-
-    return 0;
-}
-
-static int luaRenderTri(lua_State* luaVM) {
-    float x1 = (float)lua_tonumber(luaVM, 1);
-    float y1 = (float)lua_tonumber(luaVM, 2);
-    float x2 = (float)lua_tonumber(luaVM, 3);
-    float y2 = (float)lua_tonumber(luaVM, 4);
-    float x3 = (float)lua_tonumber(luaVM, 5);
-    float y3 = (float)lua_tonumber(luaVM, 6);
-
-    graphics->renderTri(x1, y1, x2, y2, x3, y3);
-
-    return 0;
-}
-
-static int luaRenderQuad(lua_State* luaVM) {
-    float x = (float)lua_tonumber(luaVM, 1);
-    float y = (float)lua_tonumber(luaVM, 2);
-    float w = (float)lua_tonumber(luaVM, 3);
-    float h = (float)lua_tonumber(luaVM, 4);
-
-    if (h < 0.001f || w < 0.001f) {
-        return 0;
-    }
-
-    bool full = true;
-    if (lua_gettop(luaVM) >= 5) {
-        full = (bool)lua_toboolean(luaVM, 5);
-    }
-
-    bool batch = false;
-    if (lua_gettop(luaVM) >= 6) {
-        batch = (bool)lua_toboolean(luaVM, 6);
-    }
-
-    graphics->renderQuad(x, y, x + w, y + h, full, batch);
-
-
-    return 0;
-}
-
-static int luaRenderCircle(lua_State* luaVM) {
-    float x = (float)lua_tonumber(luaVM, 1);
-    float y = (float)lua_tonumber(luaVM, 2);
-    float radius = (float)lua_tonumber(luaVM, 3);
-
-    if (lua_gettop(luaVM) >= 4) {
-        int segments = (int)lua_tonumber(luaVM, 4);
-        graphics->renderCircle(x, y, radius, segments);
-    } else {
-        graphics->renderCircle(x, y, radius);
-    }
-
-    return 0;
-}
-
-static int luaRenderArc(lua_State* luaVM) {
-    float x = (float)lua_tonumber(luaVM, 1);
-    float y = (float)lua_tonumber(luaVM, 2);
-    float radius = (float)lua_tonumber(luaVM, 3);
-    float angle1 = (float)lua_tonumber(luaVM, 4);
-    float angle2 = (float)lua_tonumber(luaVM, 5);
-
-    graphics->renderArc(x, y, radius, angle1, angle2);
-
-    return 0;
-}
-
-static int luaSetScissor(lua_State* luaVM) {
-    if (lua_gettop(luaVM) >= 4) {
-        int x = (int)lua_tonumber(luaVM, 1);
-        int y = (int)lua_tonumber(luaVM, 2);
-        int w = (int)lua_tonumber(luaVM, 3);
-        int h = (int)lua_tonumber(luaVM, 4);
-
-        graphics->setScissor(x, y, w, h);
-    } else {
-        graphics->setScissor();
-    }
-
-    return 0;
-}
-
-static int luaFlushGraphics(lua_State* luaVM) {
-    graphics->spriteBatchAlpha->render();
-    graphics->spriteBatchAlpha->clear();
-
-    return 0;
-}
-
-#endif
 
 void registerGraphicsFunctions() {
-	/*
     static const luaL_Reg graphicsFuncs[] = {
         { "resetVideo", luaResetVideo},
-        { "resizeCanvas", luaResizeCanvas},
-        { "setDefaultShader", luaSetDefaultShader},
-        { "setCanvasShader", luaSetCanvasShader},
-        { "invalidateTextureCache", luaInvalidateTextureCache},
 
         { "loadSprite", luaLoadSprite},
         { "addToAtlas", luaAddToAtlas},
         { "buildAtlas", luaBuildAtlas},
 
-        // renderSprite(index, x, y, z = 1, r = 0, sx = 1, sy = 1, additive = false)
         { "renderSprite", luaRenderSprite},
-        { "renderSpriteUV", luaRenderSpriteUV},
         { "spriteWidth", luaSpriteWidth},
         { "spriteHeight", luaSpriteHeight},
-        { "collides", luaCollides},
-
-        { "setColor", luaSetColor},
-        { "setLineWidth", luaSetLineWidth},
-
-        { "beginBatch", luaBeginBatch},
-        { "endBatch", luaEndBatch},
-        { "renderTri", luaRenderTri},
-        { "renderQuad", luaRenderQuad},
-        { "renderCircle", luaRenderCircle},
-        { "renderArc", luaRenderArc},
-        { "setScissor", luaSetScissor},
-        { "flushGraphics", luaFlushGraphics},
+		
+		// { "colorTransform", luaColorTransform},
+		// { "loadShader", luaLoadShader},
+		{ "addLayer", luaAddLayer},
 
         { NULL, NULL }
     };
     script.registerFuncs("AB", "graphics", graphicsFuncs);
-	*/
 }
 
 }
