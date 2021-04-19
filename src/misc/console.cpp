@@ -32,8 +32,15 @@ freely, subject to the following restrictions:
 #include "../core/version.h"
 #include "../script/script.h"
 #include "../core/log.h"
+#include "../core/window.h"
 
 namespace AB {
+
+//static const glm::vec4 TEXT_COLOR_1(1.0f, 0.85f, 0.35f, 1.0f);
+//static const glm::vec4 TEXT_COLOR_2(1.0f, 0.75f, 0.0f, 1.0f);
+
+static const glm::vec4 TEXT_COLOR_1(0.35f, 1.0f, 0.5f, 1.0f);
+static const glm::vec4 TEXT_COLOR_2(0.0f, 0.75f, 0.0f, 1.0f);
 
 extern std::vector<SDL_Event> eventQueue;
 
@@ -77,7 +84,7 @@ int luaPrint(lua_State *L) {
     return 0;
 }
 
-Console::Console() {
+bool Console::startup() {
     active = false;
     addMessage("", false);
     addMessage("AB Engine Lua Console", true);
@@ -89,9 +96,18 @@ Console::Console() {
 
     commandLineHistory.clear();
     commandLineHistoryPos = commandLineHistory.end();
+	
+	batchRenderer = new BatchRenderer();
+	font.load("default1");
+	font.setColor(0.2f, 0.3f, 0.4f, 1.0f);	// TEXT_COLOR_1
+
+	extern Window window;
+	camera.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
+
+	return true;
 }
 
-Console::~Console() {
+void Console::shutdown() {
 }
 
 void Console::update() {
@@ -105,9 +121,11 @@ void Console::update() {
                 if (active) {
                     // pause();
                     SDL_StartTextInput();
+					LOG("Console opened", 0);
                 } else {
                     // resume();
                     SDL_StopTextInput();
+					LOG("Console closed", 0);
                 }
             }
 
@@ -163,41 +181,49 @@ void Console::update() {
 
 void Console::render() {
     if (!active) return;
+		
+	batchRenderer->beginScene(camera);
+		AB::Renderer::Quad quad;
+		
+		int width = 780;
+		int height = 420;
 
-	ERR("Console rendering unimplemented! ", 0);
-	/*
-    glViewport(0, 0, graphics->xRes, graphics->yRes);
-    glm::mat4 projection = glm::ortho(0.0f, (GLfloat)graphics->xRes, (GLfloat)graphics->yRes, 0.0f, 0.1f, 100.0f);
-    GLuint projLoc = glGetUniformLocation(graphics->shaders.get(1)->getID(), "projection");
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		//	TODO: this should call a generic quad renderer in renderer.h
+		quad.pos = glm::vec3(width / 2 + 20, height / 2 + 20, -1.0f);
+		quad.size = glm::vec2(width, height); 
+		quad.scale = 1.0f;
+		quad.rotation = 0.0f;
+		quad.uv = glm::vec4(0.0f, 1.0f, 1.0f, 0.0f);
+		quad.textureID = 0;
+		quad.color = glm::vec4(0.0f, 0.0f, 0.0f, 0.75f);
+		batchRenderer->renderQuad(quad);	
+	
+		width = 760;
+		height = 1;
+		quad.pos = glm::vec3(width / 2 + 30, height / 2 + 395, -1.0f);
+		quad.size = glm::vec2(width, height); 
+		quad.color = TEXT_COLOR_1;
+		batchRenderer->renderQuad(quad);	
+	batchRenderer->endScene();
+	
+	batchRenderer->beginScene(camera);
+		font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
+		font.printString(batchRenderer, 30, 423, 1.0f, Font::LEFT, "> " + commandLine + (time(NULL) % 2 == 0 ? "_" : ""));
 
-    graphics->setColor(0.0f, 0.0f, 0.0f, 0.75f);
-    graphics->renderQuad(20, 20, 780, 420);
-
-    graphics->setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    graphics->renderQuad(30, 395, 770, 396);
-
-    graphics->fonts.get(1)->setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    graphics->fonts.get(1)->printString(30, 413, 2.0f, Font::LEFT, "> " + commandLine + (time(NULL) % 2 == 0 ? "_" : ""));
-
-    float y = 383;
-    for (std::list<ConsoleMessage>::iterator message = messages.begin(); message != messages.end(); message++) {
-        if (message->entered) {
-            graphics->fonts.get(1)->setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        } else {
-            graphics->fonts.get(1)->setColor(0.5f, 0.5f, 0.5f, 1.0f);
-        }
-        graphics->fonts.get(1)->printString(30, y, 2.0f, Font::LEFT, message->message);
-        y -= 15;
-        if (y < 25) {
-            break;
-        }
-    }
-
-    glViewport(0,0,graphics->canvasWidth,graphics->canvasHeight);
-    projection = glm::ortho(0.0f, (GLfloat)graphics->canvasWidth, (GLfloat)graphics->canvasHeight, 0.0f, 0.1f, 100.0f);
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	*/
+		float y = 383;
+		for (std::list<ConsoleMessage>::iterator message = messages.begin(); message != messages.end(); message++) {
+			if (message->entered) {
+				font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
+			} else {
+				font.setColor(TEXT_COLOR_2.r, TEXT_COLOR_2.g, TEXT_COLOR_2.b, TEXT_COLOR_2.a);
+			}
+			font.printString(batchRenderer, 30, y, 1.0f, Font::LEFT, message->message);
+			y -= 20;
+			if (y < 25) {
+				break;
+			}
+		}
+	batchRenderer->endScene();
 }
 
 }   //  namespace

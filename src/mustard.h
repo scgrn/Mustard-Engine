@@ -37,6 +37,7 @@ freely, subject to the following restrictions:
 #include "core/fileSystem.h"
 #include "core/window.h"
 #include "core/log.h"
+#include "misc/console.h"
 
 namespace AB {
 	extern FileSystem fileSystem;
@@ -45,7 +46,10 @@ namespace AB {
 	extern Script script;
 	extern Input input;
 	extern Window window;
-	
+#ifdef DEBUG
+	extern Console console;
+#endif	
+
 	void startup(Application *app);
 	void shutdown();
 }

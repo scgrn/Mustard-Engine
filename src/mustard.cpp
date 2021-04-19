@@ -34,6 +34,7 @@ Audio audio;
 Script script;
 Input input;
 Window window;
+Console console;
 
 void startup(Application *app) {
 	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
@@ -52,12 +53,18 @@ void startup(Application *app) {
 	audio.startup();
 	window.startup(app);
 	renderer.startup();
+#ifdef DEBUG
+	console.startup();
+#endif
 }
 
 void shutdown() {
 	LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
 	
 	//  ... and shutdown.
+#ifdef DEBUG
+	console.shutdown();
+#endif
 	renderer.shutdown();
 	window.shutdown();
 	audio.shutdown();

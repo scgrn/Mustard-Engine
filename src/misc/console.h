@@ -28,22 +28,34 @@ freely, subject to the following restrictions:
 #include <list>
 #include <iostream>
 
+#include "../core/subsystem.h"
+
+#include "../renderer/font.h"
+#include "../renderer/camera.h"
+
 namespace AB {
 
-class Console {
+class Console : public SubSystem {
     public:
-        Console();
-        ~Console();
+		bool startup();
+		void shutdown();
 
         void update();
         void render();
-        bool isActive() { return active; }
+        
+		bool active = false;
 
     protected:
         std::list<std::string> commandLineHistory;
         std::list<std::string>::iterator commandLineHistoryPos;
         std::string commandLine;
-        bool active;
+		
+		BatchRenderer *batchRenderer;
+		Font font;
+		
+		//	it seems really ridiculous to me that we need to create a camera for the fucking DEBUG CONSOLE.
+		//	maybe we should generally do away wiht cameras and the renderers could just take a projection matrix?
+		OrthographicCamera camera;
 
 };
 

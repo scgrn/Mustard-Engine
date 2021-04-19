@@ -47,22 +47,25 @@ freely, subject to the following restrictions:
 
 #ifdef DEBUG
 #include "../misc/capture.h"
+#include "../misc/console.h"
 #endif  //  DEBUG
 
 //  TODO: this needs to be in common code somewhere for android, web
+//void checkOpenGLError(const char* stmt, const char* fname, int line);
+// i hate it. i seriously hate that i can't put this code in renderer.cpp.
 void checkOpenGLError(const char* stmt, const char* fname, int line) {
     bool errorOccured = false;
     while (GLenum errorCode = glGetError() != GL_NO_ERROR) {
         std::string error;
         switch (errorCode)
         {
-            case GL_INVALID_ENUM:								error = "INVALID_ENUM"; break;
-            case GL_INVALID_VALUE:								error = "INVALID_VALUE"; break;
+            case GL_INVALID_ENUM:							error = "INVALID_ENUM"; break;
+            case GL_INVALID_VALUE:							error = "INVALID_VALUE"; break;
             case GL_INVALID_OPERATION:						error = "INVALID_OPERATION"; break;
             case GL_STACK_OVERFLOW:							error = "STACK_OVERFLOW"; break;
             case GL_STACK_UNDERFLOW:						error = "STACK_UNDERFLOW"; break;
             case GL_OUT_OF_MEMORY:							error = "OUT_OF_MEMORY"; break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:	error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:			error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
 
         LOG("OpenGL error %08x: %s at %s:%i - for %s\n", errorCode, error.c_str(), fname, line, stmt);
@@ -74,9 +77,10 @@ void checkOpenGLError(const char* stmt, const char* fname, int line) {
     }
 }
 
+
 namespace AB {
 
-//  android-specific method stubs
+//  android-specific method stubs (what?)
 void vibrate(int ms) {}
 void launchEmail() {}
 void requestRating() {}
@@ -84,6 +88,10 @@ void launchURL(std::string URL) {}
 
 extern Window window;
 std::vector<SDL_Event> eventQueue;
+
+#ifdef DEBUG
+	extern Console console;
+#endif
 
 // float accumulator = 0.0f;
 // unsigned int lastTime = 0, currentTime;
@@ -268,9 +276,16 @@ void mainLoop(Application *app) {
 
         while(frame_accumulator >= desired_frametime*update_multiplicity){
             for(int i = 0; i<update_multiplicity; i++){
-                app->update();
+#ifdef DEBUG
+				if (!console.active) {
+					app->update();
+				}
                 input.update();
-
+				console.update();
+#else
+				app->update();
+                input.update();
+#endif
                 eventQueue.clear();
                 frame_accumulator -= desired_frametime;
             }
@@ -278,6 +293,9 @@ void mainLoop(Application *app) {
     }
 
     app->render();
+#ifdef DEBUG
+	console.render();
+#endif
 
 #ifdef DEBUG
     if (recording) {
