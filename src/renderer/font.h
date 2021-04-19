@@ -53,7 +53,7 @@ class Font : public Resource {
         /**
         *    Loads a font and its associated texture from file
         *
-        *    @param filename XML font descriptor file - passing NULL, erm, "default" creates a built-in 3x5 pixel font
+        *    @param filename XML font descriptor file - passing NULL, erm, "default1" creates a built-in 3x5 pixel font. Passing "default2" will create an 8x8 pixel font.
         */
         virtual void load(std::string const& id);
 
@@ -109,7 +109,8 @@ class Font : public Resource {
         int lineHeight, base;
 
     private:
-        void buildDefault();
+        void build8x8Default(bool stretch);
+		void build3x5Default();
 };
 
 }   //  namespace
