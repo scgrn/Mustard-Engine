@@ -1,4 +1,4 @@
-/**
+ /**
 
 zlib License
 
@@ -31,8 +31,7 @@ namespace AB {
 
 class BatchRenderer : public Renderer {
 	public:
-		
-		BatchRenderer();
+		BatchRenderer(Shader *shader = &defaultShader, glm::mat4 colorTransform = glm::mat4(1.0f), bool depthSorting = false);
 		~BatchRenderer();
 
 		virtual void beginScene(const Camera& camera);

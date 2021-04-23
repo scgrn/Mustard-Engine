@@ -36,6 +36,10 @@ Input input;
 Window window;
 Console console;
 
+ResourceManager<Sprite> sprites;
+ResourceManager<Shader> shaders;
+std::map<int, BatchRenderer*> batchRenderers;
+
 void startup(Application *app) {
 	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
 	LOG(std::string(79, '-').c_str(), 0);

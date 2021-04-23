@@ -37,10 +37,9 @@ namespace AB {
 extern Script script;
 extern Window window;
 
-//	not sure if i like these here...
-ResourceManager<Sprite> sprites;
-ResourceManager<Shader> shaders;
-std::map<int, BatchRenderer> batchRenderers;
+extern ResourceManager<Sprite> sprites;
+extern ResourceManager<Shader> shaders;
+extern std::map<int, BatchRenderer*> batchRenderers;
 
 //----------------------------------------------------------------- Graphics state --------------------------------
 static int luaResetVideo(lua_State* luaVM) {
@@ -51,6 +50,10 @@ static int luaResetVideo(lua_State* luaVM) {
 
 //----------------------------------------------------------------- Graphics ------------------------------------------
 
+///	Loads a sprite
+// @param index Sprite index
+// @param filename Filename
+// @function AB.graphics.addToAtlas
 static int luaLoadSprite(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     std::string filename = std::string(lua_tostring(luaVM, 2));
@@ -68,28 +71,40 @@ static int luaLoadSprite(lua_State* luaVM) {
     return 0;
 }
 
-// renderSprite(index, x, y, z, r = 0, sx = 1, sy = 1, additive = false)
+///	Queues a sprite to be renderer on the screen or current canvas.
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param index Sprite index
+// @param x X position
+// @param y Y position
+// @param z (-1) Z position
+// @param angle (0) Rotation
+// @param scaleX (1) Scale X
+// @param scaleY (scaleX) Scale Y
+// @function AB.graphics.loadSprite
+
+// renderSprite(batchIndex, index, x, y, z, r = 0, sx = 1, sy = 1, additive = false)
 static int luaRenderSprite(lua_State* luaVM) {
-    int frame = (int)lua_tonumber(luaVM, 1);
-    float x = (float)lua_tonumber(luaVM, 2);
-    float y = (float)lua_tonumber(luaVM, 3);
+    int layer = (int)lua_tonumber(luaVM, 1);
+    int index = (int)lua_tonumber(luaVM, 2);
+    float x = (float)lua_tonumber(luaVM, 3);
+    float y = (float)lua_tonumber(luaVM, 4);
 
     float z = -1.0f;
     float angle = 0.0f;
     float scaleX = 1.0f;
     float scaleY = 1.0f;
 
-    if (lua_gettop(luaVM) >= 4) {
-		z = (float)lua_tonumber(luaVM, 4);
-    }
     if (lua_gettop(luaVM) >= 5) {
-		angle = (float)lua_tonumber(luaVM, 5);
+		z = (float)lua_tonumber(luaVM, 5);
     }
     if (lua_gettop(luaVM) >= 6) {
-		scaleX = (float)lua_tonumber(luaVM, 6);
+		angle = (float)lua_tonumber(luaVM, 6);
     }
     if (lua_gettop(luaVM) >= 7) {
-		scaleY = (float)lua_tonumber(luaVM, 7);
+		scaleX = (float)lua_tonumber(luaVM, 7);
+    }
+    if (lua_gettop(luaVM) >= 8) {
+		scaleY = (float)lua_tonumber(luaVM, 8);
     } else {
         scaleY = scaleX;
     }
@@ -105,10 +120,17 @@ static int luaRenderSprite(lua_State* luaVM) {
         graphics->spriteBatchAlpha->clear();
     }
 */
+	
+	//	TODO: need to support scaleY in quad renderer
+	sprites.get(index)->render(batchRenderers[layer], glm::vec3(x, y, z), angle, scaleX);
+
     return 0;
 }
 
-
+/// Adds a sprite into the current atlas queue. This should be done at startup before any rendering occurs. Sprites that are commonly
+// used together can be batched into a single atlas to improve performance by minimizing texture switches.
+// @param index Sprite index
+// @function AB.graphics.addToAtlas
 static int luaAddToAtlas(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     addToAtlas(sprites.get(index));
@@ -150,11 +172,43 @@ static int luaSpriteHeight(lua_State* luaVM) {
     return 1;
 }
 
-/// Creates a new rendering layer. (BatchRenderer internally). Layers are renderered back to front, largest indices first. A default layer of 0 is provided
+///	Queues a quad to be renderer on the screen or current canvas.
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param x X position
+// @param y Y position
+// @param z (-1) Z position
+// @param angle (0) Rotation
+// @function AB.graphics.renderQuad
+static int luaRenderQuad(lua_State* luaVM) {
+	return 0;
+}
+
+/*
+///	Creates a rendering canvas.
+// @param index
+// @param width
+// @param height
+// @function AB.graphics.createCanvas
+static int luaCreateCanvas(lua_State* luaVM) {
+	return 0;
+}
+
+///	Uses a canvas for rendering. Pass 0 to restore default frameBuffer.
+// @param index
+// @function AB.graphics.useCanvas
+static int luaUseCanvas(lua_State* luaVM) {
+	return 0;
+}
+*/
+/// Creates a new rendering layer. (BatchRenderer internally). Layers are renderered back to front, largest indices first.
+// A default layer of 0 is provided
 // @param index Layer index
-// @function AB.graphics.addLayer
-static int luaAddLayer(lua_State* luaVM) {
+// @function AB.graphics.createLayer
+static int luaCreateLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+
+	//	TODO: pass in colorTransform, depthSorting
+	batchRenderers[index] = new BatchRenderer();
 
 	return 0;
 }
@@ -170,11 +224,15 @@ void registerGraphicsFunctions() {
         { "renderSprite", luaRenderSprite},
         { "spriteWidth", luaSpriteWidth},
         { "spriteHeight", luaSpriteHeight},
+		{ "renderQuad", luaRenderQuad},
 		
+		//{ "createCanvas", luaCreateCanvas},
+		//{ "useCanvas", luaUseCanvas},
+
 		// { "colorTransform", luaColorTransform},
 		// { "loadShader", luaLoadShader},
-		{ "addLayer", luaAddLayer},
-
+		{ "createLayer", luaCreateLayer},
+		
         { NULL, NULL }
     };
     script.registerFuncs("AB", "graphics", graphicsFuncs);

@@ -116,6 +116,10 @@ void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u
 }
 
 void Sprite::render(BatchRenderer *renderer, glm::vec3 pos, float rotation, float scale, glm::vec4 color) {
+    if (texture.get() == 0) {
+        uploadToGPU();
+    }
+	
 	BatchRenderer::Quad quad;
 	
 	quad.pos = pos;

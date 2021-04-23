@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 
 #include "renderer.h"
 #include "../core/log.h"
+#include "batchRenderer.h"
 
 //  force use of discrete GPU
 //  https://stackoverflow.com/questions/16823372/forcing-machine-to-use-dedicated-graphics-card/39047129
@@ -39,6 +40,8 @@ namespace AB {
 
 GLuint Renderer::whiteTexture;
 TextureCache Renderer::textureCache;
+
+extern std::map<int, BatchRenderer*> batchRenderers;
 
 // common quad mesh
 GLfloat Renderer::quadVertices[] = {
@@ -87,6 +90,10 @@ bool Renderer::startup() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 	
+	batchRenderers.clear();
+	batchRenderers[0] = new BatchRenderer();
+	//batchRenderers.insert(std::pair<int, BatchRenderer>(0, new BatchRenderer()));
+	
 	initialized = true;
 	
 	return true;
@@ -95,6 +102,10 @@ bool Renderer::startup() {
 void Renderer::shutdown() {
 	LOG("Renderer subsystem shutdown", 0);
 	
+	for (std::map<int, BatchRenderer*>::iterator i = batchRenderers.begin(); i != batchRenderers.end(); i++) {
+		delete i->second;
+	}
+
 	glDeleteTextures(1, &whiteTexture);
     glDeleteBuffers(1, &ubo);
 
@@ -117,6 +128,11 @@ void Renderer::defineRenderGroup(int index, Shader *shader, glm::mat4 colorTrans
 }
 */
 
+void Renderer::clear(float r, float g, float b, float a) {
+	glClearColor(r, g, b, a);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void Renderer::renderQuad(const Quad& quad) {
 }
 
@@ -127,6 +143,17 @@ void Renderer::endScene() {
 	
 	inScene = false;
 }
+
+void Renderer::renderBatches(const Camera& camera) {
+    for (std::map<int, BatchRenderer*>::reverse_iterator it = batchRenderers.rbegin(); it != batchRenderers.rend(); it++) {
+		BatchRenderer *batchRenderer = it->second;
 		
+		if (batchRenderer->renderBatch.size() > 0) {
+			batchRenderer->beginScene(camera);
+			batchRenderer->endScene();
+		}
+	}
+}
+
 }
 

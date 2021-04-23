@@ -78,9 +78,14 @@ class Renderer : public SubSystem {
 		// void submit(const RenderCommand& command);
 		
 //		void defineRenderGroup(int index, Shader *shader, glm::mat4 colorTransform = glm::mat4(1.0f), bool depthSorting = false);
+		
+		void clear(float r, float g, float b, float a);
+		
 		void renderQuad(const Quad& quad);
 		
 		virtual void endScene();
+		
+		void renderBatches(const Camera& camera);
 		
 		static TextureCache textureCache;
         static GLuint whiteTexture;

@@ -61,6 +61,18 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.addToAtlas">AB.graphics.addToAtlas (index, filename)</a></td>
+	<td class="summary">Loads a sprite</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.loadSprite">AB.graphics.loadSprite (layer, index, x, y, z, angle, scaleX, scaleY)</a></td>
+	<td class="summary">Queues a sprite to be renderer on the screen or current canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.addToAtlas">AB.graphics.addToAtlas (index)</a></td>
+	<td class="summary">Adds a sprite into the current atlas queue.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.buildAtlas">AB.graphics.buildAtlas ()</a></td>
 	<td class="summary">Builds a sprite atlas.</td>
 	</tr>
@@ -73,7 +85,11 @@
 	<td class="summary">Returns height of a sprite</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#AB.graphics.addLayer">AB.graphics.addLayer (index)</a></td>
+	<td class="name" nowrap><a href="#AB.graphics.renderQuad">AB.graphics.renderQuad (layer, x, y, z, angle)</a></td>
+	<td class="summary">Queues a quad to be renderer on the screen or current canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.createLayer">AB.graphics.createLayer (index)</a></td>
 	<td class="summary">Creates a new rendering layer.</td>
 	</tr>
 </table>
@@ -85,6 +101,91 @@
     <h2 class="section-header "><a name="Functions"></a>Functions</h2>
 
     <dl class="function">
+    <dt>
+    <a name = "AB.graphics.addToAtlas"></a>
+    <strong>AB.graphics.addToAtlas (index, filename)</strong>
+    </dt>
+    <dd>
+    Loads a sprite
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+         Sprite index
+        </li>
+        <li><span class="parameter">filename</span>
+         Filename
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.loadSprite"></a>
+    <strong>AB.graphics.loadSprite (layer, index, x, y, z, angle, scaleX, scaleY)</strong>
+    </dt>
+    <dd>
+    Queues a sprite to be renderer on the screen or current canvas.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         Rendering layer. A default layer of 0 is provided
+        </li>
+        <li><span class="parameter">index</span>
+         Sprite index
+        </li>
+        <li><span class="parameter">x</span>
+         X position
+        </li>
+        <li><span class="parameter">y</span>
+         Y position
+        </li>
+        <li><span class="parameter">z</span>
+         (-1) Z position
+        </li>
+        <li><span class="parameter">angle</span>
+         (0) Rotation
+        </li>
+        <li><span class="parameter">scaleX</span>
+         (1) Scale X
+        </li>
+        <li><span class="parameter">scaleY</span>
+         (scaleX) Scale Y
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.addToAtlas"></a>
+    <strong>AB.graphics.addToAtlas (index)</strong>
+    </dt>
+    <dd>
+    Adds a sprite into the current atlas queue.  This should be done at startup before any rendering occurs. Sprites that are commonly
+ used together can be batched into a single atlas to improve performance by minimizing texture switches.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+         Sprite index
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
     <dt>
     <a name = "AB.graphics.buildAtlas"></a>
     <strong>AB.graphics.buildAtlas ()</strong>
@@ -150,11 +251,44 @@
 
 </dd>
     <dt>
-    <a name = "AB.graphics.addLayer"></a>
-    <strong>AB.graphics.addLayer (index)</strong>
+    <a name = "AB.graphics.renderQuad"></a>
+    <strong>AB.graphics.renderQuad (layer, x, y, z, angle)</strong>
     </dt>
     <dd>
-    Creates a new rendering layer.  (BatchRenderer internally). Layers are renderered back to front, largest indices first. A default layer of 0 is provided
+    Queues a quad to be renderer on the screen or current canvas.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         Rendering layer. A default layer of 0 is provided
+        </li>
+        <li><span class="parameter">x</span>
+         X position
+        </li>
+        <li><span class="parameter">y</span>
+         Y position
+        </li>
+        <li><span class="parameter">z</span>
+         (-1) Z position
+        </li>
+        <li><span class="parameter">angle</span>
+         (0) Rotation
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.createLayer"></a>
+    <strong>AB.graphics.createLayer (index)</strong>
+    </dt>
+    <dd>
+    Creates a new rendering layer.  (BatchRenderer internally). Layers are renderered back to front, largest indices first.
+ A default layer of 0 is provided
 
 
     <h3>Parameters:</h3>
@@ -176,7 +310,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-04-19 01:40:49 </i>
+<i style="float:right;">Last updated 2021-04-23 15:30:14 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

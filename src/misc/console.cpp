@@ -39,8 +39,11 @@ namespace AB {
 //static const glm::vec4 TEXT_COLOR_1(1.0f, 0.85f, 0.35f, 1.0f);
 //static const glm::vec4 TEXT_COLOR_2(1.0f, 0.75f, 0.0f, 1.0f);
 
-static const glm::vec4 TEXT_COLOR_1(0.35f, 1.0f, 0.5f, 1.0f);
-static const glm::vec4 TEXT_COLOR_2(0.0f, 0.75f, 0.0f, 1.0f);
+//static const glm::vec4 TEXT_COLOR_1(0.35f, 1.0f, 0.5f, 1.0f);
+//static const glm::vec4 TEXT_COLOR_2(0.0f, 0.75f, 0.0f, 1.0f);
+
+static const glm::vec4 TEXT_COLOR_1(1.0f, 1.0f, 1.0f, 1.0f);
+static const glm::vec4 TEXT_COLOR_2(0.75f, 0.75f, 0.75f, 1.0f);
 
 extern std::vector<SDL_Event> eventQueue;
 

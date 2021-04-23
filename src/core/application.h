@@ -35,7 +35,7 @@ class Application {
         //  App -> Game
         virtual void startup() {}
         virtual void shutdown() {}
-        virtual void glContextCreated(int canvasWidth, int canvasHeight, int xRes, int yRes, bool fullscreen) {}
+        virtual void glContextCreated(int xRes, int yRes, bool fullscreen) {}
         virtual void glContextDestroyed() {}
 
         virtual void onPause() {}

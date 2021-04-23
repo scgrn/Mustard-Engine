@@ -52,6 +52,11 @@ namespace AB {
 
 	void startup(Application *app);
 	void shutdown();
+	
+	extern ResourceManager<Sprite> sprites;
+	extern ResourceManager<Shader> shaders;
+	extern std::map<int, BatchRenderer*> batchRenderers;
+
 }
 
 #endif // AB_H

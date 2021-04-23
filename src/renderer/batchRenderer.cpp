@@ -33,7 +33,9 @@ namespace AB {
 Shader BatchRenderer::defaultShader;
 static bool defaultShaderLoaded = false;
 
-BatchRenderer::BatchRenderer() {
+BatchRenderer::BatchRenderer(Shader *shader, glm::mat4 colorTransform, bool depthSorting) {
+	LOG("BatchRenderer constructor called", 0);
+	
 	//	load default shader
 	if (!defaultShaderLoaded) {
 		defaultShader.load("shaders/default2d");
@@ -64,7 +66,7 @@ BatchRenderer::BatchRenderer() {
 	CALL_GL(glGenBuffers(1, &ibo));
 	CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, ibo));
 	CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(Quad) * MAX_QUADS_PER_BATCH, NULL, GL_DYNAMIC_DRAW));
-
+	
 	// set instance attribute pointers
 	
 	//		position
@@ -103,11 +105,11 @@ BatchRenderer::BatchRenderer() {
 	CALL_GL(glVertexAttribDivisor(7, 1));
 	
 	renderBatch.reserve(MAX_QUADS_PER_BATCH);
+	renderBatch.clear();
 	
-	// TODO: temp!
-	shader = &defaultShader;
-	depthSorting = false;
-	colorTransform = glm::mat4(1.0f);
+	this->shader = shader;
+	this->depthSorting = depthSorting;
+	this->colorTransform = colorTransform;
 }
 
 BatchRenderer::~BatchRenderer() {
@@ -128,7 +130,7 @@ void BatchRenderer::beginScene(const Camera& camera) {
 }
 
 void BatchRenderer::renderQuad(const Quad& quad) {
-	assert(inScene);
+	//assert(inScene);
 
 	renderBatch.push_back(quad);
 }
@@ -144,7 +146,7 @@ void BatchRenderer::endScene() {
 	assert(inScene);
 	
 	//	it renders
-
+	
 	// enable VAO
 	CALL_GL(glBindVertexArray(vao));
 	
@@ -160,14 +162,12 @@ void BatchRenderer::endScene() {
 		
 		// sort renderBatch
 		std::sort(renderBatch.begin(), renderBatch.end(), depthSorting ? cmpDepth : cmp);
-
 		
 		//	iterate renderbatch, set textureID to texture unit for each Quad before populating ibo
 		int begin = 0;
 		int end = -1;
 
 		for (int i = 0; i < renderBatch.size();) {
-
 			//	need pointer
 			Quad &quad = renderBatch[i];
 			

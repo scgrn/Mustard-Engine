@@ -50,8 +50,6 @@ void Window::shutdown() {
 }
 
 void Window::setVideoMode(Application *app) {
-    int canvasWidth = 800;
-    int canvasHeight = 480;
     int xRes = 800;
     int yRes = 480;
     bool fullscreen = false;
@@ -67,22 +65,6 @@ void Window::setVideoMode(Application *app) {
         lua_gettable(luaVM, -2);
         fullscreen = (bool)lua_toboolean(luaVM, -1);
         LOG_EXP(fullscreen);
-        lua_pop(luaVM, -1);
-        lua_pop(luaVM, -1);
-
-        lua_getglobal(luaVM, "videoConfig");
-        lua_pushstring(luaVM, "canvasWidth");
-        lua_gettable(luaVM, -2);
-        canvasWidth = (int)lua_tonumber(luaVM, -1);
-        LOG_EXP(canvasWidth);
-        lua_pop(luaVM, -1);
-        lua_pop(luaVM, -1);
-
-        lua_getglobal(luaVM, "videoConfig");
-        lua_pushstring(luaVM, "canvasHeight");
-        lua_gettable(luaVM, -2);
-        canvasHeight = (int)lua_tonumber(luaVM, -1);
-        LOG_EXP(canvasHeight);
         lua_pop(luaVM, -1);
         lua_pop(luaVM, -1);
 
@@ -175,7 +157,7 @@ void Window::setVideoMode(Application *app) {
         //  }
 
         if (app) {
-            app->glContextCreated(canvasWidth, canvasHeight, xRes, yRes, fullscreen);
+            app->glContextCreated(xRes, yRes, fullscreen);
         }
 	} else {
         if (fullscreen) {
