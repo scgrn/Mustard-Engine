@@ -31,15 +31,13 @@ namespace AB {
 
 class Camera {
 	public:
-		//virtual void setProjection() = 0;
-		virtual const glm::mat4& getProjectionMatrix() const { return projectionMatrix; }
-		
-	protected:
-		void recalculateViewMatrix();
-
 		glm::mat4 projectionMatrix;
 		glm::mat4 viewMatrix;
 		glm::mat4 viewProjectionMatrix;
+
+		virtual void recalculateViewMatrix() {}
+		
+	protected:
 
 };
 
@@ -54,7 +52,11 @@ class OrthographicCamera : public Camera {
 class PerspectiveCamera : public Camera {
 	public:
 		PerspectiveCamera();
-		void setProjection();
+		void setProjection(float fov);
+		virtual void recalculateViewMatrix();
+		
+		glm::vec3 rotation;
+		glm::vec3 position;
 };
 
 

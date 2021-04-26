@@ -32,7 +32,6 @@ namespace AB {
 class Skybox : public Renderer {
 	public:
 		Skybox(std::vector<std::string> faces);
-			
 		~Skybox();
 		
 		virtual void beginScene(const Camera& camera);

@@ -27,14 +27,7 @@ freely, subject to the following restrictions:
 #include "skybox.h"
 #include "image.h"
 
-#include "../input/input.h"	// TODO: remove!
-
 namespace AB {
-
-float rx = 0.0f;
-float ry = 0.0f;
-
-extern Input input;
 
 Skybox::Skybox(std::vector<std::string> faces) {
 
@@ -126,27 +119,10 @@ Skybox::~Skybox() {
 void Skybox::beginScene(const Camera& camera) {
 	shader.bind();
 	
-	//	TODO: should come from camera!
-	float fov = 90.0f;
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(fov), 1.0f, 0.1f, 100.0f);
-    glm::mat4 viewMatrix = glm::rotate(glm::mat4(1.0), ry, glm::vec3(0.0f, 1.0f, 0.0f));
-    viewMatrix = glm::rotate(viewMatrix, rx, glm::vec3(1.0f, 0.0f, 0.0f));
-	
-	const float SPEED = 0.1f;
-	if (input.isPressed(79)) {
-		ry += SPEED;
-	}
-	if (input.isPressed(80)) {
-		ry -= SPEED;
-	}
-	if (input.isPressed(82)) {
-		rx += SPEED;
-	}
-	if (input.isPressed(81)) {
-		rx -= SPEED;
-	}
-	
-	shader.setMat4("projection", projectionMatrix);
+	glm::mat4 viewMatrix = camera.viewMatrix;
+	viewMatrix = glm::mat4(glm::mat3(viewMatrix)); // remove translation from the view matrix
+
+	shader.setMat4("projection", camera.projectionMatrix);
 	shader.setMat4("view", viewMatrix);
 }
 

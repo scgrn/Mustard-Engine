@@ -25,8 +25,11 @@ freely, subject to the following restrictions:
 #include "../pch.h"
 
 #include "camera.h"
+#include "../core/window.h"
 
 namespace AB {
+	
+extern Window window;
 
 OrthographicCamera::OrthographicCamera() {}
 
@@ -34,7 +37,23 @@ void OrthographicCamera::setProjection(float left, float right, float bottom, fl
 	projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
-PerspectiveCamera::PerspectiveCamera() {}
-void PerspectiveCamera::setProjection() {}
+PerspectiveCamera::PerspectiveCamera() {
+	projectionMatrix = glm::mat4(1.0f);
+	viewMatrix = glm::mat4(1.0f);
+}
+
+void PerspectiveCamera::setProjection(float fov) {
+    projectionMatrix = glm::perspective(glm::radians(fov), (float)window.currentMode.xRes / (float)window.currentMode.yRes, 0.1f, 1000.0f);
+}
+
+void PerspectiveCamera::recalculateViewMatrix() {
+	viewMatrix = glm::mat4(1.0f);
+	
+	viewMatrix = glm::rotate(viewMatrix, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	viewMatrix = glm::rotate(viewMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	viewMatrix = glm::rotate(viewMatrix, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	
+	viewMatrix = glm::translate(viewMatrix, position);
+}
 
 }
