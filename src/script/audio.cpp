@@ -36,6 +36,9 @@ namespace AB {
 extern Script script;
 extern Audio audio;
 
+extern ResourceManager<Sound> sounds;
+extern ResourceManager<Music> music;
+
 //----------------------------------------------------------------- Sfx / music --------------------------------
 
 /// Loads a sound effect for later playback
@@ -46,7 +49,8 @@ static int luaLoadSound(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     std::string filename = std::string(lua_tostring(luaVM, 2));
 
-    audio.loadSound(index, filename);
+	
+    sounds.mapResource(index, filename, true);
     // bool result = loadSound(index, filename);
     // lua_pushboolean(luaVM, result);
 
@@ -58,22 +62,28 @@ static int luaLoadSound(lua_State* luaVM) {
 
 /// Plays a sound effect
 // @param index sound effect handle
-// @param loop (default false) whether to loop
 // @param volume (default 1.0) volume [0..1]
+// @param pan (default 0.0) pan [-1..1]
+// @param loop (default false) whether to loop
 // @function AB.audio.playSound
 static int luaPlaySound(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
-    bool loop = false;
     float volume = 1.0f;
+    float pan = 0.0f;
+    bool loop = false;
+
     if (lua_gettop(luaVM) >= 2) {
-        loop = (bool)lua_toboolean(luaVM, 2);
+        volume = (float)lua_tonumber(luaVM, 2);
     }
     if (lua_gettop(luaVM) >= 3) {
-        volume = (float)lua_tonumber(luaVM, 3);
+        pan = (float)lua_tonumber(luaVM, 3);
     }
-    audio.playSound(index, loop, volume);
-
+    if (lua_gettop(luaVM) >= 4) {
+        loop = (bool)lua_toboolean(luaVM, 4);
+    }
+	sounds.get(index)->play(volume, pan, loop);
+	
     return 0;
 }
 
@@ -82,7 +92,7 @@ static int luaPlaySound(lua_State* luaVM) {
 // @function AB.audio.stopSound
 static int luaStopSound(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-    audio.stopSound(index);
+	sounds.get(index)->stop();
 
     return 0;
 }
@@ -101,61 +111,66 @@ static int luaLoadMusic(lua_State* luaVM) {
         loopPoint = (1.0f / BPS) * (beats * 2);
     }
 
-    audio.loadMusic(index, filename, loopPoint);
+	music.mapResource(index, filename, true);
+	if (loopPoint > 0) {
+		music.get(index)->setLoopPoint(loopPoint);
+	}
 
     return 0;
 }
 
 static int luaPlayMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-    audio.playMusic(index);
+	music.get(index)->play();
 
     return 0;
 }
 
 static int luaPauseMusic(lua_State* luaVM) {
-    audio.pauseMusic();
+    int index = (int)lua_tonumber(luaVM, 1);
+	music.get(index)->pause();
 
     return 0;
 }
 
 static int luaResumeMusic(lua_State* luaVM) {
-    audio.resumeMusic();
-
+	audio.currentMusic->resume();
+	
     return 0;
 }
 
 static int luaFadeMusicIn(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     float duration = (float)lua_tonumber(luaVM, 2);
-    audio.fadeMusicIn(index, duration);
+    
+	music.get(index)->fadeIn(duration);
 
     return 0;
 }
 
 static int luaFadeMusicOut(lua_State* luaVM) {
-    float duration = (float)lua_tonumber(luaVM, 1);
-    audio.fadeMusicOut(duration);
-
+	float duration = (float)lua_tonumber(luaVM, 1);
+	audio.currentMusic->fadeOut(duration);
+	
     return 0;
 }
 
 static int luaStopMusic(lua_State* luaVM) {
-    audio.stopMusic();
+    audio.currentMusic->stop();
 
     return 0;
 }
 
 static int luaSetSoundVolume(lua_State* luaVM) {
     float volume = (float)lua_tonumber(luaVM, 1);
-    audio.setSoundVolume(volume);
+    audio.soundVolume = volume;
 
     return 0;
 }
 
 static int luaSetMusicVolume(lua_State* luaVM) {
     float volume = (float)lua_tonumber(luaVM, 1);
-    audio.setMusicVolume(volume);
+    audio.musicVolume = volume;
 
     return 0;
 }

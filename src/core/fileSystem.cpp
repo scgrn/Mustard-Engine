@@ -39,6 +39,7 @@ namespace AB {
 extern FileSystem fileSystem;
 
 //	TODO: i'd like to move these as members of filesystem but then dataobject can't see them
+//			maybe just have it read from the global filesystem instance?
 struct FileResource {
 	std::string path;
 	uint32_t offset, sizeCompressed, sizeDecompressed;
@@ -180,7 +181,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     archives.push_back(archive);
 }
 
-unsigned char* FileSystem::readFile(std::string const& path, unsigned int *size) {
+unsigned char* FileSystem::readFile(std::string const& path, size_t *size) {
     FILE *file = fopen(path.c_str(), "rb");
     if (!file) {
         LOG("ERROR LOADING FILE! %s", path.c_str());
@@ -198,10 +199,10 @@ unsigned char* FileSystem::readFile(std::string const& path, unsigned int *size)
     return data;
 }
 
-DataObject::DataObject(const char* path, unsigned int *size, bool forceLocal) {
+DataObject::DataObject(const char* path, bool forceLocal) {
     if (forceLocal) {
         LOG("Loading %s from local filesystem...", path);
-        data = fileSystem.readFile(path, size);
+        data = fileSystem.readFile(path, &size);
         return;
     }
 
@@ -224,11 +225,9 @@ DataObject::DataObject(const char* path, unsigned int *size, bool forceLocal) {
                 // fread(dataCompressed, 1, resource->sizeCompressed, file);
                 // crypt(dataCompressed, resource->sizeCompressed, archive->key);
 
-                *size = resource->sizeDecompressed;
-                data = new unsigned char[*size];
-                fread(data, 1, *size, file);
-
-                LOG_EXP(*size);
+                size = resource->sizeDecompressed;
+                data = new unsigned char[size];
+                fread(data, 1, size, file);
 
                 //int result = uncompress(data, size, dataCompressed, resource->sizeCompressed);
                 //  TODO: check result
@@ -243,7 +242,7 @@ DataObject::DataObject(const char* path, unsigned int *size, bool forceLocal) {
     }
     LOG("File <%s> not found in archive, loading from local filesystem", path);
 #ifdef DEBUG
-    data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), size);
+    data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
     return;
 #endif
     std::string filename = path;
@@ -252,10 +251,6 @@ DataObject::DataObject(const char* path, unsigned int *size, bool forceLocal) {
 
 DataObject::~DataObject() {
     delete [] data;
-}
-
-unsigned char* DataObject::getData() {
-    return data;
 }
 
 std::string FileSystem::loadData(std::string key) {

@@ -22,8 +22,7 @@ workspace("Mustard")
 
 	defines {
 		"WIN32",
-		"WINDOWS_VERSION",
-		"WITH_SDL2",
+		"WITH_MINIAUDIO",
 		
 		-- for emscripten
 		-- https://uncovergame.com/2015/01/21/porting-a-complete-c-game-engine-to-html5-through-emscripten/
@@ -71,8 +70,11 @@ project("Mustard") ---------------------------------------------------------
 			"./vendor/soloud20200207/src/audiosource/**.cpp",
 			"./vendor/soloud20200207/src/audiosource/**.c",
 			"./vendor/soloud20200207/src/filter**.cpp",
-			"./vendor/soloud20200207/src/backend/sdl/**.cpp",
-			"./vendor/soloud20200207/src/backend/sdl/**.c",
+			
+			--"./vendor/soloud20200207/src/backend/sdl/**.cpp",
+			--"./vendor/soloud20200207/src/backend/sdl/**.c",
+
+			"./vendor/soloud20200207/src/backend/miniaudio/**.cpp",
 		}
 		
 		removefiles {

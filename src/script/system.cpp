@@ -69,10 +69,9 @@ static int luaLoadScript(lua_State* luaVM) {
         filename = "scripts/" + filename;
     }
 
-    unsigned int size;
-    DataObject dataObject(filename.c_str(), &size, forceLocal);
+    DataObject dataObject(filename.c_str(), forceLocal);
 
-    int error = luaL_loadbuffer(luaVM, (const char*)dataObject.getData(), size, filename.c_str());
+    int error = luaL_loadbuffer(luaVM, (const char*)dataObject.getData(), dataObject.getSize(), filename.c_str());
     if (error) {
         std::string errorMsg = lua_tostring(luaVM, -1);
         lua_pop(luaVM, 1);

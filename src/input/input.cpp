@@ -98,9 +98,8 @@ bool Input::startup() {
 
     //  try to read gamepad mappings
     //  TODO: check local file first, fall back to archive
-    unsigned int size;
-    DataObject dataObject = DataObject("gamecontrollerdb.txt", &size);
-    ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), size), 0);
+    DataObject dataObject = DataObject("gamecontrollerdb.txt");
+    ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), dataObject.getSize()), 0);
     // ret = SDL_GameControllerAddMappingsFromFile("assets/gamecontrollerdb.txt");
     LOG("Added gamepad mappings: %d", ret);
 

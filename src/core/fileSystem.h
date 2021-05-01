@@ -50,7 +50,7 @@ class FileSystem : public SubSystem {
 		void addArchive(std::string const& path, std::string const& key = "");
 
 		//  caller is responsible to delete() returned pointer
-		unsigned char* readFile(std::string const& path, unsigned int *size);
+		unsigned char* readFile(std::string const& path, size_t *size);
 	
 		std::string loadData(std::string key);
 		void saveData(std::string key, std::string value);
@@ -67,14 +67,18 @@ class FileSystem : public SubSystem {
 
 class DataObject {
     public:
-        DataObject(const char* path, unsigned int *size, bool forceLocal = false);
+        DataObject(const char* path, bool forceLocal = false);
         ~DataObject();
-        unsigned char* getData();
+
+        unsigned char* getData() { return data; } 
+		size_t getSize() { return size; }
 
     protected:
         DataObject() {}
 
         unsigned char *data;
+		size_t size;
+
 };
 
 }   //  namespace

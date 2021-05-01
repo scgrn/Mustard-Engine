@@ -26,33 +26,64 @@ freely, subject to the following restrictions:
 #define AUDIO_H
 
 #include "../core/subsystem.h"
+#include "../core/fileSystem.h"
+#include "../core/resourceManager.h"
+
+namespace SoLoud {
+	class Soloud;
+	class Wav;
+	class WavStream;
+};
 
 namespace AB {
+
+class Sound : public Resource {
+    public:
+		Sound() {};
+		
+        void load(std::string const& filename);
+        void release();
+		
+		void play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
+		void stop();
+		void isPlaying();
+		
+	protected:
+		SoLoud::Wav *wav;
+		DataObject *data;
+
+};
+
+class Music : public Resource {
+	public:
+        void load(std::string const& filename);
+        void release();
+		
+		void setLoopPoint(float loopPoint);
+		void play();
+		void pause();
+		void resume();
+		void fadeIn(float duration);
+		void fadeOut(float duration);
+		void stop();
+		
+	protected:
+		SoLoud::WavStream *wavStream;
+		DataObject *data;
+		int musicHandle;
+		
+};
 
 class Audio : public SubSystem {
 	public:
 		bool startup();
 		void shutdown();
 		
-		void loadSound(int index, std::string filename);
-		void playSound(int index, bool loop = false, float volume = 1.0f);
-		void stopSound(int index);
-		bool isPlaying(int index);
-
-		void loadMusic(int index, std::string filename, float loopPoint = 0.0f);
-		void playMusic(int index);
-		void pauseMusic();
-		void resumeMusic();
-		void fadeMusicIn(int index, float duration);
-		void fadeMusicOut(float duration);
-		void stopMusic();
-
-		void setSoundVolume(float volume);
-		void setMusicVolume(float volume);
-
-	private:
 		float soundVolume = 1.0f;
 		float musicVolume = 1.0f;
+
+		SoLoud::Soloud *soloud;
+		Music *currentMusic = NULL;
 
 };
 

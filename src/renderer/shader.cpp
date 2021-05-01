@@ -40,12 +40,11 @@ void Shader::load(std::string const& filename) {
 
     LOG("Loading shader <%s>", filename.c_str());
 
-    unsigned int size;
-    DataObject vertexDataObject((filename + ".vert").c_str(), &size);
-    std::string vertSource = std::string((const char*)vertexDataObject.getData(), size);
+    DataObject vertexDataObject((filename + ".vert").c_str());
+    std::string vertSource = std::string((const char*)vertexDataObject.getData(), vertexDataObject.getSize());
 
-    DataObject fragmentDataObject((filename + ".frag").c_str(), &size);
-    std::string fragSource = std::string((const char*)fragmentDataObject.getData(), size);
+    DataObject fragmentDataObject((filename + ".frag").c_str());
+    std::string fragSource = std::string((const char*)fragmentDataObject.getData(), fragmentDataObject.getSize());
 
     //  compile vertex shader
     GLuint vertexShader;

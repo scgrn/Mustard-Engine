@@ -39,9 +39,8 @@ void initLocalization(std::string const& filename) {
     //  read string table
     LOG("Loading string table from <%s>", filename.c_str());
 
-    unsigned int size;
-    AB::DataObject stringDataObject(filename.c_str(), &size);
-    std::string stringData = std::string((const char*)stringDataObject.getData(), size);
+    AB::DataObject stringDataObject(filename.c_str());
+    std::string stringData = std::string((const char*)stringDataObject.getData(), stringDataObject.getSize());
 
     std::istringstream ss(stringData);
 

@@ -69,13 +69,11 @@ void Font::load(std::string const& filename) {
         LOG("Loading font <%s>", filename.c_str());
 
         TiXmlDocument *DOM;
-        unsigned int lengthRead;
-        DataObject dataObject(filename.c_str(), &lengthRead);
+        DataObject dataObject(filename.c_str());
         char *buffer = (char*)dataObject.getData();
         if (buffer == 0) {
             ERR("Couldn't open <%s>", filename.c_str());
         }
-        LOG("%d bytes read from file <%s>", lengthRead, filename.c_str());
 
         DOM = new TiXmlDocument();
         const char *xmlData = buffer;

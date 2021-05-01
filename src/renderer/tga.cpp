@@ -74,8 +74,7 @@ static void flipImage(unsigned char *data, int width, int height, int bpp) {
 }
 
 unsigned char* loadTGA(const std::string& filename, int &width, int &height, int &bpp) {
-    unsigned int fileSize;
-    DataObject dataObject(filename.c_str(), &fileSize);
+    DataObject dataObject(filename.c_str());
 
     //  read header
     unsigned char* data = dataObject.getData();
@@ -134,7 +133,7 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
 	
 	// unmapped RGB
 	if (encoding == 2) {
-		if (imageSize + 18 + data[0] > (int)fileSize) {
+		if (imageSize + 18 + data[0] > (int)dataObject.getSize()) {
 			ERR("Bad image format", 0);
 		}
 		memcpy(imageData, &data[offset], imageSize);

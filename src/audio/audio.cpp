@@ -35,51 +35,9 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-static SoLoud::Soloud gSoloud; 
-static std::map<int, SoLoud::Wav> sfx;
-static std::map<int, SoLoud::WavStream> music;
+extern Audio audio;
 
 // TODO: hashmap of looping sounds, killAllLoopingSFX()
-
-#ifdef ANDROID
-
-void initSound() {}
-extern void loadSound(int index, std::string filename);
-extern void playMusic();
-extern void pauseMusic();
-extern void playSound(int index, bool loop);
-void stopSound(int index) {}
-void closeSound() {}
-
-#else
-/*
-#include "soloud.h"
-#include "soloud_wav.h"
-#include "soloud_wavstream.h"
-
-static SoLoud::Soloud gSoloud; 
-std::map<int, SoLoud::Wav> sfx;
-std::map<int, SoLoud::WavStream> music;
-*/
-int musicHandle;
-
-
-class Sample : public Resource {
-    public:
-        void load(std::string const& filename) {
-            dataObject = new DataObject(filename.c_str(), &size);
-        }
-
-        void release() {
-            delete dataObject;
-        }
-
-        DataObject *dataObject;
-        unsigned int size;
-};
-
-ResourceManager<Sample> samples;
-
 
 //  https://youtu.be/Vjm--AqG04Y
 float dBToVolume(float dB) {
@@ -90,107 +48,127 @@ float volumeTodB(float volume) {
     return 20.0f * log10f(volume);
 }
 
+//----------------------------------------------------------------------------------------------------------------------------------
+
+void Sound::load(std::string const& filename) {
+	data = new DataObject(filename.c_str());
+
+	wav = new SoLoud::Wav();
+	wav->loadMem(data->getData(), data->getSize(), false, false);
+}
+
+void Sound::release() {
+	delete data;
+	delete wav;
+}
+
+void Sound::play(float volume, float pan, bool loop) {
+	// TODO: looping
+    if (audio.soundVolume > 0.01f) {
+        wav->stop();
+        int handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
+	}
+}
+
+void Sound::stop() {
+	wav->stop();
+}
+
+void Sound::isPlaying() {
+	// TODO: how
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------
+
+void Music::load(std::string const& filename) {
+	data = new DataObject(filename.c_str());
+	wavStream = new SoLoud::WavStream();
+	wavStream->loadMem(data->getData(), data->getSize(), false, false);
+	
+	//	TODO: load from dataObject!
+    // wavStream->load(filename.c_str());
+    wavStream->setLooping(true);
+    wavStream->setSingleInstance(true);
+}
+
+void Music::release() {
+	delete wavStream;
+}
+
+void Music::setLoopPoint(float loopPoint) {
+    wavStream->setLoopPoint(loopPoint);
+}
+
+void Music::play() {
+    musicHandle = audio.soloud->play(*wavStream);
+    audio.soloud->seek(musicHandle, 0.0f);
+    audio.soloud->setVolume(musicHandle, audio.musicVolume);
+	audio.currentMusic = this;
+}
+
+void Music::pause() {
+    audio.soloud->setPause(musicHandle, true);
+}
+
+void Music::resume() {
+    audio.soloud->setPause(musicHandle, false);
+}
+
+void Music::fadeIn(float duration) {
+    musicHandle = audio.soloud->play(*wavStream);
+    audio.soloud->seek(musicHandle, 0.0f);
+    audio.soloud->setVolume(musicHandle, 0.0f);
+    audio.soloud->fadeVolume(musicHandle, audio.musicVolume, duration);
+	audio.currentMusic = this;	
+}
+
+void Music::fadeOut(float duration) {
+    audio.soloud->fadeVolume(musicHandle, 0, duration);
+    audio.soloud->scheduleStop(musicHandle, duration);
+}
+
+void Music::stop() {
+    audio.soloud->stop(musicHandle);
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------
+
 bool Audio::startup() {
 	LOG("Audio subsystem startup", 0);
 
-    gSoloud.init(); // Initialize SoLoud
+	soloud = new SoLoud::Soloud();
+    soloud->init(SoLoud::Soloud::CLIP_ROUNDOFF, SoLoud::Soloud::MINIAUDIO, SoLoud::Soloud::AUTO, SoLoud::Soloud::AUTO);
+	
+	//	check for error
+	
+	//	print device info
+	
+	
 	initialized = true;
 	
 	return true;
 }
 
 void Audio::shutdown() {
+	// TODO: do we need to kill resource manager first??
+	
 	LOG("Audio subsystem shutdown", 0);
 
     // TODO: iterate through both sfx and music hashmaps and call stop()
     //  ...see if that fixes mutex crash at shutdown
+	extern ResourceManager<Sound> sounds;
+	extern ResourceManager<Music> music;
 
-    stopMusic();
-    gSoloud.deinit(); // Clean up!
+	sounds.clear();
+	music.clear();
+	
+	if (currentMusic) {
+		currentMusic->stop();
+	}
+	
+    soloud->deinit(); // Clean up!
+	delete soloud;
 }
 
-void Audio::loadSound(int index, std::string filename) {
-    filename = "assets/" + filename;
-    sfx[index].load(filename.c_str());
-    // TODO: error check
-}
-
-void Audio::loadMusic(int index, std::string filename, float loopPoint) {
-    filename = "assets/" + filename;
-    music[index].load(filename.c_str());
-    music[index].setLoopPoint(loopPoint);
-    music[index].setLooping(true);
-    music[index].setSingleInstance(true);
-
-    // TODO: error check
-}
-
-void Audio::playMusic(int index) {
-    LOG("playMusic() called, index: %d", index);
-
-    musicHandle = gSoloud.play(music[index]);
-    gSoloud.seek(musicHandle, 0.0f);
-    gSoloud.setVolume(musicHandle, musicVolume);
-}
-
-void Audio::pauseMusic() {
-    gSoloud.setPause(musicHandle, true);
-}
-
-void Audio::resumeMusic() {
-    gSoloud.setPause(musicHandle, false);
-}
-
-void Audio::fadeMusicIn(int index, float duration) {
-    LOG("fadeMusicIn() called, index: %d", index);
-
-    musicHandle = gSoloud.play(music[index]);
-    gSoloud.seek(musicHandle, 0.0f);
-    gSoloud.setVolume(musicHandle, 0.0f);
-    gSoloud.fadeVolume(musicHandle, musicVolume, duration);
-}
-
-void Audio::fadeMusicOut(float duration) {
-    gSoloud.fadeVolume(musicHandle, 0, duration);
-    gSoloud.scheduleStop(musicHandle, duration);
-}
-
-void Audio::stopMusic() {
-    gSoloud.stop(musicHandle);
-}
-
-void Audio::playSound(int index, bool loop, float volume) {
-    if (soundVolume > 0.01f) {
-        sfx[index].stop();
-        int handle = gSoloud.playClocked(1.0f / 60.0f, sfx[index]);
-        gSoloud.setVolume(handle, volume * soundVolume);
-#ifdef DEBUG
-        extern void recordSFX(int index);
-        recordSFX(index);
-#endif
-    }
-}
-
-void Audio::stopSound(int index) {
-    sfx[index].stop();
-}
-
-bool Audio::isPlaying(int index) {
-	// TODO: how?
-	//return (!sfx[index].hasEnded());
-
-	return false;
-}
-
-void Audio::setSoundVolume(float volume) {
-    soundVolume = volume;
-}
-
-void Audio::setMusicVolume(float volume) {
-    musicVolume = volume;
-    gSoloud.setVolume(musicHandle, musicVolume);
-}
-
-#endif	// desktop
-
+		
 }   //  namespace

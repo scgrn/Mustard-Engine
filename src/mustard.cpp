@@ -38,13 +38,18 @@ Console console;
 
 ResourceManager<Sprite> sprites;
 ResourceManager<Shader> shaders;
+ResourceManager<Sound> sounds;
+ResourceManager<Music> music;
+
 std::map<int, BatchRenderer*> batchRenderers;
 
 void startup(Application *app) {
 	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
 	LOG(std::string(79, '-').c_str(), 0);
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER) != 0) {
+        ERR("Unable to initialize SDL: %s", SDL_GetError());
+	}
 	
 	LOG("Platform: %s", SDL_GetPlatform());
 	LOG("CPU count: %d", SDL_GetCPUCount());
@@ -77,6 +82,8 @@ void shutdown() {
 	fileSystem.shutdown();
 
     SDL_Quit();
+	
+	LOG("Goodbye.", 0);
 }
 
 }
