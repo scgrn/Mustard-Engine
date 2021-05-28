@@ -97,6 +97,13 @@ static int luaStopSound(lua_State* luaVM) {
     return 0;
 }
 
+static int luaIsPlaying(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    lua_pushboolean(luaVM, sounds.get(index)->isPlaying());
+	
+	return 1;
+}
+
 static int luaLoadMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     std::string filename = std::string(lua_tostring(luaVM, 2));
@@ -180,6 +187,7 @@ void registerAudioFunctions() {
         { "loadSound", luaLoadSound},
         { "playSound", luaPlaySound},
         { "stopSound", luaStopSound},
+		{ "isPlaying", luaIsPlaying},
 
         { "loadMusic", luaLoadMusic},
         { "playMusic", luaPlayMusic},

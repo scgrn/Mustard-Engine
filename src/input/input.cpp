@@ -29,6 +29,8 @@ freely, subject to the following restrictions:
 #include "../core/log.h"
 #include "../core/fileSystem.h"
 
+#include "gamepad.cpp"
+
 namespace AB {
 
 #define X(a, b) a = b,
@@ -44,14 +46,26 @@ static const char *strings[] = {SCANCODES};
 
 extern Script script;
 
-static const int MAX_GAMEPADS = 4;
-static const float DEFAULT_DEADZONE = 0.2f;
 
 extern std::vector<SDL_Event> eventQueue;
 
 static const Uint8 *keyStates;
 static Uint8 *prevKeyStates;
 static int numKeys;
+
+/*
+struct Mouse {
+    int x, y;
+    bool buttons[3];
+} mouse;
+*/
+
+// --------- GAMEPAD STUFF --------------------------------------------------------------------------------------------------------------
+
+static const int MAX_GAMEPADS = 4;
+static const float DEFAULT_DEADZONE = 0.2f;
+
+GamepadController gamepadController;
 
 struct Gamepad {
     SDL_GameController* gameController;
@@ -60,13 +74,6 @@ struct Gamepad {
 };
 
 static Gamepad gamepads[MAX_GAMEPADS];
-
-/*
-struct Mouse {
-    int x, y;
-    bool buttons[3];
-} mouse;
-*/
 
 //  returns -1 if not found
 static int getGamepadIndexByID(SDL_JoystickID const id) {
@@ -80,62 +87,6 @@ static int getGamepadIndexByID(SDL_JoystickID const id) {
     LOG("A WARNING: GAMEPAD GET INDEX BY ID FAILED! id: %d", id);
 
     return -1;
-}
-
-bool Input::startup() {
-	LOG("Input subsystem startup", 0);
-	
-	LOG("SCANCODE 84: %s", strings[84]);
-	
-	// TODO: WTF
-	// LOG("SCANCODE FOR A: %d", Scancodes.A);
-	
-    //  check gamepads
-	int ret = SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
-    if (ret != 0) {
-        LOG("Error initializing SDL controller subsystem: %d", ret);
-    }
-
-    //  try to read gamepad mappings
-    //  TODO: check local file first, fall back to archive
-    DataObject dataObject = DataObject("gamecontrollerdb.txt");
-    ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), dataObject.getSize()), 0);
-    // ret = SDL_GameControllerAddMappingsFromFile("assets/gamecontrollerdb.txt");
-    LOG("Added gamepad mappings: %d", ret);
-
-    for (int i = 0; i < MAX_GAMEPADS; i++) {
-        gamepads[i].gameController = nullptr;
-        gamepads[i].joystickID = -1;
-        gamepads[i].deadZone = DEFAULT_DEADZONE;
-    }
-
-    SDL_JoystickEventState(SDL_ENABLE);
-    LOG("Num joysticks: %i", SDL_NumJoysticks());
-
-    int index = 0;
-    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-        if (SDL_IsGameController(i)) {
-            gamepads[index].gameController = SDL_GameControllerOpen(i);
-            if (gamepads[index].gameController) {
-                SDL_Joystick *joy = SDL_GameControllerGetJoystick(gamepads[index].gameController);
-                gamepads[index].joystickID = SDL_JoystickInstanceID(joy);
-                LOG("Controller %d initialized: %d", index, i);
-
-                index++;
-            } else {
-                LOG("Could not open gamecontroller %d: %s\n", i, SDL_GetError());
-            }
-        }
-    }
-
-    //  init keyboard
-    keyStates = SDL_GetKeyboardState(&numKeys);
-    prevKeyStates = new Uint8[numKeys];
-    update();
-
-	initialized = true;
-	
-	return true;
 }
 
 static void addGamepad(int id) {
@@ -185,6 +136,95 @@ static void removeGamepad(int id) {
     }
 }
 
+int Input::numGamepads() {
+    return SDL_NumJoysticks();
+}
+
+void Input::setDeadzone(int gamepadIndex, float deadZone) {
+    if (gamepadIndex > 0 && gamepadIndex < MAX_GAMEPADS) {
+        gamepads[gamepadIndex].deadZone = deadZone;
+    } else {
+        //  TODO: log warning level
+        LOG("WARNING: gamepad index out of range: %d", gamepadIndex);
+    }
+}
+
+
+bool Input::gamepadIsPressed(int gamepadIndex, int button) {
+    SDL_GameControllerButton sdlButton;
+
+    switch (button) {
+        case 1: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_LEFT; break;
+        case 2: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_RIGHT; break;
+        case 3: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_UP; break;
+        case 4: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_DOWN; break;
+        case 5: sdlButton = SDL_CONTROLLER_BUTTON_A; break;
+        case 6: sdlButton = SDL_CONTROLLER_BUTTON_B; break;
+        case 7: sdlButton = SDL_CONTROLLER_BUTTON_START; break;
+        default: sdlButton = SDL_CONTROLLER_BUTTON_INVALID; break;
+    }
+    return (SDL_GameControllerGetButton(gamepads[gamepadIndex].gameController, sdlButton) == 1);
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------------------
+
+bool Input::startup() {
+	LOG("Input subsystem startup", 0);
+	
+	LOG("SCANCODE 84: %s", strings[84]);
+	
+	// TODO: WTF
+	// LOG("SCANCODE FOR A: %d", Scancodes.A);
+	
+    //  check gamepads
+	int ret = SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
+    if (ret != 0) {
+        LOG("Error initializing SDL controller subsystem: %d", ret);
+    }
+
+    //  try to read gamepad mappings
+    //  TODO: check local file first, fall back to archive
+    DataObject dataObject = DataObject("gamecontrollerdb.txt");
+    ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), dataObject.getSize()), 0);
+    // ret = SDL_GameControllerAddMappingsFromFile("assets/gamecontrollerdb.txt");
+    LOG("Added gamepad mappings: %d", ret);
+
+    for (int i = 0; i < MAX_GAMEPADS; i++) {
+        gamepads[i].gameController = nullptr;
+        gamepads[i].joystickID = -1;
+        gamepads[i].deadZone = DEFAULT_DEADZONE;
+    }
+
+    SDL_JoystickEventState(SDL_ENABLE);
+    LOG("Num joysticks: %i", SDL_NumJoysticks());
+/*
+    int index = 0;
+    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+        if (SDL_IsGameController(i)) {
+            gamepads[index].gameController = SDL_GameControllerOpen(i);
+            if (gamepads[index].gameController) {
+                SDL_Joystick *joy = SDL_GameControllerGetJoystick(gamepads[index].gameController);
+                gamepads[index].joystickID = SDL_JoystickInstanceID(joy);
+                LOG("Controller %d initialized: %d", index, i);
+
+                index++;
+            } else {
+                LOG("Could not open gamecontroller %d: %s\n", i, SDL_GetError());
+            }
+        }
+    }
+*/
+    //  init keyboard
+    keyStates = SDL_GetKeyboardState(&numKeys);
+    prevKeyStates = new Uint8[numKeys];
+    update();
+
+	initialized = true;
+	
+	return true;
+}
+
+
 void Input::update() {
     memcpy(prevKeyStates, keyStates, numKeys);
 
@@ -203,15 +243,18 @@ void Input::update() {
         */
 
         if (event->type == SDL_JOYDEVICEADDED) {
-            LOG("Joystick added", 0);
+            LOG("Gamepad added", 0);
             addGamepad(event->cdevice.which);
             script.execute("AB.onGamepadConnected()");
         }
         if (event->type == SDL_JOYDEVICEREMOVED) {
-            LOG("Joystick removed", 0);
+            LOG("Gamepad removed", 0);
             removeGamepad(event->cdevice.which);
             script.execute("AB.onGamepadDisconnected()");
         }
+		
+		gamepadController.processEvent(*event);
+		
         //if (event->type == SDL_GAME) {   // say
         //}
     }
@@ -264,36 +307,6 @@ int[BUFFER_SIZE] Input::getKeyBuffer() {
 */	
 void Input::showCursor(bool show) {
     SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
-}
-
-int Input::numGamepads() {
-    return SDL_NumJoysticks();
-}
-
-void Input::setDeadzone(int gamepadIndex, float deadZone) {
-    if (gamepadIndex > 0 && gamepadIndex < MAX_GAMEPADS) {
-        gamepads[gamepadIndex].deadZone = deadZone;
-    } else {
-        //  TODO: log warning level
-        LOG("WARNING: gamepad index out of range: %d", gamepadIndex);
-    }
-}
-
-
-bool Input::gamepadIsPressed(int gamepadIndex, int button) {
-    SDL_GameControllerButton sdlButton;
-
-    switch (button) {
-        case 1: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_LEFT; break;
-        case 2: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_RIGHT; break;
-        case 3: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_UP; break;
-        case 4: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_DOWN; break;
-        case 5: sdlButton = SDL_CONTROLLER_BUTTON_A; break;
-        case 6: sdlButton = SDL_CONTROLLER_BUTTON_B; break;
-        case 7: sdlButton = SDL_CONTROLLER_BUTTON_START; break;
-        default: sdlButton = SDL_CONTROLLER_BUTTON_INVALID; break;
-    }
-    return (SDL_GameControllerGetButton(gamepads[gamepadIndex].gameController, sdlButton) == 1);
 }
 
 }   //  namespace

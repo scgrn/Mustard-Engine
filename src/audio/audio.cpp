@@ -74,8 +74,8 @@ void Sound::stop() {
 	wav->stop();
 }
 
-void Sound::isPlaying() {
-	// TODO: how
+bool Sound::isPlaying() {
+	return audio.soloud->countAudioSource(*wav) > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -85,8 +85,6 @@ void Music::load(std::string const& filename) {
 	wavStream = new SoLoud::WavStream();
 	wavStream->loadMem(data->getData(), data->getSize(), false, false);
 	
-	//	TODO: load from dataObject!
-    // wavStream->load(filename.c_str());
     wavStream->setLooping(true);
     wavStream->setSingleInstance(true);
 }
@@ -150,12 +148,8 @@ bool Audio::startup() {
 }
 
 void Audio::shutdown() {
-	// TODO: do we need to kill resource manager first??
-	
 	LOG("Audio subsystem shutdown", 0);
 
-    // TODO: iterate through both sfx and music hashmaps and call stop()
-    //  ...see if that fixes mutex crash at shutdown
 	extern ResourceManager<Sound> sounds;
 	extern ResourceManager<Music> music;
 

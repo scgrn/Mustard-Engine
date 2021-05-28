@@ -34,6 +34,7 @@ extern Script script;
 
 bool Window::startup(Application *app) {
 	LOG("Window subsystem startup", 0);
+	
 	window = NULL;
 
 	setVideoMode(app);
@@ -145,11 +146,12 @@ void Window::setVideoMode(Application *app) {
 
         window = SDL_CreateWindow(title.c_str(), windowXPos, windowYPos, xRes, yRes, windowFlags);
 
+        glContext = SDL_GL_CreateContext(window);
+
         // this *should* enable vsync
         SDL_GL_SetSwapInterval(vsync ? 1 : 0);
         SDL_SetWindowGrab(window, SDL_FALSE);
 
-        glContext = SDL_GL_CreateContext(window);
 
         //  try to enable adaptive vsync, fall back to regular vsync
         //if (SDL_GL_SetSwapInterval(-1) == -1) {
@@ -169,8 +171,6 @@ void Window::setVideoMode(Application *app) {
         }
         SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 	}
-	
-
 
     SDL_DisableScreenSaver();
 	

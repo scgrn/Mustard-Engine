@@ -47,7 +47,7 @@ void startup(Application *app) {
 	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
 	LOG(std::string(79, '-').c_str(), 0);
 
-	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER) != 0) {
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
         ERR("Unable to initialize SDL: %s", SDL_GetError());
 	}
 	

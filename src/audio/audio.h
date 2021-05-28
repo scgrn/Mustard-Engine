@@ -46,7 +46,7 @@ class Sound : public Resource {
 		
 		void play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
 		void stop();
-		void isPlaying();
+		bool isPlaying();
 		
 	protected:
 		SoLoud::Wav *wav;
@@ -76,8 +76,8 @@ class Music : public Resource {
 
 class Audio : public SubSystem {
 	public:
-		bool startup();
-		void shutdown();
+		bool startup() override;
+		void shutdown() override;
 		
 		float soundVolume = 1.0f;
 		float musicVolume = 1.0f;

@@ -47,29 +47,29 @@ class Input : public SubSystem {
 		void shutdown() override;
 		void update(); //  has to be called before events are pumped or after update is called
 
+		//	keyboard functions
 		bool wasPressed(int key);
 		bool isPressed(int key);    // 6y77
-		bool wasReleased(int key);  //  -Rilo, 4/19/20
-
+		bool wasReleased(int key);  //  -Rilo Kitty, 4/19/20
 		//int INKEY$();						//	pops oldest keypress
 		//int[BUFFER_SIZE] getKeyBuffer();
 		
+		//	mouse functions
 		void showCursor(bool show);
 
+		//	touch functions
+		
+		//	gamepad functions
 		int numGamepads();
 		bool gamepadWasPressed(int gamepadIndex, int button);
 		bool gamepadIsPressed(int gamepadIndex, int button);
 		bool gamepadWasReleased(int gamepadIndex, int button);
 		float gamepadAxis(int gamepadIndex, int axis);
 		void setDeadzone(int gamepadIndex, float deadZone);
-
+		
 	private:
 		int keyBuffer[BUFFER_SIZE];
 };
-
-
-//  TODO: need to poll mouse / touch coords, press states
-
 
 }   //  namespace
 

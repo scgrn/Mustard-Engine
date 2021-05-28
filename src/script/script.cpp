@@ -97,7 +97,7 @@ bool Script::startup() {
         { "onMouseWheelMoved", luaDummyFunc},
 
         { "onGamepadConnected", luaDummyFunc},
-        { "onGamepadDisonnected", luaDummyFunc},
+        { "onGamepadDisconnected", luaDummyFunc},
         { "onGamepadPressed", luaDummyFunc},
         { "onGamepadReleased", luaDummyFunc},
         { "onGamepadAxisMoved", luaDummyFunc},
