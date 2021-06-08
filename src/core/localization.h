@@ -32,8 +32,8 @@ namespace AB {
 
 enum Language {ENGLISH, FRENCH, ITALIAN, GERMAN, SPANISH, LAST};
 
-std::map<std::string, std::string> strings[LAST];
-Language language;
+extern std::map<std::string, std::string> strings[LAST];
+extern Language language;
 
 void initLocalization(std::string const& filename);
 

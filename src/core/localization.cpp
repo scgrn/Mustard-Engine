@@ -32,6 +32,9 @@ freely, subject to the following restrictions:
 #include "../script/script.h"
 
 namespace AB {
+	
+std::map<std::string, std::string> strings[LAST];
+Language language;
 
 //  TODO: make this a lua function
 void initLocalization(std::string const& filename) {

@@ -14,18 +14,20 @@ IF "%AB_PROJECTS_ROOT%"=="" (
 	set /p AB_PROJECTS_ROOT="ENTER PROJECTS ROOT: "
 )
 
-:MAIN_MENU
 cls
+:MAIN_MENU
 echo MUSTARD ENGINE
 echo.
 echo  [1] NEW PROJECT
-echo  [2] LOAD PROJECT
-echo  [3] EXIT
+echo  [2] LIST PROJECTS
+echo  [3] LOAD PROJECT
+echo  [4] EXIT
 echo.
 
-choice /c:123 /n /m "SELECT: "
+choice /c:1234 /n /m "SELECT: "
 if %errorlevel% == 1 goto NEW_PROJECT
-if %errorlevel% == 2 goto LOAD_PROJECT
+if %errorlevel% == 2 goto LIST_PROJECTS
+if %errorlevel% == 3 goto LOAD_PROJECT
 goto EXIT
 
 :NEW_PROJECT
@@ -48,6 +50,11 @@ popd
 goto BUILD
 
 goto PROJECT_MENU
+
+:LIST_PROJECTS
+cls
+dir /b /ad /p
+goto MAIN_MENU
 
 :LOAD_PROJECT
 cls

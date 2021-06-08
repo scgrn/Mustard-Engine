@@ -117,6 +117,7 @@ bool Script::startup() {
 	registerFontFunctions();
 	registerInputFunctions();
 	registerAudioFunctions();
+	registerLocalizationFunctions();
 	
 #ifdef DEBUG
     extern int luaPrint (lua_State *L);

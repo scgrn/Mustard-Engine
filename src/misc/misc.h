@@ -61,8 +61,9 @@ inline T clamp(T val, T minVal, T maxVal) {
     return min(max(val, minVal), maxVal);
 }
 
-float inline round(float val) {
-    return floor(val + 0.5f);
+template<class T>
+inline T round(T val) {
+    return (val > 0.0) ? floor(val + 0.5) : ceil(val - 0.5);
 }
 
 float inline toRadians(float val) {
@@ -85,6 +86,11 @@ inline int nextPowerOfTwo(int v) {
 	v++;
 
 	return v;
+}
+
+template<class T>
+T greatestCommonDevisor(T a, T b) {
+    return (b == 0) ? a : greatestCommonDevisor(b, a % b);
 }
 
 template<class T>
@@ -112,4 +118,4 @@ inline std::string toString(T val, bool groupDigits = true) {
 
 }   //  namespace
 
-#endif  //  VISAGE_MISC_H
+#endif  
