@@ -68,6 +68,11 @@ void startup(Application *app) {
 }
 
 void shutdown() {
+	shaders.clear(true);
+	sprites.clear(true);
+	sounds.clear(true);
+	music.clear(true);
+	
 	LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
 	
 	//  ... and shutdown.

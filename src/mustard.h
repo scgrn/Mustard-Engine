@@ -57,6 +57,8 @@ namespace AB {
 	extern ResourceManager<Shader> shaders;
 	extern std::map<int, BatchRenderer*> batchRenderers;
 
+	extern ResourceManager<Sound> sounds;
+	extern ResourceManager<Music> music;
 }
 
 #endif // AB_H

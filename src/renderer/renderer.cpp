@@ -94,6 +94,8 @@ bool Renderer::startup() {
 	batchRenderers[0] = new BatchRenderer();
 	//batchRenderers.insert(std::pair<int, BatchRenderer>(0, new BatchRenderer()));
 	
+    CALL_GL(glGenVertexArrays(1, &fullscreenQuadVAO));
+
 	initialized = true;
 	
 	return true;
@@ -105,6 +107,8 @@ void Renderer::shutdown() {
 	for (std::map<int, BatchRenderer*>::iterator i = batchRenderers.begin(); i != batchRenderers.end(); i++) {
 		delete i->second;
 	}
+
+    glDeleteBuffers(1, &fullscreenQuadVAO);
 
 	glDeleteTextures(1, &whiteTexture);
     glDeleteBuffers(1, &ubo);
@@ -133,7 +137,13 @@ void Renderer::clear(float r, float g, float b, float a) {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Renderer::renderFullscreenQuad() {
+	CALL_GL(glBindVertexArray(fullscreenQuadVAO));
+	CALL_GL(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+}
+
 void Renderer::renderQuad(const Quad& quad) {
+	ERR("NOT IMPLEMENTED!", 0);
 }
 
 void Renderer::endScene() {

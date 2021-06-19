@@ -57,8 +57,7 @@ void checkOpenGLError(const char* stmt, const char* fname, int line) {
     bool errorOccured = false;
     while (GLenum errorCode = glGetError() != GL_NO_ERROR) {
         std::string error;
-        switch (errorCode)
-        {
+        switch (errorCode) {
             case GL_INVALID_ENUM:							error = "INVALID_ENUM"; break;
             case GL_INVALID_VALUE:							error = "INVALID_VALUE"; break;
             case GL_INVALID_OPERATION:						error = "INVALID_OPERATION"; break;
