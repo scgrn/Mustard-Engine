@@ -39,6 +39,19 @@ freely, subject to the following restrictions:
 #include "core/log.h"
 #include "misc/console.h"
 
+#include "renderer/sprite.h"
+#include "renderer/palette.h"
+#include "renderer/font.h"
+#include "renderer/renderTarget.h"
+#include "renderer/colorTransform.h"
+#include "renderer/batchRenderer.h"
+#include "renderer/skybox.h"
+#include "renderer/model.h"
+
+#include "math/random.h"
+#include "math/perlin.h"
+#include "misc/misc.h"
+
 namespace AB {
 	extern FileSystem fileSystem;
 	extern Renderer renderer;
@@ -55,6 +68,7 @@ namespace AB {
 	
 	extern ResourceManager<Sprite> sprites;
 	extern ResourceManager<Shader> shaders;
+	extern ResourceManager<Font> fonts;
 	extern std::map<int, BatchRenderer*> batchRenderers;
 
 	extern ResourceManager<Sound> sounds;

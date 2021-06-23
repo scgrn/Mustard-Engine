@@ -37,6 +37,7 @@ class RenderTarget {
         void end();
 
         GLuint getTexture() { return texture; }
+        GLuint fbo;
 
     protected:
         RenderTarget() {}
@@ -47,7 +48,6 @@ class RenderTarget {
 
         GLuint texture;
         GLuint depthStencilBuffer;
-        GLuint fbo;
 
 };
 

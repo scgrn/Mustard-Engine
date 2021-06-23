@@ -43,15 +43,12 @@ RenderTarget::RenderTarget(int width, int height, bool depthStencil) {
 	
 	CALL_GL(glGenTextures(1, &texture));
 	CALL_GL(glBindTexture(GL_TEXTURE_2D, texture));
-	
-	//	TODO: s/b RGBA??
-	CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0,GL_RGB, GL_UNSIGNED_BYTE, 0));
+	CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0));
 
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-	
 
 	//  TODO: needs stencil!
 	if (hasDepthStencil) {
@@ -66,11 +63,14 @@ RenderTarget::RenderTarget(int width, int height, bool depthStencil) {
 	GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
 	CALL_GL(glDrawBuffers(1, drawBuffers));
 	
-	
-	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		ERR("Couldn't create frame buffer!", 0);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		CALL_GL(glDeleteFramebuffers(1, &fbo));
+		CALL_GL(glDeleteTextures(1, &texture));
 
-		// TODO: clean up
+		if (hasDepthStencil) {
+			CALL_GL(glDeleteTextures(1, &depthStencilBuffer));
+		}
+		ERR("Couldn't create frame buffer!", 0);
 	}
 
 	CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
@@ -81,22 +81,22 @@ RenderTarget::~RenderTarget() {
     CALL_GL(glDeleteTextures(1, &texture));
 
     if (hasDepthStencil) {
-        glDeleteTextures(1, &depthStencilBuffer);
+        CALL_GL(glDeleteTextures(1, &depthStencilBuffer));
     }
 }
 
 void RenderTarget::clear() {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    CALL_GL(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
     if (hasDepthStencil) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        CALL_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
     } else {
-        glClear(GL_COLOR_BUFFER_BIT);
+        CALL_GL(glClear(GL_COLOR_BUFFER_BIT));
     }
 }
 
 void RenderTarget::begin() {
 	CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
-	CALL_GL(glViewport(0,0,width,height));
+	CALL_GL(glViewport(0, 0, width, height));
 }
 
 void RenderTarget::end() {

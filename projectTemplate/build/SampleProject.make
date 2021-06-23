@@ -35,7 +35,7 @@ endef
 
 ifeq ($(config),debug_win64)
 TARGETDIR = ../bin/Debug
-TARGET = $(TARGETDIR)/SPACEWAR.EXE.exe
+TARGET = $(TARGETDIR)/vermilionbakesale.exe
 OBJDIR = obj/win64/Debug
 DEFINES += -DWIN32 -DWINDOWS_VERSION -DWITH_SDL2 -DLUA_COMPAT_ALL -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -Wno-pragmas -Wpsabi -msse2
@@ -44,7 +44,7 @@ ALL_LDFLAGS += $(LDFLAGS) -L/projects/Mustard/bin -L/projects/Mustard/vendor/SDL
 
 else ifeq ($(config),release_win64)
 TARGETDIR = ../bin/Release
-TARGET = $(TARGETDIR)/SPACEWAR.EXE.exe
+TARGET = $(TARGETDIR)/vermilionbakesale.exe
 OBJDIR = obj/win64/Release
 DEFINES += -DWIN32 -DWINDOWS_VERSION -DWITH_SDL2 -DLUA_COMPAT_ALL -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -Wno-pragmas -Wpsabi -msse2

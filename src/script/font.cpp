@@ -29,20 +29,20 @@ Font loading and rendering
 #include "../pch.h"
 
 #include "script.h"
+#include "../renderer/font.h"
 
 namespace AB {
 
 extern Script script;
+extern ResourceManager<Font> fonts;
 
 //----------------------------------------------------------------- Text functions --------------------------------
-
-#if 0
 
 static int luaLoadFont(lua_State* luaVM) {
     int fontIndex = (int)lua_tonumber(luaVM, 1);
     std::string filename = std::string(lua_tostring(luaVM, 2));
 
-    AB::graphics->fonts.mapResource(fontIndex, filename);
+    fonts.mapResource(fontIndex, filename);
 
     return 0;
 }
@@ -68,7 +68,7 @@ static int luaPrintString(lua_State* luaVM) {
 		default: align = Font::LEFT;
 	}
 
-    graphics->fonts.get(fontIndex)->printString(x, y, scale, align, str);
+    fonts.get(fontIndex)->printString(0, x, y, scale, align, str);
 
 	return 0;
 }
@@ -78,16 +78,15 @@ static int luaStringLength(lua_State* luaVM) {
     std::string str = std::string(lua_tostring(luaVM, 2));
     float scale = (float)lua_tonumber(luaVM, 3);
 
+	//	why
     // scale /= 36.0f;
 
-	lua_pushnumber(luaVM, graphics->fonts.get(fontIndex)->stringLength(str, scale));
+	lua_pushnumber(luaVM, fonts.get(fontIndex)->stringLength(str, scale));
 
     return 1;
 }
-#endif
 
 void registerFontFunctions() {
-	/*
     static const luaL_Reg fontFuncs[] = {
         { "loadFont", luaLoadFont},
         { "printString", luaPrintString},
@@ -96,7 +95,6 @@ void registerFontFunctions() {
         { NULL, NULL }
     };
     script.registerFuncs("AB", "font", fontFuncs);
-	*/
 }
 
 }

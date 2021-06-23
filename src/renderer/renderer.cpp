@@ -87,8 +87,8 @@ bool Renderer::startup() {
 	CALL_GL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 	LOG_EXP(sizeof(uniforms));
 	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+	CALL_GL(glEnable(GL_BLEND));
+	CALL_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	
 	batchRenderers.clear();
 	batchRenderers[0] = new BatchRenderer();
@@ -108,10 +108,10 @@ void Renderer::shutdown() {
 		delete i->second;
 	}
 
-    glDeleteBuffers(1, &fullscreenQuadVAO);
+    CALL_GL(glDeleteBuffers(1, &fullscreenQuadVAO));
 
-	glDeleteTextures(1, &whiteTexture);
-    glDeleteBuffers(1, &ubo);
+	CALL_GL(glDeleteTextures(1, &whiteTexture));
+    CALL_GL(glDeleteBuffers(1, &ubo));
 
 	initialized = false;
 }
@@ -133,13 +133,14 @@ void Renderer::defineRenderGroup(int index, Shader *shader, glm::mat4 colorTrans
 */
 
 void Renderer::clear(float r, float g, float b, float a) {
-	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT);
+	CALL_GL(glClearColor(r, g, b, a));
+	CALL_GL(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 void Renderer::renderFullscreenQuad() {
 	CALL_GL(glBindVertexArray(fullscreenQuadVAO));
 	CALL_GL(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+	CALL_GL(glBindVertexArray(0));
 }
 
 void Renderer::renderQuad(const Quad& quad) {

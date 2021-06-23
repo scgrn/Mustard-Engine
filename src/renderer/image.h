@@ -37,6 +37,17 @@ class Image {
 		Image(const std::string& tgaFilename);
 		~Image();
 		
+        inline void pset(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
+            //  TODO: implement alpha blending?
+
+            int ofs = ((y * width) + x) * 4;
+
+            data[ofs + 0] = r;
+            data[ofs + 1] = g;
+            data[ofs + 2] = b;
+            data[ofs + 3] = a;
+        }
+		
         unsigned char *data;
         int width, height;
 		int imageSize;	// in bytes

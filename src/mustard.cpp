@@ -38,6 +38,7 @@ Console console;
 
 ResourceManager<Sprite> sprites;
 ResourceManager<Shader> shaders;
+ResourceManager<Font> fonts;
 ResourceManager<Sound> sounds;
 ResourceManager<Music> music;
 
@@ -70,6 +71,7 @@ void startup(Application *app) {
 void shutdown() {
 	shaders.clear(true);
 	sprites.clear(true);
+	fonts.clear(true);
 	sounds.clear(true);
 	music.clear(true);
 	

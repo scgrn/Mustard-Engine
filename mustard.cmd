@@ -53,7 +53,12 @@ goto PROJECT_MENU
 
 :LIST_PROJECTS
 cls
+pushd "%AB_PROJECTS_ROOT%
 dir /b /ad /p
+echo.
+popd
+pause
+cls
 goto MAIN_MENU
 
 :LOAD_PROJECT
@@ -89,6 +94,7 @@ if %ERRORLEVEL% == 6 goto PACKAGE
 if %ERRORLEVEL% == 7 goto OPEN_CMD
 if %ERRORLEVEL% == 8 goto OPEN_FOLDER
 popd
+cls
 goto MAIN_MENU
 
 :RUN
