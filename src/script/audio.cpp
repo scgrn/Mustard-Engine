@@ -163,8 +163,10 @@ static int luaFadeMusicOut(lua_State* luaVM) {
 }
 
 static int luaStopMusic(lua_State* luaVM) {
-    audio.currentMusic->stop();
-
+	if (audio.currentMusic) {
+		audio.currentMusic->stop();
+	}
+	
     return 0;
 }
 

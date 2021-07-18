@@ -74,6 +74,7 @@ RenderTarget::RenderTarget(int width, int height, bool depthStencil) {
 	}
 
 	CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+	CALL_GL(glBindTexture(GL_TEXTURE_2D, texture));
 }
 
 RenderTarget::~RenderTarget() {
@@ -86,7 +87,7 @@ RenderTarget::~RenderTarget() {
 }
 
 void RenderTarget::clear() {
-    CALL_GL(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
+    CALL_GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     if (hasDepthStencil) {
         CALL_GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
     } else {

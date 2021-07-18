@@ -171,7 +171,7 @@ bool Input::gamepadIsPressed(int gamepadIndex, int button) {
 bool Input::startup() {
 	LOG("Input subsystem startup", 0);
 	
-	LOG("SCANCODE 84: %s", strings[84]);
+	// LOG("SCANCODE 84: %s", strings[84]);
 	
 	// TODO: WTF
 	// LOG("SCANCODE FOR A: %d", Scancodes.A);

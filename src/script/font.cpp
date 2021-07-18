@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 */
 
 /**
-Font loading and rendering
+Font loading and rendering. Currently only supports <a href="http://www.angelcode.com/products/bmfont/">AngelCode BM font format</a>
 */
 
 #include "../pch.h"
@@ -35,9 +35,14 @@ namespace AB {
 
 extern Script script;
 extern ResourceManager<Font> fonts;
+extern std::map<int, BatchRenderer*> batchRenderers;
 
 //----------------------------------------------------------------- Text functions --------------------------------
 
+///	Loads a font
+// @param index Font index
+// @param filename Filename
+// @function AB.font.loadFont
 static int luaLoadFont(lua_State* luaVM) {
     int fontIndex = (int)lua_tonumber(luaVM, 1);
     std::string filename = std::string(lua_tostring(luaVM, 2));
@@ -47,13 +52,23 @@ static int luaLoadFont(lua_State* luaVM) {
     return 0;
 }
 
+/// Prints a string
+// @param layer Rendering layer
+// @param index Font index
+// @param x X position
+// @param y Y position
+// @param scale Scale
+// @param alignment Alignment (AB.font.LEFT, AB.font.CENTER, AB.font.RIGHT)
+// @param str String to print
+// @function AB.font.printString
 static int luaPrintString(lua_State* luaVM) {
-    int fontIndex = (int)lua_tonumber(luaVM, 1);
-    float x = (float)lua_tonumber(luaVM, 2);
-    float y = (float)lua_tonumber(luaVM, 3);
-    float scale = (float)lua_tonumber(luaVM, 4);
-    int alignment = (int)lua_tonumber(luaVM, 5);
-    std::string str = std::string(lua_tostring(luaVM, 6));
+	int layer = (int)lua_tonumber(luaVM, 1);
+    int fontIndex = (int)lua_tonumber(luaVM, 2);
+    float x = (float)lua_tonumber(luaVM, 3);
+    float y = (float)lua_tonumber(luaVM, 4);
+    float scale = (float)lua_tonumber(luaVM, 5);
+    int alignment = (int)lua_tonumber(luaVM, 6);
+    std::string str = std::string(lua_tostring(luaVM, 7));
 /*
     //  adjust to match love2d font metrics
     scale /= 36.0f;
@@ -68,11 +83,17 @@ static int luaPrintString(lua_State* luaVM) {
 		default: align = Font::LEFT;
 	}
 
-    fonts.get(fontIndex)->printString(0, x, y, scale, align, str);
+    fonts.get(fontIndex)->printString(batchRenderers[layer], x, y, scale, align, str);
 
 	return 0;
 }
 
+///	Calculates width of string
+// @param index Font index
+// @param str String
+// @param scale Scale
+// @return Width of string in pixels
+// @function AB.font.stringLength
 static int luaStringLength(lua_State* luaVM) {
     int fontIndex = (int)lua_tonumber(luaVM, 1);
     std::string str = std::string(lua_tostring(luaVM, 2));
@@ -95,6 +116,10 @@ void registerFontFunctions() {
         { NULL, NULL }
     };
     script.registerFuncs("AB", "font", fontFuncs);
+	
+	script.execute("AB.font.LEFT = 1");
+	script.execute("AB.font.CENTER = 2");
+	script.execute("AB.font.RIGHT = 3");
 }
 
 }

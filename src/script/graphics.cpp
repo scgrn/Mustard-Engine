@@ -53,7 +53,7 @@ static int luaResetVideo(lua_State* luaVM) {
 ///	Loads a sprite
 // @param index Sprite index
 // @param filename Filename
-// @function AB.graphics.addToAtlas
+// @function AB.graphics.loadSprite
 static int luaLoadSprite(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     std::string filename = std::string(lua_tostring(luaVM, 2));
@@ -80,7 +80,7 @@ static int luaLoadSprite(lua_State* luaVM) {
 // @param angle (0) Rotation
 // @param scaleX (1) Scale X
 // @param scaleY (scaleX) Scale Y
-// @function AB.graphics.loadSprite
+// @function AB.graphics.renderSprite
 
 // renderSprite(batchIndex, index, x, y, z, r = 0, sx = 1, sy = 1, additive = false)
 static int luaRenderSprite(lua_State* luaVM) {
@@ -174,13 +174,54 @@ static int luaSpriteHeight(lua_State* luaVM) {
 
 ///	Queues a quad to be renderer on the screen or current canvas.
 // @param layer Rendering layer. A default layer of 0 is provided
+// @param width Width
+// @param height Height
 // @param x X position
 // @param y Y position
 // @param z (-1) Z position
 // @param angle (0) Rotation
+// @param r (255) Red color component
+// @param g (255) Green color component
+// @param b (255) Blue color component
+// @param a (255) Alpha component
 // @function AB.graphics.renderQuad
 static int luaRenderQuad(lua_State* luaVM) {
-	return 0;
+    int layer = (int)lua_tonumber(luaVM, 1);
+    float width = (float)lua_tonumber(luaVM, 2);
+    float height = (float)lua_tonumber(luaVM, 3);
+    float x = (float)lua_tonumber(luaVM, 4);
+    float y = (float)lua_tonumber(luaVM, 5);
+
+    float z = -1.0f;
+    float angle = 0.0f;
+    float r = 1.0f;
+    float g = 1.0f;
+    float b = 1.0f;
+    float a = 1.0f;
+
+    if (lua_gettop(luaVM) >= 6) {
+		z = (float)lua_tonumber(luaVM, 6);
+    }
+    if (lua_gettop(luaVM) >= 7) {
+		angle = (float)lua_tonumber(luaVM, 7);
+    }
+    if (lua_gettop(luaVM) >= 8) {
+		r = (float)lua_tonumber(luaVM, 8);
+    }
+    if (lua_gettop(luaVM) >= 9) {
+		g = (float)lua_tonumber(luaVM, 9);
+    }
+    if (lua_gettop(luaVM) >= 10) {
+		b = (float)lua_tonumber(luaVM, 10);
+    }
+    if (lua_gettop(luaVM) >= 11) {
+		a = (float)lua_tonumber(luaVM, 11);
+    }
+	
+	//	TODO: need to support scaleY in quad renderer
+	// sprites.get(index)->render(batchRenderers[layer], glm::vec3(x, y, z), angle, scaleX);
+
+    return 0;
 }
 
 /*
