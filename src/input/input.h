@@ -48,14 +48,20 @@ class Input : public SubSystem {
 		void update(); //  has to be called before events are pumped or after update is called
 
 		//	keyboard functions
-		bool wasPressed(int key);
-		bool isPressed(int key);    // 6y77
-		bool wasReleased(int key);  //  -Rilo Kitty, 4/19/20
+		bool wasKeyPressed(int key);
+		bool isKeyPressed(int key);    // 6y77
+		bool wasKeyReleased(int key);  //  -Rilo Kitty, 4/19/20
 		//int INKEY$();						//	pops oldest keypress
 		//int[BUFFER_SIZE] getKeyBuffer();
 		
 		//	mouse functions
-		void showCursor(bool show);
+		bool wasMousePressed(int button);
+		bool isMousePressed(int button);
+		bool wasMouseReleased(int button);  
+		int getMouseWheelMove();
+		glm::vec2 getPosition();
+		void setMousePosition(glm::vec2 pos);
+		void showCursor(bool visible);
 
 		//	touch functions
 		

@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 #include "../script/script.h"
 #include "../core/log.h"
 #include "../core/fileSystem.h"
+#include "../core/window.h"
 
 #include "gamepad.cpp"
 
@@ -53,12 +54,12 @@ static const Uint8 *keyStates;
 static Uint8 *prevKeyStates;
 static int numKeys;
 
-/*
 struct Mouse {
     int x, y;
     bool buttons[3];
+    bool prevButtons[3];
+	int wheel;
 } mouse;
-*/
 
 // --------- GAMEPAD STUFF --------------------------------------------------------------------------------------------------------------
 
@@ -149,7 +150,6 @@ void Input::setDeadzone(int gamepadIndex, float deadZone) {
     }
 }
 
-
 bool Input::gamepadIsPressed(int gamepadIndex, int button) {
     SDL_GameControllerButton sdlButton;
 
@@ -228,6 +228,8 @@ bool Input::startup() {
 void Input::update() {
     memcpy(prevKeyStates, keyStates, numKeys);
 
+	mouse.wheel = 0;
+	
     // TODO: iterate event queue and check gamepad events
     extern std::vector<SDL_Event> eventQueue;
 
@@ -253,6 +255,14 @@ void Input::update() {
             script.execute("AB.onGamepadDisconnected()");
         }
 		
+		if (event->type == SDL_MOUSEMOTION) {
+			mouse.x = event->motion.x;
+			mouse.y = event->motion.y;
+		}
+        if (event->type ==  SDL_MOUSEWHEEL) {
+			mouse.wheel = event->wheel.y;
+		}
+		
 		gamepadController.processEvent(*event);
 		
         //if (event->type == SDL_GAME) {   // say
@@ -265,12 +275,13 @@ void Input::update() {
     //      callLua()
     //  }
     //  oldX = newX
-/*
-    Uint32 buttons = SDL_GetMouseState(&mouse.x, &mouse.y);
+
+    memcpy(mouse.prevButtons, mouse.buttons, 3);
+
+    Uint32 buttons = SDL_GetMouseState(NULL, NULL);
     mouse.buttons[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
     mouse.buttons[1] = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
     mouse.buttons[2] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
-*/
 }
 
 void Input::shutdown() {
@@ -285,15 +296,17 @@ void Input::shutdown() {
 	LOG("Input subsystem shutdown", 0);
 }
 
-bool Input::wasPressed(int key) {
+//-------------------------------------------------------- Keyboard functions -----------------------------------------------------
+
+bool Input::wasKeyPressed(int key) {
     return (keyStates[key] && !prevKeyStates[key]);
 }
 
-bool Input::isPressed(int key) {
+bool Input::isKeyPressed(int key) {
     return keyStates[key];
 }
 
-bool Input::wasReleased(int key) {
+bool Input::wasKeyReleased(int key) {
 	return (!keyStates[key] && prevKeyStates[key]);
 }
 /*
@@ -305,8 +318,36 @@ int[BUFFER_SIZE] Input::getKeyBuffer() {
 	return keyBuffer();
 }
 */	
-void Input::showCursor(bool show) {
-    SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
+
+//-------------------------------------------------------- Mouse functions -----------------------------------------------------
+
+bool Input::wasMousePressed(int button) {
+    return (mouse.buttons[button] && !mouse.prevButtons[button]);
+}
+
+bool Input::isMousePressed(int button) {
+	return mouse.buttons[button];
+}
+
+bool Input::wasMouseReleased(int button) {
+    return (!mouse.buttons[button] && mouse.prevButtons[button]);
+}  
+
+int Input::getMouseWheelMove() {
+	return mouse.wheel;
+}
+
+glm::vec2 Input::getPosition() {
+	return glm::vec2(mouse.x, mouse.y);
+}
+
+void Input::setMousePosition(glm::vec2 pos) {
+	extern Window window;
+	SDL_WarpMouseInWindow(window.window, pos.x, pos.y);
+}
+
+void Input::showCursor(bool visible) {
+    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
 }
 
 }   //  namespace

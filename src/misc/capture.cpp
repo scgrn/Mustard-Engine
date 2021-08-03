@@ -36,7 +36,7 @@ static int frame, session;
 static std::ofstream sfxLog;
 static std::string imagePath;
 
-bool recording;
+bool recording = false;
 
 void beginCapture(int w, int h, std::string imgPath, std::string sfxPath) {
     width = w;
@@ -50,7 +50,7 @@ void beginCapture(int w, int h, std::string imgPath, std::string sfxPath) {
 
     frame = 0;
     session = 0;
-    recording = false;
+    recording = true;
 
     //  create SFX log file
     sfxLog = std::ofstream(sfxPath + "sfx.csv");
@@ -121,6 +121,8 @@ void endCapture() {
 
     //  close SFX log file
     sfxLog.close();
+	
+	recording = false;
 }
 
 void recordSFX(int index) {

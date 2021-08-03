@@ -80,6 +80,10 @@ static int luaLoadSprite(lua_State* luaVM) {
 // @param angle (0) Rotation
 // @param scaleX (1) Scale X
 // @param scaleY (scaleX) Scale Y
+// @param r (1.0) Red component
+// @param g (1.0) Green component
+// @param b (1.0) Blue component
+// @param a (1.0) Alpha component
 // @function AB.graphics.renderSprite
 
 // renderSprite(batchIndex, index, x, y, z, r = 0, sx = 1, sy = 1, additive = false)
@@ -93,6 +97,11 @@ static int luaRenderSprite(lua_State* luaVM) {
     float angle = 0.0f;
     float scaleX = 1.0f;
     float scaleY = 1.0f;
+	
+	float r = 1.0f;
+	float b = 1.0f;
+	float g = 1.0f;
+	float a = 1.0f;
 
     if (lua_gettop(luaVM) >= 5) {
 		z = (float)lua_tonumber(luaVM, 5);
@@ -108,6 +117,19 @@ static int luaRenderSprite(lua_State* luaVM) {
     } else {
         scaleY = scaleX;
     }
+
+    if (lua_gettop(luaVM) >= 9) {
+		r = (float)lua_tonumber(luaVM, 9);
+    }
+    if (lua_gettop(luaVM) >= 10) {
+		g = (float)lua_tonumber(luaVM, 10);
+    }
+    if (lua_gettop(luaVM) >= 11) {
+		b = (float)lua_tonumber(luaVM, 11);
+    }
+    if (lua_gettop(luaVM) >= 12) {
+		a = (float)lua_tonumber(luaVM, 12);
+    }
 /*
     bool batch = false;
     if (lua_gettop(luaVM) >= 8) {
@@ -122,7 +144,7 @@ static int luaRenderSprite(lua_State* luaVM) {
 */
 	
 	//	TODO: need to support scaleY in quad renderer
-	sprites.get(index)->render(batchRenderers[layer], glm::vec3(x, y, z), angle, scaleX);
+	sprites.get(index)->render(batchRenderers[layer], glm::vec3(x, y, z), angle, scaleX, glm::vec4(r, g, b, a));
 
     return 0;
 }
@@ -180,10 +202,10 @@ static int luaSpriteHeight(lua_State* luaVM) {
 // @param y Y position
 // @param z (-1) Z position
 // @param angle (0) Rotation
-// @param r (255) Red color component
-// @param g (255) Green color component
-// @param b (255) Blue color component
-// @param a (255) Alpha component
+// @param r (1.0) Red color component
+// @param g (1.0) Green color component
+// @param b (1.0) Blue color component
+// @param a (1.0) Alpha component
 // @function AB.graphics.renderQuad
 static int luaRenderQuad(lua_State* luaVM) {
     int layer = (int)lua_tonumber(luaVM, 1);

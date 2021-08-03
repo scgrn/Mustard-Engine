@@ -37,13 +37,12 @@ extern Script script;
 extern Input input;
 
 //----------------------------------------------------------------- INPUT --------------------------------------
-// TODO:		setMousePosition(x, y)
 
 // generate lua scancode constant list for documentation here
 
 static int luaShowCursor(lua_State* luaVM) {
-    bool enabled = (bool)lua_toboolean(luaVM, 1);
-    input.showCursor(enabled);
+    bool visible = (bool)lua_toboolean(luaVM, 1);
+    input.showCursor(visible);
 
     return 0;
 }
@@ -64,23 +63,53 @@ static int luaGetMouseState(lua_State* luaVM) {
     return 5;
 }
 
+static int luaSetMousePosition(lua_State* luaVM) {
+    int x = (int)lua_tonumber(luaVM, 1);
+    int y = (int)lua_tonumber(luaVM, 2);
+	
+	input.setMousePosition(glm::vec2(x, y));
+
+    return 0;
+}
+
+static int luaMouseWasPressed(lua_State* luaVM) {
+    int button = (int)lua_tonumber(luaVM, 1);
+    lua_pushboolean(luaVM, input.wasMousePressed(button));
+
+    return 1;
+}
+
+static int luaMousePressed(lua_State* luaVM) {
+    int button = (int)lua_tonumber(luaVM, 1);
+    lua_pushboolean(luaVM, input.isMousePressed(button));
+
+    return 1;
+}
+
+static int luaMouseWasReleased(lua_State* luaVM) {
+    int button = (int)lua_tonumber(luaVM, 1);
+    lua_pushboolean(luaVM, input.wasKeyReleased(button));
+
+    return 1;
+}
+
 static int luaKeyWasPressed(lua_State* luaVM) {
     int scanCode = (int)lua_tonumber(luaVM, 1);
-    lua_pushboolean(luaVM, input.wasPressed(scanCode));
+    lua_pushboolean(luaVM, input.wasKeyPressed(scanCode));
 
     return 1;
 }
 
 static int luaKeyPressed(lua_State* luaVM) {
     int scanCode = (int)lua_tonumber(luaVM, 1);
-    lua_pushboolean(luaVM, input.isPressed(scanCode));
+    lua_pushboolean(luaVM, input.isKeyPressed(scanCode));
 
     return 1;
 }
 
 static int luaKeyWasReleased(lua_State* luaVM) {
     int scanCode = (int)lua_tonumber(luaVM, 1);
-    lua_pushboolean(luaVM, input.wasReleased(scanCode));
+    lua_pushboolean(luaVM, input.wasKeyReleased(scanCode));
 
     return 1;
 }
@@ -152,10 +181,16 @@ void registerInputFunctions() {
     static const luaL_Reg inputFuncs[] = {
         { "getMouseState", luaGetMouseState},
         { "showCursor", luaShowCursor},
+		{ "setMousePosition", luaSetMousePosition},
+		{ "mouseWasPressed", luaMouseWasPressed},
+		{ "mousePressed", luaMousePressed},
+		{ "mouseWasReleased", luaMouseWasReleased},
+		
         { "keyWasPressed", luaKeyWasPressed},
         { "keyPressed", luaKeyPressed},
         { "keyWasReleased", luaKeyWasReleased},
         { "keyName", luaKeyName},
+
         { "buttonName", luaButtonName},
         { "gamepadPressed", luaGamepadPressed},
         { "numGamepads", luaNumGamepads},

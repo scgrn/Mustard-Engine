@@ -14,6 +14,11 @@ IF "%AB_PROJECTS_ROOT%"=="" (
 	set /p AB_PROJECTS_ROOT="ENTER PROJECTS ROOT: "
 )
 
+:: check if project name is set
+IF NOT "%AB_PROJECT_NAME%"=="" (
+	goto PROJECT_MENU
+)
+
 cls
 :MAIN_MENU
 echo MUSTARD ENGINE

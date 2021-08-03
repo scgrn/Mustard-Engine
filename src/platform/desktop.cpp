@@ -124,6 +124,10 @@ int64_t time_averager[time_history_count] = {desired_frametime, desired_frametim
 int64_t prev_frame_time = SDL_GetPerformanceCounter();
 int64_t frame_accumulator = 0;
 
+//	this is some temp shit just for recording
+long currentTime = SDL_GetTicks();
+long lastTime = currentTime;
+
 
 void quit() {
     done = true;
@@ -195,18 +199,16 @@ void mainLoop(Application *app) {
 #ifdef DEBUG
     //  force simulated 30fps gameplay for video capture
     if (recording) {
-        /*
         app->update();
         eventQueue.clear();
         app->update();
-        updateInput();
+		input.update();
 
         currentTime = SDL_GetTicks();
         while (currentTime < lastTime + 30) {
             currentTime = SDL_GetTicks();
         }
         lastTime = currentTime;
-        */
     } else
 #endif // DEBUG
     {

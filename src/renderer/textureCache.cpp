@@ -82,7 +82,7 @@ GLuint TextureCache::bindTexture(GLuint textureID, bool reserve) {
 	assert(unit != -1);
 
 	//	TODO: LOG_V
-    LOG("Loading texture into unit %d", unit);
+    // LOG("Loading texture into unit %d", unit);
 
     textureBindings[unit].textureID = textureID;
     textureBindings[unit].lastFrame = frameID;

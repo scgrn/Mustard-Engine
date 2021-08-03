@@ -59,7 +59,6 @@ class Window : public SubSystem {
 		void resetViewport();
 		void present();
 		
-	private:
 		SDL_Window *window;
 		SDL_GLContext glContext;
 
