@@ -258,11 +258,27 @@ void Input::update() {
 		if (event->type == SDL_MOUSEMOTION) {
 			mouse.x = event->motion.x;
 			mouse.y = event->motion.y;
+			script.execute("AB.onMouseMoved(" + toString(mouse.x, false) + ", " + toString(mouse.y, false) + ")");
 		}
         if (event->type ==  SDL_MOUSEWHEEL) {
 			mouse.wheel = event->wheel.y;
+			script.execute("AB.onMouseWheelMoved(" + toString(mouse.wheel, false) + ")");
 		}
 		
+		if (event->type == SDL_MOUSEBUTTONDOWN) {
+			script.execute("AB.onMousePressed(" +
+			toString((int)event->button.button, false) + ", " +
+			toString(event->button.x, false) + ", " +
+			toString(event->button.y, false) + ")");
+		}
+		
+		if (event->type == SDL_MOUSEBUTTONUP) {
+			script.execute("AB.onMouseReleased(" +
+			toString((int)event->button.button, false) + ", " +
+			toString(event->button.x, false) + ", " +
+			toString(event->button.y, false) + ")");
+		}
+
 		gamepadController.processEvent(*event);
 		
         //if (event->type == SDL_GAME) {   // say

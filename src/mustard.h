@@ -29,8 +29,6 @@ freely, subject to the following restrictions:
 
 #include "core/application.h"
 
-#include "renderer/renderer.h"
-#include "renderer/batchRenderer.h"
 #include "audio/audio.h"
 #include "script/script.h"
 #include "input/input.h"
@@ -39,6 +37,7 @@ freely, subject to the following restrictions:
 #include "core/log.h"
 #include "misc/console.h"
 
+#include "renderer/renderer.h"
 #include "renderer/sprite.h"
 #include "renderer/palette.h"
 #include "renderer/font.h"

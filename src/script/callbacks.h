@@ -50,6 +50,8 @@ These are called from the engine during the main loop or when certain events occ
 // @function AB.onToggleFullscreen
 
 
+/// <br/>
+
 /// Called when application focus is lost
 // @function AB.onFocusLost
 
