@@ -353,11 +353,11 @@ int Input::getMouseWheelMove() {
 	return mouse.wheel;
 }
 
-glm::vec2 Input::getPosition() {
-	return glm::vec2(mouse.x, mouse.y);
+Vec2 Input::getPosition() {
+	return Vec2(mouse.x, mouse.y);
 }
 
-void Input::setMousePosition(glm::vec2 pos) {
+void Input::setMousePosition(Vec2 pos) {
 	extern Window window;
 	SDL_WarpMouseInWindow(window.window, pos.x, pos.y);
 }

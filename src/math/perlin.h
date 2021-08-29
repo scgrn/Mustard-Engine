@@ -43,16 +43,16 @@ class PerlinNoise {
         PerlinNoise(int seed);
         ~PerlinNoise();
 
-        float noise(float x, float y, float z, int octaves, float persistence);
+        f32 noise(f32 x, f32 y, f32 z, int octaves, f32 persistence);
 
     protected:
         static const int SAMPLE_SIZE = 256;
 
         void init();
-        float fade(float t);
-        float lerp(float a, float b, float x);
-        float sample(float x, float y, float z);
-        float grad(int hash, float x, float y, float z);
+        f32 fade(f32 t);
+        f32 lerp(f32 a, f32 b, f32 x);
+        f32 sample(f32 x, f32 y, f32 z);
+        f32 grad(int hash, f32 x, f32 y, f32 z);
 
         int p[SAMPLE_SIZE * 2];
 };

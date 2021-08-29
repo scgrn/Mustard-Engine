@@ -59,8 +59,8 @@ class Input : public SubSystem {
 		bool isMousePressed(int button);
 		bool wasMouseReleased(int button);  
 		int getMouseWheelMove();
-		glm::vec2 getPosition();
-		void setMousePosition(glm::vec2 pos);
+		Vec2 getPosition();
+		void setMousePosition(Vec2 pos);
 		void showCursor(bool visible);
 
 		//	touch functions

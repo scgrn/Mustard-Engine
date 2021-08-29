@@ -119,8 +119,8 @@ Skybox::~Skybox() {
 void Skybox::beginScene(const Camera& camera) {
 	shader.bind();
 	
-	glm::mat4 viewMatrix = camera.viewMatrix;
-	viewMatrix = glm::mat4(glm::mat3(viewMatrix)); // remove translation from the view matrix
+	Mat4 viewMatrix = camera.viewMatrix;
+	viewMatrix = Mat4(mat3(viewMatrix)); // remove translation from the view matrix
 
 	shader.setMat4("projection", camera.projectionMatrix);
 	shader.setMat4("view", viewMatrix);

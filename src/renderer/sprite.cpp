@@ -115,7 +115,7 @@ void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u
     }
 }
 
-void Sprite::render(BatchRenderer *renderer, glm::vec3 pos, float rotation, float scale, glm::vec4 color) {
+void Sprite::render(BatchRenderer *renderer, Vec3 pos, float rotation, float scale, Vec4 color) {
     if (texture.get() == 0) {
         uploadToGPU();
     }
@@ -123,10 +123,10 @@ void Sprite::render(BatchRenderer *renderer, glm::vec3 pos, float rotation, floa
 	BatchRenderer::Quad quad;
 	
 	quad.pos = pos;
-	quad.size = glm::vec2(width, height);
+	quad.size = Vec2(width, height);
 	quad.scale = scale;
 	quad.rotation = rotation;
-	quad.uv = glm::vec4(u1, v1, u2, v2);
+	quad.uv = Vec4(u1, v1, u2, v2);
 	quad.textureID = texture->glHandle;
 	quad.color = color;
 
@@ -137,7 +137,7 @@ struct Scan {
     float x1, u1, v1, x2, u2, v2;
 };
 
-void scanEdge(glm::vec2 p1, float u1, float v1, glm::vec2 p2,
+void scanEdge(Vec2 p1, float u1, float v1, Vec2 p2,
     float u2, float v2, Scan *scan, int range, float yMin) {
 
     if (p1.y == p2.y) return;   // hey! this a horizontal slice!! beat it!
@@ -181,8 +181,8 @@ void scanEdge(glm::vec2 p1, float u1, float v1, glm::vec2 p2,
     }
 }
 
-bool collides(Sprite *s1, glm::vec2 pos1, float angle1, float scaleX1, float scaleY1,
-    Sprite *s2, glm::vec2 pos2, float angle2, float scaleX2, float scaleY2) {
+bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
+    Sprite *s2, Vec2 pos2, float angle2, float scaleX2, float scaleY2) {
 
     //  broad phase squared distance check
     float dist = (pos1.x - pos2.x) * (pos1.x - pos2.x) + (pos1.y - pos2.y) * (pos1.y - pos2.y);
@@ -206,19 +206,19 @@ bool collides(Sprite *s1, glm::vec2 pos1, float angle1, float scaleX1, float sca
         }
 
         //  rotate and scale bounding rectangles
-        glm::vec2 v1[4], v2[4];
+        Vec2 v1[4], v2[4];
 
         //  first sprite
-        v1[0] = glm::vec2(-s1->halfX, -s1->halfY);
-        v1[1] = glm::vec2( s1->halfX, -s1->halfY);
-        v1[2] = glm::vec2( s1->halfX,  s1->halfY);
-        v1[3] = glm::vec2(-s1->halfX,  s1->halfY);
+        v1[0] = Vec2(-s1->halfX, -s1->halfY);
+        v1[1] = Vec2( s1->halfX, -s1->halfY);
+        v1[2] = Vec2( s1->halfX,  s1->halfY);
+        v1[3] = Vec2(-s1->halfX,  s1->halfY);
 
         float ta = toRadians(-angle1);
 
         for (int i = 0; i < 4; i++) {
-            glm::vec2 scaled = glm::vec2(v1[i].x * scaleX1, v1[i].y * scaleY1);
-            glm::vec2 rotated;
+            Vec2 scaled = Vec2(v1[i].x * scaleX1, v1[i].y * scaleY1);
+            Vec2 rotated;
 
             rotated.x = scaled.y * sin(ta) + scaled.x * cos(ta);
             rotated.y = scaled.y * cos(ta) - scaled.x * sin(ta);
@@ -227,16 +227,16 @@ bool collides(Sprite *s1, glm::vec2 pos1, float angle1, float scaleX1, float sca
         }
 
         //  second sprite
-        v2[0] = glm::vec2(-s2->halfX, -s2->halfY);
-        v2[1] = glm::vec2( s2->halfX, -s2->halfY);
-        v2[2] = glm::vec2( s2->halfX,  s2->halfY);
-        v2[3] = glm::vec2(-s2->halfX,  s2->halfY);
+        v2[0] = Vec2(-s2->halfX, -s2->halfY);
+        v2[1] = Vec2( s2->halfX, -s2->halfY);
+        v2[2] = Vec2( s2->halfX,  s2->halfY);
+        v2[3] = Vec2(-s2->halfX,  s2->halfY);
 
         ta = toRadians(-angle2);
 
         for (int i = 0; i < 4; i++) {
-            glm::vec2 scaled = glm::vec2(v2[i].x * scaleX2, v2[i].y * scaleY2);
-            glm::vec2 rotated;
+            Vec2 scaled = Vec2(v2[i].x * scaleX2, v2[i].y * scaleY2);
+            Vec2 rotated;
 
             rotated.x = scaled.y * sin(ta) + scaled.x * cos(ta);
             rotated.y = scaled.y * cos(ta) - scaled.x * sin(ta);

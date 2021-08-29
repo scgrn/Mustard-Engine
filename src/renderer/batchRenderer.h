@@ -25,13 +25,14 @@ freely, subject to the following restrictions:
 #ifndef AB_BATCH_RENDERER_H
 #define AB_BATCH_RENDERER_H
 
+#include "math.h"
 #include "renderer.h"
 
 namespace AB {
 
 class BatchRenderer : public Renderer {
 	public:
-		BatchRenderer(Shader *shader = &defaultShader, glm::mat4 colorTransform = glm::mat4(1.0f), bool depthSorting = false);
+		BatchRenderer(Shader *shader = &defaultShader, Mat4 colorTransform = Mat4(), bool depthSorting = false);
 		~BatchRenderer();
 
 		virtual void beginScene(const Camera& camera);
@@ -42,7 +43,7 @@ class BatchRenderer : public Renderer {
 		std::vector<Quad> renderBatch;
 		Shader *shader;
 		bool depthSorting;
-		glm::mat4 colorTransform;
+		Mat4 colorTransform;
 
 		static Shader defaultShader;
 

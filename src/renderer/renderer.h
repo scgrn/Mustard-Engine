@@ -60,13 +60,13 @@ class Renderer : public SubSystem {
 		// a 64 svelte bytes
 		// TODO: constructor to set defaults
 		struct Quad {
-			glm::vec3 pos;
-			glm::vec2 size;
+			Vec3 pos;
+			Vec2 size;
 			float scale;
 			float rotation;		// radians
-			glm::vec4 uv;		// {u1, v1, u2, v2}
+			Vec4 uv;		// {u1, v1, u2, v2}
 			GLint textureID;	// set to 0 for white texture
-			glm::vec4 color;		
+			Vec4 color;		
 		};
 
 		bool startup();
@@ -77,7 +77,7 @@ class Renderer : public SubSystem {
 		// pass in state, render command (VAO, primitive type)
 		// void submit(const RenderCommand& command);
 		
-//		void defineRenderGroup(int index, Shader *shader, glm::mat4 colorTransform = glm::mat4(1.0f), bool depthSorting = false);
+//		void defineRenderGroup(int index, Shader *shader, Mat4 colorTransform = Mat4(), bool depthSorting = false);
 		
 		void clear(float r, float g, float b, float a);
 		void renderFullscreenQuad();
@@ -101,9 +101,9 @@ class Renderer : public SubSystem {
 	private:
 		// no samplers in uniform blocks :(
 		struct Uniforms {
-            glm::mat4 projectionMatrix;
-			glm::mat4 viewMatrix;
-			glm::mat4 colorTransform;
+            Mat4 projectionMatrix;
+			Mat4 viewMatrix;
+			Mat4 colorTransform;
             int timer;
             float randomSeed;
 		} uniforms;

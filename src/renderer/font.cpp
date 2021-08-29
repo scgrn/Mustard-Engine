@@ -164,7 +164,7 @@ void Font::load(std::string const& filename) {
         DOM = NULL;
     }
 
-	color = glm::vec4(1.0f);
+	color = Vec4(1.0f);
 }
 
 void Font::release() {
@@ -419,7 +419,7 @@ void Font::printString(BatchRenderer *renderer, GLfloat x, GLfloat y, GLfloat sc
                 cx += (chars[ascii]->width / 2.0f) * scale;
                 cy += (chars[ascii]->height / 2.0f) * scale;
                 
-				chars[ascii]->render(renderer, glm::vec3(cx, cy, -1.0f), 0, scale, color);
+				chars[ascii]->render(renderer, Vec3(cx, cy, -1.0f), 0, scale, color);
 				
                 tx += chars[ascii]->xAdvance * scale;
             } else {
@@ -474,7 +474,7 @@ int Font::stringLength(std::string const& string, GLfloat scale) {
 }
 
 void Font::setColor(float r, float g, float b, float a) {
-	color = glm::vec4(r, g, b, a);
+	color = Vec4(r, g, b, a);
 }
 
 }   //  namespace

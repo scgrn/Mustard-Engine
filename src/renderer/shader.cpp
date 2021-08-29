@@ -131,29 +131,24 @@ void Shader::setFloat(const std::string& name, float value) {
 	CALL_GL(glUniform1f(location, value));
 }
 
-void Shader::setVec2(const std::string& name, const glm::vec2& value) {
+void Shader::setVec2(const std::string& name, const Vec2& value) {
 	GLint location = getUniformLocation(name);
 	CALL_GL(glUniform2f(location, value.x, value.y));
 }
 
-void Shader::setVec3(const std::string& name, const glm::vec3& value) {
+void Shader::setVec3(const std::string& name, const Vec3& value) {
 	GLint location = getUniformLocation(name);
 	CALL_GL(glUniform3f(location, value.x, value.y, value.z));
 }
 
-void Shader::setVec4(const std::string& name, const glm::vec4& value) {
+void Shader::setVec4(const std::string& name, const Vec4& value) {
 	GLint location = getUniformLocation(name);
 	CALL_GL(glUniform4f(location, value.x, value.y, value.z, value.w));
 }
 
-void Shader::setMat3(const std::string& name, const glm::mat3& matrix) {
+void Shader::setMat4(const std::string& name, const Mat4& matrix) {
 	GLint location = getUniformLocation(name);
-	CALL_GL(glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix)));
-}
-
-void Shader::setMat4(const std::string& name, const glm::mat4& matrix) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix)));
+	CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix)));
 }
 
 GLint Shader::getUniformLocation(const std::string& name) const {

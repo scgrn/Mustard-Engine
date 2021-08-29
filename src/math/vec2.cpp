@@ -2,7 +2,7 @@
 
 zlib License
 
-(C) 2020 Andrew Krause
+(C) 2021 Andrew Krause
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -22,44 +22,65 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef AB_CAMERA_H
-#define AB_CAMERA_H
+#include <cmath>
 
-#include "../math/math.h"
+#include "Vec2.h"
+#include "misc.h"
 
 namespace AB {
-
-class Camera {
-	public:
-		Mat4 projectionMatrix;
-		Mat4 viewMatrix;
-		Mat4 viewProjectionMatrix;
-
-		virtual void recalculateViewMatrix() {}
-		
-	protected:
-
-};
-
-
-class OrthographicCamera : public Camera {
-	public:
-		OrthographicCamera();
-		void setProjection(float left, float right, float bottom, float top);
-};
-
-
-class PerspectiveCamera : public Camera {
-	public:
-		PerspectiveCamera();
-		void setProjection(float fov);
-		virtual void recalculateViewMatrix();
-		
-		Vec3 rotation;
-		Vec3 position;
-};
-
-
+	
+Vec2::Vec2() {
+	reset();
 }
 
-#endif
+Vec2::Vec2(f32 x, f32 y) {
+	this->x = x;
+	this->y = y;
+}
+
+void Vec2::set(f32 x, f32 y) {
+	this->x = x;
+	this->y = y;
+}
+
+void Vec2::reset() {
+	x = 0;
+	y = 0;
+}
+
+void Vec2::normalize() {
+	f32 l = magnitude();
+
+	if (l != 0.0f) {
+		x = x / l;
+		y = y / l;
+	}
+}
+
+void Vec2::truncate(f32 length) {
+	f32 l = magnitude();
+
+	if (l > length) {
+		x = (x / l) * length;
+		y = (y / l) * length;
+	}
+}
+
+void Vec2::rotate(f32 angle) {
+    f32 tx = x;
+    f32 ty = y;
+    f32 ta = toRadians(angle);
+
+    x = ty * sin(ta) + tx * cos(ta);
+    y = ty * cos(ta) - tx * sin(ta);
+}
+
+f32 Vec2::magnitude() {
+	return sqrt((x * x) + (y * y));
+}
+
+f32 Vec2::dotProduct(Vec2 v) {
+	return (x * v.x) + (y * v.y);
+}
+
+}

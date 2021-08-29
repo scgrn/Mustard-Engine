@@ -31,7 +31,7 @@ namespace AB {
 
 class Model : public Resource {
     public:
-        static void setLoadTransform(glm::mat4 transform);
+        static void setLoadTransform(Mat4 transform);
         static void resetLoadTransform();
 
         virtual void load(std::string const& filename);
@@ -45,12 +45,12 @@ class Model : public Resource {
         float getRadius() { return radius; }
 
     protected:
-        static glm::mat4 loadTransform;
+        static Mat4 loadTransform;
 
         struct PackedVertex{
-            glm::vec3 position;
-            glm::vec2 uv;
-            glm::vec3 normal;
+            Vec3 position;
+            Vec2 uv;
+            Vec3 normal;
 
             bool operator<(const PackedVertex that) const{
                 return memcmp((void*)this, (void*)&that, sizeof(PackedVertex)) > 0;
@@ -58,22 +58,22 @@ class Model : public Resource {
         };
 
         bool loadOBJ(std::string const& filename,
-            std::vector<glm::vec3> &outVertices,
-            std::vector<glm::vec2> &outUVs,
-            std::vector<glm::vec3> &outNormals);
+            std::vector<Vec3> &outVertices,
+            std::vector<Vec2> &outUVs,
+            std::vector<Vec3> &outNormals);
 
         bool getSimilarVertexIndex(PackedVertex &packed,
             std::map<PackedVertex, unsigned short> &vertexToOutIndex,
             unsigned short &result);
 
-        void indexVBO(std::vector<glm::vec3> &inVertices,
-            std::vector<glm::vec2> &inUVs,
-            std::vector<glm::vec3> &inNormals,
+        void indexVBO(std::vector<Vec3> &inVertices,
+            std::vector<Vec2> &inUVs,
+            std::vector<Vec3> &inNormals,
 
             std::vector<unsigned short> &outIndices,
-            std::vector<glm::vec3> &outVertices,
-            std::vector<glm::vec2> &outUVs,
-            std::vector<glm::vec3> &outNormals);
+            std::vector<Vec3> &outVertices,
+            std::vector<Vec2> &outUVs,
+            std::vector<Vec3> &outNormals);
 
         GLuint vertexBuffer, uvBuffer, normalBuffer, elementBuffer;
         GLuint vertexArrayID;

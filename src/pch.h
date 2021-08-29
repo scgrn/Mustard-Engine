@@ -25,6 +25,9 @@ freely, subject to the following restrictions:
 #ifndef AB_PCH_H
 #define AB_PCH_H
 
+#include "types.h"
+#include "math.h"
+
 #include <iostream>
 #include <fstream>
 #include <list>
@@ -64,11 +67,6 @@ extern "C" {
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
-
 
 #ifdef DEBUG
 extern void checkOpenGLError(const char* stmt, const char* fname, int line);

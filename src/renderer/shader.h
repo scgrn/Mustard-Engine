@@ -27,11 +27,8 @@ freely, subject to the following restrictions:
 
 #include <unordered_map>
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
-
 #include "../core/resourceManager.h"
+#include "../math/math.h"
 
 namespace AB {
 
@@ -48,11 +45,10 @@ class Shader : public Resource {
 		void setInt(const std::string& name, int value);
 		void setIntArray(const std::string& name, int* values, uint32_t count);
 		void setFloat(const std::string& name, float value);
-		void setVec2(const std::string& name, const glm::vec2& value);
-		void setVec3(const std::string& name, const glm::vec3& value);
-		void setVec4(const std::string& name, const glm::vec4& value);
-		void setMat3(const std::string& name, const glm::mat3& matrix);
-		void setMat4(const std::string& name, const glm::mat4& matrix);
+		void setVec2(const std::string& name, const Vec2& value);
+		void setVec3(const std::string& name, const Vec3& value);
+		void setVec4(const std::string& name, const Vec4& value);
+		void setMat4(const std::string& name, const Mat4& matrix);
 		
 		GLuint getProgram() { return shaderProgram; }
 		

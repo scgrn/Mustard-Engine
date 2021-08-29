@@ -63,9 +63,6 @@ project("Mustard") ---------------------------------------------------------
 			"./vendor/tinyxml/**.cpp",
 			"./vendor/zlib-1.2.11/*.c",
 
-			"./vendor/glm/**.hpp",
-			"./vendor/glm/**.inl",
-
 			"./vendor/soloud20200207/src/core/**.cpp",
 			"./vendor/soloud20200207/src/audiosource/**.cpp",
 			"./vendor/soloud20200207/src/audiosource/**.c",
@@ -88,7 +85,6 @@ project("Mustard") ---------------------------------------------------------
 			"./src",
 			"./vendor",
 			"./vendor/glad",
-			"./vendor/glm",
 			"./vendor/lua-5.3.5/src",
 			"./vendor/SDL2-2.0.12/x86_64-w64-mingw32/include",
 			"./vendor/SDL2-2.0.12/x86_64-w64-mingw32/include/SDL2",

@@ -67,7 +67,7 @@ static int luaSetMousePosition(lua_State* luaVM) {
     int x = (int)lua_tonumber(luaVM, 1);
     int y = (int)lua_tonumber(luaVM, 2);
 	
-	input.setMousePosition(glm::vec2(x, y));
+	input.setMousePosition(Vec2(x, y));
 
     return 0;
 }

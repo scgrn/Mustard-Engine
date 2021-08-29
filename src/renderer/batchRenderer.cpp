@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "../pch.h"
 
 #include "batchRenderer.h"
+#include <cassert>
 
 static const int MAX_QUADS_PER_BATCH = 4096;
 
@@ -33,7 +34,7 @@ namespace AB {
 Shader BatchRenderer::defaultShader;
 static bool defaultShaderLoaded = false;
 
-BatchRenderer::BatchRenderer(Shader *shader, glm::mat4 colorTransform, bool depthSorting) {
+BatchRenderer::BatchRenderer(Shader *shader, Mat4 colorTransform, bool depthSorting) {
 	LOG("BatchRenderer constructor called", 0);
 	
 	//	load default shader

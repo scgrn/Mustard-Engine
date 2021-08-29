@@ -28,27 +28,27 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-glm::mat4 Model::loadTransform = glm::mat4(1.0f);
+Mat4 Model::loadTransform = Mat4();
 
-void Model::setLoadTransform(glm::mat4 transform) {
+void Model::setLoadTransform(Mat4 transform) {
     Model::loadTransform = transform;
 }
 
 void Model::resetLoadTransform() {
-    Model::loadTransform = glm::mat4(1.0f);
+    Model::loadTransform = Mat4();
 }
 
 bool Model::loadOBJ(std::string const& filename,
-    std::vector<glm::vec3> &outVertices,
-    std::vector<glm::vec2> &outUVs,
-    std::vector<glm::vec3> &outNormals) {
+    std::vector<Vec3> &outVertices,
+    std::vector<Vec2> &outUVs,
+    std::vector<Vec3> &outNormals) {
 
     unsigned int size;
     DataObject dataObject(filename.c_str(), &size);
 
-    std::vector<glm::vec3> tempVertices;
-    std::vector<glm::vec3> tempNormals;
-    std::vector<glm::vec2> tempUVs;
+    std::vector<Vec3> tempVertices;
+    std::vector<Vec3> tempNormals;
+    std::vector<Vec2> tempUVs;
 
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 
@@ -80,20 +80,20 @@ bool Model::loadOBJ(std::string const& filename,
 		/* else */ if (buffer.substr(0,2) == "vn") {
 			double f1, f2, f3;
 			line >> line_t >> f1 >> f2 >> f3;
-			tempNormals.push_back(glm::vec3((float)f1, (float)f2, (float)f3) );
+			tempNormals.push_back(Vec3((float)f1, (float)f2, (float)f3) );
 		}
 		else if (buffer.substr(0,2) == "vt") {
 			double f1, f2;
 			line >> line_t >> f1 >> f2;
-			tempUVs.push_back(glm::vec2((float)f1, (float)f2) );
+			tempUVs.push_back(Vec2((float)f1, (float)f2) );
 			textured = true;
 		}
 		else if (buffer.substr(0,1) == "v") {
 			double f1, f2, f3;
 			line >> line_t >> f1 >> f2 >> f3;
 
-            glm::vec4 vertex = loadTransform * glm::vec4((float)f1, (float)f2, (float)f3, 1.0f);
-			tempVertices.push_back((glm::vec3)vertex);
+            Vec4 vertex = loadTransform * Vec4((float)f1, (float)f2, (float)f3, 1.0f);
+			tempVertices.push_back((Vec3)vertex);
 
 			//float newRadius = sqrt((f1 * f1) + (f2 * f2) + (f3 * f3));
 			float newRadius = ((f1 * f1) + (f2 * f2) + (f3 * f3));
@@ -162,14 +162,14 @@ bool Model::getSimilarVertexIndex(PackedVertex &packed,
 	}
 }
 
-void Model::indexVBO(std::vector<glm::vec3> &inVertices,
-    std::vector<glm::vec2> &inUVs,
-    std::vector<glm::vec3> &inNormals,
+void Model::indexVBO(std::vector<Vec3> &inVertices,
+    std::vector<Vec2> &inUVs,
+    std::vector<Vec3> &inNormals,
 
     std::vector<unsigned short> &outIndices,
-    std::vector<glm::vec3> &outVertices,
-    std::vector<glm::vec2> &outUVs,
-    std::vector<glm::vec3> &outNormals) {
+    std::vector<Vec3> &outVertices,
+    std::vector<Vec2> &outUVs,
+    std::vector<Vec3> &outNormals) {
 
 	std::map<PackedVertex, unsigned short> vertexToOutIndex;
 
@@ -195,9 +195,9 @@ void Model::indexVBO(std::vector<glm::vec3> &inVertices,
 
 
 void Model::load(std::string const& filename) {
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> UVs;
-	std::vector<glm::vec3> normals;
+	std::vector<Vec3> vertices;
+	std::vector<Vec2> UVs;
+	std::vector<Vec3> normals;
 
     bool res = loadOBJ(filename, vertices, UVs, normals);
 
@@ -206,9 +206,9 @@ void Model::load(std::string const& filename) {
     }
 
 	std::vector<unsigned short> indices;
-	std::vector<glm::vec3> indexedVertices;
-	std::vector<glm::vec2> indexedUVs;
-	std::vector<glm::vec3> indexedNormals;
+	std::vector<Vec3> indexedVertices;
+	std::vector<Vec2> indexedUVs;
+	std::vector<Vec3> indexedNormals;
 	indexVBO(vertices, UVs, normals, indices, indexedVertices, indexedUVs, indexedNormals);
 
     // create VAO
@@ -218,15 +218,15 @@ void Model::load(std::string const& filename) {
     // Load it into a VBO
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(Vec3), &indexedVertices[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexedUVs.size() * sizeof(glm::vec2), &indexedUVs[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, indexedUVs.size() * sizeof(Vec2), &indexedUVs[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &normalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(Vec3), &indexedNormals[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &elementBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);

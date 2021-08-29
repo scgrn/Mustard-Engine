@@ -41,19 +41,19 @@ PerlinNoise::PerlinNoise(int seed) {
 PerlinNoise::~PerlinNoise() {
 }
 
-float PerlinNoise::fade(float t) {
+f32 PerlinNoise::fade(f32 t) {
     return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
 }
 
-float PerlinNoise::lerp(float a, float b, float x) {
+f32 PerlinNoise::lerp(f32 a, f32 b, f32 x) {
     return a + x * (b - a);
 }
 
-float PerlinNoise::noise(float x, float y, float z, int octaves, float persistence) {
-    float total = 0.0f;
-    float frequency = 1.0f;
-    float amplitude = 1.0f;
-    float maxValue = 0.0f;
+f32 PerlinNoise::noise(f32 x, f32 y, f32 z, int octaves, f32 persistence) {
+    f32 total = 0.0f;
+    f32 frequency = 1.0f;
+    f32 amplitude = 1.0f;
+    f32 maxValue = 0.0f;
 
     for (int i = 0; i < octaves; i++) {
         total += sample(x * frequency, y * frequency, z * frequency) * amplitude;
@@ -67,19 +67,19 @@ float PerlinNoise::noise(float x, float y, float z, int octaves, float persisten
     return total / maxValue;
 }
 
-float PerlinNoise::sample(float x, float y, float z) {
+f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     const int SAMPLE_MASK = PerlinNoise::SAMPLE_SIZE - 1;
 
     //  calculate nearest vertices and offset into cubic lattice
     int xi = (int)floor(x) & SAMPLE_MASK;
     int yi = (int)floor(y) & SAMPLE_MASK;
     int zi = (int)floor(z) & SAMPLE_MASK;
-    float xf = x - floor(x);
-    float yf = y - floor(y);
-    float zf = z - floor(z);
-    float u = fade(xf);
-    float v = fade(yf);
-    float w = fade(zf);
+    f32 xf = x - floor(x);
+    f32 yf = y - floor(y);
+    f32 zf = z - floor(z);
+    f32 u = fade(xf);
+    f32 v = fade(yf);
+    f32 w = fade(zf);
 
     //  create hash
     int aaa, aba, aab, abb, baa, bba, bab, bbb;
@@ -93,7 +93,7 @@ float PerlinNoise::sample(float x, float y, float z) {
     bbb = p[p[p[(xi+ 1)] + (yi+ 1)] + (zi+ 1)];
 
     //  interpolate gradients
-    float x1, x2, y1, y2;
+    f32 x1, x2, y1, y2;
     x1 = lerp(grad(aaa, xf, yf, zf), grad(baa, xf - 1, yf, zf), u);
     x2 = lerp(grad(aba, xf, yf - 1, zf), grad(bba, xf - 1, yf - 1, zf), u);
     y1 = lerp(x1, x2, v);
@@ -105,7 +105,7 @@ float PerlinNoise::sample(float x, float y, float z) {
     return (lerp(y1, y2, w) + 1.0f) / 2.0f;
 }
 
-float PerlinNoise::grad(int hash, float x, float y, float z) {
+f32 PerlinNoise::grad(int hash, f32 x, f32 y, f32 z) {
     switch (hash & 0xF) {
         case 0x0: return  x + y;
         case 0x1: return -x + y;

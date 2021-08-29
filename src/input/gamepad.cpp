@@ -56,17 +56,17 @@ void GamepadController::open(int device) {
 	isConnected = true;
 	if (SDL_JoystickIsHaptic(j)) {
 		haptic = SDL_HapticOpenFromJoystick(j);
-		printf("Haptic Effects: %d\n", SDL_HapticNumEffects(haptic));
-		printf("Haptic Query: %x\n", SDL_HapticQuery(haptic));
+		LOG("Haptic Effects: %d", SDL_HapticNumEffects(haptic));
+		LOG("Haptic Query: %x", SDL_HapticQuery(haptic));
 		if (SDL_HapticRumbleSupported(haptic)) {
-			printf("Haptic Rumble Supported\n");
+			LOG("Haptic Rumble Supported", 0);
 			if (SDL_HapticRumbleInit(haptic) != 0) {
-				printf("Haptic Rumble Init error: %s\n", SDL_GetError());
+				LOG("Haptic Rumble Init error: %s", SDL_GetError());
 				SDL_HapticClose(haptic);
 				haptic = 0;
 			}
 		} else {
-			printf("Haptic Rumble Not Supported\n");
+			LOG("Haptic Rumble Not Supported", 0);
 			SDL_HapticClose(haptic);
 			haptic = 0;
 		}

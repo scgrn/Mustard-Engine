@@ -2,7 +2,7 @@
 
 zlib License
 
-(C) 2020 Andrew Krause
+(C) 2021 Andrew Krause
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -22,43 +22,15 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef AB_CAMERA_H
-#define AB_CAMERA_H
-
-#include "../math/math.h"
+#ifndef AB_QUAT_H
+#define AB_QUAT_H
 
 namespace AB {
-
-class Camera {
+	
+class Quat {
 	public:
-		Mat4 projectionMatrix;
-		Mat4 viewMatrix;
-		Mat4 viewProjectionMatrix;
-
-		virtual void recalculateViewMatrix() {}
-		
-	protected:
-
+	
 };
-
-
-class OrthographicCamera : public Camera {
-	public:
-		OrthographicCamera();
-		void setProjection(float left, float right, float bottom, float top);
-};
-
-
-class PerspectiveCamera : public Camera {
-	public:
-		PerspectiveCamera();
-		void setProjection(float fov);
-		virtual void recalculateViewMatrix();
-		
-		Vec3 rotation;
-		Vec3 position;
-};
-
 
 }
 

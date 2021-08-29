@@ -144,7 +144,7 @@ static int luaRenderSprite(lua_State* luaVM) {
 */
 	
 	//	TODO: need to support scaleY in quad renderer
-	sprites.get(index)->render(batchRenderers[layer], glm::vec3(x, y, z), angle, scaleX, glm::vec4(r, g, b, a));
+	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX, Vec4(r, g, b, a));
 
     return 0;
 }
@@ -241,7 +241,7 @@ static int luaRenderQuad(lua_State* luaVM) {
     }
 	
 	//	TODO: need to support scaleY in quad renderer
-	// sprites.get(index)->render(batchRenderers[layer], glm::vec3(x, y, z), angle, scaleX);
+	// sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX);
 
     return 0;
 }

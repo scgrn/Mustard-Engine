@@ -36,14 +36,14 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-//static const glm::vec4 TEXT_COLOR_1(1.0f, 0.85f, 0.35f, 1.0f);
-//static const glm::vec4 TEXT_COLOR_2(1.0f, 0.75f, 0.0f, 1.0f);
+//static const Vec4 TEXT_COLOR_1(1.0f, 0.85f, 0.35f, 1.0f);
+//static const Vec4 TEXT_COLOR_2(1.0f, 0.75f, 0.0f, 1.0f);
 
-//static const glm::vec4 TEXT_COLOR_1(0.35f, 1.0f, 0.5f, 1.0f);
-//static const glm::vec4 TEXT_COLOR_2(0.0f, 0.75f, 0.0f, 1.0f);
+//static const Vec4 TEXT_COLOR_1(0.35f, 1.0f, 0.5f, 1.0f);
+//static const Vec4 TEXT_COLOR_2(0.0f, 0.75f, 0.0f, 1.0f);
 
-static const glm::vec4 TEXT_COLOR_1(1.0f, 1.0f, 1.0f, 1.0f);
-static const glm::vec4 TEXT_COLOR_2(0.75f, 0.75f, 0.75f, 1.0f);
+static const Vec4 TEXT_COLOR_1(1.0f, 1.0f, 1.0f, 1.0f);
+static const Vec4 TEXT_COLOR_2(0.75f, 0.75f, 0.75f, 1.0f);
 
 extern std::vector<SDL_Event> eventQueue;
 
@@ -192,19 +192,19 @@ void Console::render() {
 		int height = 420;
 
 		//	TODO: this should call a generic quad renderer in renderer.h
-		quad.pos = glm::vec3(width / 2 + 20, height / 2 + 20, -1.0f);
-		quad.size = glm::vec2(width, height); 
+		quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);
+		quad.size = Vec2(width, height); 
 		quad.scale = 1.0f;
 		quad.rotation = 0.0f;
-		quad.uv = glm::vec4(0.0f, 1.0f, 1.0f, 0.0f);
+		quad.uv = Vec4(0.0f, 1.0f, 1.0f, 0.0f);
 		quad.textureID = 0;
-		quad.color = glm::vec4(0.0f, 0.0f, 0.0f, 0.75f);
+		quad.color = Vec4(0.0f, 0.0f, 0.0f, 0.75f);
 		batchRenderer->renderQuad(quad);	
 	
 		width = 760;
 		height = 1;
-		quad.pos = glm::vec3(width / 2 + 30, height / 2 + 395, -1.0f);
-		quad.size = glm::vec2(width, height); 
+		quad.pos = Vec3(width / 2 + 30, height / 2 + 395, -1.0f);
+		quad.size = Vec2(width, height); 
 		quad.color = TEXT_COLOR_1;
 		batchRenderer->renderQuad(quad);	
 	batchRenderer->endScene();

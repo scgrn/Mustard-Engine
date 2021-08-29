@@ -122,7 +122,7 @@ void Renderer::beginScene(const Camera& camera) {
 	inScene = true;
 }
 /*
-void Renderer::defineRenderGroup(int index, Shader *shader, glm::mat4 colorTransform, bool depthSorting) {
+void Renderer::defineRenderGroup(int index, Shader *shader, Mat4 colorTransform, bool depthSorting) {
 	renderGroups[index].shader = shader;
 	renderGroups[index].colorTransform = colorTransform;
 	renderGroups[index].depthSorting = depthSorting;

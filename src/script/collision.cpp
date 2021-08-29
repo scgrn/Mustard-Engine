@@ -54,8 +54,8 @@ static int luaCollides(lua_State* luaVM) {
     float sx2 = (float)lua_tonumber(luaVM, 11);
     float sy2 = (float)lua_tonumber(luaVM, 12);
 
-    bool collision = collides(graphics->sprites.get(f1), glm::vec2(x1, y1), r1, sx1, sy1,
-        graphics->sprites.get(f2), glm::vec2(x2, y2), r2, sx2, sy2);
+    bool collision = collides(graphics->sprites.get(f1), Vec2(x1, y1), r1, sx1, sy1,
+        graphics->sprites.get(f2), Vec2(x2, y2), r2, sx2, sy2);
 
     lua_pushboolean(luaVM, collision);
 

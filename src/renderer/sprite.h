@@ -27,8 +27,6 @@ freely, subject to the following restrictions:
 
 #include <memory>
 
-#include "glm/glm.hpp"
-
 #include "../core/resourceManager.h"
 #include "texture.h"
 #include "image.h"
@@ -57,7 +55,7 @@ class Sprite : public Resource {
 
 		void buildCollisionMask();
 		void uploadToGPU();
-		void render(BatchRenderer *renderer, glm::vec3 pos, float rotation = 0.0f, float scale = 1.0f, glm::vec4 color = glm::vec4(1.0f));
+		void render(BatchRenderer *renderer, Vec3 pos, float rotation = 0.0f, float scale = 1.0f, Vec4 color = Vec4(1.0f));
 		
 		std::shared_ptr<Texture> texture;
 
@@ -77,8 +75,8 @@ class Sprite : public Resource {
 
 };
 
-extern bool collides(Sprite *s1, glm::vec2 pos1, float angle1, float scaleX1, float scaleY1,
-    Sprite *s2, glm::vec2 pos2, float angle2, float scaleX2, float scaleY2);
+extern bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
+    Sprite *s2, Vec2 pos2, float angle2, float scaleX2, float scaleY2);
 
 }   //  namespace
 

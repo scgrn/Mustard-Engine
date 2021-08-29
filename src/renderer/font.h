@@ -104,7 +104,7 @@ class Font : public Resource {
         std::unordered_map<int, std::unordered_map<int, int> > kernings;
         std::shared_ptr<Texture> texture;
 		
-		glm::vec4 color;
+		Vec4 color;
 
         int lineHeight, base;
 
