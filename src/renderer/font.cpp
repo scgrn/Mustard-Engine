@@ -164,7 +164,7 @@ void Font::load(std::string const& filename) {
         DOM = NULL;
     }
 
-	color = Vec4(1.0f);
+	color = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void Font::release() {

@@ -22,8 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef AB_DEFINES
-#define AB_DEFINES
+#ifndef AB_TYPES_H
+#define AB_TYPES_H
 
 #include <stdint.h>
 #include <stddef.h>

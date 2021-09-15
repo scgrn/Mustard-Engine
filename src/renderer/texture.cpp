@@ -45,7 +45,7 @@ freely, subject to the following restrictions:
 
 #include "texture.h"
 #include "tga.h"
-#include "../misc/misc.h"
+#include "../math/math.h"
 #include "../core/log.h"
 
 namespace AB {

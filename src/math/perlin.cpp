@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 
 #include "perlin.h"
 #include "random.h"
+#include "math.h"
 
 namespace AB {
 

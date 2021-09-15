@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #define AB_MODEL_H
 
 #include "../core/resourceManager.h"
+#include "../math/math.h"
 
 namespace AB {
 

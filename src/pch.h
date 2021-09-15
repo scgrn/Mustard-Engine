@@ -26,7 +26,6 @@ freely, subject to the following restrictions:
 #define AB_PCH_H
 
 #include "types.h"
-#include "math.h"
 
 #include <iostream>
 #include <fstream>
@@ -39,6 +38,7 @@ freely, subject to the following restrictions:
 #include <sstream>
 #include <stdexcept>
 #include <cstdio>
+#include <cassert>
 
 #ifdef ANDROID
 #include <GLES/gl.h>

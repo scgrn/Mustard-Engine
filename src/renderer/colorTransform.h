@@ -36,7 +36,7 @@ inline Mat4 identity() {
 }
 
 inline Mat4 invert() {
-    float matrix[] = {
+    f32 matrix[] = {
         -1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, -1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, -1.0f, 1.0f,
@@ -46,8 +46,8 @@ inline Mat4 invert() {
 	return Mat4(matrix);
 }
 
-inline Mat4 multiply(const float r, const float g, const float b) {
-    float matrix[] = {
+inline Mat4 multiply(const f32 r, const f32 g, const f32 b) {
+    f32 matrix[] = {
         r, 0.0f, 0.0f, 0.0f,
         0.0f, g, 0.0f, 0.0f,
         0.0f, 0.0f, b, 0.0f,
@@ -58,8 +58,8 @@ inline Mat4 multiply(const float r, const float g, const float b) {
 	return Mat4(matrix);
 }
 
-inline Mat4 screen(const float r, const float g, const float b) {
-    float matrix[] = {
+inline Mat4 screen(const f32 r, const f32 g, const f32 b) {
+    f32 matrix[] = {
         1.0f-r, 0.0f, 0.0f, r,
         0.0f, 1.0f-g, 0.0f, g,
         0.0f, 0.0f, 1.0f-b, b,
@@ -70,8 +70,8 @@ inline Mat4 screen(const float r, const float g, const float b) {
 	return Mat4(matrix);
 }
 
-inline Mat4 colorFill(const float r, const float g, const float b, const float a) {
-    float matrix[] = {
+inline Mat4 colorFill(const f32 r, const f32 g, const f32 b, const f32 a) {
+    f32 matrix[] = {
         1.0f-a, 0.0f, 0.0f, r*a,
         0.0f, 1.0f-a, 0.0f, g*a,
         0.0f, 0.0f, 1.0f-a, b*a,
@@ -82,13 +82,13 @@ inline Mat4 colorFill(const float r, const float g, const float b, const float a
 	return Mat4(matrix);
 }
 
-inline Mat4 linearDodge(const float r, const float g, const float b);
-inline Mat4 linearBurn(const float r, const float g, const float b);
-inline Mat4 colorDodge(const float r, const float g, const float b);
-inline Mat4 colorBurn(const float r, const float g, const float b);
+inline Mat4 linearDodge(const f32 r, const f32 g, const f32 b);
+inline Mat4 linearBurn(const f32 r, const f32 g, const f32 b);
+inline Mat4 colorDodge(const f32 r, const f32 g, const f32 b);
+inline Mat4 colorBurn(const f32 r, const f32 g, const f32 b);
 
-inline Mat4 tintedMonochrome(const float r, const float g, const float b, const float a) {
-    float matrix[] = {
+inline Mat4 tintedMonochrome(const f32 r, const f32 g, const f32 b, const f32 a) {
+    f32 matrix[] = {
         1.0f-a, 0.0f, 0.0f, r*a,
         0.0f, 1.0f-a, 0.0f, g*a,
         0.0f, 0.0f, 1.0f-a, b*a,
@@ -99,13 +99,13 @@ inline Mat4 tintedMonochrome(const float r, const float g, const float b, const 
 	return Mat4(matrix);
 }
 
-inline Mat4 hueShift(const float theta);
+inline Mat4 hueShift(const f32 theta);
 
-inline Mat4 saturate(const float v);
+inline Mat4 saturate(const f32 v);
 
-inline Mat4 brightness(const float v);
-inline Mat4 darkness(const float v);
-inline Mat4 contrast(const float v);
+inline Mat4 brightness(const f32 v);
+inline Mat4 darkness(const f32 v);
+inline Mat4 contrast(const f32 v);
 
 }   //  blend namespace
 

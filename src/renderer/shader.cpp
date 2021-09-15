@@ -146,9 +146,15 @@ void Shader::setVec4(const std::string& name, const Vec4& value) {
 	CALL_GL(glUniform4f(location, value.x, value.y, value.z, value.w));
 }
 
+void Shader::setMat3(const std::string& name, const Mat3& matrix) {
+	GLint location = getUniformLocation(name);
+	CALL_GL(glUniformMatrix3fv(location, 1, GL_FALSE, (f32*)(&matrix)));
+}
+
 void Shader::setMat4(const std::string& name, const Mat4& matrix) {
 	GLint location = getUniformLocation(name);
-	CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix)));
+	//CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix)));
+	CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, (f32*)(&matrix)));
 }
 
 GLint Shader::getUniformLocation(const std::string& name) const {

@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 
 #include "palette.h"
 #include "tga.h"
+#include "../math/math.h"
 
 namespace AB {
 

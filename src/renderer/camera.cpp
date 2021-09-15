@@ -35,7 +35,7 @@ extern Window window;
 OrthographicCamera::OrthographicCamera() {}
 
 void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
-	projectionMatrix = Mat4::ortho(left, right, bottom, top, -1.0f, 1.0f);
+	projectionMatrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
 PerspectiveCamera::PerspectiveCamera() {
@@ -44,17 +44,17 @@ PerspectiveCamera::PerspectiveCamera() {
 }
 
 void PerspectiveCamera::setProjection(float fov) {
-    projectionMatrix = Mat4::perspective(toRadians(fov), (float)window.currentMode.xRes / (float)window.currentMode.yRes, 0.1f, 1000.0f);
+    projectionMatrix = perspective(toRadians(fov), (float)window.currentMode.xRes / (float)window.currentMode.yRes, 0.1f, 1000.0f);
 }
 
 void PerspectiveCamera::recalculateViewMatrix() {
 	viewMatrix = Mat4();
 	
-	viewMatrix = Mat4::rotate(viewMatrix, rotation.x, Vec3(1.0f, 0.0f, 0.0f));
-	viewMatrix = Mat4::rotate(viewMatrix, rotation.y, Vec3(0.0f, 1.0f, 0.0f));
-	viewMatrix = Mat4::rotate(viewMatrix, rotation.z, Vec3(0.0f, 0.0f, 1.0f));
+	viewMatrix = viewMatrix * rotateX(rotation.x);
+	viewMatrix = viewMatrix * rotateY(rotation.y);
+	viewMatrix = viewMatrix * rotateZ(rotation.z);
 	
-	viewMatrix = Mat4::translate(viewMatrix, position);
+	viewMatrix = viewMatrix * translate(position);
 }
 
 }

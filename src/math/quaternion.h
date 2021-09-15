@@ -22,16 +22,83 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef AB_QUAT_H
-#define AB_QUAT_H
+#ifndef AB_QUATERNION_H
+#define AB_QUATERNION_H
+
+#include "matrix.h"
 
 namespace AB {
-	
-class Quat {
-	public:
-	
+
+class Quaternion {
+    public:
+        Vec4 q;
+
+        float magnitude() {
+            return sqrt((q.x * q.x) + (q.y * q.y) + (q.z * q.z) + (q.w * q.w));
+        }
+
+        void normalize() {
+            q /= magnitude();
+        }
+
+        void fromEuler(float pitch, float yaw, float roll) {
+            // Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll
+            // and multiply those together.
+            // the calculation below does the same, just shorter
+
+            const float PIOVER180 = M_PI / 180.0f;
+
+            float p = pitch * PIOVER180 / 2.0f;
+            float y = yaw * PIOVER180 / 2.0f;
+            float r = roll * PIOVER180 / 2.0f;
+
+            float sinp = sin(p);
+            float siny = sin(y);
+            float sinr = sin(r);
+            float cosp = cos(p);
+            float cosy = cos(y);
+            float cosr = cos(r);
+
+            q.x = sinr * cosp * cosy - cosr * sinp * siny;
+            q.y = cosr * sinp * cosy + sinr * cosp * siny;
+            q.z = cosr * cosp * siny - sinr * sinp * cosy;
+            q.w = cosr * cosp * cosy + sinr * sinp * siny;
+
+            normalize();
+        }
+
+        Mat4 toMatrix() {
+            Mat4 ret;
+
+            float xx = q.x * q.x;
+            float xy = q.x * q.y;
+            float xz = q.x * q.z;
+            float xw = q.x * q.w;
+
+            float yy = q.y * q.y;
+            float yz = q.y * q.z;
+            float yw = q.y * q.w;
+
+            float zz = q.z * q.z;
+            float zw = q.z * q.w;
+
+            ret.data2d[0][0] = 1 - 2 * (yy + zz);
+            ret.data2d[1][0] =     2 * (xy - zw);
+            ret.data2d[2][0] =     2 * (xz + yw);
+
+            ret.data2d[0][1] =     2 * (xy + zw);
+            ret.data2d[1][1] = 1 - 2 * (xx + zz);
+            ret.data2d[2][1] =     2 * (yz - xw);
+
+            ret.data2d[0][2] =     2 * (xz - yw);
+            ret.data2d[1][2] =     2 * (yz + xw);
+            ret.data2d[2][2] = 1 - 2 * (xx + yy);
+
+            return ret;
+        }
 };
 
-}
+}   //  namespace
 
 #endif
+

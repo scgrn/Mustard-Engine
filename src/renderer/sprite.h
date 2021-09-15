@@ -55,7 +55,7 @@ class Sprite : public Resource {
 
 		void buildCollisionMask();
 		void uploadToGPU();
-		void render(BatchRenderer *renderer, Vec3 pos, float rotation = 0.0f, float scale = 1.0f, Vec4 color = Vec4(1.0f));
+		void render(BatchRenderer *renderer, Vec3 pos, float rotation = 0.0f, float scale = 1.0f, Vec4 color = Vec4());
 		
 		std::shared_ptr<Texture> texture;
 

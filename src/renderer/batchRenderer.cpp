@@ -25,7 +25,6 @@ freely, subject to the following restrictions:
 #include "../pch.h"
 
 #include "batchRenderer.h"
-#include <cassert>
 
 static const int MAX_QUADS_PER_BATCH = 4096;
 

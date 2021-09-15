@@ -22,65 +22,20 @@ freely, subject to the following restrictions:
 
 **/
 
-#include <cmath>
+#include "../pch.h"
 
-#include "Vec2.h"
-#include "misc.h"
+#include "vector.h"
 
 namespace AB {
-	
-Vec2::Vec2() {
-	reset();
-}
 
-Vec2::Vec2(f32 x, f32 y) {
-	this->x = x;
-	this->y = y;
-}
+Vec3 crossProduct(Vec3 const& a, Vec3 const& b) {
+    Vec3 c;
 
-void Vec2::set(f32 x, f32 y) {
-	this->x = x;
-	this->y = y;
-}
+    c.x = (a.y * b.z) - (a.z * b.y);
+    c.y = (a.z * b.x) - (a.x * b.z);
+    c.z = (a.x * b.y) - (a.y * b.x);
 
-void Vec2::reset() {
-	x = 0;
-	y = 0;
-}
-
-void Vec2::normalize() {
-	f32 l = magnitude();
-
-	if (l != 0.0f) {
-		x = x / l;
-		y = y / l;
-	}
-}
-
-void Vec2::truncate(f32 length) {
-	f32 l = magnitude();
-
-	if (l > length) {
-		x = (x / l) * length;
-		y = (y / l) * length;
-	}
-}
-
-void Vec2::rotate(f32 angle) {
-    f32 tx = x;
-    f32 ty = y;
-    f32 ta = toRadians(angle);
-
-    x = ty * sin(ta) + tx * cos(ta);
-    y = ty * cos(ta) - tx * sin(ta);
-}
-
-f32 Vec2::magnitude() {
-	return sqrt((x * x) + (y * y));
-}
-
-f32 Vec2::dotProduct(Vec2 v) {
-	return (x * v.x) + (y * v.y);
+    return c;
 }
 
 }

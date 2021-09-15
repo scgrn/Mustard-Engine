@@ -8,7 +8,7 @@ class App : public AB::Application {
 		void shutdown() {};
 		
         void update() {
-			if (AB::input.wasPressed(41)) {
+			if (AB::input.wasKeyPressed(41)) {
 				AB::quit();
 			}
 			

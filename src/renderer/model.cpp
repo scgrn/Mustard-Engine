@@ -92,6 +92,9 @@ bool Model::loadOBJ(std::string const& filename,
 			double f1, f2, f3;
 			line >> line_t >> f1 >> f2 >> f3;
 
+            // Vec4 vertex = loadTransform * Vec4((float)f1, (float)f2, (float)f3, 1.0f);
+			// tempVertices.push_back(Vec3(vertex.x, vertex.y, vertex.z));
+
             Vec4 vertex = loadTransform * Vec4((float)f1, (float)f2, (float)f3, 1.0f);
 			tempVertices.push_back((Vec3)vertex);
 

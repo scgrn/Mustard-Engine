@@ -36,6 +36,7 @@ freely, subject to the following restrictions:
 #define AB_INPUT_H
 
 #include "../core/subsystem.h"
+#include "../math/math.h"
 
 namespace AB {
 
