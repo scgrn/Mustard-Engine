@@ -29,8 +29,9 @@ freely, subject to the following restrictions:
 #include "../core/log.h"
 #include "../core/fileSystem.h"
 #include "../core/window.h"
+#include "../misc/misc.h"
 
-#include "gamepad.cpp"
+// #include "gamepad.cpp"
 
 namespace AB {
 
@@ -66,7 +67,7 @@ struct Mouse {
 static const int MAX_GAMEPADS = 4;
 static const float DEFAULT_DEADZONE = 0.2f;
 
-GamepadController gamepadController;
+// GamepadController gamepadController;
 
 struct Gamepad {
     SDL_GameController* gameController;
@@ -279,7 +280,7 @@ void Input::update() {
 			toString(event->button.y, false) + ")");
 		}
 
-		gamepadController.processEvent(*event);
+		// gamepadController.processEvent(*event);
 		
         //if (event->type == SDL_GAME) {   // say
         //}

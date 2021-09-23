@@ -39,7 +39,7 @@ workspace("Mustard")
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		symbols "On"
-
+		
 	filter "configurations:Release"
 		defines { "NDEBUG" }
 		optimize "On"
@@ -103,6 +103,9 @@ project("Mustard") ---------------------------------------------------------
 			"SDL2main",
 			"SDL2.dll"
 		}
+
+		filter "configurations:Debug"
+			buildoptions { "-finstrument-functions" }
 	 
 project("AssetCompiler") ---------------------------------------------------------
 	kind("ConsoleApp")

@@ -25,3 +25,8 @@ freely, subject to the following restrictions:
 #include "../pch.h"
 
 #include "profiler.h"
+
+//  these will bookend all function calls when compiled with -finstrument-functions
+void __cyg_profile_func_enter(void *thisFunc, void *callSite) __attribute__((no_instrument_function));
+void __cyg_profile_func_exit(void *thisFunc, void *callSite) __attribute__((no_instrument_function));
+
