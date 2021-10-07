@@ -44,6 +44,39 @@ class Input : public SubSystem {
 	public:
 		static const int BUFFER_SIZE = 16; // 64;
 		
+		//	alias SDL gamepad button constants
+		typedef enum {
+			BUTTON_INVALID = SDL_CONTROLLER_BUTTON_INVALID,
+			BUTTON_A,
+			BUTTON_B,
+			BUTTON_X,
+			BUTTON_Y,
+			BUTTON_BACK,
+			BUTTON_GUIDE,
+			BUTTON_START,
+			BUTTON_LEFTSTICK,
+			BUTTON_RIGHTSTICK,
+			BUTTON_LEFTSHOULDER,
+			BUTTON_RIGHTSHOULDER,
+			BUTTON_DPAD_UP,
+			BUTTON_DPAD_DOWN,
+			BUTTON_DPAD_LEFT,
+			BUTTON_DPAD_RIGHT,
+			BUTTON_MAX
+		} GamepadButton;
+
+		//	alias SDL gamepad axis constants
+		typedef enum {
+			AXIS_INVALID = SDL_CONTROLLER_AXIS_INVALID,
+			AXIS_LEFT_X,
+			AXIS_LEFT_Y,
+			AXIS_RIGHT_X,
+			AXIS_RIGHT_Y,
+			AXIS_TRIGGER_LEFT,
+			AXIS_TRIGGER_RIGHT,
+			AXIS_MAX
+		} GamepadAxis;
+
 		bool startup() override;
 		void shutdown() override;
 		void update(); //  has to be called before events are pumped or after update is called
@@ -60,19 +93,28 @@ class Input : public SubSystem {
 		bool isMousePressed(int button);
 		bool wasMouseReleased(int button);  
 		int getMouseWheelMove();
-		Vec2 getPosition();
+		Vec2 getMousePosition();
 		void setMousePosition(Vec2 pos);
-		void showCursor(bool visible);
+		void showMouseCursor(bool visible);
 
 		//	touch functions
 		
 		//	gamepad functions
-		int numGamepads();
+		int getNumGamepads();
 		bool gamepadWasPressed(int gamepadIndex, int button);
 		bool gamepadIsPressed(int gamepadIndex, int button);
 		bool gamepadWasReleased(int gamepadIndex, int button);
 		float gamepadAxis(int gamepadIndex, int axis);
 		void setDeadzone(int gamepadIndex, float deadZone);
+		void vibrate(int gamepadIndex, float strength, int duration);
+		
+		//  menu helper functions
+		bool menuUp();
+		bool menuDown();
+		bool menuLeft();
+		bool menuRight();
+		bool menuSelect();
+		bool menuBack();
 		
 	private:
 		int keyBuffer[BUFFER_SIZE];

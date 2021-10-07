@@ -42,7 +42,7 @@ extern Input input;
 
 static int luaShowCursor(lua_State* luaVM) {
     bool visible = (bool)lua_toboolean(luaVM, 1);
-    input.showCursor(visible);
+    input.showMouseCursor(visible);
 
     return 0;
 }
@@ -152,6 +152,7 @@ static int luaButtonName(lua_State* luaVM) {
     return 1;
 }
 
+//	BONUS BONER BARBECUE
 static int luaGamepadPressed(lua_State* luaVM) {
     int button = (int)lua_tonumber(luaVM, 1);
 
@@ -172,7 +173,7 @@ static int luaGamepadPressed(lua_State* luaVM) {
 }
 
 static int luaNumGamepads(lua_State* luaVM) {
-    lua_pushinteger(luaVM, input.numGamepads());
+    lua_pushinteger(luaVM, input.getNumGamepads());
 
     return 1;
 }

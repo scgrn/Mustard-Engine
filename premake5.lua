@@ -31,7 +31,6 @@ workspace("Mustard")
 	
 	buildoptions  {
 		"-Wno-pragmas",
-		--"-fpermissive",		-- TODO: why did i need this?
 		"-Wpsabi",
 		"-msse2"
 	}

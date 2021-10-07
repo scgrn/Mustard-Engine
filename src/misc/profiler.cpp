@@ -26,7 +26,20 @@ freely, subject to the following restrictions:
 
 #include "profiler.h"
 
+extern "C"
+{
+
 //  these will bookend all function calls when compiled with -finstrument-functions
 void __cyg_profile_func_enter(void *thisFunc, void *callSite) __attribute__((no_instrument_function));
 void __cyg_profile_func_exit(void *thisFunc, void *callSite) __attribute__((no_instrument_function));
 
+void __cyg_profile_func_enter(void *thisFunc, void *callSite) {
+	//	why does this crash?
+  //printf("ENTER: %p, from %p\n", thisFunc, callSite);
+}
+
+void __cyg_profile_func_exit(void *thisFunc, void *callSite) {
+  //printf("EXIT:  %p, from %p\n", thisFunc, callSite);
+}
+
+}

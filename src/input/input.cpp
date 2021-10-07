@@ -31,8 +31,6 @@ freely, subject to the following restrictions:
 #include "../core/window.h"
 #include "../misc/misc.h"
 
-// #include "gamepad.cpp"
-
 namespace AB {
 
 #define X(a, b) a = b,
@@ -46,9 +44,10 @@ static const char *strings[] = {SCANCODES};
 #undef X
 
 
+static const int MAX_GAMEPADS = 4;
+static const float DEFAULT_DEADZONE = 0.1f;
+
 extern Script script;
-
-
 extern std::vector<SDL_Event> eventQueue;
 
 static const Uint8 *keyStates;
@@ -62,35 +61,25 @@ struct Mouse {
 	int wheel;
 } mouse;
 
-// --------- GAMEPAD STUFF --------------------------------------------------------------------------------------------------------------
-
-static const int MAX_GAMEPADS = 4;
-static const float DEFAULT_DEADZONE = 0.2f;
-
-// GamepadController gamepadController;
-
 struct Gamepad {
-    SDL_GameController* gameController;
-    SDL_JoystickID joystickID;
+    bool buttons[SDL_CONTROLLER_BUTTON_MAX];
+    bool prevButtons[SDL_CONTROLLER_BUTTON_MAX];
+
+    float axis[SDL_CONTROLLER_AXIS_MAX];
+    float prevAxis[SDL_CONTROLLER_AXIS_MAX];
+    int rawAxis[SDL_CONTROLLER_AXIS_MAX];
+	
+	SDL_GameController *gamepad;
+	SDL_Haptic *haptic;
+	SDL_JoystickID joystick;
+
     float deadZone;
 };
 
-static Gamepad gamepads[MAX_GAMEPADS];
+std::vector<Gamepad> connectedGamepads;
+static int numGamepads;
 
-//  returns -1 if not found
-static int getGamepadIndexByID(SDL_JoystickID const id) {
-    for (int i = 0; i < MAX_GAMEPADS; i++) {
-        if (gamepads[i].joystickID == id) {
-            return i;
-        }
-    }
-
-    //  TODO: when log levels are implemnted, set this as: warning
-    LOG("A WARNING: GAMEPAD GET INDEX BY ID FAILED! id: %d", id);
-
-    return -1;
-}
-
+/*
 static void addGamepad(int id) {
     LOG("GAMEPAD ADDED: %d", id);
 
@@ -137,35 +126,7 @@ static void removeGamepad(int id) {
         gamepads[MAX_GAMEPADS].joystickID = -1;
     }
 }
-
-int Input::numGamepads() {
-    return SDL_NumJoysticks();
-}
-
-void Input::setDeadzone(int gamepadIndex, float deadZone) {
-    if (gamepadIndex > 0 && gamepadIndex < MAX_GAMEPADS) {
-        gamepads[gamepadIndex].deadZone = deadZone;
-    } else {
-        //  TODO: log warning level
-        LOG("WARNING: gamepad index out of range: %d", gamepadIndex);
-    }
-}
-
-bool Input::gamepadIsPressed(int gamepadIndex, int button) {
-    SDL_GameControllerButton sdlButton;
-
-    switch (button) {
-        case 1: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_LEFT; break;
-        case 2: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_RIGHT; break;
-        case 3: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_UP; break;
-        case 4: sdlButton = SDL_CONTROLLER_BUTTON_DPAD_DOWN; break;
-        case 5: sdlButton = SDL_CONTROLLER_BUTTON_A; break;
-        case 6: sdlButton = SDL_CONTROLLER_BUTTON_B; break;
-        case 7: sdlButton = SDL_CONTROLLER_BUTTON_START; break;
-        default: sdlButton = SDL_CONTROLLER_BUTTON_INVALID; break;
-    }
-    return (SDL_GameControllerGetButton(gamepads[gamepadIndex].gameController, sdlButton) == 1);
-}
+*/
 
 // -------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -173,7 +134,6 @@ bool Input::startup() {
 	LOG("Input subsystem startup", 0);
 	
 	// LOG("SCANCODE 84: %s", strings[84]);
-	
 	// TODO: WTF
 	// LOG("SCANCODE FOR A: %d", Scancodes.A);
 	
@@ -187,34 +147,75 @@ bool Input::startup() {
     //  TODO: check local file first, fall back to archive
     DataObject dataObject = DataObject("gamecontrollerdb.txt");
     ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), dataObject.getSize()), 0);
-    // ret = SDL_GameControllerAddMappingsFromFile("assets/gamecontrollerdb.txt");
     LOG("Added gamepad mappings: %d", ret);
 
-    for (int i = 0; i < MAX_GAMEPADS; i++) {
-        gamepads[i].gameController = nullptr;
-        gamepads[i].joystickID = -1;
-        gamepads[i].deadZone = DEFAULT_DEADZONE;
-    }
+	int numJoysticks = SDL_NumJoysticks();
+    LOG("Num joysticks: %i", numJoysticks);
+	numGamepads = 0;
 
-    SDL_JoystickEventState(SDL_ENABLE);
-    LOG("Num joysticks: %i", SDL_NumJoysticks());
-/*
-    int index = 0;
-    for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-        if (SDL_IsGameController(i)) {
-            gamepads[index].gameController = SDL_GameControllerOpen(i);
-            if (gamepads[index].gameController) {
-                SDL_Joystick *joy = SDL_GameControllerGetJoystick(gamepads[index].gameController);
-                gamepads[index].joystickID = SDL_JoystickInstanceID(joy);
-                LOG("Controller %d initialized: %d", index, i);
-
-                index++;
-            } else {
+	// Count how many controllers there are
+	for (int i = 0; i < numJoysticks; i++) {
+		if (SDL_IsGameController(i)) {
+			numGamepads++;
+		}
+	}
+    LOG("Num gamepads: %i", numGamepads);
+	
+	// If we have some controllers attached
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			// Open the controller and add it to our list
+			Gamepad gamepad;
+			gamepad.gamepad = SDL_GameControllerOpen(i);
+			if (SDL_GameControllerGetAttached(gamepad.gamepad) == 1) {
+				SDL_Joystick *j = SDL_GameControllerGetJoystick(gamepad.gamepad);
+				if (SDL_JoystickIsHaptic(j)) {
+					gamepad.haptic = SDL_HapticOpenFromJoystick(j);
+					LOG("Haptic Effects: %d", SDL_HapticNumEffects(gamepad.haptic));
+					LOG("Haptic Query: %x", SDL_HapticQuery(gamepad.haptic));
+					if (SDL_HapticRumbleSupported(gamepad.haptic)) {
+						LOG("Haptic Rumble Supported", 0);
+						if (SDL_HapticRumbleInit(gamepad.haptic) != 0) {
+							LOG("Haptic Rumble Init error: %s", SDL_GetError());
+							SDL_HapticClose(gamepad.haptic);
+							gamepad.haptic = nullptr;
+						}
+					} else {
+						LOG("Haptic Rumble Not Supported", 0);
+						SDL_HapticClose(gamepad.haptic);
+						gamepad.haptic = nullptr;
+					}
+				} else {
+					gamepad.haptic = nullptr;
+				}
+				connectedGamepads.push_back(gamepad);
+                LOG("Controller %d initialized", i);
+			} else {
                 LOG("Could not open gamecontroller %d: %s\n", i, SDL_GetError());
-            }
-        }
-    }
-*/
+			}
+		}
+		SDL_GameControllerEventState(SDL_ENABLE);
+	}
+    SDL_JoystickEventState(SDL_ENABLE);
+
+	connectedGamepads.resize(MAX_GAMEPADS);
+	
+	// Set the status of the controllers to "nothing is happening"
+	for (int i = 0; i < numGamepads; i++) {
+		for (int j = 0; j < SDL_CONTROLLER_BUTTON_MAX; j++) {
+			connectedGamepads[i].buttons[j] = false;
+			connectedGamepads[i].prevButtons[j] = false;
+		}
+
+		for (int j = 0; j < SDL_CONTROLLER_AXIS_MAX; j++) {
+			connectedGamepads[i].rawAxis[j] = 0;
+			connectedGamepads[i].axis[j] = 0.0f;
+			connectedGamepads[i].prevAxis[j] = 0.0f;
+		}
+		
+        connectedGamepads[i].deadZone = DEFAULT_DEADZONE;
+	}
+
     //  init keyboard
     keyStates = SDL_GetKeyboardState(&numKeys);
     prevKeyStates = new Uint8[numKeys];
@@ -230,32 +231,17 @@ void Input::update() {
     memcpy(prevKeyStates, keyStates, numKeys);
 
 	mouse.wheel = 0;
+
+	for (int i = 0; i < numGamepads; i++) {
+		for (int j = 0; j < BUTTON_MAX; j++) {
+			connectedGamepads[i].prevButtons[j] = connectedGamepads[i].buttons[j];
+		}
+		for (int j = 0; j < AXIS_MAX; j++) {
+			connectedGamepads[i].prevAxis[j] = connectedGamepads[i].axis[j];
+		}
+	}
 	
-    // TODO: iterate event queue and check gamepad events
-    extern std::vector<SDL_Event> eventQueue;
-
     for (std::vector<SDL_Event>::iterator event = eventQueue.begin(); event != eventQueue.end(); event++) {
-        // these do not seem to work reliably...
-        /*
-        if (event->type == SDL_CONTROLLERDEVICEADDED) {
-            LOG("Gamepad added", 0);
-        }
-        if (event->type == SDL_CONTROLLERDEVICEREMOVED) {
-            LOG("Gamepad removed", 0);
-        }
-        */
-
-        if (event->type == SDL_JOYDEVICEADDED) {
-            LOG("Gamepad added", 0);
-            addGamepad(event->cdevice.which);
-            script.execute("AB.onGamepadConnected()");
-        }
-        if (event->type == SDL_JOYDEVICEREMOVED) {
-            LOG("Gamepad removed", 0);
-            removeGamepad(event->cdevice.which);
-            script.execute("AB.onGamepadDisconnected()");
-        }
-		
 		if (event->type == SDL_MOUSEMOTION) {
 			mouse.x = event->motion.x;
 			mouse.y = event->motion.y;
@@ -280,19 +266,89 @@ void Input::update() {
 			toString(event->button.y, false) + ")");
 		}
 
-		// gamepadController.processEvent(*event);
+		//	gamepad events
+
+        // these do not seem to work reliably...
+        /*
+        if (event->type == SDL_CONTROLLERDEVICEADDED) {
+            LOG("Gamepad added", 0);
+        }
+        if (event->type == SDL_CONTROLLERDEVICEREMOVED) {
+            LOG("Gamepad removed", 0);
+        }
+        */
+
+        if (event->type == SDL_JOYDEVICEADDED) {
+            LOG("Gamepad added: %d", event->cdevice.which);
+            //addGamepad(event->cdevice.which);
+            script.execute("AB.onGamepadConnected()");
+        }
+        if (event->type == SDL_JOYDEVICEREMOVED) {
+            LOG("Gamepad removed: %d", event->cdevice.which);
+            //removeGamepad(event->cdevice.which);
+            script.execute("AB.onGamepadDisconnected()");
+        }
+		
+		if (event->type == SDL_CONTROLLERBUTTONDOWN) {
+			for (int i = 0; i < numGamepads; i++) {
+				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
+					connectedGamepads[i].buttons[event->cbutton.button] = true;
+					// TODO: call lua
+				}				
+			}
+		}
+		
+		if (event->type == SDL_CONTROLLERBUTTONUP) {
+			for (int i = 0; i < numGamepads; i++) {
+				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
+					connectedGamepads[i].buttons[event->cbutton.button] = false;
+					// TODO: call lua
+				}				
+			}
+		}
+		
+		if (event->type == SDL_CONTROLLERAXISMOTION) {
+			for (int i = 0; i < numGamepads; i++) {
+				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
+					connectedGamepads[i].rawAxis[event->caxis.axis] = event->caxis.value;
+				}				
+			}
+		}
 		
         //if (event->type == SDL_GAME) {   // say
         //}
     }
 
-    // TODO: poll gamepad axis and update custom pressed flags
-    //  newX = getAxis
-    //  if (newX - oldX > whateves) {
-    //      callLua()
-    //  }
-    //  oldX = newX
+	//	calculate gamepad axis positions compensating for deadzone
+	for (int i = 0; i < numGamepads; i++) {
+		for (int axis = 0; axis < 2; axis++) {
+			GamepadAxis horizAxis = axis == 0 ? AXIS_LEFT_X : AXIS_RIGHT_X;
+			GamepadAxis vertAxis = axis == 0 ? AXIS_LEFT_Y : AXIS_RIGHT_Y;
 
+			AB::Vec2 stickInput = AB::Vec2(connectedGamepads[i].rawAxis[horizAxis] / 32768.0f, connectedGamepads[i].rawAxis[vertAxis] / 32768.0f);
+			if (AB::magnitude(stickInput) < connectedGamepads[i].deadZone) {
+				stickInput = AB::Vec2(0, 0);
+			} else {
+				stickInput = AB::normalize(stickInput) * ((AB::magnitude(stickInput) - connectedGamepads[i].deadZone) / (1.0f - connectedGamepads[i].deadZone));
+			}
+			
+			connectedGamepads[i].prevAxis[horizAxis] = connectedGamepads[i].axis[horizAxis];
+			connectedGamepads[i].prevAxis[vertAxis] = connectedGamepads[i].axis[vertAxis];
+			
+			connectedGamepads[i].axis[horizAxis] = stickInput.x;
+			connectedGamepads[i].axis[vertAxis] = stickInput.y;
+			
+			if (connectedGamepads[i].prevAxis[horizAxis] != connectedGamepads[i].axis[horizAxis]) {
+				//script.execute("AB.onGamepadAxis()");
+			}
+			if (connectedGamepads[i].prevAxis[vertAxis] != connectedGamepads[i].axis[vertAxis]) {
+				//script.execute("AB.onGamepadAxis()");
+			}
+		}
+		
+		// TODO: process triggers
+	}
+	
     memcpy(mouse.prevButtons, mouse.buttons, 3);
 
     Uint32 buttons = SDL_GetMouseState(NULL, NULL);
@@ -304,11 +360,11 @@ void Input::update() {
 void Input::shutdown() {
     delete [] prevKeyStates;
 
-    for (int i = 0; i < MAX_GAMEPADS; i++) {
-        SDL_GameControllerClose(gamepads[i].gameController);
+    for (int i = 0; i < numGamepads; i++) {
+        SDL_GameControllerClose(connectedGamepads[i].gamepad);
 
-        gamepads[i].gameController = nullptr;
-        gamepads[i].joystickID = -1;
+        connectedGamepads[i].gamepad = nullptr;
+        connectedGamepads[i].joystick = -1;
     }
 	LOG("Input subsystem shutdown", 0);
 }
@@ -354,7 +410,7 @@ int Input::getMouseWheelMove() {
 	return mouse.wheel;
 }
 
-Vec2 Input::getPosition() {
+Vec2 Input::getMousePosition() {
 	return Vec2(mouse.x, mouse.y);
 }
 
@@ -363,9 +419,138 @@ void Input::setMousePosition(Vec2 pos) {
 	SDL_WarpMouseInWindow(window.window, pos.x, pos.y);
 }
 
-void Input::showCursor(bool visible) {
+void Input::showMouseCursor(bool visible) {
     SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
 }
 
+//-------------------------------------------------------- Gamepad functions -----------------------------------------------------
+
+int Input::getNumGamepads() {
+	return numGamepads;
+}
+
+bool Input::gamepadWasPressed(int gamepadIndex, int button) {
+	if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
+		return false;
+	}
+	return (connectedGamepads[gamepadIndex].buttons[button] && !connectedGamepads[gamepadIndex].prevButtons[button]);
+}
+
+bool Input::gamepadIsPressed(int gamepadIndex, int button) {
+	if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
+		return false;
+	}
+	return connectedGamepads[gamepadIndex].buttons[button];
+}
+
+bool Input::gamepadWasReleased(int gamepadIndex, int button) {
+	if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
+		return false;
+	}
+	return (!connectedGamepads[gamepadIndex].buttons[button] && connectedGamepads[gamepadIndex].prevButtons[button]);
+}
+
+float Input::gamepadAxis(int gamepadIndex, int axis) {
+	if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
+		return false;
+	}
+	return connectedGamepads[gamepadIndex].axis[axis];
+}
+
+void Input::setDeadzone(int gamepadIndex, float deadZone) {
+    if (gamepadIndex >= 0 && gamepadIndex <= numGamepads) {
+        connectedGamepads[gamepadIndex].deadZone = deadZone;
+    } else {
+        //  TODO: log warning level
+        LOG("WARNING: gamepad index out of range: %d", gamepadIndex);
+    }
+}
+
+void Input::vibrate(int gamepadIndex, float strength, int duration) {
+    if (gamepadIndex >= 0 && gamepadIndex <= numGamepads) {
+		if (connectedGamepads[gamepadIndex].haptic) {
+			if (SDL_HapticRumblePlay(connectedGamepads[gamepadIndex].haptic, strength, duration) != 0) {
+				LOG_EXP(SDL_GetError());
+			}
+		}
+	}
+}
+
+//-------------------------------------------------------- Menu helper functions -----------------------------------------------------
+
+
+//	TODO: add support for gamepad left stick
+bool Input::menuUp() {
+	bool pressed = wasKeyPressed(UP);
+
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			pressed = pressed || gamepadWasPressed(i, BUTTON_DPAD_UP);
+		}
+	}
+	
+	return pressed;
+}
+
+bool Input::menuDown() {
+	bool pressed = wasKeyPressed(DOWN);
+
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			pressed = pressed || gamepadWasPressed(i, BUTTON_DPAD_DOWN);
+		}
+	}
+	
+	return pressed;
+}
+
+bool Input::menuLeft() {
+	bool pressed = wasKeyPressed(LEFT);
+
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			pressed = pressed || gamepadWasPressed(i, BUTTON_DPAD_LEFT);
+		}
+	}
+	
+	return pressed;
+}
+
+bool Input::menuRight() {
+	bool pressed = wasKeyPressed(RIGHT);
+
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			pressed = pressed || gamepadWasPressed(i, BUTTON_DPAD_RIGHT);
+		}
+	}
+	
+	return pressed;
+}
+
+bool Input::menuSelect() {
+	bool pressed = wasKeyPressed(RETURN);
+
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			pressed = pressed || gamepadWasPressed(i, BUTTON_A);
+		}
+	}
+	
+	return pressed;
+}
+
+bool Input::menuBack() {
+	bool pressed = wasKeyPressed(ESCAPE);
+
+	if (numGamepads > 0) {
+		for (int i = 0; i < numGamepads; i++) {
+			pressed = pressed || gamepadWasPressed(i, BUTTON_B);
+		}
+	}
+	
+	return pressed;
+}
+		
 }   //  namespace
 
