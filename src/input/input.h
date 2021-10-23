@@ -62,7 +62,9 @@ class Input : public SubSystem {
 			BUTTON_DPAD_DOWN,
 			BUTTON_DPAD_LEFT,
 			BUTTON_DPAD_RIGHT,
+			
 			SDL_BUTTON_MAX,
+			
 			BUTTON_LSTICK_UP,
 			BUTTON_LSTICK_DOWN,
 			BUTTON_LSTICK_LEFT,
@@ -94,8 +96,8 @@ class Input : public SubSystem {
 
 		//	keyboard functions
 		bool wasKeyPressed(int key);
-		bool isKeyPressed(int key);    // 6y77
-		bool wasKeyReleased(int key);  //  -Rilo Kitty, 4/19/20
+		bool isKeyPressed(int key);    // 6y77  -Rilo Kitty, 4/19/20
+		bool wasKeyReleased(int key);
 		//int INKEY$();						//	pops oldest keypress
 		//int[BUFFER_SIZE] getKeyBuffer();
 		

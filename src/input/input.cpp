@@ -363,14 +363,28 @@ void Input::update() {
 		connectedGamepads[i].buttons[BUTTON_RSTICK_DOWN] = connectedGamepads[i].axis[AXIS_RIGHT_Y] > 0.15f;
 		connectedGamepads[i].buttons[BUTTON_RSTICK_LEFT] = connectedGamepads[i].axis[AXIS_RIGHT_X] < -0.15f;
 		connectedGamepads[i].buttons[BUTTON_RSTICK_RIGHT] = connectedGamepads[i].axis[AXIS_RIGHT_X] > 0.15f;
+		// process triggers -  axis and "axis buttons"
+//		connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] = connectedGamepads[i].rawAxis[AXIS_TRIGGER_LEFT] / 32768.0f;
+//		connectedGamepads[i].axis[AXIS_TRIGGER_RIGHT] = connectedGamepads[i].rawAxis[AXIS_TRIGGER_RIGHT] / 32768.0f;
 
-		//	TODO: call lua if any "axis buttons" have been, you know, "pressed"
+		for (int axis = 0; axis < 2; axis++) {
+			GamepadAxis trigger = axis == 0 ? AXIS_TRIGGER_LEFT : AXIS_TRIGGER_RIGHT;
+			
+			float triggerInput = connectedGamepads[i].rawAxis[trigger] / 32768.0f;
+			
+			connectedGamepads[i].prevAxis[trigger] = connectedGamepads[i].axis[trigger];
+			connectedGamepads[i].axis[trigger] = (triggerInput - connectedGamepads[i].deadZone) / (1.0f - connectedGamepads[i].deadZone);
+		}
 
-		// TODO: process triggers -  axis and "axis buttons"
-		
+		connectedGamepads[i].buttons[BUTTON_LTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] > 0.15f;
+		connectedGamepads[i].buttons[BUTTON_RTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_RIGHT] > 0.15f;
 	}
 	
-    memcpy(mouse.prevButtons, mouse.buttons, 3);
+	
+	//	TODO: call lua if any "axis buttons" have been, you know, "pressed"
+    
+	//  update mouse
+	memcpy(mouse.prevButtons, mouse.buttons, 3);
 
     Uint32 buttons = SDL_GetMouseState(NULL, NULL);
     mouse.buttons[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
@@ -499,8 +513,6 @@ void Input::vibrate(int gamepadIndex, float strength, int duration) {
 
 //-------------------------------------------------------- Menu helper functions -----------------------------------------------------
 
-
-//	TODO: add support for gamepad left stick
 bool Input::menuUp() {
 	bool pressed = wasKeyPressed(UP);
 
