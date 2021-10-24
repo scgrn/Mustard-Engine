@@ -137,16 +137,38 @@ static int luaButtonName(lua_State* luaVM) {
     int button = (int)lua_tonumber(luaVM, 1);
 
     std::string name = "UNKNOWN";
-    /*
-    if (button < SDL_CONTROLLER_BUTTON_MAX) {
-        name = SDL_GameControllerGetStringForButton(button);
-    } else {
-        // TODO: custom axis - button conversion thinger
-        name = "UNIMPLEMENTED";
-    }
-    // SDL_CONTROLLER_BUTTON_DPAD_UP
-    */
-
+	
+	switch (button) {
+		case input.BUTTON_A: name = "A"; break;
+		case input.BUTTON_B: name = "B"; break;
+		case input.BUTTON_X: name = "X"; break;
+		case input.BUTTON_Y: name = "Y"; break;
+		case input.BUTTON_BACK: name = "Back"; break;
+		case input.BUTTON_GUIDE: name = "Guide"; break;
+		case input.BUTTON_START: name = "Start"; break;
+		case input.BUTTON_LEFTSTICK: name = "Left stick"; break;
+		case input.BUTTON_RIGHTSTICK: name = "Right stick"; break;
+		case input.BUTTON_LEFTSHOULDER: name = "Left shoulder"; break;
+		case input.BUTTON_RIGHTSHOULDER: name = "Right shoulder"; break;
+		case input.BUTTON_DPAD_UP: name = "Dpad up"; break;
+		case input.BUTTON_DPAD_DOWN: name = "Dpad down"; break;
+		case input.BUTTON_DPAD_LEFT: name = "Dpad left"; break;
+		case input.BUTTON_DPAD_RIGHT: name = "Dpad right"; break;
+		
+		case input.BUTTON_MAX: name = "wut"; break;
+		
+		case input.BUTTON_LSTICK_UP: name = "Left stick up"; break;
+		case input.BUTTON_LSTICK_DOWN: name = "Left stick down"; break;
+		case input.BUTTON_LSTICK_LEFT: name = "Left stick left"; break;
+		case input.BUTTON_LSTICK_RIGHT: name = "Left stick right"; break;
+		case input.BUTTON_RSTICK_UP: name = "Right stick up"; break;
+		case input.BUTTON_RSTICK_DOWN: name = "Right stick down"; break;
+		case input.BUTTON_RSTICK_LEFT: name = "Right stick left"; break;
+		case input.BUTTON_RSTICK_RIGHT: name = "Right stick right"; break;
+		case input.BUTTON_LTRIGGER: name = "Left trigger"; break;
+		case input.BUTTON_RTRIGGER: name = "Right trigger"; break;	
+	}
+	
     lua_pushstring(luaVM, name.c_str());
 
     return 1;
