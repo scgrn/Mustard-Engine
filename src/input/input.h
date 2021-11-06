@@ -129,8 +129,11 @@ class Input : public SubSystem {
 		bool menuSelect();
 		bool menuBack();
 		
+		bool showGamepadControls;
+		
 	private:
 		int keyBuffer[BUFFER_SIZE];
+		bool firstMouseMotion;
 };
 
 }   //  namespace

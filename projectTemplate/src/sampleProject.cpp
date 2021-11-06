@@ -16,6 +16,7 @@ class App : public AB::Application {
         }
 
         void render() {
+            AB::script.execute("AB.render()");
         }
 };
 

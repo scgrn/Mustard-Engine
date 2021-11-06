@@ -29,13 +29,28 @@ Collision detection functions
 #include "../pch.h"
 
 #include "script.h"
+#include "../renderer/sprite.h"
 
 namespace AB {
 
 extern Script script;
+extern ResourceManager<Sprite> sprites;
 
-#if 0
-
+/// Pixel-precise collision detection with rotation and scaling
+// @function AB.collision.collides
+// @param index1 Sprite 1 handle
+// @param x1 Sprite 1 x position
+// @param y1 Sprite 1 y position
+// @param r1 Sprite 1 rotation
+// @param sx1 Sprite 1 x scale
+// @param sy1 Sprite 1 y scale
+// @param index2 Sprite 2 handle
+// @param x2 Sprite 2 x position
+// @param y2 Sprite 2 y position
+// @param r2 Sprite 2 rotation
+// @param sx2 Sprite 2 x scale
+// @param sy2 Sprite 2 y scale
+// @return collision
 static int luaCollides(lua_State* luaVM) {
 
     //  TODO: maybe check number of arguments?
@@ -54,18 +69,20 @@ static int luaCollides(lua_State* luaVM) {
     float sx2 = (float)lua_tonumber(luaVM, 11);
     float sy2 = (float)lua_tonumber(luaVM, 12);
 
-    bool collision = collides(graphics->sprites.get(f1), Vec2(x1, y1), r1, sx1, sy1,
-        graphics->sprites.get(f2), Vec2(x2, y2), r2, sx2, sy2);
+extern bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
+    Sprite *s2, Vec2 pos2, float angle2, float scaleX2, float scaleY2);
+
+    bool collision = collides(sprites.get(f1), Vec2(x1, y1), r1, sx1, sy1,
+        sprites.get(f2), Vec2(x2, y2), r2, sx2, sy2);
 
     lua_pushboolean(luaVM, collision);
 
     return 1;
 }
 
-#endif
 void registerCollisionFunctions() {
     static const luaL_Reg collisionFuncs[] = {
-      //  { "collides", luaCollides},
+        { "collides", luaCollides},
 
         { NULL, NULL }
     };

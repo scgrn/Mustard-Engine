@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 */
 
 /**
-These are called from the engine during the main loop or when certain events occur
+These are called from the engine during the main loop or when system events occur
 */
 
 /// Load configuration. Called before window and renderer are created.
@@ -63,13 +63,14 @@ These are called from the engine during the main loop or when certain events occ
 
 
 /// Called when a key is pressed
-// @param key Scancode of key
-// See <scancodes>
 // @function AB.onKeyPressed
+// @param key Scancode of key
+// @see input.scanCodes
 
 /// Called when a key is released
-// @param key Scancode of key
 // @function AB.onKeyReleased
+// @param key Scancode of key
+// @see input.scanCodes
 
 
 /// Called when back is pressed on mobile (or Esc on desktop/web)
@@ -115,27 +116,29 @@ These are called from the engine during the main loop or when certain events occ
 // @function AB.onMouseWheelMoved
 // @param delta Move amount
 
-
 /// Called when a gamepad is connected
-// @param index Gamepad index
 // @function AB.onGamepadConnected
+// @param index Gamepad index
 
 /// Called when a gamepad is disconnected
-// @param index Gamepad index
 // @function AB.onGamepadDisonnected
+// @param index Gamepad index
 
 /// Called when a gamedpad button is pressed
-// @param index Gamepad index
-// @param index Button index
 // @function AB.onGamepadPressed
+// @param index Gamepad index
+// @param button Button index
+// @see input.gamepadButtons
 
 /// Called when a gamepad button is released
-// @param index Gamepad index
-// @param index Button index
 // @function AB.onGamepadReleased
+// @param index Gamepad index
+// @param button Button index
+// @see input.gamepadButtons
 
 /// Called when a gamepad axis is moved
+// @function AB.onGamepadAxisMoved
 // @param index Gamepad index
 // @param axis Axis that was moved
-// @param delta Move amount
-// @function AB.onGamepadAxisMoved
+// @param position Axis position
+// @see input.gamepadAxes

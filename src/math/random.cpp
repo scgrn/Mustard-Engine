@@ -32,13 +32,13 @@ freely, subject to the following restrictions:
 namespace AB {
 
 typedef struct {
-    uint32_t x;
-    uint32_t y;
+    u32 x;
+    u32 y;
 } RandomState;
 
 static RandomState state = {2282008U, 362436069U};
 
-static uint32_t randomUint32() {
+static u32 randomUint32() {
     state.x = 69069U * state.x + 123U;
     state.y ^= state.y << 13U;
     state.y ^= state.y >> 17U;
@@ -48,8 +48,8 @@ static uint32_t randomUint32() {
 }
 
 void rndSeed() {
-    uint32_t t = time(NULL);
-    uint32_t f = 0;
+    u32 t = time(NULL);
+    u32 f = 0;
 
     //  flip bits
     for (int i = 0; i < 32; i++) {
@@ -59,20 +59,20 @@ void rndSeed() {
     rndSeed(f);
 }
 
-void rndSeed(int seed) {
+void rndSeed(u32 seed) {
     state.x = seed;
     state.y = 362436069U;
 }
 
-double rnd() {
+f64 rnd() {
     return randomUint32() * (1.0 / 4294967296.0); // 2^32 − 1
 }
 
-int rnd(int n) {
+u32 rnd(u32 n) {
     return rnd() * n;   // TODO: looks weird. test.
 }
 
-int rnd(int lb, int ub) {
+u32 rnd(u32 lb, u32 ub) {
   return lb + (int32_t)(rnd() * (ub - lb + 1));
 }
 

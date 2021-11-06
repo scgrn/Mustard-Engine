@@ -33,12 +33,12 @@ freely, subject to the following restrictions:
 namespace AB {
 
 void rndSeed();
-void rndSeed(int seed);
+void rndSeed(u32 seed);
 
 //  TODO: document ranges (inclusive, etc)
-double rnd();
-int rnd(int n);
-int rnd(int lb, int ub);
+f64 rnd();
+u32 rnd(u32 n);
+u32 rnd(u32 lb, u32 ub);
 
 }   //  namespace
 

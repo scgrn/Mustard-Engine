@@ -107,9 +107,9 @@ BatchRenderer::BatchRenderer(Shader *shader, Mat4 colorTransform, bool depthSort
 	renderBatch.reserve(MAX_QUADS_PER_BATCH);
 	renderBatch.clear();
 	
-	this->shader = shader;
-	this->depthSorting = depthSorting;
+	this->shader = shader == nullptr ? &defaultShader : shader;
 	this->colorTransform = colorTransform;
+	this->depthSorting = depthSorting;
 }
 
 BatchRenderer::~BatchRenderer() {

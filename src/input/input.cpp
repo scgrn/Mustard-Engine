@@ -136,16 +136,19 @@ bool Input::startup() {
 	// LOG("SCANCODE 84: %s", strings[84]);
 	// TODO: WTF
 	// LOG("SCANCODE FOR A: %d", Scancodes.A);
+
+	showGamepadControls = false;
+	firstMouseMotion = true;
 	
     //  check gamepads
 	int ret = SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
     if (ret != 0) {
         LOG("Error initializing SDL controller subsystem: %d", ret);
     }
-
+	
     //  try to read gamepad mappings
     //  TODO: check local file first, fall back to archive
-    DataObject dataObject = DataObject("gamecontrollerdb.txt");
+	DataObject dataObject = DataObject("gamecontrollerdb.txt");
     ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), dataObject.getSize()), 0);
     LOG("Added gamepad mappings: %d", ret);
 
@@ -163,6 +166,7 @@ bool Input::startup() {
 	
 	// If we have some controllers attached
 	if (numGamepads > 0) {
+		showGamepadControls = true;
 		for (int i = 0; i < numGamepads; i++) {
 			// Open the controller and add it to our list
 			Gamepad gamepad;
@@ -200,11 +204,6 @@ bool Input::startup() {
 
 	connectedGamepads.resize(MAX_GAMEPADS);
 
-	//	TODO: test - remove
-	for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; i++) {
-		LOG_EXP(SDL_GameControllerGetStringForButton((SDL_GameControllerButton)i));
-	}
-	
 	// Set the status of the controllers to "nothing is happening"
 	for (int i = 0; i < numGamepads; i++) {
 		for (int j = 0; j < BUTTON_MAX; j++) {
@@ -231,7 +230,6 @@ bool Input::startup() {
 	return true;
 }
 
-
 void Input::update() {
     memcpy(prevKeyStates, keyStates, numKeys);
 
@@ -247,17 +245,30 @@ void Input::update() {
 	}
 	
     for (std::vector<SDL_Event>::iterator event = eventQueue.begin(); event != eventQueue.end(); event++) {
+		if (event->type == SDL_KEYDOWN) {
+			showGamepadControls = false;
+		}
+		
 		if (event->type == SDL_MOUSEMOTION) {
+			if (firstMouseMotion) {
+				firstMouseMotion = false;
+			} else {
+				showGamepadControls = false;
+			}
 			mouse.x = event->motion.x;
 			mouse.y = event->motion.y;
 			script.execute("AB.onMouseMoved(" + toString(mouse.x, false) + ", " + toString(mouse.y, false) + ")");
 		}
         if (event->type ==  SDL_MOUSEWHEEL) {
+			showGamepadControls = false;
+			LOG("MOUSE WHEEL", 0);
 			mouse.wheel = event->wheel.y;
 			script.execute("AB.onMouseWheelMoved(" + toString(mouse.wheel, false) + ")");
 		}
 		
 		if (event->type == SDL_MOUSEBUTTONDOWN) {
+			showGamepadControls = false;
+			LOG("MOUSE BUTTON DOWN", 0);
 			script.execute("AB.onMousePressed(" +
 			toString((int)event->button.button, false) + ", " +
 			toString(event->button.x, false) + ", " +
@@ -287,14 +298,17 @@ void Input::update() {
             LOG("Gamepad added: %d", event->cdevice.which);
             //addGamepad(event->cdevice.which);
             script.execute("AB.onGamepadConnected()");
+			showGamepadControls = true;
         }
         if (event->type == SDL_JOYDEVICEREMOVED) {
             LOG("Gamepad removed: %d", event->cdevice.which);
             //removeGamepad(event->cdevice.which);
             script.execute("AB.onGamepadDisconnected()");
+			// TODO: set showGamepadControls to false if last gamepad was removed
         }
 		
 		if (event->type == SDL_CONTROLLERBUTTONDOWN) {
+			showGamepadControls = true;
 			for (int i = 0; i < numGamepads; i++) {
 				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
 					connectedGamepads[i].buttons[event->cbutton.button] = true;
@@ -313,6 +327,7 @@ void Input::update() {
 		}
 		
 		if (event->type == SDL_CONTROLLERAXISMOTION) {
+			showGamepadControls = true;
 			for (int i = 0; i < numGamepads; i++) {
 				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
 					connectedGamepads[i].rawAxis[event->caxis.axis] = event->caxis.value;
@@ -342,15 +357,7 @@ void Input::update() {
 			
 			connectedGamepads[i].axis[horizAxis] = stickInput.x;
 			connectedGamepads[i].axis[vertAxis] = stickInput.y;
-			
-			if (connectedGamepads[i].prevAxis[horizAxis] != connectedGamepads[i].axis[horizAxis]) {
-				script.execute("AB.onGamepadAxisMoved(" + toString(i) + ", " + toString(horizAxis) +
-					", " + toString(connectedGamepads[i].axis[horizAxis]) + ")");
-			}
-			if (connectedGamepads[i].prevAxis[vertAxis] != connectedGamepads[i].axis[vertAxis]) {
-				script.execute("AB.onGamepadAxisMoved(" + toString(i) + ", " + toString(vertAxis) +
-					", " + toString(connectedGamepads[i].axis[horizAxis]) + ")");
-			}
+
 		}
 		
 		//	update "axis buttons"
@@ -363,10 +370,8 @@ void Input::update() {
 		connectedGamepads[i].buttons[BUTTON_RSTICK_DOWN] = connectedGamepads[i].axis[AXIS_RIGHT_Y] > 0.15f;
 		connectedGamepads[i].buttons[BUTTON_RSTICK_LEFT] = connectedGamepads[i].axis[AXIS_RIGHT_X] < -0.15f;
 		connectedGamepads[i].buttons[BUTTON_RSTICK_RIGHT] = connectedGamepads[i].axis[AXIS_RIGHT_X] > 0.15f;
-		// process triggers -  axis and "axis buttons"
-//		connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] = connectedGamepads[i].rawAxis[AXIS_TRIGGER_LEFT] / 32768.0f;
-//		connectedGamepads[i].axis[AXIS_TRIGGER_RIGHT] = connectedGamepads[i].rawAxis[AXIS_TRIGGER_RIGHT] / 32768.0f;
 
+		// process triggers -  axis and "axis buttons"
 		for (int axis = 0; axis < 2; axis++) {
 			GamepadAxis trigger = axis == 0 ? AXIS_TRIGGER_LEFT : AXIS_TRIGGER_RIGHT;
 			
@@ -375,14 +380,25 @@ void Input::update() {
 			connectedGamepads[i].prevAxis[trigger] = connectedGamepads[i].axis[trigger];
 			connectedGamepads[i].axis[trigger] = (triggerInput - connectedGamepads[i].deadZone) / (1.0f - connectedGamepads[i].deadZone);
 		}
-
 		connectedGamepads[i].buttons[BUTTON_LTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] > 0.15f;
 		connectedGamepads[i].buttons[BUTTON_RTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_RIGHT] > 0.15f;
+
+		//	call lua if any axis has been moved
+		for (int axis = 0; axis < AXIS_MAX; axis++) {
+			if (connectedGamepads[i].axis[axis] != connectedGamepads[i].prevAxis[axis]) {
+				script.execute("AB.onGamepadAxisMoved(" + toString(i) + ", " + toString(axis) +
+					", " + std::to_string(connectedGamepads[i].axis[axis]) + ")");
+			}
+		}
+
+		//	call lua if any "axis buttons" have been, you know, "pressed"
+		for (int button = BUTTON_LSTICK_UP; button < BUTTON_MAX; button++) {
+			if (gamepadWasPressed(i, button)) {
+				script.execute("AB.onGamepadPressed (" + toString(i) + ", " + toString(button) + ")");
+			}
+		}
 	}
 	
-	
-	//	TODO: call lua if any "axis buttons" have been, you know, "pressed"
-    
 	//  update mouse
 	memcpy(mouse.prevButtons, mouse.buttons, 3);
 

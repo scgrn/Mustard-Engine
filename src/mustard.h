@@ -69,6 +69,7 @@ namespace AB {
 	extern ResourceManager<Shader> shaders;
 	extern ResourceManager<Font> fonts;
 	extern std::map<int, BatchRenderer*> batchRenderers;
+	extern std::map<int, RenderTarget*> canvases;
 
 	extern ResourceManager<Sound> sounds;
 	extern ResourceManager<Music> music;

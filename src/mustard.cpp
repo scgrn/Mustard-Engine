@@ -43,6 +43,7 @@ ResourceManager<Sound> sounds;
 ResourceManager<Music> music;
 
 std::map<int, BatchRenderer*> batchRenderers;
+std::map<int, RenderTarget*> canvases;
 
 void startup(Application *app) {
 	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);

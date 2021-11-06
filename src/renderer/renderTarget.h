@@ -36,18 +36,16 @@ class RenderTarget {
         void begin();
         void end();
 
-        GLuint getTexture() { return texture; }
+        int width, height;
+        bool hasDepthStencil;
+
         GLuint fbo;
+        GLuint texture;
+        GLuint depthStencilBuffer;
 
     protected:
         RenderTarget() {}
 
-        bool hasDepthStencil;
-
-        int width, height;
-
-        GLuint texture;
-        GLuint depthStencilBuffer;
 
 };
 

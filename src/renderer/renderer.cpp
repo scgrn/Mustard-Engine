@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "renderer.h"
 #include "../core/log.h"
 #include "batchRenderer.h"
+#include "renderTarget.h"
 
 //  force use of discrete GPU
 //  https://stackoverflow.com/questions/16823372/forcing-machine-to-use-dedicated-graphics-card/39047129
@@ -42,6 +43,7 @@ GLuint Renderer::whiteTexture;
 TextureCache Renderer::textureCache;
 
 extern std::map<int, BatchRenderer*> batchRenderers;
+extern std::map<int, RenderTarget*> canvases;
 
 // common quad mesh
 GLfloat Renderer::quadVertices[] = {
@@ -105,6 +107,9 @@ void Renderer::shutdown() {
 	LOG("Renderer subsystem shutdown", 0);
 	
 	for (std::map<int, BatchRenderer*>::iterator i = batchRenderers.begin(); i != batchRenderers.end(); i++) {
+		delete i->second;
+	}
+	for (std::map<int, RenderTarget*>::iterator i = canvases.begin(); i != canvases.end(); i++) {
 		delete i->second;
 	}
 

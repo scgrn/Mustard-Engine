@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 */
 
 /**
-Font loading and rendering. Currently only supports <a href="http://www.angelcode.com/products/bmfont/">AngelCode BM font format</a>
+Font loading and rendering. Currently only supports <a href="http://www.angelcode.com/products/bmfont/">AngelCode BM font format</a> with XML descriptor
 */
 
 #include "../pch.h"
@@ -107,11 +107,45 @@ static int luaStringLength(lua_State* luaVM) {
     return 1;
 }
 
+/// Sets font color
+// @param index Font index
+// @param r (1.0) Red
+// @param g (1.0) Green
+// @param b (1.0) Blue
+// @param a (1.0) Alpha
+// @function AB.font.setColor
+static int luaSetColor(lua_State* luaVM) {
+    int fontIndex = (int)lua_tonumber(luaVM, 1);
+	
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 1.0f;
+	float a = 1.0f;
+	
+    if (lua_gettop(luaVM) >= 2) {
+        r = (float)lua_tonumber(luaVM, 2);
+    }
+    if (lua_gettop(luaVM) >= 3) {
+        g = (float)lua_tonumber(luaVM, 3);
+    }
+    if (lua_gettop(luaVM) >= 4) {
+        b = (float)lua_tonumber(luaVM, 4);
+    }
+    if (lua_gettop(luaVM) >= 5) {
+        a = (float)lua_tonumber(luaVM, 5);
+    }
+	
+	fonts.get(fontIndex)->setColor(r, g, b, a);
+	
+	return 0;
+}
+
 void registerFontFunctions() {
     static const luaL_Reg fontFuncs[] = {
         { "loadFont", luaLoadFont},
         { "printString", luaPrintString},
         { "stringLength", luaStringLength},
+		{ "setColor", luaSetColor},
 
         { NULL, NULL }
     };

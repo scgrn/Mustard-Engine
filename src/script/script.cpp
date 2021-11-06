@@ -125,8 +125,8 @@ bool Script::startup() {
 #endif
 
     // run startup scripts
-    execute("AB.system.loadScript('interface.lua')");
-    execute("loadConfig()");    // TODO: AB
+    execute("AB.system.loadScript('main.lua')");
+    execute("AB.loadConfig()");
 
 	// check stack is balanced
 	assert(lua_gettop(luaVM) == 0);

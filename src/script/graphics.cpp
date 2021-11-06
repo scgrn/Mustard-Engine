@@ -31,6 +31,7 @@ Graphics state and rendering
 #include "script.h"
 #include "../core/window.h"
 #include "../renderer/spriteAtlas.h"
+#include "../renderer/renderTarget.h"
 
 namespace AB {
 
@@ -40,6 +41,30 @@ extern Window window;
 extern ResourceManager<Sprite> sprites;
 extern ResourceManager<Shader> shaders;
 extern std::map<int, BatchRenderer*> batchRenderers;
+extern std::map<int, RenderTarget*> canvases;
+
+static Vec4 currentColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
+static int spriteHandle = 1;
+static int canvasHandle = 1;
+static int currentRenderTarget = 0;
+
+/// Color transforms
+// @field NONE ()
+// @field INVERT ()
+// @field MULTIPLY (r, g, b)
+// @field SCREEN (r, g, b)
+// @field COLOR_FILL (r, g, b, a)
+// @field LINEAR_DODGE (r, g, b)
+// @field LINEAR_BURN (r, g, b)
+// @field COLOR_DODGE (r, g, b)
+// @field COLOR_BURN (r, g, b)
+// @field TINTED_MONOCHROME (r, g, b, a)
+// @field HUE_SHIFT (theta)
+// @field SATURATE (value)
+// @field BRIGHTNESS (value)
+// @field DARKNESS (value)
+// @field CONTRAST (value)
+// @table colorTransforms
 
 //----------------------------------------------------------------- Graphics state --------------------------------
 static int luaResetVideo(lua_State* luaVM) {
@@ -51,27 +76,40 @@ static int luaResetVideo(lua_State* luaVM) {
 //----------------------------------------------------------------- Graphics ------------------------------------------
 
 ///	Loads a sprite
-// @param index Sprite index
-// @param filename Filename
 // @function AB.graphics.loadSprite
+// @param filename Filename
+// @param collisionMask (true) If a collision mask should be created
+// @param index (optional) Sprite index
+// @return sprite handle
 static int luaLoadSprite(lua_State* luaVM) {
-    int index = (int)lua_tonumber(luaVM, 1);
-    std::string filename = std::string(lua_tostring(luaVM, 2));
+    std::string filename = std::string(lua_tostring(luaVM, 1));
 
     bool createMask = true;
-    if (lua_gettop(luaVM) >= 3) {
-        createMask = (bool)lua_toboolean(luaVM, 3);
+    if (lua_gettop(luaVM) >= 2) {
+        createMask = (bool)lua_toboolean(luaVM, 2);
     }
+
+	int index;
+    if (lua_gettop(luaVM) >= 3) {
+        index = (int)lua_tonumber(luaVM, 3);
+    } else {
+		index = spriteHandle;
+		spriteHandle++;
+	}
 
     sprites.mapResource(index, filename);
     if (createMask) {
         sprites.get(index)->buildCollisionMask();
     }
 
-    return 0;
+	//  return handle
+	lua_pushnumber(luaVM, index);
+
+    return index;
 }
 
 ///	Queues a sprite to be renderer on the screen or current canvas.
+// @function AB.graphics.renderSprite
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param index Sprite index
 // @param x X position
@@ -80,13 +118,6 @@ static int luaLoadSprite(lua_State* luaVM) {
 // @param angle (0) Rotation
 // @param scaleX (1) Scale X
 // @param scaleY (scaleX) Scale Y
-// @param r (1.0) Red component
-// @param g (1.0) Green component
-// @param b (1.0) Blue component
-// @param a (1.0) Alpha component
-// @function AB.graphics.renderSprite
-
-// renderSprite(batchIndex, index, x, y, z, r = 0, sx = 1, sy = 1, additive = false)
 static int luaRenderSprite(lua_State* luaVM) {
     int layer = (int)lua_tonumber(luaVM, 1);
     int index = (int)lua_tonumber(luaVM, 2);
@@ -98,11 +129,6 @@ static int luaRenderSprite(lua_State* luaVM) {
     float scaleX = 1.0f;
     float scaleY = 1.0f;
 	
-	float r = 1.0f;
-	float b = 1.0f;
-	float g = 1.0f;
-	float a = 1.0f;
-
     if (lua_gettop(luaVM) >= 5) {
 		z = (float)lua_tonumber(luaVM, 5);
     }
@@ -118,33 +144,8 @@ static int luaRenderSprite(lua_State* luaVM) {
         scaleY = scaleX;
     }
 
-    if (lua_gettop(luaVM) >= 9) {
-		r = (float)lua_tonumber(luaVM, 9);
-    }
-    if (lua_gettop(luaVM) >= 10) {
-		g = (float)lua_tonumber(luaVM, 10);
-    }
-    if (lua_gettop(luaVM) >= 11) {
-		b = (float)lua_tonumber(luaVM, 11);
-    }
-    if (lua_gettop(luaVM) >= 12) {
-		a = (float)lua_tonumber(luaVM, 12);
-    }
-/*
-    bool batch = false;
-    if (lua_gettop(luaVM) >= 8) {
-        batch = (bool)lua_toboolean(luaVM, 8);
-    }
-
-    graphics->spriteBatchAlpha->add(graphics->sprites.get(frame), x, y, z, angle, scaleX, scaleY);
-    if (!batch) {
-        graphics->spriteBatchAlpha->render();
-        graphics->spriteBatchAlpha->clear();
-    }
-*/
-	
 	//	TODO: need to support scaleY in quad renderer
-	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX, Vec4(r, g, b, a));
+	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX, currentColor);
 
     return 0;
 }
@@ -168,33 +169,25 @@ static int luaBuildAtlas(lua_State* luaVM) {
     return 0;
 }
 
-/// Returns width of a sprite
+/// Returns size of a sprite
+// @function AB.graphics.spriteSize
 // @param index Sprite index
 // @return width
-// @function AB.graphics.spriteWidth
-static int luaSpriteWidth(lua_State* luaVM) {
+// @return height
+// @usage width, height = AB.graphics.spriteSize(1)
+static int luaSpriteSize(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     int width = sprites.get(index)->width;
-
-    lua_pushinteger(luaVM, width);
-
-    return 1;
-}
-
-/// Returns height of a sprite
-// @param index Sprite index
-// @return height
-// @function AB.graphics.spriteHeight
-static int luaSpriteHeight(lua_State* luaVM) {
-    int index = (int)lua_tonumber(luaVM, 1);
     int height = sprites.get(index)->height;
 
-    lua_pushinteger(luaVM, height);
+    lua_pushinteger(luaVM, width);
+	lua_pushinteger(luaVM, height);
 
-    return 1;
+    return 2;
 }
 
 ///	Queues a quad to be renderer on the screen or current canvas.
+// @function AB.graphics.renderQuad
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param width Width
 // @param height Height
@@ -202,11 +195,6 @@ static int luaSpriteHeight(lua_State* luaVM) {
 // @param y Y position
 // @param z (-1) Z position
 // @param angle (0) Rotation
-// @param r (1.0) Red color component
-// @param g (1.0) Green color component
-// @param b (1.0) Blue color component
-// @param a (1.0) Alpha component
-// @function AB.graphics.renderQuad
 static int luaRenderQuad(lua_State* luaVM) {
     int layer = (int)lua_tonumber(luaVM, 1);
     float width = (float)lua_tonumber(luaVM, 2);
@@ -216,28 +204,12 @@ static int luaRenderQuad(lua_State* luaVM) {
 
     float z = -1.0f;
     float angle = 0.0f;
-    float r = 1.0f;
-    float g = 1.0f;
-    float b = 1.0f;
-    float a = 1.0f;
 
     if (lua_gettop(luaVM) >= 6) {
 		z = (float)lua_tonumber(luaVM, 6);
     }
     if (lua_gettop(luaVM) >= 7) {
 		angle = (float)lua_tonumber(luaVM, 7);
-    }
-    if (lua_gettop(luaVM) >= 8) {
-		r = (float)lua_tonumber(luaVM, 8);
-    }
-    if (lua_gettop(luaVM) >= 9) {
-		g = (float)lua_tonumber(luaVM, 9);
-    }
-    if (lua_gettop(luaVM) >= 10) {
-		b = (float)lua_tonumber(luaVM, 10);
-    }
-    if (lua_gettop(luaVM) >= 11) {
-		a = (float)lua_tonumber(luaVM, 11);
     }
 	
 	//	TODO: need to support scaleY in quad renderer
@@ -246,33 +218,188 @@ static int luaRenderQuad(lua_State* luaVM) {
     return 0;
 }
 
-/*
-///	Creates a rendering canvas.
-// @param index
-// @param width
-// @param height
-// @function AB.graphics.createCanvas
-static int luaCreateCanvas(lua_State* luaVM) {
+/// Sets current color
+// @function AB.graphics.setColor
+// @param r (1.0) Red color component
+// @param g (1.0) Green color component
+// @param b (1.0) Blue color component
+// @param a (1.0) Alpha component
+static int luaSetColor(lua_State* luaVM) {
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 1.0f;
+	float a = 1.0f;
+	
+    if (lua_gettop(luaVM) >= 1) {
+		r = (float)lua_tonumber(luaVM, 1);
+    }
+    if (lua_gettop(luaVM) >= 2) {
+		g = (float)lua_tonumber(luaVM, 2);
+    }
+    if (lua_gettop(luaVM) >= 3) {
+		b = (float)lua_tonumber(luaVM, 3);
+    }
+    if (lua_gettop(luaVM) >= 4) {
+		a = (float)lua_tonumber(luaVM, 4);
+    }
+	currentColor = Vec4(r, g, b, a);
+
 	return 0;
+}
+
+///	Creates a rendering canvas.
+// @function AB.graphics.createCanvas
+// @param width Width of canvas
+// @param height Height of canvas
+// @param index (optional) Handle to canvas
+// @return canvas handle
+static int luaCreateCanvas(lua_State* luaVM) {
+    int width = (int)lua_tonumber(luaVM, 1);
+    int height = (int)lua_tonumber(luaVM, 2);
+
+	int index;
+    if (lua_gettop(luaVM) >= 3) {
+        index = (int)lua_tonumber(luaVM, 3);
+    } else {
+		index = canvasHandle;
+		canvasHandle++;
+	}
+	canvases[index] = new RenderTarget(width, height);
+
+	//  return handle
+	lua_pushnumber(luaVM, index);
+
+	return 1;
 }
 
 ///	Uses a canvas for rendering. Pass 0 to restore default frameBuffer.
-// @param index
 // @function AB.graphics.useCanvas
+// @param index
 static int luaUseCanvas(lua_State* luaVM) {
-	return 0;
-}
-*/
-/// Creates a new rendering layer. (BatchRenderer internally). Layers are renderered back to front, largest indices first.
-// A default layer of 0 is provided
-// @param index Layer index
-// @function AB.graphics.createLayer
-static int luaCreateLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
-	//	TODO: pass in colorTransform, depthSorting
-	batchRenderers[index] = new BatchRenderer();
+	if (currentRenderTarget != 0) {
+		canvases[currentRenderTarget]->end();
+	}
+	
+	currentRenderTarget = index;
+	if (currentRenderTarget != 0) {
+		canvases[currentRenderTarget]->begin();
+	}
+	
+	return 0;
+}
 
+///	Queues a canvas's texture to be renderer on the screen or another canvas.
+// @function AB.graphics.renderCanvas
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param index Canvas index
+// @param x X position
+// @param y Y position
+// @param z (-1) Z position
+// @param angle (0) Rotation
+// @param scaleX (1) Scale X
+// @param scaleY (scaleX) Scale Y
+static int luaRenderCanvas(lua_State* luaVM) {
+    int layer = (int)lua_tonumber(luaVM, 1);
+    int index = (int)lua_tonumber(luaVM, 2);
+    float x = (float)lua_tonumber(luaVM, 3);
+    float y = (float)lua_tonumber(luaVM, 4);
+
+    float z = -1.0f;
+    float angle = 0.0f;
+    float scaleX = 1.0f;
+    float scaleY = 1.0f;
+	
+    if (lua_gettop(luaVM) >= 5) {
+		z = (float)lua_tonumber(luaVM, 5);
+    }
+    if (lua_gettop(luaVM) >= 6) {
+		angle = (float)lua_tonumber(luaVM, 6);
+    }
+    if (lua_gettop(luaVM) >= 7) {
+		scaleX = (float)lua_tonumber(luaVM, 7);
+    }
+    if (lua_gettop(luaVM) >= 8) {
+		scaleY = (float)lua_tonumber(luaVM, 8);
+    } else {
+        scaleY = scaleX;
+    }
+
+	RenderTarget *canvas = canvases[index];
+	BatchRenderer *renderer = batchRenderers[layer];
+	
+	BatchRenderer::Quad quad;
+	
+	quad.pos = Vec3(x, y, z);
+	quad.size = Vec2(canvas->width, canvas->height);
+	quad.scale = scaleX;
+	quad.rotation = angle;
+	quad.uv = Vec4(0, 0, 1, 1);
+	quad.textureID = canvas->texture;
+	quad.color = currentColor;
+
+	renderer->renderQuad(quad);
+	
+	return 0;
+}
+
+/// Creates a new rendering layer. (BatchRenderer internally). Layers are renderered back to front, largest indices first.
+// A default layer of 0 is provided
+// @function AB.graphics.createLayer
+// @param index Layer index
+// @param depthSorting (false) Whether this layer needs to support depth sorting
+static int luaCreateLayer(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    bool depthSorting = false;
+	if (lua_gettop(luaVM) >= 2) {
+		depthSorting = (float)lua_toboolean(luaVM, 2);
+    }
+	batchRenderers[index] = new BatchRenderer(nullptr, blend::identity(), depthSorting);
+
+	return 0;
+}
+
+///	Removes a rendering layer
+// @function AB.graphics.removeLayer
+// @param index Layer index
+static int luaRemoveLayer(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+
+	auto iterator = batchRenderers.find(index);
+	batchRenderers.erase(iterator);
+
+	return 0;
+}
+
+
+/// Adds a color transform for layer. Chained with any previous color transforms
+// @function AB.graphics.addColorTransform
+// @param index Layer index
+// @param transform Color transform
+// @param r Red (will also be interpreted as theta or value)
+// @param g Green
+// @param b Blue
+// @param a Alpha
+// @usage AB.graphics.addColorTransform(0, AB.graphics.colorTransforms.MULTIPLY, 0.75, 0.25, 0.5)
+// @usage AB.graphics.addColorTransform(0, AB.graphics.colorTransforms.SATURATE, 0.5)
+// @see colorTransforms
+static int luaAddColorTransform(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+
+	// TODO
+	
+	return 0;
+}
+
+/// Resets any color transformation for layer.
+// @function AB.graphics.resetColorTransforms
+// @param index Layer index
+static int luaResetColorTransforms(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+	
+	//	TODO
+	
 	return 0;
 }
 
@@ -285,16 +412,20 @@ void registerGraphicsFunctions() {
         { "buildAtlas", luaBuildAtlas},
 
         { "renderSprite", luaRenderSprite},
-        { "spriteWidth", luaSpriteWidth},
-        { "spriteHeight", luaSpriteHeight},
+        { "spriteSize", luaSpriteSize},
 		{ "renderQuad", luaRenderQuad},
-		
-		//{ "createCanvas", luaCreateCanvas},
-		//{ "useCanvas", luaUseCanvas},
 
-		// { "colorTransform", luaColorTransform},
+		{ "setColor", luaSetColor},
+		{ "createCanvas", luaCreateCanvas},
+		{ "useCanvas", luaUseCanvas},
+		{ "renderCanvas", luaRenderCanvas}, 
+
+		{ "addColorTransform", luaAddColorTransform},
+		{ "resetColorTransforms", luaResetColorTransforms},
+
 		// { "loadShader", luaLoadShader},
 		{ "createLayer", luaCreateLayer},
+		{ "removeLayer", luaRemoveLayer},
 		
         { NULL, NULL }
     };
