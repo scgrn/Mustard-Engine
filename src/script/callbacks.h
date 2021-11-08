@@ -72,7 +72,6 @@ These are called from the engine during the main loop or when system events occu
 // @param key Scancode of key
 // @see input.scanCodes
 
-
 /// Called when back is pressed on mobile (or Esc on desktop/web)
 // @function AB.onBackPressed
 

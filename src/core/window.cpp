@@ -26,11 +26,13 @@ freely, subject to the following restrictions:
 
 #include "window.h"
 #include "../script/script.h"
+#include "../renderer/camera.h"
 #include "log.h"
 
 namespace AB {
 
 extern Script script;
+extern OrthographicCamera camera2d;
 
 bool Window::startup(Application *app) {
 	LOG("Window subsystem startup", 0);
@@ -182,16 +184,18 @@ void Window::setVideoMode(Application *app) {
     SDL_GL_SwapWindow(window);
 	SDL_ShowWindow(window);
 	
-	LOG("Vendor: %s", glGetString(GL_VENDOR));
-	LOG("Renderer: %s", glGetString(GL_RENDERER));
-	LOG("Version: %s", glGetString(GL_VERSION));
-	LOG("Shading language version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	LOG("\tVendor: %s", glGetString(GL_VENDOR));
+	LOG("\tRenderer: %s", glGetString(GL_RENDERER));
+	LOG("\tVersion: %s", glGetString(GL_VERSION));
+	LOG("\tShading language version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	
 	// TODO: clean this up. replace the stack vars above
 	currentMode.xRes = xRes;
 	currentMode.yRes = yRes;
 	currentMode.fullscreen = fullscreen;
 	currentMode.vsync = vsync;
+	
+	camera2d.setProjection(0, currentMode.xRes, currentMode.yRes, 0);
 }
 
 void Window::present() {

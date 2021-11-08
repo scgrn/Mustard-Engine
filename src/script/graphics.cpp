@@ -43,6 +43,10 @@ extern ResourceManager<Shader> shaders;
 extern std::map<int, BatchRenderer*> batchRenderers;
 extern std::map<int, RenderTarget*> canvases;
 
+extern Renderer renderer;
+extern Window window;
+extern OrthographicCamera camera2d;
+
 static Vec4 currentColor = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
 static int spriteHandle = 1;
 static int canvasHandle = 1;
@@ -285,6 +289,9 @@ static int luaUseCanvas(lua_State* luaVM) {
 	currentRenderTarget = index;
 	if (currentRenderTarget != 0) {
 		canvases[currentRenderTarget]->begin();
+		camera2d.setProjection(0, canvases[currentRenderTarget]->width, canvases[currentRenderTarget]->height, 0);
+	} else {
+		camera2d.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
 	}
 	
 	return 0;
@@ -403,6 +410,14 @@ static int luaResetColorTransforms(lua_State* luaVM) {
 	return 0;
 }
 
+/// Performs any pending rendering operations
+// @function AB.graphics.flushGraphics
+static int luaFlushGraphics(lua_State* luaVM) {
+	renderer.renderBatches(camera2d);
+	
+	return 0;
+}
+
 void registerGraphicsFunctions() {
     static const luaL_Reg graphicsFuncs[] = {
         { "resetVideo", luaResetVideo},
@@ -426,6 +441,8 @@ void registerGraphicsFunctions() {
 		// { "loadShader", luaLoadShader},
 		{ "createLayer", luaCreateLayer},
 		{ "removeLayer", luaRemoveLayer},
+		
+		{ "flushGraphics", luaFlushGraphics},
 		
         { NULL, NULL }
     };

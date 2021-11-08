@@ -73,6 +73,8 @@ namespace AB {
 
 	extern ResourceManager<Sound> sounds;
 	extern ResourceManager<Music> music;
+	
+	extern OrthographicCamera camera2d;
 }
 
 #endif // AB_H

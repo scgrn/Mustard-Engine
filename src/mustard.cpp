@@ -45,6 +45,8 @@ ResourceManager<Music> music;
 std::map<int, BatchRenderer*> batchRenderers;
 std::map<int, RenderTarget*> canvases;
 
+OrthographicCamera camera2d;
+
 void startup(Application *app) {
 	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
 	LOG(std::string(79, '-').c_str(), 0);
@@ -53,9 +55,9 @@ void startup(Application *app) {
         ERR("Unable to initialize SDL: %s", SDL_GetError());
 	}
 	
-	LOG("Platform: %s", SDL_GetPlatform());
-	LOG("CPU count: %d", SDL_GetCPUCount());
-	LOG("System RAM: %dMB", SDL_GetSystemRAM());
+	LOG("\tPlatform: %s", SDL_GetPlatform());
+	LOG("\tCPU count: %d", SDL_GetCPUCount());
+	LOG("\tSystem RAM: %dMB", SDL_GetSystemRAM());
 	
 	//	...so i have full control of when and what order they're initialized...
 	fileSystem.startup();
