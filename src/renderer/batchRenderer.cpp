@@ -125,6 +125,8 @@ void BatchRenderer::beginScene(const Camera& camera) {
 	//	set transformation uniforms
 	defaultShader.bind();
 	defaultShader.setMat4("projection", camera.projectionMatrix);
+
+	defaultShader.setMat4("colorTransform", colorTransform);
 	
 	inScene = true;
 }

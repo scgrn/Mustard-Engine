@@ -5,7 +5,8 @@ class App : public AB::Application {
 		void startup() {
 		};
 
-		void shutdown() {};
+		void shutdown() {
+		};
 		
         void update() {
 			if (AB::input.wasKeyPressed(41)) {
@@ -17,6 +18,7 @@ class App : public AB::Application {
 
         void render() {
             AB::script.execute("AB.render()");
+			AB::renderer.renderBatches(AB::camera2d);
         }
 };
 

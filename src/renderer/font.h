@@ -53,9 +53,12 @@ class Font : public Resource {
         /**
         *    Loads a font and its associated texture from file
         *
-        *    @param filename XML font descriptor file - passing NULL, erm, "default1" creates a built-in 3x5 pixel font. Passing "default2" will create an 8x8 pixel font.
+        *    @param filename XML font descriptor file -
+		*		Passing "default1" creates a built-in 8x16 pixel font.
+		*		Passing "default2" creates a built-in 8x8 pixel font.
+		*		Passing "default3" creates a built-in 3x5 pixel font.
         */
-        virtual void load(std::string const& id);
+        virtual void load(std::string const& filename);
 
 		virtual void release();
 

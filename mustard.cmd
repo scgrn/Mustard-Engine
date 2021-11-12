@@ -47,8 +47,8 @@ pushd "%AB_PROJECTS_ROOT%\%AB_PROJECT_NAME%\"
 pushd assets\scripts\
 echo local TITLE = "%AB_PROJECT_NAME%" > temp.lua
 echo. >> temp.lua
-type interface.lua >> temp.lua
-type temp.lua > interface.lua
+type main.lua >> temp.lua
+type temp.lua > main.lua
 del temp.lua
 popd
 

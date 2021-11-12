@@ -54,7 +54,6 @@ inline Mat4 multiply(const f32 r, const f32 g, const f32 b) {
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    //return transpose(Mat4(matrix));
 	return Mat4(matrix);
 }
 
@@ -66,7 +65,6 @@ inline Mat4 screen(const f32 r, const f32 g, const f32 b) {
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    //return transpose(Mat4(matrix));
 	return Mat4(matrix);
 }
 
@@ -78,34 +76,156 @@ inline Mat4 colorFill(const f32 r, const f32 g, const f32 b, const f32 a) {
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    //return transpose(Mat4(matrix));
 	return Mat4(matrix);
 }
 
-inline Mat4 linearDodge(const f32 r, const f32 g, const f32 b);
-inline Mat4 linearBurn(const f32 r, const f32 g, const f32 b);
-inline Mat4 colorDodge(const f32 r, const f32 g, const f32 b);
-inline Mat4 colorBurn(const f32 r, const f32 g, const f32 b);
-
-inline Mat4 tintedMonochrome(const f32 r, const f32 g, const f32 b, const f32 a) {
+//	additive blend
+inline Mat4 linearDodge(const f32 r, const f32 g, const f32 b) {
     f32 matrix[] = {
-        1.0f-a, 0.0f, 0.0f, r*a,
-        0.0f, 1.0f-a, 0.0f, g*a,
-        0.0f, 0.0f, 1.0f-a, b*a,
+        1.0f, 0.0f, 0.0f, r,
+        0.0f, 1.0f, 0.0f, g,
+        0.0f, 0.0f, 1.0f, b,
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    //return transpose(Mat4(matrix));
 	return Mat4(matrix);
 }
 
-inline Mat4 hueShift(const f32 theta);
+inline Mat4 linearBurn(const f32 r, const f32 g, const f32 b) {
+    f32 matrix[] = {
+        1.0f, 0.0f, 0.0f, r-1.0f,
+        0.0f, 1.0f, 0.0f, g-1.0f,
+        0.0f, 0.0f, 1.0f, b-1.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
 
-inline Mat4 saturate(const f32 v);
+	return Mat4(matrix);
+}
 
-inline Mat4 brightness(const f32 v);
-inline Mat4 darkness(const f32 v);
-inline Mat4 contrast(const f32 v);
+inline Mat4 colorDodge(const f32 r, const f32 g, const f32 b) {
+    f32 matrix[] = {
+        1.0f/(1.0f-r), 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f/(1.0f-g), 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f/(1.0f-b), 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+	return Mat4(matrix);
+}
+	
+inline Mat4 colorBurn(const f32 r, const f32 g, const f32 b) {
+    f32 matrix[] = {
+        1.0f/r, 0.0f, 0.0f, 1.0f/(1.0f-r),
+        0.0f, 1.0f/g, 0.0f, 1.0f/(1.0f-g),
+        0.0f, 0.0f, 1.0f/b, 1.0f/(1.0f-b),
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+	return Mat4(matrix);
+}
+
+inline Mat4 tintedMonochrome(const f32 r, const f32 g, const f32 b, const f32 a) {
+    f32 matrix[] = {
+        0.30f*r, 0.59f*r, 0.11f*r, 0.0f,
+        0.30f*g, 0.59f*g, 0.11f*g, 0.0f,
+        0.30f*b, 0.59f*b, 0.11f*b, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+	return Mat4(matrix);
+}
+
+inline Mat4 hueShift(const f32 theta) {
+	f32 r1 = (1.0f + 2.0f * cos(theta)) / 3.0f;
+	f32 r2 = (1.0f - cos(theta)) / 3.0f - sin(theta) / sqrt(3.0f);
+	f32 r3 = (1.0f - cos(theta)) / 3.0f + sin(theta) / sqrt(3.0f);
+
+    f32 matrix[] = {
+        r1, r2, r3, 0.0f,
+        r3, r1, r2, 0.0f,
+        r2, r3, r1, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+	
+    return Mat4(matrix);
+}
+
+inline Mat4 saturate(const f32 v) {
+    f32 matrix[] = {
+		(1.0f+2*v)/3.0f, (1.0f-v)/3.0f, (1.0f-v)/3.0f, 0.0f,
+		(1.0f-v)/3.0f, (1.0f+2*v)/3.0f, (1.0f-v)/3.0f, 0.0f,
+		(1.0f-v)/3.0f, (1.0f-v)/3.0f, (1.0f+2*v)/3.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    return Mat4(matrix);
+}
+
+inline Mat4 brightness(const f32 v) {
+    f32 matrix[] = {
+		v, 0.0f, 0.0f, 0.0f,
+		0.0f, v, 0.0f, 0.0f,
+		0.0f, 0.0f, v, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    return Mat4(matrix);
+}
+
+inline Mat4 darkness(const f32 v) {
+    f32 matrix[] = {
+		v, 0.0f, 0.0f, 1.0f-v,
+		0.0f, v, 0.0f, 1.0f-v,
+		0.0f, 0.0f, v, 1.0f-v,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    return Mat4(matrix);
+}
+
+inline Mat4 contrast(const f32 v) {
+    f32 matrix[] = {
+		v, 0.0f, 0.0f, 0.5f-0.5f*v,
+		0.0f, v, 0.0f, 0.5f-0.5f*v,
+		0.0f, 0.0f, v, 0.5f-0.5f*v,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    return Mat4(matrix);
+}
+
+inline Mat4 swapRG() {
+    f32 matrix[] = {
+        0.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+	return Mat4(matrix);
+}
+
+inline Mat4 swapRB() {
+    f32 matrix[] = {
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+	return Mat4(matrix);
+}
+
+inline Mat4 swapGB() {
+    f32 matrix[] = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+	return Mat4(matrix);
+}
 
 }   //  blend namespace
 

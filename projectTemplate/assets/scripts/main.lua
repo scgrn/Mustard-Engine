@@ -1,6 +1,6 @@
-function loadConfig()
+function AB.loadConfig()
 	videoConfig = {
-		title = TITLE or "AB SAMPLE PROJECT",
+		title = "AB SAMPLE PROJECT",
 		xRes = 800,
 		yRes = 600,
 		fullscreen = false,
@@ -9,19 +9,13 @@ function loadConfig()
 end
 
 function AB.init()
-	--AB.graphics.loadSprite(1, "gfx/tv1.tga")
+	font = AB.font.loadFont("default1")
 end
 
 function AB.update()
 end
 
 function AB.render()
-	--AB.graphics.setColor(128, 0, 128, 255)
-	--AB.graphics.renderQuad(100, 100, 200, 200)
---[[	
-	AB.graphics.setColor(255, 255, 255, 255)
-	AB.graphics.renderSprite(1, 200, 200, -1)
-	AB.graphics.renderQuad(100,100,50,50)
-]]
+	AB.font.printString(0, font, 400, 300, 2, AB.font.CENTER, "Hello, world!")
 end
 

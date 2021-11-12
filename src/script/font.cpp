@@ -37,26 +37,42 @@ extern Script script;
 extern ResourceManager<Font> fonts;
 extern std::map<int, BatchRenderer*> batchRenderers;
 
+static int fontHandle = 1;
+
 //----------------------------------------------------------------- Text functions --------------------------------
 
 ///	Loads a font
-// @param index Font index
-// @param filename Filename
 // @function AB.font.loadFont
+// @param filename Filename.<br/>
+// &nbsp;&nbsp;&nbsp;&nbsp;Pass in "default1" for a built-in 8x16 font<br/>
+// &nbsp;&nbsp;&nbsp;&nbsp;Pass in "default2" for a built-in 8x8 font<br/>
+// &nbsp;&nbsp;&nbsp;&nbsp;Pass in "default3" for a built-in 3x5 font<br/>
+// @param index (optional) Font index
+// @return font index
 static int luaLoadFont(lua_State* luaVM) {
-    int fontIndex = (int)lua_tonumber(luaVM, 1);
-    std::string filename = std::string(lua_tostring(luaVM, 2));
+    std::string filename = std::string(lua_tostring(luaVM, 1));
+    
+	int index;
+    if (lua_gettop(luaVM) >= 2) {
+        index = (int)lua_tonumber(luaVM, 2);
+    } else {
+		index = fontHandle;
+		fontHandle++;
+	}
 
-    fonts.mapResource(fontIndex, filename);
+	fonts.mapResource(index, filename);
 
-    return 0;
+	//  return handle
+	lua_pushnumber(luaVM, index);
+
+    return 1;
 }
 
 /// Prints a string
 // @param layer Rendering layer
 // @param index Font index
 // @param x X position
-// @param y Y position
+// @param y Y position (baseline)
 // @param scale Scale
 // @param alignment Alignment (AB.font.LEFT, AB.font.CENTER, AB.font.RIGHT)
 // @param str String to print

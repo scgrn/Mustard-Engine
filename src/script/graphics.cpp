@@ -68,16 +68,47 @@ static int currentRenderTarget = 0;
 // @field BRIGHTNESS (value)
 // @field DARKNESS (value)
 // @field CONTRAST (value)
+// @field SWAP_R_G
+// @field SWAP_R_B
+// @field SWAP_G_B
 // @table colorTransforms
 
-//----------------------------------------------------------------- Graphics state --------------------------------
+/// Sets the video mode. Only necessary upon changes to video mode. Reads a global table: videoConfig = { title, xRes, yRes, fullscreen, vsync }
+// @function AB.graphics.resetVideo
 static int luaResetVideo(lua_State* luaVM) {
     window.setVideoMode(NULL);
 
     return 0;
 }
 
-//----------------------------------------------------------------- Graphics ------------------------------------------
+/// Clears the screen or current canvas
+// @function AB.graphics.clear
+// @param r (0.0) Red color component
+// @param g (0.0) Green color component
+// @param b (0.0) Blue color component
+// @param a (1.0) Alpha component
+static int luaClear(lua_State* luaVM) {
+	float r = 0.0f;
+	float g = 0.0f;
+	float b = 0.0f;
+	float a = 1.0f;
+	
+    if (lua_gettop(luaVM) >= 1) {
+		r = (float)lua_tonumber(luaVM, 1);
+    }
+    if (lua_gettop(luaVM) >= 2) {
+		g = (float)lua_tonumber(luaVM, 2);
+    }
+    if (lua_gettop(luaVM) >= 3) {
+		b = (float)lua_tonumber(luaVM, 3);
+    }
+    if (lua_gettop(luaVM) >= 4) {
+		a = (float)lua_tonumber(luaVM, 4);
+    }
+	renderer.clear(r, g, b, a);
+	
+	return 0;
+}
 
 ///	Loads a sprite
 // @function AB.graphics.loadSprite
@@ -219,6 +250,20 @@ static int luaRenderQuad(lua_State* luaVM) {
 	//	TODO: need to support scaleY in quad renderer
 	// sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX);
 
+	BatchRenderer *renderer = batchRenderers[layer];
+	
+	BatchRenderer::Quad quad;
+	
+	quad.pos = Vec3(x, y, z);
+	quad.size = Vec2(width, height);
+	quad.scale = 1.0f;
+	quad.rotation = angle;
+	quad.uv = Vec4(0, 0, 1, 1);
+	quad.textureID = 0;
+	quad.color = currentColor;
+
+	renderer->renderQuad(quad);
+
     return 0;
 }
 
@@ -289,7 +334,9 @@ static int luaUseCanvas(lua_State* luaVM) {
 	currentRenderTarget = index;
 	if (currentRenderTarget != 0) {
 		canvases[currentRenderTarget]->begin();
-		camera2d.setProjection(0, canvases[currentRenderTarget]->width, canvases[currentRenderTarget]->height, 0);
+		
+		//	TODO: not sure about setting the projection this way.. (y coords are flipped)
+		camera2d.setProjection(0, canvases[currentRenderTarget]->width, 0, canvases[currentRenderTarget]->height);
 	} else {
 		camera2d.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
 	}
@@ -360,7 +407,7 @@ static int luaCreateLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     bool depthSorting = false;
 	if (lua_gettop(luaVM) >= 2) {
-		depthSorting = (float)lua_toboolean(luaVM, 2);
+		depthSorting = (bool)lua_toboolean(luaVM, 2);
     }
 	batchRenderers[index] = new BatchRenderer(nullptr, blend::identity(), depthSorting);
 
@@ -393,8 +440,54 @@ static int luaRemoveLayer(lua_State* luaVM) {
 // @see colorTransforms
 static int luaAddColorTransform(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+	int colorTransform = (int)lua_tonumber(luaVM, 2);
+	
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 1.0f;
+	float a = 1.0f;
+	
+	if (lua_gettop(luaVM) >= 3) {
+		r = (float)lua_tonumber(luaVM, 3);
+    }
+	if (lua_gettop(luaVM) >= 4) {
+		g = (float)lua_tonumber(luaVM, 4);
+    }
+	if (lua_gettop(luaVM) >= 5) {
+		b = (float)lua_tonumber(luaVM, 5);
+    }
+	if (lua_gettop(luaVM) >= 6) {
+		a = (float)lua_tonumber(luaVM, 6);
+    }
+	
+	float theta = r;
+	float value = r;
 
-	// TODO
+	Mat4 transform;
+	switch (colorTransform) {
+		case 0: transform = blend::identity(); break;
+		case 1: transform = blend::invert(); break;
+		case 2: transform = blend::multiply(r, g, b); break;
+		case 3: transform = blend::screen(r, g, b); break;
+		case 4: transform = blend::colorFill(r, g, b, a); break;
+		case 5: transform = blend::linearDodge(r, g, b); break;
+		case 6: transform = blend::linearBurn(r, g, b); break;
+		case 7: transform = blend::colorDodge(r, g, b); break;
+		case 8: transform = blend::colorBurn(r, g, b); break;
+		case 9: transform = blend::tintedMonochrome(r, g, b, a); break;
+		case 10: transform = blend::hueShift(theta); break;
+		case 11: transform = blend::saturate(value); break;
+		case 12: transform = blend::brightness(value); break;
+		case 13: transform = blend::darkness(value); break;
+		case 14: transform = blend::contrast(value); break;
+		case 15: transform = blend::swapRG(); break;
+		case 16: transform = blend::swapRB(); break;
+		case 17: transform = blend::swapGB(); break;
+		
+		default: break;
+	}
+
+	batchRenderers[index]->colorTransform = batchRenderers[index]->colorTransform * transform;
 	
 	return 0;
 }
@@ -405,7 +498,7 @@ static int luaAddColorTransform(lua_State* luaVM) {
 static int luaResetColorTransforms(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 	
-	//	TODO
+	batchRenderers[index]->colorTransform = Mat4();
 	
 	return 0;
 }
@@ -421,7 +514,8 @@ static int luaFlushGraphics(lua_State* luaVM) {
 void registerGraphicsFunctions() {
     static const luaL_Reg graphicsFuncs[] = {
         { "resetVideo", luaResetVideo},
-
+		{ "clear", luaClear},
+			
         { "loadSprite", luaLoadSprite},
         { "addToAtlas", luaAddToAtlas},
         { "buildAtlas", luaBuildAtlas},
@@ -447,6 +541,26 @@ void registerGraphicsFunctions() {
         { NULL, NULL }
     };
     script.registerFuncs("AB", "graphics", graphicsFuncs);
+
+	script.execute("AB.graphics.colorTransforms = {"
+		"NONE = 0,"
+		"INVERT = 1,"
+		"MULTIPLY = 2,"
+		"SCREEN = 3,"
+		"COLOR_FILL = 4,"
+		"LINEAR_DODGE = 5,"
+		"LINEAR_BURN = 6,"
+		"COLOR_DODGE = 7,"
+		"COLOR_BURN = 8,"
+		"TINTED_MONOCHROME = 9,"
+		"HUE_SHIFT = 10,"
+		"SATURATE = 11,"
+		"BRIGHTNESS = 12,"
+		"DARKNESS = 13,"
+		"CONTRAST = 14,"
+		"SWAP_R_G = 15,"
+		"SWAP_R_B = 16,"
+		"SWAP_G_B = 17}");
 }
 
 }

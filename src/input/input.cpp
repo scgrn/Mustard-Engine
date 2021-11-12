@@ -261,25 +261,23 @@ void Input::update() {
 		}
         if (event->type ==  SDL_MOUSEWHEEL) {
 			showGamepadControls = false;
-			LOG("MOUSE WHEEL", 0);
 			mouse.wheel = event->wheel.y;
 			script.execute("AB.onMouseWheelMoved(" + toString(mouse.wheel, false) + ")");
 		}
 		
 		if (event->type == SDL_MOUSEBUTTONDOWN) {
 			showGamepadControls = false;
-			LOG("MOUSE BUTTON DOWN", 0);
 			script.execute("AB.onMousePressed(" +
-			toString((int)event->button.button, false) + ", " +
-			toString(event->button.x, false) + ", " +
-			toString(event->button.y, false) + ")");
+				toString((int)event->button.button, false) + ", " +
+				toString(event->button.x, false) + ", " +
+				toString(event->button.y, false) + ")");
 		}
 		
 		if (event->type == SDL_MOUSEBUTTONUP) {
 			script.execute("AB.onMouseReleased(" +
-			toString((int)event->button.button, false) + ", " +
-			toString(event->button.x, false) + ", " +
-			toString(event->button.y, false) + ")");
+				toString((int)event->button.button, false) + ", " +
+				toString(event->button.x, false) + ", " +
+				toString(event->button.y, false) + ")");
 		}
 
 		//	gamepad events
