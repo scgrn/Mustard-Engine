@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 
 #include "sprite.h"
 #include "../misc/misc.h"
+#include "../core/resourceManager.h"
 
 namespace AB {
 
@@ -43,11 +44,13 @@ class Node {
         Node *down;
 };
 
-static std::vector<Sprite*> sprites;
+static std::vector<Sprite*> atlasSprites;
 static Node *root;
 
+extern ResourceManager<Sprite> sprites;
+
 void addToAtlas(Sprite *sprite) {
-    sprites.push_back(sprite);
+    atlasSprites.push_back(sprite);
 }
 
 static bool cmp(Sprite *s1, Sprite *s2) {
@@ -129,7 +132,7 @@ static Node* growNode(Node *root, int w, int h) {
 }
 
 static void fit() {
-    for (std::vector<Sprite*>::iterator sprite = sprites.begin(); sprite != sprites.end(); sprite++) {
+    for (std::vector<Sprite*>::iterator sprite = atlasSprites.begin(); sprite != atlasSprites.end(); sprite++) {
         Node *node = findNode(root, (*sprite)->width, (*sprite)->height);
         if (node) {
             Node* fit = splitNode(node, (*sprite)->width, (*sprite)->height);
@@ -155,10 +158,10 @@ static void deleteTree(Node* node) {
 
 void buildAtlas() {
     //  sort sprites based on longest edge
-    std::sort(sprites.begin(), sprites.end(), cmp);
+    std::sort(atlasSprites.begin(), atlasSprites.end(), cmp);
 
     //  initialize the target to the size of the largest sprite
-    root = new Node(0, 0, sprites.at(0)->width, sprites.at(0)->height);
+    root = new Node(0, 0, atlasSprites.at(0)->width, atlasSprites.at(0)->height);
     fit();
     int atlasWidth = root->w;
     int atlasHeight = root->h;
@@ -186,7 +189,7 @@ void buildAtlas() {
 
 */
 
-    for (std::vector<Sprite*>::iterator sprite = sprites.begin(); sprite != sprites.end(); sprite++) {
+    for (std::vector<Sprite*>::iterator sprite = atlasSprites.begin(); sprite != atlasSprites.end(); sprite++) {
         float u1 = (float)(*sprite)->atlasX / (float)atlasWidth;
         float v1 = (float)(*sprite)->atlasY / (float)atlasHeight;
         float u2 = (float)((*sprite)->atlasX + (*sprite)->width) / (float)atlasWidth;
@@ -218,8 +221,55 @@ void buildAtlas() {
     delete [] data;
 
     //  TODO: check if grown past MAX_TEXTURE_SIZE and split
-    sprites.clear();
+    atlasSprites.clear();
     // GL_MAX_TEXTURE_SIZE
+}
+
+int loadAtlas(std::string const& filename, int firstIndex, int width, int height) {
+    sprites.mapResource(firstIndex, filename);
+	sprites.get(firstIndex)->uploadToGPU();
+	
+	int atlasWidth = sprites.get(firstIndex)->width;
+	int atlasHeight = sprites.get(firstIndex)->height;
+	
+	int columns = atlasWidth / width;
+	int rows = atlasHeight / height;
+	
+	int numSprites = rows * columns;
+	
+	// TODO: account for margin
+	float uIncrease = (float)width / (float)atlasWidth;
+	float vIncrease = (float)height / (float)atlasHeight;
+	
+	int spriteIndex = firstIndex;
+	float v = 0.0f;
+	for (int y = 0; y < rows; y++) {
+		float u = 0.0f;
+		for (int x = 0; x < columns; x++) {
+			if (spriteIndex > firstIndex) {
+				sprites.mapResource(spriteIndex, ".");
+			}
+
+			Sprite* sprite = sprites.get(spriteIndex);
+			sprite->width = width;
+			sprite->height = height;
+			sprite->halfX = width / 2;
+			sprite->halfY = height / 2;
+			sprite->radius = sqrt((float)((sprite->halfX * sprite->halfX) + (sprite->halfY * sprite->halfY)));
+			
+			float u1 = u;
+			float v1 = v;
+			float u2 = u + uIncrease;
+			float v2 = v + vIncrease;
+			sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2);
+			
+			spriteIndex++;
+			u += uIncrease;
+		}
+		v += vIncrease;
+	}
+	
+	return numSprites;
 }
 
 }   //  namespace

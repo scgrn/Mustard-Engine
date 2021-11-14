@@ -140,7 +140,44 @@ static int luaLoadSprite(lua_State* luaVM) {
 	//  return handle
 	lua_pushnumber(luaVM, index);
 
-    return index;
+    return 1;
+}
+
+/// Loads a series of sprites from a spritesheet
+// @function AB.graphics.loadAtlas
+// @param filename Filename
+// @param width Width of each sprite
+// @param height Height of each sprite
+// @param collisionMask (true) If a collision mask should be created
+// @param index (optional) First sprite index
+// @return first sprite handle
+// @return number of sprites loaded
+static int luaLoadAtlas(lua_State* luaVM) {
+    std::string filename = std::string(lua_tostring(luaVM, 1));
+	int width = (int)lua_tonumber(luaVM, 2);
+	int height = (int)lua_tonumber(luaVM, 3);
+	
+    bool createMask = true;
+    if (lua_gettop(luaVM) >= 4) {
+        createMask = (bool)lua_toboolean(luaVM, 4);
+    }
+
+	int index;
+	int spritesLoaded;
+    if (lua_gettop(luaVM) >= 5) {
+        index = (int)lua_tonumber(luaVM, 5);
+		spritesLoaded = loadAtlas(filename, index, width, height);
+    } else {
+		index = spriteHandle;
+		spritesLoaded = loadAtlas(filename, index, width, height);
+		spriteHandle += spritesLoaded;
+	}
+
+	//  return handle and number of sprites loaded
+	lua_pushnumber(luaVM, index);
+	lua_pushnumber(luaVM, spritesLoaded);
+
+    return 2;
 }
 
 ///	Queues a sprite to be renderer on the screen or current canvas.
@@ -517,6 +554,7 @@ void registerGraphicsFunctions() {
 		{ "clear", luaClear},
 			
         { "loadSprite", luaLoadSprite},
+		{ "loadAtlas", luaLoadAtlas},
         { "addToAtlas", luaAddToAtlas},
         { "buildAtlas", luaBuildAtlas},
 

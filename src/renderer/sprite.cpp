@@ -40,15 +40,17 @@ Sprite::Sprite() {
 }
 
 void Sprite::load(std::string const& filename) {
-    LOG("Loading <%s>", filename.c_str());
+	if (filename != ".") {
+		LOG("Loading <%s>", filename.c_str());
 
-    image = new Image(filename.c_str());
+		image = new Image(filename.c_str());
 
-    width = image->width;
-    height = image->height;
-	halfX = width / 2;
-	halfY = height / 2;
-	radius = sqrt((float)((halfX * halfX) + (halfY * halfY)));
+		width = image->width;
+		height = image->height;
+		halfX = width / 2;
+		halfY = height / 2;
+		radius = sqrt((float)((halfX * halfX) + (halfY * halfY)));
+	}
 }
 
 void Sprite::release() {
