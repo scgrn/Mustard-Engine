@@ -52,6 +52,12 @@ static int spriteHandle = 1;
 static int canvasHandle = 1;
 static int currentRenderTarget = 0;
 
+/// Blend modes
+// @field ALPHA (default)
+// @field ADDITIVE
+// @field PREMULTIPLIED_ALPHA
+// @table blendModes
+
 /// Color transforms
 // @field NONE ()
 // @field INVERT ()
@@ -68,9 +74,9 @@ static int currentRenderTarget = 0;
 // @field BRIGHTNESS (value)
 // @field DARKNESS (value)
 // @field CONTRAST (value)
-// @field SWAP_R_G
-// @field SWAP_R_B
-// @field SWAP_G_B
+// @field SWAP_R_G ()
+// @field SWAP_R_B ()
+// @field SWAP_G_B ()
 // @table colorTransforms
 
 /// Sets the video mode. Only necessary upon changes to video mode. Reads a global table: videoConfig = { title, xRes, yRes, fullscreen, vsync }
@@ -180,6 +186,25 @@ static int luaLoadAtlas(lua_State* luaVM) {
     return 2;
 }
 
+/// Adds a sprite into the current atlas queue. This should be done at startup before any rendering occurs. Sprites that are commonly
+// used together can be batched into a single atlas to improve performance by minimizing texture switches.
+// @param index Sprite index
+// @function AB.graphics.addToAtlas
+static int luaAddToAtlas(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    addToAtlas(sprites.get(index));
+
+    return 0;
+}
+
+/// Builds a sprite atlas. Call this after several calls to AB.graphics.addToAtlas
+// @function AB.graphics.buildAtlas
+static int luaBuildAtlas(lua_State* luaVM) {
+    buildAtlas();
+
+    return 0;
+}
+
 ///	Queues a sprite to be renderer on the screen or current canvas.
 // @function AB.graphics.renderSprite
 // @param layer Rendering layer. A default layer of 0 is provided
@@ -218,25 +243,6 @@ static int luaRenderSprite(lua_State* luaVM) {
 
 	//	TODO: need to support scaleY in quad renderer
 	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX, currentColor);
-
-    return 0;
-}
-
-/// Adds a sprite into the current atlas queue. This should be done at startup before any rendering occurs. Sprites that are commonly
-// used together can be batched into a single atlas to improve performance by minimizing texture switches.
-// @param index Sprite index
-// @function AB.graphics.addToAtlas
-static int luaAddToAtlas(lua_State* luaVM) {
-    int index = (int)lua_tonumber(luaVM, 1);
-    addToAtlas(sprites.get(index));
-
-    return 0;
-}
-
-/// Builds a sprite atlas. Call this after several calls to AB.graphics.addToAtlas
-// @function AB.graphics.buildAtlas
-static int luaBuildAtlas(lua_State* luaVM) {
-    buildAtlas();
 
     return 0;
 }
@@ -463,6 +469,20 @@ static int luaRemoveLayer(lua_State* luaVM) {
 	return 0;
 }
 
+/// Sets a layer's blend mode
+// @function AB.graphics.setBlendMode
+// @param index Layer index
+// @param blendMode Blend mode
+// @usage AB.graphics.setBlendMode(0, AB.graphics.blendModes.ADDITIVE)
+// @see blendModes
+static int luaSetBlendMode(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    int blendMode = (int)lua_tonumber(luaVM, 2);
+
+	batchRenderers[index]->blendMode = (Renderer::BlendMode)blendMode;
+
+	return 0;
+}
 
 /// Adds a color transform for layer. Chained with any previous color transforms
 // @function AB.graphics.addColorTransform
@@ -567,18 +587,24 @@ void registerGraphicsFunctions() {
 		{ "useCanvas", luaUseCanvas},
 		{ "renderCanvas", luaRenderCanvas}, 
 
-		{ "addColorTransform", luaAddColorTransform},
-		{ "resetColorTransforms", luaResetColorTransforms},
-
 		// { "loadShader", luaLoadShader},
 		{ "createLayer", luaCreateLayer},
 		{ "removeLayer", luaRemoveLayer},
 		
+		{ "setBlendMode", luaSetBlendMode},
+		{ "addColorTransform", luaAddColorTransform},
+		{ "resetColorTransforms", luaResetColorTransforms},
+
 		{ "flushGraphics", luaFlushGraphics},
 		
         { NULL, NULL }
     };
     script.registerFuncs("AB", "graphics", graphicsFuncs);
+
+	script.execute("AB.graphics.blendModes = {"
+		"ALPHA = 0,"
+		"ADDITIVE = 1,"
+		"PREMULTIPLIED_ALPHA = 2}");
 
 	script.execute("AB.graphics.colorTransforms = {"
 		"NONE = 0,"

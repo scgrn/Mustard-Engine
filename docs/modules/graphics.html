@@ -78,16 +78,16 @@
 	<td class="summary">Loads a series of sprites from a spritesheet</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#AB.graphics.renderSprite">AB.graphics.renderSprite (layer, index, x, y, z, angle, scaleX, scaleY)</a></td>
-	<td class="summary">Queues a sprite to be renderer on the screen or current canvas.</td>
-	</tr>
-	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.addToAtlas">AB.graphics.addToAtlas (index)</a></td>
 	<td class="summary">Adds a sprite into the current atlas queue.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.buildAtlas">AB.graphics.buildAtlas ()</a></td>
 	<td class="summary">Builds a sprite atlas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.renderSprite">AB.graphics.renderSprite (layer, index, x, y, z, angle, scaleX, scaleY)</a></td>
+	<td class="summary">Queues a sprite to be renderer on the screen or current canvas.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.spriteSize">AB.graphics.spriteSize (index)</a></td>
@@ -122,6 +122,10 @@
 	<td class="summary">Removes a rendering layer</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.setBlendMode">AB.graphics.setBlendMode (index, blendMode)</a></td>
+	<td class="summary">Sets a layer's blend mode</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.addColorTransform">AB.graphics.addColorTransform (index, transform, r, g, b, a)</a></td>
 	<td class="summary">Adds a color transform for layer.</td>
 	</tr>
@@ -136,6 +140,10 @@
 </table>
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#blendModes">blendModes</a></td>
+	<td class="summary">Blend modes</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#colorTransforms">colorTransforms</a></td>
 	<td class="summary">Color transforms</td>
@@ -263,6 +271,41 @@
 
 </dd>
     <dt>
+    <a name = "AB.graphics.addToAtlas"></a>
+    <strong>AB.graphics.addToAtlas (index)</strong>
+    </dt>
+    <dd>
+    Adds a sprite into the current atlas queue.  This should be done at startup before any rendering occurs. Sprites that are commonly
+ used together can be batched into a single atlas to improve performance by minimizing texture switches.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+         Sprite index
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.buildAtlas"></a>
+    <strong>AB.graphics.buildAtlas ()</strong>
+    </dt>
+    <dd>
+    Builds a sprite atlas.  Call this after several calls to AB.graphics.addToAtlas
+
+
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "AB.graphics.renderSprite"></a>
     <strong>AB.graphics.renderSprite (layer, index, x, y, z, angle, scaleX, scaleY)</strong>
     </dt>
@@ -297,41 +340,6 @@
          (scaleX) Scale Y
         </li>
     </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "AB.graphics.addToAtlas"></a>
-    <strong>AB.graphics.addToAtlas (index)</strong>
-    </dt>
-    <dd>
-    Adds a sprite into the current atlas queue.  This should be done at startup before any rendering occurs. Sprites that are commonly
- used together can be batched into a single atlas to improve performance by minimizing texture switches.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">index</span>
-         Sprite index
-        </li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "AB.graphics.buildAtlas"></a>
-    <strong>AB.graphics.buildAtlas ()</strong>
-    </dt>
-    <dd>
-    Builds a sprite atlas.  Call this after several calls to AB.graphics.addToAtlas
-
-
 
 
 
@@ -573,6 +581,37 @@
 
 </dd>
     <dt>
+    <a name = "AB.graphics.setBlendMode"></a>
+    <strong>AB.graphics.setBlendMode (index, blendMode)</strong>
+    </dt>
+    <dd>
+    Sets a layer's blend mode
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+         Layer index
+        </li>
+        <li><span class="parameter">blendMode</span>
+         Blend mode
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/graphics.html#blendModes">blendModes</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">AB.graphics.setBlendMode(<span class="number">0</span>, AB.graphics.blendModes.ADDITIVE)</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "AB.graphics.addColorTransform"></a>
     <strong>AB.graphics.addColorTransform (index, transform, r, g, b, a)</strong>
     </dt>
@@ -655,6 +694,29 @@
 
     <dl class="function">
     <dt>
+    <a name = "blendModes"></a>
+    <strong>blendModes</strong>
+    </dt>
+    <dd>
+    Blend modes
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">ALPHA</span>
+         (default)
+        </li>
+        <li><span class="parameter">ADDITIVE</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "colorTransforms"></a>
     <strong>colorTransforms</strong>
     </dt>
@@ -710,13 +772,13 @@
          (value)
         </li>
         <li><span class="parameter">SWAP_R_G</span>
-
+         ()
         </li>
         <li><span class="parameter">SWAP_R_B</span>
-
+         ()
         </li>
         <li><span class="parameter">SWAP_G_B</span>
-
+         ()
         </li>
     </ul>
 
@@ -732,7 +794,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2021-11-14 15:54:59 </i>
+<i style="float:right;">Last updated 2021-11-14 17:22:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
