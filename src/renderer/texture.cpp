@@ -82,8 +82,8 @@ Texture::Texture(Image *image) {
 void Texture::init(Image *image) {
 	int rWidth = image->width;
 	int rHeight = image->height;
-	int width = nextPowerOfTwo(rWidth);
-	int height = nextPowerOfTwo(rHeight);
+	width = nextPowerOfTwo(rWidth);
+	height = nextPowerOfTwo(rHeight);
 
 	u2 = (float)rWidth / (float)width;
 	v2 = (float)rHeight / (float)height;

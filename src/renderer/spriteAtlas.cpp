@@ -234,12 +234,12 @@ int loadAtlas(std::string const& filename, int firstIndex, int width, int height
 	
 	int columns = atlasWidth / width;
 	int rows = atlasHeight / height;
-	
 	int numSprites = rows * columns;
 	
-	// TODO: account for margin
-	float uIncrease = (float)width / (float)atlasWidth;
-	float vIncrease = (float)height / (float)atlasHeight;
+	float uIncrease = ((float)width / (float)atlasWidth) *
+		((float)atlasWidth / (float)sprites.get(firstIndex)->texture->width);
+	float vIncrease = ((float)height / (float)atlasHeight) *
+		((float)atlasHeight / (float)sprites.get(firstIndex)->texture->height);
 	
 	int spriteIndex = firstIndex;
 	float v = 0.0f;
