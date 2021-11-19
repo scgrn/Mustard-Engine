@@ -372,10 +372,10 @@ static int luaSetMousePosition(lua_State* luaVM) {
 
 /// Checks if mouse button was pressed this frame
 // @function AB.input.mouseWasPressed
-// @param button Button index (1-3)
+// @param button Button index (1-2)
 // @return pressed
 static int luaMouseWasPressed(lua_State* luaVM) {
-    int button = (int)lua_tonumber(luaVM, 1);
+    int button = (int)lua_tonumber(luaVM, 1) - 1;
     lua_pushboolean(luaVM, input.wasMousePressed(button));
 
     return 1;
@@ -386,7 +386,7 @@ static int luaMouseWasPressed(lua_State* luaVM) {
 // @param button Button index (1-3)
 // @return pressed
 static int luaMousePressed(lua_State* luaVM) {
-    int button = (int)lua_tonumber(luaVM, 1);
+    int button = (int)lua_tonumber(luaVM, 1) - 1;
     lua_pushboolean(luaVM, input.isMousePressed(button));
 
     return 1;
@@ -397,7 +397,7 @@ static int luaMousePressed(lua_State* luaVM) {
 // @param button Button index (1-3)
 // @return released
 static int luaMouseWasReleased(lua_State* luaVM) {
-    int button = (int)lua_tonumber(luaVM, 1);
+    int button = (int)lua_tonumber(luaVM, 1) - 1;
     lua_pushboolean(luaVM, input.wasKeyReleased(button));
 
     return 1;
@@ -419,6 +419,7 @@ static int luaKeyWasPressed(lua_State* luaVM) {
 // @function AB.input.keyPressed
 // @param scanCode Key scancode
 // @return pressed
+// @usage pressed = AB.input.keyPressed(AB.input.scancodes.RETURN)
 // @see scanCodes
 static int luaKeyPressed(lua_State* luaVM) {
     int scanCode = (int)lua_tonumber(luaVM, 1);

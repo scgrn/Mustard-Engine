@@ -158,13 +158,6 @@ void BatchRenderer::endScene() {
 		default: break;
 	}
 	
-	if (blendMode == ALPHA) {
-		// CALL_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-		;
-	} else {
-		CALL_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE));
-	}
-	
 	// enable VAO
 	CALL_GL(glBindVertexArray(vao));
 	
