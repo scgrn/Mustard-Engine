@@ -200,6 +200,18 @@ static int luaGetOS(lua_State* luaVM) {
     return 0;
 }
 
+/// Checks if engine is running in debug mode
+// @function AB.system.debugMode
+// @return debugMode
+static int luaDebugMode(lua_State* luaVM) {
+#ifdef DEBUG
+	lua_pushboolean(luaVM, 1);
+#else
+	lua_pushboolean(luaVM, 0);
+#endif
+	return 1;
+}
+
 /// Exits the program
 // @function AB.system.quit
 static int luaQuit(lua_State* luaVM) {
@@ -218,6 +230,7 @@ void registerSystemFunctions() {
 		{ "resync", luaResync},
 		{ "openURL", luaOpenURL},
 		{ "getOS", luaGetOS},
+		{ "debugMode", luaDebugMode},
 		{ "quit", luaQuit},
 
 		{ NULL, NULL }
