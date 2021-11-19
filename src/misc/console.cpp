@@ -194,7 +194,7 @@ void Console::render() {
 		//	TODO: this should call a generic quad renderer in renderer.h
 		quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);
 		quad.size = Vec2(width, height); 
-		quad.scale = 1.0f;
+		quad.scale = Vec2(1.0f, 1.0f);
 		quad.rotation = 0.0f;
 		quad.uv = Vec4(0.0f, 1.0f, 1.0f, 0.0f);
 		quad.textureID = 0;

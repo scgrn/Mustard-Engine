@@ -419,7 +419,7 @@ void Font::printString(BatchRenderer *renderer, GLfloat x, GLfloat y, GLfloat sc
                 cx += (chars[ascii]->width / 2.0f) * scale;
                 cy += (chars[ascii]->height / 2.0f) * scale;
                 
-				chars[ascii]->render(renderer, Vec3(cx, cy, -1.0f), 0, scale, color);
+				chars[ascii]->render(renderer, Vec3(cx, cy, -1.0f), 0, Vec2(scale, scale), color);
 				
                 tx += chars[ascii]->xAdvance * scale;
             } else {

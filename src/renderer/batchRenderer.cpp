@@ -81,27 +81,27 @@ BatchRenderer::BatchRenderer(Shader *shader, Mat4 colorTransform, bool depthSort
 	
 	//		scale
     CALL_GL(glEnableVertexAttribArray(3));
-	CALL_GL(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 5)));
+	CALL_GL(glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 5)));
 	CALL_GL(glVertexAttribDivisor(3, 1));  
 
 	//		rotation
     CALL_GL(glEnableVertexAttribArray(4));
-	CALL_GL(glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 6)));
+	CALL_GL(glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 7)));
 	CALL_GL(glVertexAttribDivisor(4, 1));  
 
 	//		uv
     CALL_GL(glEnableVertexAttribArray(5));
-	CALL_GL(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 7)));
+	CALL_GL(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 8)));
 	CALL_GL(glVertexAttribDivisor(5, 1));  
 
 	//		texture unit
     CALL_GL(glEnableVertexAttribArray(6));
-	CALL_GL(glVertexAttribIPointer(6, 1, GL_INT, sizeof(Quad), (void*)(sizeof(GLfloat) * 11)));
+	CALL_GL(glVertexAttribIPointer(6, 1, GL_INT, sizeof(Quad), (void*)(sizeof(GLfloat) * 12)));
 	CALL_GL(glVertexAttribDivisor(6, 1));  
 
 	//		color
     CALL_GL(glEnableVertexAttribArray(7));
-	CALL_GL(glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 11 + sizeof(GLint))));
+	CALL_GL(glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 12 + sizeof(GLint))));
 	CALL_GL(glVertexAttribDivisor(7, 1));
 	
 	renderBatch.reserve(MAX_QUADS_PER_BATCH);

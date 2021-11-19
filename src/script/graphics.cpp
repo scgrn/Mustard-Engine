@@ -242,7 +242,7 @@ static int luaRenderSprite(lua_State* luaVM) {
     }
 
 	//	TODO: need to support scaleY in quad renderer
-	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX, currentColor);
+	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
 
     return 0;
 }
@@ -299,7 +299,7 @@ static int luaRenderQuad(lua_State* luaVM) {
 	
 	quad.pos = Vec3(x, y, z);
 	quad.size = Vec2(width, height);
-	quad.scale = 1.0f;
+	quad.scale = Vec2(1.0f, 1.0f);
 	quad.rotation = angle;
 	quad.uv = Vec4(0, 0, 1, 1);
 	quad.textureID = 0;
@@ -430,7 +430,7 @@ static int luaRenderCanvas(lua_State* luaVM) {
 	
 	quad.pos = Vec3(x, y, z);
 	quad.size = Vec2(canvas->width, canvas->height);
-	quad.scale = scaleX;
+	quad.scale = Vec2(scaleX, scaleY);
 	quad.rotation = angle;
 	quad.uv = Vec4(0, 0, 1, 1);
 	quad.textureID = canvas->texture;

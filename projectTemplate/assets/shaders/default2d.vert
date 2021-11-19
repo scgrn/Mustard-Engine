@@ -2,7 +2,7 @@ layout (location = 0) in vec3 vertexPosition;
 
 layout (location = 1) in vec3 position;
 layout (location = 2) in vec2 size;
-layout (location = 3) in float scale;
+layout (location = 3) in vec2 scale;
 layout (location = 4) in float rotation;
 layout (location = 5) in vec4 texCoord;
 layout (location = 6) in int textureUnit;
@@ -16,7 +16,8 @@ flat out int TextureUnit;
 uniform mat4 projection;
 
 void main() {
-	vec4 newPos = vec4((vertexPosition * vec3(size, 1.0) * scale), 1.0f);
+	vec4 newPos = vec4((vertexPosition * vec3(size, 1.0) * vec3(scale, 1)), 1.0f);
+	//newPos = newPos * vec4(scale, 1, 1);
 	
 	gl_Position.x = (newPos.x * cos(rotation)) + (newPos.y * sin(rotation));
 	gl_Position.y = (newPos.y * cos(rotation)) - (newPos.x * sin(rotation));

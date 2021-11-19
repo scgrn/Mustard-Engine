@@ -117,7 +117,7 @@ void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u
     }
 }
 
-void Sprite::render(BatchRenderer *renderer, Vec3 pos, float rotation, float scale, Vec4 color) {
+void Sprite::render(BatchRenderer *renderer, Vec3 pos, float rotation, Vec2 scale, Vec4 color) {
     if (texture.get() == 0) {
         uploadToGPU();
     }

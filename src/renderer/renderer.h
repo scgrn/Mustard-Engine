@@ -69,7 +69,7 @@ class Renderer : public SubSystem {
 		struct Quad {
 			Vec3 pos;
 			Vec2 size;
-			float scale;
+			Vec2 scale;
 			float rotation;		// radians
 			Vec4 uv;			// {u1, v1, u2, v2}
 			GLint textureID;	// set to 0 for white texture
