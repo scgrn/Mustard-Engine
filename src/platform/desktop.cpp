@@ -149,19 +149,9 @@ void mainLoop(Application *app) {
 
         // TODO: call onPause / onResume on focus events
 
-        // TODO: catch gamepad events and pass them to lua
-
         if (event.type == SDL_KEYDOWN) {
-            //  check fullscreen toggle
-            if (event.key.keysym.sym == SDLK_RETURN && (event.key.keysym.mod & KMOD_ALT)) {
-                script.execute("AB.onToggleFullscreen()");
-            } else {
-                //  pass to lua
-                script.execute("AB.onKeyPressed(" + toString(event.key.keysym.scancode) + ")");
-            }
-
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-                app->onBackPressed();
+				app->onBackPressed();
             }
 #ifdef DEBUG
             if (event.key.keysym.sym == SDLK_PAUSE) {

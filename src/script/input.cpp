@@ -31,6 +31,7 @@ Input polling
 #include "script.h"
 #include "../input/input.h"
 #include "../core/log.h"
+#include "../misc/misc.h"
 
 namespace AB {
 
@@ -756,6 +757,13 @@ void registerInputFunctions() {
         { NULL, NULL }
     };
     script.registerFuncs("AB", "input", inputFuncs);
+
+	std::string command = "AB.input.scancodes = {";
+#define X(a, b) command += #a; command += "=" + toString(b) + ",";
+#include "../input/scancodes.h"
+#undef X
+	command += "}";
+	script.execute(command);
 }
 
 }

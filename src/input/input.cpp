@@ -30,23 +30,26 @@ freely, subject to the following restrictions:
 #include "../core/fileSystem.h"
 #include "../core/window.h"
 #include "../misc/misc.h"
+#include "../misc/console.h"
 
 namespace AB {
 
 #define X(a, b) a = b,
+enum Scancodes {
 #include "scancodes.h"
-enum Scancodes {SCANCODES};
+};
 #undef X
 
-#define X(a, b) "a",
+#define X(a, b) {b, #a},
+std::unordered_map<int, std::string> keyNames = {
 #include "scancodes.h"
-static const char *strings[] = {SCANCODES};
+};
 #undef X
-
 
 static const int MAX_GAMEPADS = 4;
 static const float DEFAULT_DEADZONE = 0.1f;
 
+extern Console console;
 extern Script script;
 extern std::vector<SDL_Event> eventQueue;
 
@@ -130,12 +133,11 @@ static void removeGamepad(int id) {
 
 // -------------------------------------------------------------------------------------------------------------------------------------------
 
+static void associate(int a, std::string b) {
+}
+
 bool Input::startup() {
 	LOG("Input subsystem startup", 0);
-	
-	// LOG("SCANCODE 84: %s", strings[84]);
-	// TODO: WTF
-	// LOG("SCANCODE FOR A: %d", Scancodes.A);
 
 	showGamepadControls = false;
 	firstMouseMotion = true;
@@ -247,6 +249,16 @@ void Input::update() {
     for (std::vector<SDL_Event>::iterator event = eventQueue.begin(); event != eventQueue.end(); event++) {
 		if (event->type == SDL_KEYDOWN) {
 			showGamepadControls = false;
+
+            //  check fullscreen toggle
+            if (event->key.keysym.sym == SDLK_RETURN && (event->key.keysym.mod & KMOD_ALT)) {
+                script.execute("AB.onToggleFullscreen()");
+            } else {
+				if (!console.active) {
+					//  pass to lua
+					script.execute("AB.onKeyPressed(" + toString(event->key.keysym.scancode) + ")");
+				}
+            }
 		}
 		
 		if (event->type == SDL_MOUSEMOTION) {
