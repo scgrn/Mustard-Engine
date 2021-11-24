@@ -118,7 +118,9 @@ static int luaLoadData(lua_State* luaVM) {
     }
 
 	std::string value = fileSystem.loadData(key);
-
+	LOG_EXP(value);
+	lua_pushstring(luaVM, value.c_str());
+/*
     int error = luaL_loadbuffer(luaVM, value.c_str(), value.size(), key.c_str());
     if (error) {
         std::string errorMsg = lua_tostring(luaVM, -1);
@@ -147,7 +149,7 @@ static int luaLoadData(lua_State* luaVM) {
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
 #endif
     }
-
+*/
 	return 1;
 }
 
@@ -160,7 +162,7 @@ static int luaSaveData(lua_State* luaVM) {
 	//	TODO: compile switch
     std::string key = std::string(lua_tostring(luaVM, 1));
     std::string value = std::string(lua_tostring(luaVM, 2));
-
+	
     fileSystem.saveData(key, value);
 
 	return 0;

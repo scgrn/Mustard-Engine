@@ -343,18 +343,14 @@ static int luaShowCursor(lua_State* luaVM) {
 // @return Right mouse button
 // @usage x, y, left, middle, right = AB.input.getMouseState()
 static int luaGetMouseState(lua_State* luaVM) {
-    int x, y;
-
-    Uint32 buttons = SDL_GetMouseState(&x, &y);
-
-    lua_pushinteger(luaVM, x);
-    lua_pushinteger(luaVM, y);
+	Vec2 pos = input.getMousePosition();
+    lua_pushinteger(luaVM, (int)pos.x);
+    lua_pushinteger(luaVM, (int)pos.y);
 	
-	//	TODO: these should come from input subsystem. why does script even know about SDL.
-    lua_pushboolean(luaVM, buttons & SDL_BUTTON(SDL_BUTTON_LEFT));
-    lua_pushboolean(luaVM, buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE));
-    lua_pushboolean(luaVM, buttons & SDL_BUTTON(SDL_BUTTON_RIGHT));
-
+	for (int i = 0; i < 3; i++) {
+		lua_pushboolean(luaVM, input.isMousePressed(i));
+	}
+	
     return 5;
 }
 

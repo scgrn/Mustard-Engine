@@ -413,9 +413,9 @@ void Input::update() {
 	memcpy(mouse.prevButtons, mouse.buttons, 3);
 
     Uint32 buttons = SDL_GetMouseState(NULL, NULL);
-    mouse.buttons[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
-    mouse.buttons[1] = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
-    mouse.buttons[2] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+    mouse.buttons[0] = buttons & SDL_BUTTON_LMASK;
+    mouse.buttons[1] = buttons & SDL_BUTTON_MMASK;
+    mouse.buttons[2] = buttons & SDL_BUTTON_RMASK;
 }
 
 void Input::shutdown() {
