@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 
 #include "subsystem.h"
 #include "application.h"
+#include "../math/math.h"
 
 namespace AB {
 
@@ -56,6 +57,7 @@ class Window : public SubSystem {
 		void shutdown() override;
 		
 		void setVideoMode(Application *app);
+		Vec2 getDesktopResolution();
 		void resetViewport();
 		void present();
 		

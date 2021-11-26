@@ -198,6 +198,20 @@ void Window::setVideoMode(Application *app) {
 	camera2d.setProjection(0, currentMode.xRes, currentMode.yRes, 0);
 }
 
+Vec2 Window::getDesktopResolution() {
+	Vec2 res;
+	
+	SDL_DisplayMode dm;
+	if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
+		LOG("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
+	} else {
+		res.x = dm.w;
+		res.y = dm.h;
+	}
+	
+	return res;
+}
+
 void Window::present() {
     // present the frame to the user, much to their delight
     SDL_GL_SwapWindow(window);

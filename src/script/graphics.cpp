@@ -87,6 +87,19 @@ static int luaResetVideo(lua_State* luaVM) {
     return 0;
 }
 
+/// Gets desktop resolution
+// @function AB.graphics.getDesktopResolution
+// @return xRes X resolution
+// @return yRes Y resolution
+static int luaGetDesktopResolution(lua_State* luaVM) {
+	Vec2 res = window.getDesktopResolution();
+	
+	lua_pushnumber(luaVM, res.x);
+	lua_pushnumber(luaVM, res.y);
+
+	return 2;
+}
+
 /// Clears the screen or current canvas
 // @function AB.graphics.clear
 // @param r (0.0) Red color component
@@ -571,6 +584,7 @@ static int luaFlushGraphics(lua_State* luaVM) {
 void registerGraphicsFunctions() {
     static const luaL_Reg graphicsFuncs[] = {
         { "resetVideo", luaResetVideo},
+		{ "getDesktopResolution", luaGetDesktopResolution},
 		{ "clear", luaClear},
 			
         { "loadSprite", luaLoadSprite},
