@@ -3,6 +3,10 @@ function AB.loadConfig()
 		title = "AB SAMPLE PROJECT",
 		xRes = 800,
 		yRes = 600,
+		xOffset = 0,
+		yOffset = 0,
+		xScale = 1,
+		yScale = 1,
 		fullscreen = false,
 		vsync = true,
 	}
