@@ -35,6 +35,8 @@ freely, subject to the following restrictions:
 #ifndef AB_INPUT_H
 #define AB_INPUT_H
 
+#include <unordered_map>
+
 #include "../core/subsystem.h"
 #include "../math/math.h"
 
@@ -42,6 +44,19 @@ namespace AB {
 
 class Input : public SubSystem {
 	public:
+
+#define X(a, b) a = b,
+enum Scancodes {
+#include "scancodes.h"
+};
+#undef X
+
+#define X(a, b) {b, #a},
+std::unordered_map<int, std::string> keyNames = {
+#include "scancodes.h"
+};
+#undef X
+
 		static const int BUFFER_SIZE = 16; // 64;
 		
 		//	alias SDL gamepad button constants

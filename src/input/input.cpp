@@ -34,18 +34,6 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-#define X(a, b) a = b,
-enum Scancodes {
-#include "scancodes.h"
-};
-#undef X
-
-#define X(a, b) {b, #a},
-std::unordered_map<int, std::string> keyNames = {
-#include "scancodes.h"
-};
-#undef X
-
 static const int MAX_GAMEPADS = 4;
 static const float DEFAULT_DEADZONE = 0.1f;
 

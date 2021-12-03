@@ -106,6 +106,8 @@ void Shader::load(std::string const& filename) {
 
     CALL_GL(glDeleteShader(vertexShader));
     CALL_GL(glDeleteShader(fragmentShader));
+	
+	LOG("Shader compilation successful.", 0);
 }
 
 void Shader::release() {
