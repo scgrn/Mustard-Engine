@@ -53,6 +53,7 @@ class PerspectiveCamera : public Camera {
 	public:
 		PerspectiveCamera();
 		void setProjection(float fov);
+		void setView(Mat4 view);
 		virtual void recalculateViewMatrix();
 		
 		Vec3 rotation;

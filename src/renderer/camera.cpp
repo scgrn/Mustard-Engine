@@ -47,6 +47,10 @@ void PerspectiveCamera::setProjection(float fov) {
     projectionMatrix = perspective(toRadians(fov), (float)window.currentMode.xRes / (float)window.currentMode.yRes, 0.1f, 1000.0f);
 }
 
+void PerspectiveCamera::setView(Mat4 view) {
+	viewMatrix = view;
+}
+
 void PerspectiveCamera::recalculateViewMatrix() {
 	viewMatrix = Mat4();
 	
