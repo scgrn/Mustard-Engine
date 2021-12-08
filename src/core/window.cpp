@@ -113,6 +113,9 @@ void Window::setVideoMode(Application *app) {
         fullscreen = false;
 	}
 
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+
     Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_INPUT_GRABBED | SDL_WINDOW_HIDDEN;
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);    // needed? GODDAMMIT
 
@@ -177,6 +180,7 @@ void Window::setVideoMode(Application *app) {
     SDL_DisableScreenSaver();
 	
 	gladLoadGLLoader(SDL_GL_GetProcAddress);
+	glEnable(GL_MULTISAMPLE);
 
 	//	avoids white screen flash at startup
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
