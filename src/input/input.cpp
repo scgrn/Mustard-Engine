@@ -373,10 +373,10 @@ void Input::update() {
 		for (int axis = 0; axis < 2; axis++) {
 			GamepadAxis trigger = axis == 0 ? AXIS_TRIGGER_LEFT : AXIS_TRIGGER_RIGHT;
 			
-			float triggerInput = connectedGamepads[i].rawAxis[trigger] / 32768.0f;
+			float triggerInput = connectedGamepads[i].rawAxis[trigger] / 32767.0f;
 			
 			connectedGamepads[i].prevAxis[trigger] = connectedGamepads[i].axis[trigger];
-			connectedGamepads[i].axis[trigger] = (triggerInput - connectedGamepads[i].deadZone) / (1.0f - connectedGamepads[i].deadZone);
+			connectedGamepads[i].axis[trigger] = max(triggerInput - connectedGamepads[i].deadZone, 0.0f) / (1.0f - connectedGamepads[i].deadZone);
 		}
 		connectedGamepads[i].buttons[BUTTON_LTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] > 0.15f;
 		connectedGamepads[i].buttons[BUTTON_RTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_RIGHT] > 0.15f;
@@ -501,7 +501,7 @@ bool Input::gamepadWasReleased(int gamepadIndex, int button) {
 
 float Input::gamepadAxis(int gamepadIndex, int axis) {
 	if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
-		return false;
+		return 0.0f;
 	}
 	return connectedGamepads[gamepadIndex].axis[axis];
 }
