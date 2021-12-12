@@ -224,6 +224,7 @@ Mat4 inverse(Mat4 matrix) {
 Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     Mat4 ret;
     Vec3 zAxis;
+	
     zAxis.x = target.x - position.x;
     zAxis.y = target.y - position.y;
     zAxis.z = target.z - position.z;
@@ -250,6 +251,8 @@ Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     ret.data1d[14] = dotProduct(zAxis, position);
     ret.data1d[15] = 1.0f;
 
+	//ret = translate(Vec3(-position.x, -position.y, -position.z)) * ret;
+	
     return ret;
 }
 
