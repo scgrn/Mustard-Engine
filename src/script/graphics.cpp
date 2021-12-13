@@ -254,7 +254,6 @@ static int luaRenderSprite(lua_State* luaVM) {
         scaleY = scaleX;
     }
 
-	//	TODO: need to support scaleY in quad renderer
 	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
 
     return 0;

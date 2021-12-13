@@ -55,7 +55,7 @@ class PerspectiveCamera : public Camera {
 		void setProjection(float fov);
 		void setView(Mat4 view);
 		virtual void recalculateViewMatrix();
-		Vec2 project(Vec3 point);
+		Vec2 project(Vec3 point, Mat4 modelMatrix = Mat4());
 		
 		Vec3 rotation;
 		Vec3 position;

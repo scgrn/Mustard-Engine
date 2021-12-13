@@ -61,50 +61,20 @@ void PerspectiveCamera::recalculateViewMatrix() {
 	viewMatrix = viewMatrix * translate(position);
 }
 
-//  http://www.opengl.org/wiki/GluProject_and_gluUnProject_code
-//  http://www.gamedev.net/topic/65558-gluproject-glunproject-use-examples/
-Vec2 PerspectiveCamera::project(Vec3 point) {
-	Vec3 ret;
+Vec2 PerspectiveCamera::project(Vec3 point, Mat4 modelMatrix) {
+	AB::Mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
 	
-    point.z += 1.0f;	// TODO: why
+	AB::Vec4 p = AB::Vec4(point.x, point.y, point.z, 1.0f);
+	AB::Vec4 result = transform * p;
 
-    //	transformation vectors
-    float temp[8];
-	
-    //	modelview transform
-    temp[0] = viewMatrix.data1d[0] * point.x + viewMatrix.data1d[4] * point.y + viewMatrix.data1d[8] * point.z + viewMatrix.data1d[12];  //w is always 1
-    temp[1] = viewMatrix.data1d[1] * point.x + viewMatrix.data1d[5] * point.y + viewMatrix.data1d[9] * point.z + viewMatrix.data1d[13];
-    temp[2] = viewMatrix.data1d[2] * point.x + viewMatrix.data1d[6] * point.y + viewMatrix.data1d[10] * point.z + viewMatrix.data1d[14];
-    temp[3] = viewMatrix.data1d[3] * point.x + viewMatrix.data1d[7] * point.y + viewMatrix.data1d[11] * point.z + viewMatrix.data1d[15];
-    
-	//	projection transform, the final row of projection matrix is always [0 0 -1 0]
-    //	so we optimize for that.
-    temp[4] = projectionMatrix.data1d[0] * temp[0] + projectionMatrix.data1d[4] * temp[1] + projectionMatrix.data1d[8] * temp[2] + projectionMatrix.data1d[12] * temp[3];
-    temp[5] = projectionMatrix.data1d[1] * temp[0] + projectionMatrix.data1d[5] * temp[1] + projectionMatrix.data1d[9] * temp[2] + projectionMatrix.data1d[13] * temp[3];
-    temp[6] = projectionMatrix.data1d[2] * temp[0] + projectionMatrix.data1d[6] * temp[1] + projectionMatrix.data1d[10] * temp[2] + projectionMatrix.data1d[14] * temp[3];
-    temp[7] = -temp[2];
-    
-	//	the result normalizes between -1 and 1
-    if (temp[7] == 0.0)	{ //	the w value
-		return ret; // fail
+	if (fabs(result.w) >= std::numeric_limits<float>::epsilon()) {
+		result *= (1.0f / result.w);
 	}
-    temp[7] = 1.0 / temp[7];
-    
-	//	perspective division
-    temp[4] *= temp[7];
-    temp[5] *= temp[7];
-    temp[6] *= temp[7];
-    
-	//	window coordinates
-    //	map x, y to range 0-1
-	GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
 	
-    ret.x = (temp[4] * 0.5 + 0.5) * viewport[2] + viewport[0];
-    ret.y = window.currentMode.yRes - ((temp[5] * 0.5 + 0.5) * viewport[3] + viewport[1]);
-    
-	//This is only correct when glDepthRange(0.0, 1.0)
-    // windowCoordinate[2]=(1.0+fTempo[6])*0.5;	//Between 0 and 1
+	result.x = (result.x + 1.0f) * 0.5f;
+	result.y = (-result.y + 1.0f) * 0.5f;
+	
+	AB::Vec2 ret = AB::Vec2(result.x * window.currentMode.xRes, result.y * window.currentMode.yRes);
 	
 	return ret;
 }
