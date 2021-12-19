@@ -53,12 +53,12 @@ struct Mouse {
 } mouse;
 
 struct Gamepad {
-    bool buttons[SDL_CONTROLLER_BUTTON_MAX];
-    bool prevButtons[SDL_CONTROLLER_BUTTON_MAX];
+    bool buttons[Input::BUTTON_MAX];
+    bool prevButtons[Input::BUTTON_MAX];
 
-    float axis[SDL_CONTROLLER_AXIS_MAX];
-    float prevAxis[SDL_CONTROLLER_AXIS_MAX];
-    int rawAxis[SDL_CONTROLLER_AXIS_MAX];
+    float axis[Input::AXIS_MAX];
+    float prevAxis[Input::AXIS_MAX];
+    int rawAxis[Input::AXIS_MAX];
 	
 	SDL_GameController *gamepad;
 	SDL_Haptic *haptic;
@@ -350,8 +350,8 @@ void Input::update() {
 				stickInput = AB::normalize(stickInput) * ((AB::magnitude(stickInput) - connectedGamepads[i].deadZone) / (1.0f - connectedGamepads[i].deadZone));
 			}
 			
-			connectedGamepads[i].prevAxis[horizAxis] = connectedGamepads[i].axis[horizAxis];
-			connectedGamepads[i].prevAxis[vertAxis] = connectedGamepads[i].axis[vertAxis];
+			//connectedGamepads[i].prevAxis[horizAxis] = connectedGamepads[i].axis[horizAxis];
+			//connectedGamepads[i].prevAxis[vertAxis] = connectedGamepads[i].axis[vertAxis];
 			
 			connectedGamepads[i].axis[horizAxis] = stickInput.x;
 			connectedGamepads[i].axis[vertAxis] = stickInput.y;
@@ -375,7 +375,7 @@ void Input::update() {
 			
 			float triggerInput = connectedGamepads[i].rawAxis[trigger] / 32767.0f;
 			
-			connectedGamepads[i].prevAxis[trigger] = connectedGamepads[i].axis[trigger];
+			//connectedGamepads[i].prevAxis[trigger] = connectedGamepads[i].axis[trigger];
 			connectedGamepads[i].axis[trigger] = max(triggerInput - connectedGamepads[i].deadZone, 0.0f) / (1.0f - connectedGamepads[i].deadZone);
 		}
 		connectedGamepads[i].buttons[BUTTON_LTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] > 0.15f;
@@ -396,7 +396,7 @@ void Input::update() {
 			}
 		}
 	}
-	
+
 	//  update mouse
 	memcpy(mouse.prevButtons, mouse.buttons, 3);
 
