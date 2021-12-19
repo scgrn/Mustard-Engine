@@ -310,7 +310,7 @@ void Input::update() {
 			for (int i = 0; i < numGamepads; i++) {
 				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
 					connectedGamepads[i].buttons[event->cbutton.button] = true;
-					// TODO: call lua
+					script.execute("AB.onGamepadPressed(" + toString(i) + "," + toString((int)event->cbutton.button) + ")");
 				}				
 			}
 		}
@@ -319,7 +319,7 @@ void Input::update() {
 			for (int i = 0; i < numGamepads; i++) {
 				if (event->cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(connectedGamepads[i].gamepad))) {
 					connectedGamepads[i].buttons[event->cbutton.button] = false;
-					// TODO: call lua
+					script.execute("AB.onGamepadReleased(" + toString(i) + "," + toString((int)event->cbutton.button) + ")");
 				}				
 			}
 		}
