@@ -104,11 +104,12 @@ static int luaStopSound(lua_State* luaVM) {
 
     return 0;
 }
+
 /// Checks if a sound effect is currently playing
-// @function AB.audio.isPlaying
+// @function AB.audio.isSoundPlaying
 // @param index sound effect handle
 // @return playing
-static int luaIsPlaying(lua_State* luaVM) {
+static int luaIsSoundPlaying(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     lua_pushboolean(luaVM, sounds.get(index)->isPlaying());
 	
@@ -179,7 +180,8 @@ static int luaPauseMusic(lua_State* luaVM) {
 // @function AB.audio.resumeMusic
 // @param index Music loop handle
 static int luaResumeMusic(lua_State* luaVM) {
-	audio.currentMusic->resume();
+    int index = (int)lua_tonumber(luaVM, 1);
+	music.get(index)->resume();
 	
     return 0;
 }
@@ -202,8 +204,10 @@ static int luaFadeMusicIn(lua_State* luaVM) {
 // @param index Music loop handle
 // @param duration Duration in seconds
 static int luaFadeMusicOut(lua_State* luaVM) {
-	float duration = (float)lua_tonumber(luaVM, 1);
-	audio.currentMusic->fadeOut(duration);
+    int index = (int)lua_tonumber(luaVM, 1);
+	float duration = (float)lua_tonumber(luaVM, 2);
+
+	music.get(index)->fadeOut(duration);
 	
     return 0;
 }
@@ -212,11 +216,22 @@ static int luaFadeMusicOut(lua_State* luaVM) {
 // @function AB.audio.stopMusic
 // @param index Music loop handle
 static int luaStopMusic(lua_State* luaVM) {
-	if (audio.currentMusic) {
-		audio.currentMusic->stop();
-	}
+    int index = (int)lua_tonumber(luaVM, 1);
+
+	music.get(index)->stop();
 	
     return 0;
+}
+
+/// Checks if a music loop is currently playing
+// @function AB.audio.isMusicPlaying
+// @param index Music loop handle
+// @return playing
+static int luaIsMusicPlaying(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    lua_pushboolean(luaVM, music.get(index)->isPlaying());
+	
+	return 1;
 }
 
 /// Sets global sound effect volume
@@ -244,7 +259,7 @@ void registerAudioFunctions() {
         { "loadSound", luaLoadSound},
         { "playSound", luaPlaySound},
         { "stopSound", luaStopSound},
-		{ "isPlaying", luaIsPlaying},
+		{ "isSoundPlaying", luaIsSoundPlaying},
 
         { "loadMusic", luaLoadMusic},
         { "playMusic", luaPlayMusic},
@@ -253,6 +268,7 @@ void registerAudioFunctions() {
         { "fadeMusicIn", luaFadeMusicIn},
         { "fadeMusicOut", luaFadeMusicOut},
         { "stopMusic", luaStopMusic},
+		{ "isMusicPlaying", luaIsMusicPlaying},
 
         { "setSoundVolume", luaSetSoundVolume},
         { "setMusicVolume", luaSetMusicVolume},

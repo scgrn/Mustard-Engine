@@ -66,6 +66,7 @@ class Music : public Resource {
 		void fadeIn(float duration);
 		void fadeOut(float duration);
 		void stop();
+		bool isPlaying();
 		
 	protected:
 		SoLoud::WavStream *wavStream;
@@ -83,7 +84,6 @@ class Audio : public SubSystem {
 		float musicVolume = 1.0f;
 
 		SoLoud::Soloud *soloud;
-		Music *currentMusic = NULL;
 
 };
 

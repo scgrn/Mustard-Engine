@@ -101,7 +101,6 @@ void Music::play() {
     musicHandle = audio.soloud->play(*wavStream);
     audio.soloud->seek(musicHandle, 0.0f);
     audio.soloud->setVolume(musicHandle, audio.musicVolume);
-	audio.currentMusic = this;
 }
 
 void Music::pause() {
@@ -117,7 +116,6 @@ void Music::fadeIn(float duration) {
     audio.soloud->seek(musicHandle, 0.0f);
     audio.soloud->setVolume(musicHandle, 0.0f);
     audio.soloud->fadeVolume(musicHandle, audio.musicVolume, duration);
-	audio.currentMusic = this;	
 }
 
 void Music::fadeOut(float duration) {
@@ -127,6 +125,10 @@ void Music::fadeOut(float duration) {
 
 void Music::stop() {
     audio.soloud->stop(musicHandle);
+}
+
+bool Music::isPlaying() {
+	return audio.soloud->countAudioSource(*wavStream) > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -155,10 +157,6 @@ void Audio::shutdown() {
 
 	sounds.clear();
 	music.clear();
-	
-	if (currentMusic) {
-		currentMusic->stop();
-	}
 	
     soloud->deinit(); // Clean up!
 	delete soloud;
