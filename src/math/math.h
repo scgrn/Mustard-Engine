@@ -25,6 +25,8 @@ freely, subject to the following restrictions:
 #ifndef AB_MATH_H
 #define AB_MATH_H
 
+namespace AB {
+	
 template<class T>
 inline T min(T a, T b) {
     return a < b ? a : b;
@@ -76,6 +78,8 @@ template<class T>
 T greatestCommonDevisor(T a, T b) {
     return (b == 0) ? a : greatestCommonDevisor(b, a % b);
 }
+
+}	// namespace
 
 #include "vector.h"
 #include "matrix.h"

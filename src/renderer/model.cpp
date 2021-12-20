@@ -102,7 +102,7 @@ bool Model::loadOBJ(std::string const& filename,
 			float newRadius = ((f1 * f1) + (f2 * f2) + (f3 * f3));
 			radius = std::max(radius, newRadius);
 		}
-		else if (buffer.substr(0,1) == "f") {
+		else if (buffer.substr(0,1) == "f" && buffer.substr(0,2) != "vt") {
 			std::string element;
 			line >> line_t;
 
@@ -140,15 +140,26 @@ bool Model::loadOBJ(std::string const& filename,
 			}
 		}
     }
+	
 //    std::cout << vertices.size() << std::endl;
 //    std::cout << faces.size() << std::endl;
+//	LOG_EXP(vertexIndices.size());
+	
+	if (textured) {
+		for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+			outVertices.push_back(tempVertices[vertexIndices[i]]);
+			outUVs.push_back(tempUVs[uvIndices[i]]);
+			outNormals.push_back(tempNormals[normalIndices[i]]);
+		}
+	} else {
+		for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+			outVertices.push_back(tempVertices[vertexIndices[i]]);
+			outNormals.push_back(tempNormals[normalIndices[i]]);
+		}
+	}
 
-    for (unsigned int i = 0; i < vertexIndices.size(); i++) {
-        outVertices.push_back(tempVertices[vertexIndices[i]]);
-        outUVs.push_back(tempUVs[uvIndices[i]]);
-        outNormals.push_back(tempNormals[normalIndices[i]]);
-    }
-
+	LOG("Loaded.", 0);
+	
     return true;
 }
 
@@ -176,9 +187,16 @@ void Model::indexVBO(std::vector<Vec3> &inVertices,
 
 	std::map<PackedVertex, unsigned short> vertexToOutIndex;
 
+	LOG_EXP(inVertices.size());
+	
+	PackedVertex packed;
 	for (unsigned int i = 0; i < inVertices.size(); i++) {
-        PackedVertex packed = {inVertices[i], inUVs[i], inNormals[i]};
-
+		if (textured) {
+			packed = {inVertices[i], inUVs[i], inNormals[i]};
+		} else {
+			packed = {inVertices[i], Vec2(), inNormals[i]};
+		}
+		
 		// Try to find a similar vertex in out_XXXX
 		unsigned short index;
 		bool found = getSimilarVertexIndex(packed, vertexToOutIndex, index);
@@ -187,7 +205,12 @@ void Model::indexVBO(std::vector<Vec3> &inVertices,
 			outIndices.push_back(index);
 		} else { // If not, it needs to be added in the output data.
 			outVertices.push_back(inVertices[i]);
-			outUVs.push_back(inUVs[i]);
+			if (textured) {
+				outUVs.push_back(inUVs[i]);
+			} else {
+				outUVs.push_back(Vec2());
+			}
+		
 			outNormals.push_back(inNormals[i]);
 			unsigned short newIndex = (unsigned short)outVertices.size() - 1;
 			outIndices.push_back(newIndex);
@@ -195,7 +218,6 @@ void Model::indexVBO(std::vector<Vec3> &inVertices,
 		}
 	}
 }
-
 
 void Model::load(std::string const& filename) {
 	std::vector<Vec3> vertices;
@@ -206,12 +228,14 @@ void Model::load(std::string const& filename) {
 
     if (!res) {
         // TODO: handle error!
+		LOG("ERROR", 0);
     }
 
 	std::vector<unsigned short> indices;
 	std::vector<Vec3> indexedVertices;
 	std::vector<Vec2> indexedUVs;
 	std::vector<Vec3> indexedNormals;
+
 	indexVBO(vertices, UVs, normals, indices, indexedVertices, indexedUVs, indexedNormals);
 
     // create VAO
@@ -223,10 +247,12 @@ void Model::load(std::string const& filename) {
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(Vec3), &indexedVertices[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &uvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexedUVs.size() * sizeof(Vec2), &indexedUVs[0], GL_STATIC_DRAW);
-
+	if (textured) {
+		glGenBuffers(1, &uvBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+		glBufferData(GL_ARRAY_BUFFER, indexedUVs.size() * sizeof(Vec2), &indexedUVs[0], GL_STATIC_DRAW);
+	}
+	
 	glGenBuffers(1, &normalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
 	glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(Vec3), &indexedNormals[0], GL_STATIC_DRAW);

@@ -65,7 +65,6 @@ void Sound::release() {
 void Sound::play(float volume, float pan, bool loop) {
 	// TODO: looping
     if (audio.soundVolume > 0.01f) {
-        wav->stop();
         int handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
 	}
 }
