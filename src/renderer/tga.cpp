@@ -29,8 +29,6 @@ freely, subject to the following restrictions:
 
     Loads a TGA file! Currently supports 32 or 24 bit depths.
 
-    @todo RLE support
-
 */
 
 //  http://gpwiki.org/index.php/LoadTGACpp
@@ -42,6 +40,7 @@ freely, subject to the following restrictions:
 #include "tga.h"
 #include "../core/fileSystem.h"
 #include "../core/log.h"
+#include "../math/math.h"
 
 namespace AB {
 
@@ -70,6 +69,25 @@ static void flipImage(unsigned char *data, int width, int height, int bpp) {
 			*pLine1 = *pLine2;
 			*pLine2 = bTemp;
 		}
+	}
+}
+
+static void premultiplyAlpha(unsigned char *data, int width, int height, int bpp) {
+	int size = width * height;
+	
+	for (int i = 0; i < size; i++) {
+		float r = data[i * 4 + 0] / 255.0f;
+		float g = data[i * 4 + 1] / 255.0f;
+		float b = data[i * 4 + 2] / 255.0f;
+		float a = data[i * 4 + 3] / 255.0f;
+		
+		r *= a;
+		g *= a;
+		b *= a;
+		
+		data[i * 4 + 0] = round(r * 255.0f);
+		data[i * 4 + 1] = round(g * 255.0f);
+		data[i * 4 + 2] = round(b * 255.0f);
 	}
 }
 
@@ -177,6 +195,9 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
     if ((data[17] & 0x10)) {
 		flipImage(imageData, width, height, bpp);
     }
+
+	//	premultiply alpha
+	premultiplyAlpha(imageData, width, height, bpp);
 
     return imageData;
 }

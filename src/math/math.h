@@ -25,6 +25,8 @@ freely, subject to the following restrictions:
 #ifndef AB_MATH_H
 #define AB_MATH_H
 
+#include <cmath>
+
 namespace AB {
 	
 template<class T>

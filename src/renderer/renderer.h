@@ -57,13 +57,6 @@ namespace AB {
 
 class Renderer : public SubSystem {
 	public:
-		typedef enum {
-			ALPHA = 0,
-			ADDITIVE,
-			PREMULTIPLIED_ALPHA,
-			BLEND_MAX
-		} BlendMode;
-	
 		// a 64 svelte bytes
 		// TODO: constructor to set defaults
 		struct Quad {
@@ -98,8 +91,6 @@ class Renderer : public SubSystem {
 		static TextureCache textureCache;
         static GLuint whiteTexture;
 
-		BlendMode blendMode = ALPHA;
-		
 	protected:
 		// common quad mesh
 		static GLfloat quadVertices[];

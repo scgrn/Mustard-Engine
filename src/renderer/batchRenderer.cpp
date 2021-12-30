@@ -149,15 +149,6 @@ void BatchRenderer::endScene() {
 	
 	//	it renders
 	
-	// set blend mode
-	// TODO: cache state
-	switch (blendMode) {
-		case ALPHA: CALL_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA)); break;
-		case ADDITIVE: CALL_GL(glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA)); break;
-		case PREMULTIPLIED_ALPHA: CALL_GL(glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)); break;
-		default: break;
-	}
-	
 	// enable VAO
 	CALL_GL(glBindVertexArray(vao));
 	

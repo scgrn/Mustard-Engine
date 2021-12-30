@@ -90,7 +90,7 @@ bool Renderer::startup() {
 	LOG_EXP(sizeof(uniforms));
 	
 	CALL_GL(glEnable(GL_BLEND));
-	CALL_GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	CALL_GL(glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	
 	batchRenderers.clear();
 	batchRenderers[0] = new BatchRenderer();

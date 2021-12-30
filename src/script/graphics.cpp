@@ -52,12 +52,6 @@ static int spriteHandle = 1;
 static int canvasHandle = 1;
 static int currentRenderTarget = 0;
 
-/// Blend modes
-// @field ALPHA (default)
-// @field ADDITIVE
-// @field PREMULTIPLIED_ALPHA
-// @table blendModes
-
 /// Color transforms
 // @field NONE ()
 // @field INVERT ()
@@ -322,17 +316,19 @@ static int luaRenderQuad(lua_State* luaVM) {
     return 0;
 }
 
-/// Sets current color
+/// Sets current (premultiplied) color
 // @function AB.graphics.setColor
 // @param r (1.0) Red color component
 // @param g (1.0) Green color component
 // @param b (1.0) Blue color component
-// @param a (1.0) Alpha component
+// @param opacity (1.0) Opacity
+// @param additivity (0.0) Additivity
 static int luaSetColor(lua_State* luaVM) {
 	float r = 1.0f;
 	float g = 1.0f;
 	float b = 1.0f;
-	float a = 1.0f;
+	float opacity = 1.0f;
+	float additivity = 0.0f;
 	
     if (lua_gettop(luaVM) >= 1) {
 		r = (float)lua_tonumber(luaVM, 1);
@@ -344,9 +340,13 @@ static int luaSetColor(lua_State* luaVM) {
 		b = (float)lua_tonumber(luaVM, 3);
     }
     if (lua_gettop(luaVM) >= 4) {
-		a = (float)lua_tonumber(luaVM, 4);
+		opacity = (float)lua_tonumber(luaVM, 4);
     }
-	currentColor = Vec4(r, g, b, a);
+    if (lua_gettop(luaVM) >= 5) {
+		additivity = (float)lua_tonumber(luaVM, 5);
+    }
+	
+	currentColor = Vec4(r * opacity, g * opacity, b * opacity, 1.0f - additivity);
 
 	return 0;
 }
@@ -481,21 +481,6 @@ static int luaRemoveLayer(lua_State* luaVM) {
 	return 0;
 }
 
-/// Sets a layer's blend mode
-// @function AB.graphics.setBlendMode
-// @param index Layer index
-// @param blendMode Blend mode
-// @usage AB.graphics.setBlendMode(0, AB.graphics.blendModes.ADDITIVE)
-// @see blendModes
-static int luaSetBlendMode(lua_State* luaVM) {
-    int index = (int)lua_tonumber(luaVM, 1);
-    int blendMode = (int)lua_tonumber(luaVM, 2);
-
-	batchRenderers[index]->blendMode = (Renderer::BlendMode)blendMode;
-
-	return 0;
-}
-
 /// Adds a color transform for layer. Chained with any previous color transforms
 // @function AB.graphics.addColorTransform
 // @param index Layer index
@@ -604,7 +589,6 @@ void registerGraphicsFunctions() {
 		{ "createLayer", luaCreateLayer},
 		{ "removeLayer", luaRemoveLayer},
 		
-		{ "setBlendMode", luaSetBlendMode},
 		{ "addColorTransform", luaAddColorTransform},
 		{ "resetColorTransforms", luaResetColorTransforms},
 
@@ -613,11 +597,6 @@ void registerGraphicsFunctions() {
         { NULL, NULL }
     };
     script.registerFuncs("AB", "graphics", graphicsFuncs);
-
-	script.execute("AB.graphics.blendModes = {"
-		"ALPHA = 0,"
-		"ADDITIVE = 1,"
-		"PREMULTIPLIED_ALPHA = 2}");
 
 	script.execute("AB.graphics.colorTransforms = {"
 		"NONE = 0,"
