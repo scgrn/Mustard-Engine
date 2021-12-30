@@ -17,8 +17,7 @@ Dependencies
 -------
 | Library | Purpose |
 |:---|---:|
-| [glee](http://elf-stone.com/glee.php) | OpenGL Extensions (to be replaced w/glew) |
-| [glm](https://glm.g-truc.net/0.9.9/index.html) | Vector / matrix maths |
+| [glad](https://glad.dav1d.de/) | OpenGL Extensions |
 | [lua](https://www.lua.org/) | Scripting |
 | [SDL2](https://www.libsdl.org/) | Window / input management (desktop / web only) |
 | [soloud](https://sol.gfxile.net/soloud/) | Audio |
