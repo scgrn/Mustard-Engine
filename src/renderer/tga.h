@@ -30,8 +30,6 @@ freely, subject to the following restrictions:
 
     Loads TGA files. Currently supports 32 or 24 bit depths.
 
-    @todo RLE support
-
 */
 
 #ifndef AB_TGA_H

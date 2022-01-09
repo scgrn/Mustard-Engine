@@ -26,7 +26,7 @@ make verbose=1 %*
 CD ..
 
 CD assets
-%MUSTARD_PATH%\bin\ABAC "..\%AB_PROJECT_NAME%.dat" %ENCYPTION_KEY%
+%MUSTARD_PATH%\bin\Mustard-AssetCompiler "..\%AB_PROJECT_NAME%.dat" %ENCYPTION_KEY%
 CD ..
 
 ::mshta "javascript:code(close((V=(v=new ActiveXObject('SAPI.SpVoice')).GetVoices()).count&&v.Speak('PROJECT BUILD COMPLETE')))"

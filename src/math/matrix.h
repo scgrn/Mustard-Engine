@@ -35,6 +35,7 @@ freely, subject to the following restrictions:
 #define AB_MATRIX_H
 
 #include "vector.h"
+#include "../types.h"
 
 namespace AB {
 

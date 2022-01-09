@@ -49,7 +49,7 @@ See [Lua API]
 
 Asset Compiler
 -------
-Binary is ABAC (Alien Bug Asset Compiler) in engine root. This is a command line
+Binary is Mustard-AssetCompiler in engine root. This is a command line
 tool that compiles *every* file in the directory it was launched, and every file in
 every subdirectory recursively, into a single glob.
 

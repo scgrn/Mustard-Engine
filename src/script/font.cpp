@@ -123,12 +123,13 @@ static int luaStringLength(lua_State* luaVM) {
     return 1;
 }
 
-/// Sets font color
+/// Sets font (premultiplied) color
 // @param index Font index
-// @param r (1.0) Red
-// @param g (1.0) Green
-// @param b (1.0) Blue
-// @param a (1.0) Alpha
+// @param r (1.0) Red color component
+// @param g (1.0) Green color component
+// @param b (1.0) Blue color component
+// @param opacity (1.0) Opacity
+// @param additivity (0.0) Additivity
 // @function AB.font.setColor
 static int luaSetColor(lua_State* luaVM) {
     int fontIndex = (int)lua_tonumber(luaVM, 1);
@@ -136,7 +137,8 @@ static int luaSetColor(lua_State* luaVM) {
 	float r = 1.0f;
 	float g = 1.0f;
 	float b = 1.0f;
-	float a = 1.0f;
+	float opacity = 1.0f;
+	float additivity = 0.0f;
 	
     if (lua_gettop(luaVM) >= 2) {
         r = (float)lua_tonumber(luaVM, 2);
@@ -148,10 +150,13 @@ static int luaSetColor(lua_State* luaVM) {
         b = (float)lua_tonumber(luaVM, 4);
     }
     if (lua_gettop(luaVM) >= 5) {
-        a = (float)lua_tonumber(luaVM, 5);
+		opacity = (float)lua_tonumber(luaVM, 5);
+    }
+    if (lua_gettop(luaVM) >= 6) {
+		additivity = (float)lua_tonumber(luaVM, 6);
     }
 	
-	fonts.get(fontIndex)->setColor(r, g, b, a);
+	fonts.get(fontIndex)->setColor(r * opacity, g * opacity, b * opacity, 1.0f - additivity);
 	
 	return 0;
 }

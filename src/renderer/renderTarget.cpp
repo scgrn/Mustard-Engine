@@ -52,10 +52,23 @@ RenderTarget::RenderTarget(int width, int height, bool depthStencil) {
 
 	//  TODO: needs stencil!
 	if (hasDepthStencil) {
+		/*
 		CALL_GL(glGenRenderbuffers(1, &depthStencilBuffer));
 		CALL_GL(glBindRenderbuffer(GL_RENDERBUFFER, depthStencilBuffer));
 		CALL_GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
 		CALL_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencilBuffer));
+		*/
+		glGenTextures(1, &depthStencilBuffer);
+		glBindTexture(GL_TEXTURE_2D, depthStencilBuffer);
+
+		glTexImage2D(
+		  GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, 
+		  GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL
+		);
+
+		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthStencilBuffer, 0); 
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depthStencilBuffer, 0);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	}	
 	
 	CALL_GL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0));

@@ -111,7 +111,7 @@ project("AssetCompiler") -------------------------------------------------------
 	cppdialect("gnu++17")
 
 	targetdir("./bin")
-	targetname("ABAC")
+	targetname("Mustard-AssetCompiler")
 	
 	files {
 		"./src/assetCompiler.cpp",
