@@ -296,9 +296,6 @@ static int luaRenderQuad(lua_State* luaVM) {
 		angle = (float)lua_tonumber(luaVM, 7);
     }
 	
-	//	TODO: need to support scaleY in quad renderer
-	// sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, scaleX);
-
 	BatchRenderer *renderer = batchRenderers[layer];
 	
 	BatchRenderer::Quad quad;

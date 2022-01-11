@@ -72,8 +72,8 @@ u32 rnd(u32 n) {
     return rnd() * n;   // TODO: looks weird. test.
 }
 
-u32 rnd(u32 lb, u32 ub) {
-  return lb + (int32_t)(rnd() * (ub - lb + 1));
+i32 rnd(i32 lb, i32 ub) {
+  return lb + (i32)(rnd() * (ub - lb + 1));
 }
 
 }   //  namespace

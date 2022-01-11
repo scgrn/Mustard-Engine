@@ -38,7 +38,7 @@ void rndSeed(u32 seed);
 //  TODO: document ranges (inclusive, etc)
 f64 rnd();
 u32 rnd(u32 n);
-u32 rnd(u32 lb, u32 ub);
+i32 rnd(i32 lb, i32 ub);
 
 }   //  namespace
 

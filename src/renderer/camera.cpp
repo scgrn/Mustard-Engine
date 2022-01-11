@@ -35,7 +35,7 @@ extern Window window;
 OrthographicCamera::OrthographicCamera() {}
 
 void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
-	projectionMatrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
+	projectionMatrix = ortho(left, right, bottom, top, -1.0f, 1000.0f);
 }
 
 PerspectiveCamera::PerspectiveCamera() {
