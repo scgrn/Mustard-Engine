@@ -30,12 +30,22 @@ static const int MAX_QUADS_PER_BATCH = 4096;
 
 namespace AB {
 
+// common quad mesh
+GLfloat BatchRenderer::quadVertices[] = {
+	0.5f,  0.5f, 0.0f,
+	0.5f, -0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f,
+};
+GLuint BatchRenderer::quadElements[] = {
+	0, 1, 2,
+	2, 3, 0,
+};
+
 Shader BatchRenderer::defaultShader;
 static bool defaultShaderLoaded = false;
 
 BatchRenderer::BatchRenderer(Shader *shader, Mat4 colorTransform, bool depthSorting) {
-	LOG("BatchRenderer constructor called", 0);
-	
 	//	load default shader
 	if (!defaultShaderLoaded) {
 		defaultShader.load("shaders/default2d");
@@ -119,21 +129,7 @@ BatchRenderer::~BatchRenderer() {
     glDeleteBuffers(1, &ibo);
 }
 
-void BatchRenderer::beginScene(const Camera& camera) {
-	assert(!inScene);
-
-	//	set transformation uniforms
-	defaultShader.bind();
-	defaultShader.setMat4("projection", camera.projectionMatrix);
-
-	defaultShader.setMat4("colorTransform", colorTransform);
-	
-	inScene = true;
-}
-
 void BatchRenderer::renderQuad(const Quad& quad) {
-	//assert(inScene);
-
 	renderBatch.push_back(quad);
 }
 
@@ -141,12 +137,14 @@ void BatchRenderer::flush(int begin, int end) {
 	//  massive sinkhole on chemical road
 	CALL_GL(glBufferSubData(GL_ARRAY_BUFFER, 0, (end - begin + 1) * sizeof(Quad), &renderBatch[begin]));
 	CALL_GL(glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, end - begin + 1));
-	textureCache.advanceFrame();
+	Renderer::textureCache.advanceFrame();
 }
 
-void BatchRenderer::endScene() {
-	assert(inScene);
-	
+void BatchRenderer::render(const Camera& camera) {
+	//	set transformation uniforms
+	shader->bind();
+	shader->setMat4("projection", camera.projectionMatrix);
+
 	//	it renders
 	
 	// enable VAO
@@ -154,63 +152,57 @@ void BatchRenderer::endScene() {
 	
 	CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, ibo));
 	
-	// old loop start
+	//	TODO: don't bind shaders redundantly!
+	shader->bind();
 	
-		//	TODO: don't bind shaders redundantly!
-		shader->bind();
-		
-		// set colorTransform uniform
-		shader->setMat4("colorTransform", colorTransform);
-		
-		// sort renderBatch
-		std::sort(renderBatch.begin(), renderBatch.end(), depthSorting ? cmpDepth : cmp);
-		
-		//	iterate renderbatch, set textureID to texture unit for each Quad before populating ibo
-		int begin = 0;
-		int end = -1;
+	// set colorTransform uniform
+	shader->setMat4("colorTransform", colorTransform);
+	
+	// sort renderBatch
+	std::sort(renderBatch.begin(), renderBatch.end(), depthSorting ? cmpDepth : cmp);
+	
+	//	iterate renderbatch, set textureID to texture unit for each Quad before populating ibo
+	int begin = 0;
+	int end = -1;
 
-		for (int i = 0; i < renderBatch.size();) {
-			//	need pointer
-			Quad &quad = renderBatch[i];
-			
-			if (quad.textureID == 0) {
-				quad.textureID = whiteTexture;
-			}
-			unsigned int ret = textureCache.bindTexture(quad.textureID);
-			
-			if (ret == -1) {
-				//	no texture slots available. render and loop again without advancing index.
-				//  TODO: test this
+	for (int i = 0; i < renderBatch.size();) {
+		//	need pointer
+		Quad &quad = renderBatch[i];
+		
+		if (quad.textureID == 0) {
+			quad.textureID = Renderer::whiteTexture;
+		}
+		unsigned int ret = Renderer::textureCache.bindTexture(quad.textureID);
+		
+		if (ret == -1) {
+			//	no texture slots available. render and loop again without advancing index.
+			//  TODO: test this
+			flush(begin, end);
+			begin = end + 1;
+		} else {
+			quad.textureID = ret;
+			end++;
+
+			//	reach max batch size, flush em
+			if ((end - begin + 1) >= MAX_QUADS_PER_BATCH) {
 				flush(begin, end);
 				begin = end + 1;
-			} else {
-				quad.textureID = ret;
-				end++;
-
-				//	reach max batch size, flush em
-				if ((end - begin + 1) >= MAX_QUADS_PER_BATCH) {
-					flush(begin, end);
-					begin = end + 1;
-					end = begin - 1;
-				}
-				i++;
+				end = begin - 1;
 			}
+			i++;
 		}
-		
-		if (end >= begin) {
-			flush(begin, end);
-		}
-		
-		//  this here open ballet is for errrone
-		renderBatch.clear();
-    
-	// old loop end
+	}
 	
+	if (end >= begin) {
+		flush(begin, end);
+	}
+	
+	//  this here open ballet is for errrone
+	renderBatch.clear();
+
 	// disable VAO and IBO
 	CALL_GL(glBindVertexArray(0));
 	CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
-	
-	inScene = false;
 }
 
 }

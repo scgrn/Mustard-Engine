@@ -557,7 +557,7 @@ static int luaResetColorTransforms(lua_State* luaVM) {
 /// Performs any pending rendering operations
 // @function AB.graphics.flushGraphics
 static int luaFlushGraphics(lua_State* luaVM) {
-	renderer.renderBatches(camera2d);
+	renderer.render(camera2d);
 	
 	return 0;
 }

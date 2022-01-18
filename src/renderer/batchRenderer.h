@@ -27,16 +27,28 @@ freely, subject to the following restrictions:
 
 #include "math.h"
 #include "renderer.h"
+#include "renderLayer.h"
 
 namespace AB {
 
-class BatchRenderer : public Renderer {
+class BatchRenderer : public RenderLayer {
 	public:
+		// a 64 svelte bytes
+		// TODO: constructor to set defaults
+		struct Quad {
+			Vec3 pos;
+			Vec2 size;
+			Vec2 scale;
+			float rotation;		// radians
+			Vec4 uv;			// {u1, v1, u2, v2}
+			GLint textureID;	// set to 0 for white texture
+			Vec4 color;		
+		};
+
 		BatchRenderer(Shader *shader = &defaultShader, Mat4 colorTransform = Mat4(), bool depthSorting = false);
 		~BatchRenderer();
 
-		virtual void beginScene(const Camera& camera);
-		virtual void endScene();
+		virtual void render(const Camera& camera);
 		
 		void renderQuad(const Quad& quad);
 
@@ -47,6 +59,11 @@ class BatchRenderer : public Renderer {
 
 		static Shader defaultShader;
 
+	protected:
+		// common quad mesh
+		static GLfloat quadVertices[];
+		static GLuint quadElements[];
+	
 	private:
 		//	for std::sort
 		static inline bool cmp(const Quad& a, const Quad& b) {

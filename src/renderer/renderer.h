@@ -52,51 +52,26 @@ freely, subject to the following restrictions:
 #include "shader.h"
 #include "textureCache.h"
 #include "colorTransform.h"
+#include "renderTarget.h"
+#include "renderLayer.h"
 
 namespace AB {
 
 class Renderer : public SubSystem {
 	public:
-		// a 64 svelte bytes
-		// TODO: constructor to set defaults
-		struct Quad {
-			Vec3 pos;
-			Vec2 size;
-			Vec2 scale;
-			float rotation;		// radians
-			Vec4 uv;			// {u1, v1, u2, v2}
-			GLint textureID;	// set to 0 for white texture
-			Vec4 color;		
-		};
+		std::map<int, RenderLayer*> layers;
+		std::map<int, RenderTarget*> canvases;
 
 		bool startup();
 		void shutdown();
 		
-		virtual void beginScene(const Camera& camera);
-		
-		// pass in state, render command (VAO, primitive type)
-		// void submit(const RenderCommand& command);
-		
-//		void defineRenderGroup(int index, Shader *shader, Mat4 colorTransform = Mat4(), bool depthSorting = false);
+		void render(const Camera& camera);
 		
 		void clear(float r, float g, float b, float a);
 		void renderFullscreenQuad();
 		
-		void renderQuad(const Quad& quad);
-		
-		virtual void endScene();
-		
-		void renderBatches(const Camera& camera);
-		
 		static TextureCache textureCache;
         static GLuint whiteTexture;
-
-	protected:
-		// common quad mesh
-		static GLfloat quadVertices[];
-		static GLuint quadElements[];
-		
-		bool inScene = false;
 
 	private:
 		// no samplers in uniform blocks :(

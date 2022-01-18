@@ -185,48 +185,48 @@ void Console::update() {
 void Console::render() {
     if (!active) return;
 		
-	batchRenderer->beginScene(camera);
-		AB::Renderer::Quad quad;
-		
-		int width = 780;
-		int height = 420;
-
-		//	TODO: this should call a generic quad renderer in renderer.h
-		quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);
-		quad.size = Vec2(width, height); 
-		quad.scale = Vec2(1.0f, 1.0f);
-		quad.rotation = 0.0f;
-		quad.uv = Vec4(0.0f, 1.0f, 1.0f, 0.0f);
-		quad.textureID = 0;
-		quad.color = Vec4(0.0f, 0.0f, 0.0f, 0.75f);
-		batchRenderer->renderQuad(quad);	
+	AB::BatchRenderer::Quad quad;
 	
-		width = 760;
-		height = 1;
-		quad.pos = Vec3(width / 2 + 30, height / 2 + 395, -1.0f);
-		quad.size = Vec2(width, height); 
-		quad.color = TEXT_COLOR_1;
-		batchRenderer->renderQuad(quad);	
-	batchRenderer->endScene();
-	
-	batchRenderer->beginScene(camera);
-		font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
-		font.printString(batchRenderer, 30, 423, 1.0f, Font::LEFT, "> " + commandLine + (time(NULL) % 2 == 0 ? "_" : ""));
+	int width = 780;
+	int height = 420;
 
-		float y = 383;
-		for (std::list<ConsoleMessage>::iterator message = messages.begin(); message != messages.end(); message++) {
-			if (message->entered) {
-				font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
-			} else {
-				font.setColor(TEXT_COLOR_2.r, TEXT_COLOR_2.g, TEXT_COLOR_2.b, TEXT_COLOR_2.a);
-			}
-			font.printString(batchRenderer, 30, y, 1.0f, Font::LEFT, message->message);
-			y -= 20;
-			if (y < 25) {
-				break;
-			}
+	//	TODO: this should call a generic quad renderer in renderer.h
+	quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);
+	quad.size = Vec2(width, height); 
+	quad.scale = Vec2(1.0f, 1.0f);
+	quad.rotation = 0.0f;
+	quad.uv = Vec4(0.0f, 1.0f, 1.0f, 0.0f);
+	quad.textureID = 0;
+	quad.color = Vec4(0.0f, 0.0f, 0.0f, 0.75f);
+	batchRenderer->renderQuad(quad);	
+
+	width = 760;
+	height = 1;
+	quad.pos = Vec3(width / 2 + 30, height / 2 + 395, -1.0f);
+	quad.size = Vec2(width, height); 
+	quad.color = TEXT_COLOR_1;
+	batchRenderer->renderQuad(quad);	
+	
+	batchRenderer->render(camera);
+	
+	font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
+	font.printString(batchRenderer, 30, 423, 1.0f, Font::LEFT, "> " + commandLine + (time(NULL) % 2 == 0 ? "_" : ""));
+
+	float y = 383;
+	for (std::list<ConsoleMessage>::iterator message = messages.begin(); message != messages.end(); message++) {
+		if (message->entered) {
+			font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
+		} else {
+			font.setColor(TEXT_COLOR_2.r, TEXT_COLOR_2.g, TEXT_COLOR_2.b, TEXT_COLOR_2.a);
 		}
-	batchRenderer->endScene();
+		font.printString(batchRenderer, 30, y, 1.0f, Font::LEFT, message->message);
+		y -= 20;
+		if (y < 25) {
+			break;
+		}
+	}
+
+	batchRenderer->render(camera);
 }
 
 }   //  namespace

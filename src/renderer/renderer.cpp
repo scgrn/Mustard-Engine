@@ -42,21 +42,6 @@ namespace AB {
 GLuint Renderer::whiteTexture;
 TextureCache Renderer::textureCache;
 
-extern std::map<int, BatchRenderer*> batchRenderers;
-extern std::map<int, RenderTarget*> canvases;
-
-// common quad mesh
-GLfloat Renderer::quadVertices[] = {
-	0.5f,  0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f,
-};
-GLuint Renderer::quadElements[] = {
-	0, 1, 2,
-	2, 3, 0,
-};
-		
 bool Renderer::startup() {
 	LOG("Renderer subsystem startup", 0);
 
@@ -92,8 +77,8 @@ bool Renderer::startup() {
 	CALL_GL(glEnable(GL_BLEND));
 	CALL_GL(glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	
-	batchRenderers.clear();
-	batchRenderers[0] = new BatchRenderer();
+	layers.clear();
+	layers[0] = new BatchRenderer();
 	//batchRenderers.insert(std::pair<int, BatchRenderer>(0, new BatchRenderer()));
 	
     CALL_GL(glGenVertexArrays(1, &fullscreenQuadVAO));
@@ -106,7 +91,7 @@ bool Renderer::startup() {
 void Renderer::shutdown() {
 	LOG("Renderer subsystem shutdown", 0);
 	
-	for (std::map<int, BatchRenderer*>::iterator i = batchRenderers.begin(); i != batchRenderers.end(); i++) {
+	for (std::map<int, RenderLayer*>::iterator i = layers.begin(); i != layers.end(); i++) {
 		delete i->second;
 	}
 	for (std::map<int, RenderTarget*>::iterator i = canvases.begin(); i != canvases.end(); i++) {
@@ -121,22 +106,6 @@ void Renderer::shutdown() {
 	initialized = false;
 }
 
-void Renderer::beginScene(const Camera& camera) {
-	assert(!inScene);
-
-	inScene = true;
-}
-/*
-void Renderer::defineRenderGroup(int index, Shader *shader, Mat4 colorTransform, bool depthSorting) {
-	renderGroups[index].shader = shader;
-	renderGroups[index].colorTransform = colorTransform;
-	renderGroups[index].depthSorting = depthSorting;
-	
-	//renderGroups[index].renderBatch.clear();	// do we want this?
-	renderGroups[index].renderBatch.reserve(MAX_QUADS_PER_BATCH);
-}
-*/
-
 void Renderer::clear(float r, float g, float b, float a) {
 	CALL_GL(glClearColor(r, g, b, a));
 	CALL_GL(glClear(GL_COLOR_BUFFER_BIT));
@@ -148,25 +117,15 @@ void Renderer::renderFullscreenQuad() {
 	CALL_GL(glBindVertexArray(0));
 }
 
-void Renderer::renderQuad(const Quad& quad) {
-	ERR("NOT IMPLEMENTED!", 0);
-}
-
-void Renderer::endScene() {
-	assert(inScene);
-	
-	//	it renders
-	
-	inScene = false;
-}
-
-void Renderer::renderBatches(const Camera& camera) {
-    for (std::map<int, BatchRenderer*>::reverse_iterator it = batchRenderers.rbegin(); it != batchRenderers.rend(); it++) {
-		BatchRenderer *batchRenderer = it->second;
+void Renderer::render(const Camera& camera) {
+    for (std::map<int, RenderLayer*>::reverse_iterator it = layers.rbegin(); it != layers.rend(); it++) {
+		RenderLayer *renderLayer = it->second;
 		
-		if (batchRenderer->renderBatch.size() > 0) {
-			batchRenderer->beginScene(camera);
-			batchRenderer->endScene();
+		BatchRenderer *batchRenderer = dynamic_cast<BatchRenderer*>(renderLayer);
+		if (batchRenderer) {
+			if (batchRenderer->renderBatch.size() > 0) {
+				batchRenderer->render(camera);
+			}
 		}
 	}
 }
