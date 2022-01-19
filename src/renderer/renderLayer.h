@@ -31,8 +31,8 @@ namespace AB {
 
 class RenderLayer {
 	public:
-		virtual void render(const Camera& camera);
-		
+		virtual void render(const Camera& camera) = 0;
+		virtual ~RenderLayer() {}
 };
 
 }

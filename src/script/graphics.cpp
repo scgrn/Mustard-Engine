@@ -40,8 +40,6 @@ extern Window window;
 
 extern ResourceManager<Sprite> sprites;
 extern ResourceManager<Shader> shaders;
-extern std::map<int, BatchRenderer*> batchRenderers;
-extern std::map<int, RenderTarget*> canvases;
 
 extern Renderer renderer;
 extern Window window;
@@ -248,7 +246,8 @@ static int luaRenderSprite(lua_State* luaVM) {
         scaleY = scaleX;
     }
 
-	sprites.get(index)->render(batchRenderers[layer], Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
+	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
+	sprites.get(index)->render(batchRenderer, Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
 
     return 0;
 }
@@ -296,7 +295,7 @@ static int luaRenderQuad(lua_State* luaVM) {
 		angle = (float)lua_tonumber(luaVM, 7);
     }
 	
-	BatchRenderer *renderer = batchRenderers[layer];
+	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
 	
 	BatchRenderer::Quad quad;
 	
@@ -308,7 +307,7 @@ static int luaRenderQuad(lua_State* luaVM) {
 	quad.textureID = 0;
 	quad.color = currentColor;
 
-	renderer->renderQuad(quad);
+	batchRenderer->renderQuad(quad);
 
     return 0;
 }
@@ -365,7 +364,7 @@ static int luaCreateCanvas(lua_State* luaVM) {
 		index = canvasHandle;
 		canvasHandle++;
 	}
-	canvases[index] = new RenderTarget(width, height);
+	renderer.canvases[index] = new RenderTarget(width, height);
 
 	//  return handle
 	lua_pushnumber(luaVM, index);
@@ -380,15 +379,15 @@ static int luaUseCanvas(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
 	if (currentRenderTarget != 0) {
-		canvases[currentRenderTarget]->end();
+		renderer.canvases[currentRenderTarget]->end();
 	}
 	
 	currentRenderTarget = index;
 	if (currentRenderTarget != 0) {
-		canvases[currentRenderTarget]->begin();
+		renderer.canvases[currentRenderTarget]->begin();
 		
 		//	TODO: not sure about setting the projection this way.. (y coords are flipped)
-		camera2d.setProjection(0, canvases[currentRenderTarget]->width, 0, canvases[currentRenderTarget]->height);
+		camera2d.setProjection(0, renderer.canvases[currentRenderTarget]->width, 0, renderer.canvases[currentRenderTarget]->height);
 	} else {
 		camera2d.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
 	}
@@ -432,8 +431,8 @@ static int luaRenderCanvas(lua_State* luaVM) {
         scaleY = scaleX;
     }
 
-	RenderTarget *canvas = canvases[index];
-	BatchRenderer *renderer = batchRenderers[layer];
+	RenderTarget *canvas = renderer.canvases[index];
+	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
 	
 	BatchRenderer::Quad quad;
 	
@@ -445,7 +444,7 @@ static int luaRenderCanvas(lua_State* luaVM) {
 	quad.textureID = canvas->texture;
 	quad.color = currentColor;
 
-	renderer->renderQuad(quad);
+	batchRenderer->renderQuad(quad);
 	
 	return 0;
 }
@@ -461,7 +460,7 @@ static int luaCreateLayer(lua_State* luaVM) {
 	if (lua_gettop(luaVM) >= 2) {
 		depthSorting = (bool)lua_toboolean(luaVM, 2);
     }
-	batchRenderers[index] = new BatchRenderer(nullptr, blend::identity(), depthSorting);
+	renderer.layers[index] = new BatchRenderer(nullptr, blend::identity(), depthSorting);
 
 	return 0;
 }
@@ -472,8 +471,8 @@ static int luaCreateLayer(lua_State* luaVM) {
 static int luaRemoveLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
-	auto iterator = batchRenderers.find(index);
-	batchRenderers.erase(iterator);
+	auto iterator = renderer.layers.find(index);
+	renderer.layers.erase(iterator);
 
 	return 0;
 }
@@ -538,7 +537,8 @@ static int luaAddColorTransform(lua_State* luaVM) {
 		default: break;
 	}
 
-	batchRenderers[index]->colorTransform = batchRenderers[index]->colorTransform * transform;
+	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[index]);
+	batchRenderer->colorTransform = batchRenderer->colorTransform * transform;
 	
 	return 0;
 }
@@ -549,7 +549,8 @@ static int luaAddColorTransform(lua_State* luaVM) {
 static int luaResetColorTransforms(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 	
-	batchRenderers[index]->colorTransform = Mat4();
+	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[index]);
+	batchRenderer->colorTransform = Mat4();
 	
 	return 0;
 }

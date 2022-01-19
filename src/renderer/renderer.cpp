@@ -120,7 +120,7 @@ void Renderer::renderFullscreenQuad() {
 void Renderer::render(const Camera& camera) {
     for (std::map<int, RenderLayer*>::reverse_iterator it = layers.rbegin(); it != layers.rend(); it++) {
 		RenderLayer *renderLayer = it->second;
-		
+
 		BatchRenderer *batchRenderer = dynamic_cast<BatchRenderer*>(renderLayer);
 		if (batchRenderer) {
 			if (batchRenderer->renderBatch.size() > 0) {

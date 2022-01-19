@@ -35,7 +35,7 @@ namespace AB {
 
 extern Script script;
 extern ResourceManager<Font> fonts;
-extern std::map<int, BatchRenderer*> batchRenderers;
+extern Renderer renderer;
 
 static int fontHandle = 1;
 
@@ -99,7 +99,9 @@ static int luaPrintString(lua_State* luaVM) {
 		default: align = Font::LEFT;
 	}
 
-    fonts.get(fontIndex)->printString(batchRenderers[layer], x, y, scale, align, str);
+	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
+
+    fonts.get(fontIndex)->printString(batchRenderer, x, y, scale, align, str);
 
 	return 0;
 }
