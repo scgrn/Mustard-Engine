@@ -159,7 +159,7 @@ void BatchRenderer::render(const Camera& camera) {
 	shader->setMat4("colorTransform", colorTransform);
 	
 	// sort renderBatch
-	std::sort(renderBatch.begin(), renderBatch.end(), depthSorting ? cmpDepth : cmp);
+	std::stable_sort(renderBatch.begin(), renderBatch.end(), depthSorting ? cmpDepth : cmp);
 	
 	//	iterate renderbatch, set textureID to texture unit for each Quad before populating ibo
 	int begin = 0;
