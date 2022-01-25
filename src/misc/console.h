@@ -50,7 +50,7 @@ class Console : public SubSystem {
         std::list<std::string>::iterator commandLineHistoryPos;
         std::string commandLine;
 		
-		BatchRenderer *batchRenderer;
+		RenderLayer *batchRenderer;
 		Font font;
 		
 		//	it seems really ridiculous to me that we need to create a camera for the fucking DEBUG CONSOLE.

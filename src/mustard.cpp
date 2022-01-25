@@ -42,7 +42,7 @@ ResourceManager<Font> fonts;
 ResourceManager<Sound> sounds;
 ResourceManager<Music> music;
 
-std::map<int, BatchRenderer*> batchRenderers;
+std::map<int, RenderLayer*> batchRenderers;
 std::map<int, RenderTarget*> canvases;
 
 OrthographicCamera camera2d;

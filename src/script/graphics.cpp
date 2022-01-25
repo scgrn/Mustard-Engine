@@ -32,6 +32,7 @@ Graphics state and rendering
 #include "../core/window.h"
 #include "../renderer/spriteAtlas.h"
 #include "../renderer/renderTarget.h"
+#include "../renderer/renderer.h"
 
 namespace AB {
 
@@ -246,7 +247,7 @@ static int luaRenderSprite(lua_State* luaVM) {
         scaleY = scaleX;
     }
 
-	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
+	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
 	sprites.get(index)->render(batchRenderer, Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
 
     return 0;
@@ -295,9 +296,9 @@ static int luaRenderQuad(lua_State* luaVM) {
 		angle = (float)lua_tonumber(luaVM, 7);
     }
 	
-	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
+	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
 	
-	BatchRenderer::Quad quad;
+	RenderLayer::Quad quad;
 	
 	quad.pos = Vec3(x, y, z);
 	quad.size = Vec2(width, height);
@@ -432,9 +433,9 @@ static int luaRenderCanvas(lua_State* luaVM) {
     }
 
 	RenderTarget *canvas = renderer.canvases[index];
-	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
+	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
 	
-	BatchRenderer::Quad quad;
+	RenderLayer::Quad quad;
 	
 	quad.pos = Vec3(x, y, z);
 	quad.size = Vec2(canvas->width, canvas->height);
@@ -449,7 +450,7 @@ static int luaRenderCanvas(lua_State* luaVM) {
 	return 0;
 }
 
-/// Creates a new rendering layer. (BatchRenderer internally). Layers are renderered back to front, largest indices first.
+/// Creates a new rendering layer. (RenderLayer internally). Layers are renderered back to front, largest indices first.
 // A default layer of 0 is provided
 // @function AB.graphics.createLayer
 // @param index Layer index
@@ -460,7 +461,7 @@ static int luaCreateLayer(lua_State* luaVM) {
 	if (lua_gettop(luaVM) >= 2) {
 		depthSorting = (bool)lua_toboolean(luaVM, 2);
     }
-	renderer.layers[index] = new BatchRenderer(nullptr, blend::identity(), depthSorting);
+	renderer.layers[index] = new RenderLayer(nullptr, nullptr, blend::identity(), depthSorting);
 
 	return 0;
 }
@@ -537,7 +538,7 @@ static int luaAddColorTransform(lua_State* luaVM) {
 		default: break;
 	}
 
-	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[index]);
+	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[index]);
 	if (batchRenderer) {
 		batchRenderer->colorTransform = batchRenderer->colorTransform * transform;
 	} else {
@@ -553,7 +554,7 @@ static int luaAddColorTransform(lua_State* luaVM) {
 static int luaResetColorTransforms(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 	
-	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[index]);
+	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[index]);
 	batchRenderer->colorTransform = blend::identity();
 	
 	return 0;

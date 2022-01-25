@@ -30,6 +30,7 @@ Font loading and rendering. Currently only supports <a href="http://www.angelcod
 
 #include "script.h"
 #include "../renderer/font.h"
+#include "../renderer/renderer.h"
 
 namespace AB {
 
@@ -99,7 +100,7 @@ static int luaPrintString(lua_State* luaVM) {
 		default: align = Font::LEFT;
 	}
 
-	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[layer]);
+	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
 
     fonts.get(fontIndex)->printString(batchRenderer, x, y, scale, align, str);
 

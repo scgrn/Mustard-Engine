@@ -43,8 +43,7 @@ freely, subject to the following restrictions:
 #include "renderer/font.h"
 #include "renderer/renderTarget.h"
 #include "renderer/colorTransform.h"
-#include "renderer/batchRenderer.h"
-#include "renderer/geometryRenderer.h"
+#include "renderer/renderLayer.h"
 #include "renderer/skybox.h"
 #include "renderer/model.h"
 

@@ -401,7 +401,7 @@ void Font::build3x5Default() {
     this->height = 5;
 }
 
-void Font::printString(BatchRenderer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string) {
+void Font::printString(RenderLayer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string) {
 	float tx;
 	switch (alignment) {
 		case LEFT: tx = x; break;

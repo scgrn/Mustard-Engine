@@ -100,7 +100,7 @@ bool Console::startup() {
     commandLineHistory.clear();
     commandLineHistoryPos = commandLineHistory.end();
 	
-	batchRenderer = new BatchRenderer();
+	batchRenderer = new RenderLayer();
 	font.load("default1");
 	font.setColor(0.2f, 0.3f, 0.4f, 1.0f);	// TEXT_COLOR_1
 
@@ -185,7 +185,7 @@ void Console::update() {
 void Console::render() {
     if (!active) return;
 		
-	AB::BatchRenderer::Quad quad;
+	AB::RenderLayer::Quad quad;
 	
 	int width = 780;
 	int height = 420;

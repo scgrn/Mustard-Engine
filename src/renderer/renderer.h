@@ -57,6 +57,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern GLuint whiteTexture;
+
 class Renderer : public SubSystem {
 	public:
 		std::map<int, RenderLayer*> layers;
@@ -70,9 +72,6 @@ class Renderer : public SubSystem {
 		void clear(float r, float g, float b, float a);
 		void renderFullscreenQuad();
 		
-		static TextureCache textureCache;
-        static GLuint whiteTexture;
-
 	private:
 		// no samplers in uniform blocks :(
 		struct Uniforms {
@@ -82,6 +81,10 @@ class Renderer : public SubSystem {
             int timer;
             float randomSeed;
 		} uniforms;
+		
+		struct State {
+			
+		} state;
 		
 		//std::vector<RenderCommand> commandQueue;
 

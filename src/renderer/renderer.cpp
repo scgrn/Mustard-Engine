@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 
 #include "renderer.h"
 #include "../core/log.h"
-#include "batchRenderer.h"
+#include "renderLayer.h"
 #include "renderTarget.h"
 
 //  force use of discrete GPU
@@ -38,34 +38,32 @@ extern "C"
 }
 
 namespace AB {
-
-GLuint Renderer::whiteTexture;
-TextureCache Renderer::textureCache;
-
+	
+GLuint whiteTexture;
+ 
 bool Renderer::startup() {
 	LOG("Renderer subsystem startup", 0);
-
+	
 	// create white texture
-    CALL_GL(glGenTextures(1, &whiteTexture));
-    if (!whiteTexture) {
-        ERR("Couldn't create texture!", 0);
-    }
-    CALL_GL(glActiveTexture(GL_TEXTURE0));
-    CALL_GL(glBindTexture(GL_TEXTURE_2D, whiteTexture));
+	CALL_GL(glGenTextures(1, &whiteTexture));
+	if (!whiteTexture) {
+		ERR("Couldn't create texture!", 0);
+	}
+	CALL_GL(glActiveTexture(GL_TEXTURE0));
+	CALL_GL(glBindTexture(GL_TEXTURE_2D, whiteTexture));
 
 	// TODO: test memset
 	// memset(data, 4, 0xFF);
-    unsigned char data[4];
-    for (int i = 0; i < 4; i++) {
-        data[i] = 0xFF;
-    }
+	unsigned char data[4];
+	for (int i = 0; i < 4; i++) {
+		data[i] = 0xFF;
+	}
 
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-    CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data));
-
+	CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data));
 
 	// create render state, uniform buffer, etc
 	CALL_GL(glGenBuffers(1, &ubo));
@@ -78,8 +76,8 @@ bool Renderer::startup() {
 	CALL_GL(glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	
 	layers.clear();
-	layers[0] = new BatchRenderer();
-	//batchRenderers.insert(std::pair<int, BatchRenderer>(0, new BatchRenderer()));
+	layers[0] = new RenderLayer();
+	//batchRenderers.insert(std::pair<int, RenderLayer>(0, new RenderLayer()));
 	
     CALL_GL(glGenVertexArrays(1, &fullscreenQuadVAO));
 
@@ -120,13 +118,7 @@ void Renderer::renderFullscreenQuad() {
 void Renderer::render(const Camera& camera) {
     for (std::map<int, RenderLayer*>::reverse_iterator it = layers.rbegin(); it != layers.rend(); it++) {
 		RenderLayer *renderLayer = it->second;
-
-		BatchRenderer *batchRenderer = dynamic_cast<BatchRenderer*>(renderLayer);
-		if (batchRenderer) {
-			if (batchRenderer->renderBatch.size() > 0) {
-				batchRenderer->render(camera);
-			}
-		}
+		renderLayer->render(camera);
 	}
 }
 
