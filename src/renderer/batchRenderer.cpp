@@ -48,7 +48,7 @@ static bool defaultShaderLoaded = false;
 BatchRenderer::BatchRenderer(Shader *shader, Mat4 colorTransform, bool depthSorting) {
 	//	load default shader
 	if (!defaultShaderLoaded) {
-		defaultShader.load("shaders/default2d");
+		defaultShader.load("shaders/instanced2d");
 		defaultShader.bind();
 		defaultShaderLoaded = true;
 	}

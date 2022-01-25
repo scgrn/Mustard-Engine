@@ -538,7 +538,11 @@ static int luaAddColorTransform(lua_State* luaVM) {
 	}
 
 	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[index]);
-	batchRenderer->colorTransform = batchRenderer->colorTransform * transform;
+	if (batchRenderer) {
+		batchRenderer->colorTransform = batchRenderer->colorTransform * transform;
+	} else {
+		LOG("Could not cast layer: %d", index);
+	}
 	
 	return 0;
 }
@@ -550,7 +554,7 @@ static int luaResetColorTransforms(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 	
 	BatchRenderer *batchRenderer = reinterpret_cast<BatchRenderer*>(renderer.layers[index]);
-	batchRenderer->colorTransform = Mat4();
+	batchRenderer->colorTransform = blend::identity();
 	
 	return 0;
 }
