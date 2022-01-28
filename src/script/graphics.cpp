@@ -296,8 +296,6 @@ static int luaRenderQuad(lua_State* luaVM) {
 		angle = (float)lua_tonumber(luaVM, 7);
     }
 	
-	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
-	
 	RenderLayer::Quad quad;
 	
 	quad.pos = Vec3(x, y, z);
@@ -308,9 +306,62 @@ static int luaRenderQuad(lua_State* luaVM) {
 	quad.textureID = 0;
 	quad.color = currentColor;
 
-	batchRenderer->renderQuad(quad);
+	renderer.layers[layer]->renderQuad(quad);
 
     return 0;
+}
+
+/// Queues a triangle to be renderer on the screen or current canvas.
+// @function AB.graphics.renderTri
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param x1 X1 position
+// @param y1 Y1 position
+// @param x2 X2 position
+// @param y2 Y2 position
+// @param x3 X3 position
+// @param y3 Y3 position
+static int luaRenderTri(lua_State* luaVM) {
+    int layer = (int)lua_tonumber(luaVM, 1);
+    float x1 = (float)lua_tonumber(luaVM, 2);
+    float y1 = (float)lua_tonumber(luaVM, 3);
+    float x2 = (float)lua_tonumber(luaVM, 4);
+    float y2 = (float)lua_tonumber(luaVM, 5);
+    float x3 = (float)lua_tonumber(luaVM, 6);
+    float y3 = (float)lua_tonumber(luaVM, 7);
+
+	renderer.layers[layer]->setColor(currentColor); 	// TODO: move this to renderer.state
+	renderer.layers[layer]->renderTri(x1, y1, x2, y2, x3, y3);
+	
+	return 0;
+}
+
+
+///	Queues an arc to be renderer on the screen or current canvas.
+// @function AB.graphics.renderArc
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param x X position
+// @param y Y position
+// @param radius Radius
+// @param angle1 Start angle in degrees
+// @param angle2 End angle in degrees
+// @param segments (8) Number of arc segments
+static int luaRenderArc(lua_State* luaVM) {
+    int layer = (int)lua_tonumber(luaVM, 1);
+    float x = (float)lua_tonumber(luaVM, 2);
+    float y = (float)lua_tonumber(luaVM, 3);
+    float radius = (float)lua_tonumber(luaVM, 4);
+    float angle1 = (float)lua_tonumber(luaVM, 5);
+    float angle2 = (float)lua_tonumber(luaVM, 6);
+	
+	int segments = 8;
+    if (lua_gettop(luaVM) >= 7) {
+		segments = (int)lua_tonumber(luaVM, 7);
+    }
+
+	renderer.layers[layer]->setColor(currentColor); 	// TODO: move this to renderer.state
+	renderer.layers[layer]->renderArc(x, y, radius, angle1, angle2, segments);
+	
+	return 0;
 }
 
 /// Sets current (premultiplied) color
@@ -582,6 +633,8 @@ void registerGraphicsFunctions() {
         { "renderSprite", luaRenderSprite},
         { "spriteSize", luaSpriteSize},
 		{ "renderQuad", luaRenderQuad},
+		{ "renderTri", luaRenderTri},
+		{ "renderArc", luaRenderArc},
 
 		{ "setColor", luaSetColor},
 		{ "createCanvas", luaCreateCanvas},
