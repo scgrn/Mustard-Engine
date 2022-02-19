@@ -589,12 +589,7 @@ static int luaAddColorTransform(lua_State* luaVM) {
 		default: break;
 	}
 
-	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[index]);
-	if (batchRenderer) {
-		batchRenderer->colorTransform = batchRenderer->colorTransform * transform;
-	} else {
-		LOG("Could not cast layer: %d", index);
-	}
+	renderer.layers[index]->colorTransform = renderer.layers[index]->colorTransform * transform;
 	
 	return 0;
 }
@@ -607,6 +602,46 @@ static int luaResetColorTransforms(lua_State* luaVM) {
 	
 	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[index]);
 	batchRenderer->colorTransform = blend::identity();
+	
+	return 0;
+}
+
+/// Loads a shader program. ".vert" will be appended to the filename for the vertex shader,
+// and ".frag" will be appended for the fragment shader.
+// @function AB.graphics.loadShader
+// @param filename Shader filename
+// @param index Shader index
+static int luaLoadShader(lua_State* luaVM) {
+    std::string filename = std::string(lua_tostring(luaVM, 1));
+    int index = (int)lua_tonumber(luaVM, 2);
+
+	AB::shaders.mapResource(index, filename);
+	
+	return 0;
+}
+
+/// Sets a layer's shader
+// @function AB.graphics.setShader
+// @param layerIndex Layer index
+// @param shaderIndex Shader index
+static int luaSetShader(lua_State* luaVM) {
+    int layerIndex = (int)lua_tonumber(luaVM, 1);
+    int shaderIndex = (int)lua_tonumber(luaVM, 2);
+
+	renderer.layers[layerIndex]->shader = shaders.get(shaderIndex);
+	
+	return 0;
+}
+
+/// Sets a layer's batch shader
+// @function AB.graphics.setBatchShader
+// @param layerIndex Layer index
+// @param shaderIndex Shader index
+static int luaSetBatchShader(lua_State* luaVM) {
+    int layerIndex = (int)lua_tonumber(luaVM, 1);
+    int shaderIndex = (int)lua_tonumber(luaVM, 2);
+
+	renderer.layers[layerIndex]->shader = shaders.get(shaderIndex);
 	
 	return 0;
 }
@@ -641,13 +676,16 @@ void registerGraphicsFunctions() {
 		{ "useCanvas", luaUseCanvas},
 		{ "renderCanvas", luaRenderCanvas}, 
 
-		// { "loadShader", luaLoadShader},
 		{ "createLayer", luaCreateLayer},
 		{ "removeLayer", luaRemoveLayer},
 		
 		{ "addColorTransform", luaAddColorTransform},
 		{ "resetColorTransforms", luaResetColorTransforms},
 
+		{ "loadShader", luaLoadShader},
+		{ "setShader", luaSetShader},
+		{ "setBatchShader", luaSetBatchShader},
+		
 		{ "flushGraphics", luaFlushGraphics},
 		
         { NULL, NULL }

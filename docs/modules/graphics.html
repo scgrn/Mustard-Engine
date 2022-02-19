@@ -102,6 +102,14 @@
 	<td class="summary">Queues a quad to be renderer on the screen or current canvas.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.renderTri">AB.graphics.renderTri (layer, x1, y1, x2, y2, x3, y3)</a></td>
+	<td class="summary">Queues a triangle to be renderer on the screen or current canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.renderArc">AB.graphics.renderArc (layer, x, y, radius, angle1, angle2, segments)</a></td>
+	<td class="summary">Queues an arc to be renderer on the screen or current canvas.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.setColor">AB.graphics.setColor (r, g, b, opacity, additivity)</a></td>
 	<td class="summary">Sets current (premultiplied) color</td>
 	</tr>
@@ -132,6 +140,18 @@
 	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.resetColorTransforms">AB.graphics.resetColorTransforms (index)</a></td>
 	<td class="summary">Resets any color transformation for layer.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.loadShader">AB.graphics.loadShader (filename, index)</a></td>
+	<td class="summary">Loads a shader program.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.setShader">AB.graphics.setShader (layerIndex, shaderIndex)</a></td>
+	<td class="summary">Sets a layer's shader</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#AB.graphics.setBatchShader">AB.graphics.setBatchShader (layerIndex, shaderIndex)</a></td>
+	<td class="summary">Sets a layer's batch shader</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#AB.graphics.flushGraphics">AB.graphics.flushGraphics ()</a></td>
@@ -433,6 +453,82 @@
 
 </dd>
     <dt>
+    <a name = "AB.graphics.renderTri"></a>
+    <strong>AB.graphics.renderTri (layer, x1, y1, x2, y2, x3, y3)</strong>
+    </dt>
+    <dd>
+    Queues a triangle to be renderer on the screen or current canvas.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         Rendering layer. A default layer of 0 is provided
+        </li>
+        <li><span class="parameter">x1</span>
+         X1 position
+        </li>
+        <li><span class="parameter">y1</span>
+         Y1 position
+        </li>
+        <li><span class="parameter">x2</span>
+         X2 position
+        </li>
+        <li><span class="parameter">y2</span>
+         Y2 position
+        </li>
+        <li><span class="parameter">x3</span>
+         X3 position
+        </li>
+        <li><span class="parameter">y3</span>
+         Y3 position
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.renderArc"></a>
+    <strong>AB.graphics.renderArc (layer, x, y, radius, angle1, angle2, segments)</strong>
+    </dt>
+    <dd>
+    Queues an arc to be renderer on the screen or current canvas.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layer</span>
+         Rendering layer. A default layer of 0 is provided
+        </li>
+        <li><span class="parameter">x</span>
+         X position
+        </li>
+        <li><span class="parameter">y</span>
+         Y position
+        </li>
+        <li><span class="parameter">radius</span>
+         Radius
+        </li>
+        <li><span class="parameter">angle1</span>
+         Start angle in degrees
+        </li>
+        <li><span class="parameter">angle2</span>
+         End angle in degrees
+        </li>
+        <li><span class="parameter">segments</span>
+         (8) Number of arc segments
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "AB.graphics.setColor"></a>
     <strong>AB.graphics.setColor (r, g, b, opacity, additivity)</strong>
     </dt>
@@ -665,6 +761,76 @@
 
 </dd>
     <dt>
+    <a name = "AB.graphics.loadShader"></a>
+    <strong>AB.graphics.loadShader (filename, index)</strong>
+    </dt>
+    <dd>
+    Loads a shader program.  ".vert" will be appended to the filename for the vertex shader,
+ and ".frag" will be appended for the fragment shader.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">filename</span>
+         Shader filename
+        </li>
+        <li><span class="parameter">index</span>
+         Shader index
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.setShader"></a>
+    <strong>AB.graphics.setShader (layerIndex, shaderIndex)</strong>
+    </dt>
+    <dd>
+    Sets a layer's shader
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layerIndex</span>
+         Layer index
+        </li>
+        <li><span class="parameter">shaderIndex</span>
+         Shader index
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "AB.graphics.setBatchShader"></a>
+    <strong>AB.graphics.setBatchShader (layerIndex, shaderIndex)</strong>
+    </dt>
+    <dd>
+    Sets a layer's batch shader
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">layerIndex</span>
+         Layer index
+        </li>
+        <li><span class="parameter">shaderIndex</span>
+         Shader index
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "AB.graphics.flushGraphics"></a>
     <strong>AB.graphics.flushGraphics ()</strong>
     </dt>
@@ -760,7 +926,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2022-01-25 01:34:57 </i>
+<i style="float:right;">Last updated 2022-02-12 21:00:32 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -54,7 +54,7 @@ void* operator new(std::size_t sz, const char *file, int line) {
 	analytics.used += sz;
 
 #ifdef DEBUG
-	//LOG("Allocating %zu bytes from %s, line %d. Current memory allocated: %zu", sz, file, line, analytics.used);
+	LOG("Allocating %zu bytes from %s, line %d. Current memory allocated: %zu", sz, file, line, analytics.used);
 #endif // DEBUG
 
 	void *ptr = std::malloc(sz);
@@ -76,7 +76,7 @@ void operator delete(void* ptr, std::size_t sz) noexcept {
 	std::free(ptr);
 
 #ifdef DEBUG
-	//LOG("Freeing %zu bytes. Current memory allocated: %zu", sz, analytics.used);
+	LOG("Freeing %zu bytes. Current memory allocated: %zu", sz, analytics.used);
 #endif // DEBUG
 }
 

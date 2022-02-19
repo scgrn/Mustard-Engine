@@ -20,6 +20,7 @@ function AB.update()
 end
 
 function AB.render()
-	AB.font.printString(0, font, 400, 300, 2, AB.font.CENTER, "Hello, world!")
+	AB.font.setColor(font, 1, 219 / 255, 88 / 255, 1, 0)
+	AB.font.printString(0, font, 400, 300, 2, AB.font.CENTER, "Mustard")
 end
 
