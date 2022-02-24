@@ -736,7 +736,7 @@ void registerInputFunctions() {
 		{ "axisName", luaAxisName},
 		{ "gamepadWasPressed", luaGamepadWasPressed}, 
         { "gamepadPressed", luaGamepadPressed},
-		{ "gamepadWasReleased", luaGamepadWasPressed},
+		{ "gamepadWasReleased", luaGamepadWasReleased},
 		{ "gamepadGetAxis", luaGamepadGetAxis},
         { "numGamepads", luaNumGamepads},
 		{ "showGamepadControls", luaShowGamepadControls},
@@ -760,6 +760,42 @@ void registerInputFunctions() {
 #undef X
 	command += "}";
 	script.execute(command);
+
+	script.execute("AB.input.gamepadButtons={"
+		"A=0,"
+		"B=1,"
+		"X=2,"
+		"Y=3,"
+		"BACK=4,"
+		"GUIDE=5,"
+		"START=6,"
+		"LEFTSTICK=7,"
+		"RIGHTSTICK=8,"
+		"LEFTSHOULDER=9,"
+		"RIGHTSHOULDER=10,"
+		"DPAD_UP=11,"
+		"DPAD_DOWN=12,"
+		"DPAD_LEFT=13,"
+		"DPAD_RIGHT=14,"
+		
+		"LSTICK_UP=16,"
+		"LSTICK_DOWN=17,"
+		"LSTICK_LEFT=18,"
+		"LSTICK_RIGHT=19,"
+		"RSTICK_UP=20,"
+		"RSTICK_DOWN=21,"
+		"RSTICK_LEFT=22,"
+		"RSTICK_RIGHT=23,"
+		"LTRIGGER=24,"
+		"RTRIGGER=25}");
+
+	script.execute("AB.input.gamepadAxes={"
+		"LEFT_X=0,"
+		"LEFT_Y=1,"
+		"RIGHT_X=2,"
+		"RIGHT_Y=3,"
+		"TRIGGER_LEFT=4,"
+		"TRIGGER_RIGHT=5}");
 }
 
 }
