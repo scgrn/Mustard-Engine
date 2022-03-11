@@ -424,6 +424,20 @@ static int luaCreateCanvas(lua_State* luaVM) {
 	return 1;
 }
 
+///	Deletes a canvas.
+// @function AB.graphics.deleteCanvas
+// @param index Handle to canvas
+static int luaDeleteCanvas(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+
+	std::map<int, AB::RenderTarget*>::iterator it;
+	it = renderer.canvases.find(index);
+	delete renderer.canvases[index];
+	renderer.canvases.erase(it);
+
+	return 0;
+}
+
 ///	Uses a canvas for rendering. Pass 0 to restore default frameBuffer.
 // @function AB.graphics.useCanvas
 // @param index
@@ -673,6 +687,7 @@ void registerGraphicsFunctions() {
 
 		{ "setColor", luaSetColor},
 		{ "createCanvas", luaCreateCanvas},
+		{ "deleteCanvas", luaDeleteCanvas},
 		{ "useCanvas", luaUseCanvas},
 		{ "renderCanvas", luaRenderCanvas}, 
 

@@ -35,7 +35,7 @@ endef
 
 ifeq ($(config),debug_win64)
 TARGETDIR = ../bin/Debug
-TARGET = $(TARGETDIR)/VermilionBakesale.exe
+TARGET = $(TARGETDIR)/arcade.exe
 OBJDIR = obj/win64/Debug
 DEFINES += -DWIN32 -DWINDOWS_VERSION -DWITH_SDL2 -DLUA_COMPAT_ALL -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -Wno-pragmas -Wpsabi -msse2
@@ -44,7 +44,7 @@ ALL_LDFLAGS += $(LDFLAGS) -L/projects/Mustard/bin -L/projects/Mustard/vendor/SDL
 
 else ifeq ($(config),release_win64)
 TARGETDIR = ../bin/Release
-TARGET = $(TARGETDIR)/VermilionBakesale.exe
+TARGET = $(TARGETDIR)/arcade.exe
 OBJDIR = obj/win64/Release
 DEFINES += -DWIN32 -DWINDOWS_VERSION -DWITH_SDL2 -DLUA_COMPAT_ALL -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -Wno-pragmas -Wpsabi -msse2
@@ -63,8 +63,8 @@ endif
 GENERATED :=
 OBJECTS :=
 
-GENERATED += $(OBJDIR)/sampleProject.o
-OBJECTS += $(OBJDIR)/sampleProject.o
+GENERATED += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/main.o
 
 # Rules
 # #############################################
@@ -128,7 +128,7 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/sampleProject.o: ../src/sampleProject.cpp
+$(OBJDIR)/main.o: ../src/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
