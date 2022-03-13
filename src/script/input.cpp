@@ -395,7 +395,7 @@ static int luaMousePressed(lua_State* luaVM) {
 // @return released
 static int luaMouseWasReleased(lua_State* luaVM) {
     int button = (int)lua_tonumber(luaVM, 1) - 1;
-    lua_pushboolean(luaVM, input.wasKeyReleased(button));
+    lua_pushboolean(luaVM, input.wasMouseReleased(button));
 
     return 1;
 }
