@@ -364,6 +364,42 @@ static int luaRenderArc(lua_State* luaVM) {
 	return 0;
 }
 
+/// Renders a list of line segments
+// @function AB.graphics.renderLines
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param lines[] array of line segment endpoints in form {x1, y1, x2, y2, ...}
+static int luaRenderLines(lua_State* luaVM) {
+    int layer = (int)lua_tonumber(luaVM, 1);
+
+	if (!lua_istable(luaVM, -1)) {
+		LOG("Not a table!", 0);
+	}
+	
+	//  make sure array is %4
+	size_t length = lua_rawlen(luaVM, -1);
+	if (length % 4 != 0) {
+		LOG("Vertex size is not multiple of four!", 0);
+	}
+
+	// https://dav3.co/blog/looping-through-lua-table-in-c/
+	float endpoints[length];
+	for (int i = 0; i <= length; i++) {
+		lua_pushinteger(luaVM, i + 1);
+		
+		lua_gettable(luaVM, -2);
+		if (lua_type(luaVM, -1) == LUA_TNIL) {
+			break;
+		}
+		endpoints[i] = luaL_checknumber(luaVM, -1);
+		lua_pop(luaVM, 1);
+	}
+	
+	renderer.layers[layer]->setColor(currentColor); 	// TODO: move this to renderer.state
+	renderer.layers[layer]->renderLines(endpoints, length / 4);
+
+	return 0;
+}
+
 /// Sets current (premultiplied) color
 // @function AB.graphics.setColor
 // @param r (1.0) Red color component
@@ -684,6 +720,7 @@ void registerGraphicsFunctions() {
 		{ "renderQuad", luaRenderQuad},
 		{ "renderTri", luaRenderTri},
 		{ "renderArc", luaRenderArc},
+		{ "renderLines", luaRenderLines},
 
 		{ "setColor", luaSetColor},
 		{ "createCanvas", luaCreateCanvas},

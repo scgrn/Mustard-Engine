@@ -75,6 +75,7 @@ class RenderLayer {
         void renderCircle(float x, float y, float radius, bool full = true, int segments = 32);
         void renderArc(float x, float y, float radius, float angle1, float angle2, int segments = 10);
         void renderRoundedRectangle(float x, float y, float w, float h, float radius, bool full = true, int segments = 8);
+		void renderLines(float endpoints[], int lineCount); // {x1, y1, x2, y2, ...}
 		
 		std::vector<Quad> quadBatch;
 		Shader *batchShader;

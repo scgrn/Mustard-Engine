@@ -236,6 +236,9 @@ void RenderLayer::render(const Camera& camera) {
 	shader->bind();
 	shader->setMat4("projection", camera.projectionMatrix);
 
+	// set colorTransform uniform
+	shader->setMat4("colorTransform", colorTransform);
+
 	CALL_GL(glBindVertexArray(VAO));
 
 	for (auto renderItem : renderItems) {
@@ -394,6 +397,14 @@ void RenderLayer::renderRoundedRectangle(float x, float y, float w, float h, flo
 
 		if (full) {
 			addVertex(x + w, y + radius);
+		}
+	end();
+}
+
+void RenderLayer::renderLines(float endpoints[], int lineCount) {
+	begin(GL_LINES);
+		for (int i = 0; i < lineCount * 2; i++) {
+			addVertex(endpoints[i * 2], endpoints[i * 2 + 1]);
 		}
 	end();
 }
