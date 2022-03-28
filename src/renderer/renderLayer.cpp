@@ -289,6 +289,42 @@ void RenderLayer::addVertex(float x, float y, float z) {
     currentRenderItem.vertices.push_back(currentColor.a);
 }
 
+void RenderLayer::addVertex(float x, float y, float u, float v) {
+    currentRenderItem.vertices.push_back(x);
+    currentRenderItem.vertices.push_back(y);
+    currentRenderItem.vertices.push_back(-1);
+    currentRenderItem.vertices.push_back(u);
+    currentRenderItem.vertices.push_back(v);
+    currentRenderItem.vertices.push_back(currentColor.r);
+    currentRenderItem.vertices.push_back(currentColor.g);
+    currentRenderItem.vertices.push_back(currentColor.b);
+    currentRenderItem.vertices.push_back(currentColor.a);
+}
+
+void RenderLayer::addVertex(float x, float y, float r, float g, float b, float a) {
+    currentRenderItem.vertices.push_back(x);
+    currentRenderItem.vertices.push_back(y);
+    currentRenderItem.vertices.push_back(-1);
+    currentRenderItem.vertices.push_back(0.0f); // u
+    currentRenderItem.vertices.push_back(0.0f); // v
+    currentRenderItem.vertices.push_back(r);
+    currentRenderItem.vertices.push_back(g);
+    currentRenderItem.vertices.push_back(b);
+    currentRenderItem.vertices.push_back(a);
+}
+
+void RenderLayer::addVertex(float x, float y, float u, float v, float r, float g, float b, float a) {
+    currentRenderItem.vertices.push_back(x);
+    currentRenderItem.vertices.push_back(y);
+    currentRenderItem.vertices.push_back(-1);
+    currentRenderItem.vertices.push_back(u);
+    currentRenderItem.vertices.push_back(v);
+    currentRenderItem.vertices.push_back(r);
+    currentRenderItem.vertices.push_back(g);
+    currentRenderItem.vertices.push_back(b);
+    currentRenderItem.vertices.push_back(a);
+}
+
 void RenderLayer::end() {
 	renderItems.push_back(currentRenderItem);
 }

@@ -59,12 +59,11 @@ class RenderLayer {
 		//	immediate mode emulation
 		void begin(GLenum mode, GLuint texture = whiteTexture);
         void addVertex(float x, float y, float z = -1.0f);
-		void end();
-
-        //  TODO: haven't implemented these yet. should probably also support normals.
         void addVertex(float x, float y, float u, float v);
         void addVertex(float x, float y, float r, float g, float b, float a);
         void addVertex(float x, float y, float u, float v, float r, float g, float b, float a);
+        //  TODO: should probably also support normals.
+		void end();
 
 		//	submits a quad to the batch renderer
 		void renderQuad(const Quad& quad);
