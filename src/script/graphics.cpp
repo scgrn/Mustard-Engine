@@ -480,6 +480,8 @@ static int luaDeleteCanvas(lua_State* luaVM) {
 static int luaUseCanvas(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
+	renderer.render(camera2d);
+	
 	if (currentRenderTarget != 0) {
 		renderer.canvases[currentRenderTarget]->end();
 	}

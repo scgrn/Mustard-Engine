@@ -32,7 +32,12 @@ workspace("Mustard")
 	buildoptions  {
 		"-Wno-pragmas",
 		"-Wpsabi",
-		"-msse2"
+		"-msse2",
+	}
+
+	linkoptions {
+		"-static-libstdc++",
+		"-static-libgcc"
 	}
 
 	filter "configurations:Debug"

@@ -151,5 +151,6 @@ start .
 goto PROJECT_MENU
 
 :EXIT
+set AB_PROJECT_NAME=
 cls
 

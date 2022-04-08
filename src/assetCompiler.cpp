@@ -241,8 +241,8 @@ void buildArchive(std::string archivePath) {
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-		std::cout << "Alien Bug Asset Compiler\n\n";
-        std::cout << "Usage: ABAC outputFile.dat [key]\n";
+		std::cout << "Mustard Engine Asset Compiler\n\n";
+        std::cout << "Usage: Mustard-AssetCompiler outputFile.dat [key]\n";
     } else {
         std::cout << "Building archive [" << argv[1] << "]...\n\n";
 
