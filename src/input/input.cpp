@@ -532,10 +532,10 @@ bool Input::menuUp() {
 
 	if (numGamepads > 0) {
 		for (int i = 0; i < numGamepads; i++) {
-			pressed = pressed || gamepadWasPressed(i, BUTTON_DPAD_UP || gamepadWasPressed(i, BUTTON_LSTICK_UP));
+			pressed = pressed || gamepadWasPressed(i, BUTTON_DPAD_UP) || gamepadWasPressed(i, BUTTON_LSTICK_UP);
 		}
 	}
-	
+
 	return pressed;
 }
 

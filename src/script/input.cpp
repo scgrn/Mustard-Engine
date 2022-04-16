@@ -540,6 +540,7 @@ static int luaAxisName(lua_State* luaVM) {
 // @param index (0) Gamepad index
 // @return pressed
 // @see gamepadButtons
+// @usage pressed = AB.input.gamepadWasPressed(AB.input.gamepadButtons.START)
 static int luaGamepadWasPressed(lua_State* luaVM) {
     int button = (int)lua_tonumber(luaVM, 1);
 
