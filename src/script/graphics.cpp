@@ -693,7 +693,7 @@ static int luaSetBatchShader(lua_State* luaVM) {
     int layerIndex = (int)lua_tonumber(luaVM, 1);
     int shaderIndex = (int)lua_tonumber(luaVM, 2);
 
-	renderer.layers[layerIndex]->shader = shaders.get(shaderIndex);
+	renderer.layers[layerIndex]->batchShader = shaders.get(shaderIndex);
 	
 	return 0;
 }

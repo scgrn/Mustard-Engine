@@ -37,7 +37,8 @@ These are called from the engine during the main loop or when system events occu
 //	}	
 // @function AB.loadConfig
 
-/// Initializes application. Called once after window and renderer are created.
+/// Called once before the main loop is entered.
+// All subsystems are guaranteed to be stood up.
 // @function AB.init
 
 /// Updates logic. Called 60 times a second.

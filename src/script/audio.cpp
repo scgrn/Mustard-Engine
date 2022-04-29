@@ -161,6 +161,13 @@ static int luaLoadMusic(lua_State* luaVM) {
 // @param index Music loop handle
 static int luaPlayMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+	
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
 	music.get(index)->play();
 
     return 0;
@@ -171,6 +178,13 @@ static int luaPlayMusic(lua_State* luaVM) {
 // @param index Music loop handle
 static int luaPauseMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
 	music.get(index)->pause();
 
     return 0;
@@ -181,6 +195,13 @@ static int luaPauseMusic(lua_State* luaVM) {
 // @param index Music loop handle
 static int luaResumeMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
 	music.get(index)->resume();
 	
     return 0;
@@ -194,6 +215,12 @@ static int luaFadeMusicIn(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     float duration = (float)lua_tonumber(luaVM, 2);
     
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
 	music.get(index)->fadeIn(duration);
 
     return 0;
@@ -207,6 +234,12 @@ static int luaFadeMusicOut(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 	float duration = (float)lua_tonumber(luaVM, 2);
 
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
 	music.get(index)->fadeOut(duration);
 	
     return 0;
@@ -218,6 +251,12 @@ static int luaFadeMusicOut(lua_State* luaVM) {
 static int luaStopMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
 	music.get(index)->stop();
 	
     return 0;
@@ -229,6 +268,13 @@ static int luaStopMusic(lua_State* luaVM) {
 // @return playing
 static int luaIsMusicPlaying(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+
+    if (!music.find(index)) {
+        if (music.resourceInfo[index].empty()) {
+			LOG("Unknown music loop: %d", index);
+			return 0;
+		}
+	}
     lua_pushboolean(luaVM, music.get(index)->isPlaying());
 	
 	return 1;
