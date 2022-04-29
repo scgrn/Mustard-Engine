@@ -247,6 +247,10 @@ void Input::update() {
 					script.execute("AB.onKeyPressed(" + toString(event->key.keysym.scancode) + ")");
 				}
             }
+			
+			if (event->key.keysym.sym == SDLK_ESCAPE) {
+                script.execute("AB.onBackPressed()");
+			}
 		}
 		
 		if (event->type == SDL_MOUSEMOTION) {
