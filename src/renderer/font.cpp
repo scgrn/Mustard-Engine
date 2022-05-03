@@ -412,27 +412,19 @@ void Font::printString(RenderLayer *renderer, GLfloat x, GLfloat y, GLfloat scal
 	
 	for (unsigned int i = 0; i < string.length(); i++) {
 		unsigned char ascii = string[i];
-		if (ascii < 128) {
-            if (chars[ascii]) {
-                float cx = tx + (chars[ascii]->xOffset * scale);
-                float cy = (-base * scale) + y - (chars[ascii]->yOffset * scale);
-                cx += (chars[ascii]->width / 2.0f) * scale;
-                cy += (chars[ascii]->height / 2.0f) * scale;
-                
-				chars[ascii]->render(renderer, Vec3(cx, cy, -1.0f), 0, Vec2(scale, scale), color);
-				
-                tx += chars[ascii]->xAdvance * scale;
-            } else {
-                if (ascii != 13) {
-                    ERR("UNKNOWN CHARACTER: %d", ascii);
-                }
-            }
+		if (chars[ascii]) {
+			float cx = tx + (chars[ascii]->xOffset * scale);
+			float cy = (-base * scale) + y - (chars[ascii]->yOffset * scale);
+			cx += (chars[ascii]->width / 2.0f) * scale;
+			cy += (chars[ascii]->height / 2.0f) * scale;
+			
+			chars[ascii]->render(renderer, Vec3(cx, cy, -1.0f), 0, Vec2(scale, scale), color);
+			
+			tx += chars[ascii]->xAdvance * scale;
 		} else {
-            // LOG_EXP(string);
-
-            //  TODO: test!
-            Uint16 extended = (ascii << 8) + string[i + 1];
-            // LOG_EXP(extended);
+			if (ascii != 13) {
+				ERR("UNKNOWN CHARACTER: %d", ascii);
+			}
 		}
 
         // kerning
