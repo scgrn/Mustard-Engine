@@ -110,6 +110,10 @@ void Music::resume() {
     audio.soloud->setPause(musicHandle, false);
 }
 
+void Music::setVolume(float volume) {
+    audio.soloud->setVolume(musicHandle, audio.musicVolume);
+}
+
 void Music::fadeIn(float duration) {
     musicHandle = audio.soloud->play(*wavStream);
     audio.soloud->seek(musicHandle, 0.0f);

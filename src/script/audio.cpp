@@ -296,6 +296,10 @@ static int luaSetSoundVolume(lua_State* luaVM) {
 static int luaSetMusicVolume(lua_State* luaVM) {
     float volume = (float)lua_tonumber(luaVM, 1);
     audio.musicVolume = volume;
+	
+	for (auto const& loop : music.resourceData) {
+		loop.second->setVolume(audio.musicVolume);
+	}
 
     return 0;
 }

@@ -63,6 +63,7 @@ class Music : public Resource {
 		void play();
 		void pause();
 		void resume();
+		void setVolume(float volume);
 		void fadeIn(float duration);
 		void fadeOut(float duration);
 		void stop();
