@@ -193,6 +193,7 @@ void mainLoop(Application *app) {
         eventQueue.clear();
         app->update();
 		input.update();
+		audio.update();
 
         currentTime = SDL_GetTicks();
         while (currentTime < lastTime + 30) {
@@ -265,13 +266,14 @@ void mainLoop(Application *app) {
             resync = false;
         }
 
-        while(frame_accumulator >= desired_frametime*update_multiplicity){
+        while(frame_accumulator >= desired_frametime * update_multiplicity) {
             for(int i = 0; i<update_multiplicity; i++){
 #ifdef DEBUG
 				if (!console.active) {
 					app->update();
 				}
                 input.update();
+				audio.update();
 				console.update();
 #else
 				app->update();

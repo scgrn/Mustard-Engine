@@ -165,5 +165,37 @@ void Audio::shutdown() {
 	delete soloud;
 }
 
+void Audio::update() {
+	for (auto& queuedSound : soundQueue) {
+		queuedSound.sound->play(queuedSound.volume, queuedSound.pan, queuedSound.loop);
+	}
+	soundQueue.clear();
+}
+
+void Audio::play(Sound *sound, float volume = 1.0f, float pan = 0.0f, bool loop = false) {
+	bool found = false;
+	for (auto& queuedSound : soundQueue) {
+		if (queuedSound.sound == sound) {
+			found = true;
+			
+			if (volume > queuedSound.volume) {
+				queuedSound.volume = volume;
+				queuedSound.pan = pan;
+			}
+			
+			break;
+		}
+	}
+	if (!found) {
+		QueuedSound queuedSound;
+		queuedSound.sound = sound;
+		queuedSound.volume = volume;
+		queuedSound.pan = pan;
+		queuedSound.loop = loop;
+		
+		soundQueue.push_back(queuedSound);
+	}
+}
+
 		
 }   //  namespace

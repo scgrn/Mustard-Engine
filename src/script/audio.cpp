@@ -90,7 +90,7 @@ static int luaPlaySound(lua_State* luaVM) {
     if (lua_gettop(luaVM) >= 4) {
         loop = (bool)lua_toboolean(luaVM, 4);
     }
-	sounds.get(index)->play(volume, pan, loop);
+	audio.play(sounds.get(index), volume, pan, loop);
 	
     return 0;
 }

@@ -81,10 +81,26 @@ class Audio : public SubSystem {
 		bool startup() override;
 		void shutdown() override;
 		
+		//	plays all queued sound effects
+		void update();
+		
+		//	queues a sound effect if it hasn't already been played this frame
+		void play(Sound *sound, float volume, float pan, bool loop);
+		
 		float soundVolume = 1.0f;
 		float musicVolume = 1.0f;
 
 		SoLoud::Soloud *soloud;
+		
+	private:
+		struct QueuedSound {
+			Sound* sound;
+			float volume;
+			float pan;
+			bool loop;
+		};
+		
+		std::vector<QueuedSound> soundQueue;
 
 };
 
