@@ -9,7 +9,8 @@ workspace("Mustard")
 		"linux64",
 		"linux86",
 		"android",
-		"web"
+		"web",
+		"win64steam",
 	})
 	
 --	check for 32bit platforms
@@ -49,16 +50,17 @@ workspace("Mustard")
 		optimize "On"
 
 project("Mustard") ---------------------------------------------------------
+
 	kind("StaticLib")
 
 	staticruntime("on")
 	--targetdir("bin/%{cfg.buildcfg}")
 	targetdir("./bin")
-	targetname("Mustard-%{cfg.buildcfg}")
+	targetname("Mustard-%{cfg.platform}-%{cfg.buildcfg}")
 	
 	removeplatforms({"android", "web"})
 	
-	filter { "platforms:win64" }
+	filter { "platforms:win64 or win64steam" }
 		files {
 			"**.h",
 			"./src/**.cpp",
@@ -111,6 +113,10 @@ project("Mustard") ---------------------------------------------------------
 		filter "configurations:Debug"
 			buildoptions { "-finstrument-functions" }
 	 
+		filter { "platforms:win64steam" }
+			includedirs { "./vendor/steam" }
+			links { "steam_api64.lib" }
+			
 project("AssetCompiler") ---------------------------------------------------------
 	kind("ConsoleApp")
 	cppdialect("gnu++17")

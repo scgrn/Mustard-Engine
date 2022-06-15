@@ -1,8 +1,0 @@
-@ECHO OFF
-
-IF "%AB_PROJECT_NAME%"=="" (
-	echo ENVIRONMENT VARIABLE AB_PROJECT_NAME NOT SET. ABORTING.
-	pause
-	exit
-)
-"bin\debug\%AB_PROJECT_NAME%"

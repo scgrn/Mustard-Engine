@@ -23,7 +23,10 @@ type nul >> .\src\core\version.h
 
 :: TODO: determine make program by platform
 CD build
-make verbose=1 %*
+::make verbose=1 %*
+make config=debug_win64
+make config=release_win64
+make config=release_win64steam
 CD ..
 
 

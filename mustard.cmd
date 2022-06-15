@@ -52,6 +52,9 @@ type temp.lua > main.lua
 del temp.lua
 popd
 
+:: create run.bat
+echo bin\debug\"%AB_PROJECT_NAME%" > run.bat
+
 goto BUILD
 
 goto PROJECT_MENU
