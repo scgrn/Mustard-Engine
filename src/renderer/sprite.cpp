@@ -72,12 +72,13 @@ void Sprite::buildCollisionMask(int offsetX, int offsetY) {
         return;
     }
 
-    collisionMask = new bool[width * height];
-    memset(collisionMask, 0, width * height);
-
     if (!image) {
         ERR("Image data not loaded!", 0);
     }
+
+    collisionMask = new bool[width * height];
+    memset(collisionMask, 0, width * height);
+
     unsigned char *imageData = image->data;
 
     for (int y = offsetY; y < height + offsetY; y++) {

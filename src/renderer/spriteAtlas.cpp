@@ -274,7 +274,9 @@ int loadAtlas(std::string const& filename, int firstIndex, int width, int height
 		v += vIncrease;
 	}
 	delete sprites.get(firstIndex)->image;
-	sprites.get(firstIndex)->image = NULL;
+	for (int i = firstIndex; i < spriteIndex; i++) {
+		sprites.get(i)->image = NULL;
+	}
 	
 	return numSprites;
 }
