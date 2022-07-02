@@ -225,9 +225,9 @@ void buildAtlas() {
     // GL_MAX_TEXTURE_SIZE
 }
 
-int loadAtlas(std::string const& filename, int firstIndex, int width, int height) {
+int loadAtlas(std::string const& filename, int firstIndex, int width, int height, bool buildCollisionMasks) {
     sprites.mapResource(firstIndex, filename);
-	sprites.get(firstIndex)->uploadToGPU();
+	sprites.get(firstIndex)->uploadToGPU(true);
 	
 	int atlasWidth = sprites.get(firstIndex)->width;
 	int atlasHeight = sprites.get(firstIndex)->height;
@@ -251,6 +251,7 @@ int loadAtlas(std::string const& filename, int firstIndex, int width, int height
 			}
 
 			Sprite* sprite = sprites.get(spriteIndex);
+			sprite->image = sprites.get(firstIndex)->image;
 			sprite->width = width;
 			sprite->height = height;
 			sprite->halfX = width / 2;
@@ -261,13 +262,19 @@ int loadAtlas(std::string const& filename, int firstIndex, int width, int height
 			float v1 = v;
 			float u2 = u + uIncrease;
 			float v2 = v + vIncrease;
-			sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2);
+			
+			if (buildCollisionMasks) {
+				sprite->buildCollisionMask((int)(u * atlasWidth), (int)(v * atlasHeight));
+			}
+			sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2, true);
 			
 			spriteIndex++;
 			u += uIncrease;
 		}
 		v += vIncrease;
 	}
+	delete sprites.get(firstIndex)->image;
+	sprites.get(firstIndex)->image = NULL;
 	
 	return numSprites;
 }

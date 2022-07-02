@@ -51,10 +51,10 @@ class Sprite : public Resource {
 		/**
             This is called after a sprite has been added to a sprite atlas.
 		*/
-        void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2);
+        void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage = false);
 
-		void buildCollisionMask();
-		void uploadToGPU();
+		void buildCollisionMask(int offsetX = 0, int offsetY = 0);
+		void uploadToGPU(bool retainImage = false);
 		void render(RenderLayer *renderer, Vec3 pos, float rotation = 0.0f, Vec2 scale = Vec2(1.0f, 1.0f), Vec4 color = Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		std::shared_ptr<Texture> texture;
@@ -69,8 +69,6 @@ class Sprite : public Resource {
 		int halfX, halfY;		//  width and height / 2
 
         bool *collisionMask;
-
-    protected:
         Image *image;
 
 };

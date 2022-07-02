@@ -67,7 +67,7 @@ void Sprite::release() {
     }
 }
 
-void Sprite::buildCollisionMask() {
+void Sprite::buildCollisionMask(int offsetX, int offsetY) {
     if (collisionMask) {
         return;
     }
@@ -80,8 +80,8 @@ void Sprite::buildCollisionMask() {
     }
     unsigned char *imageData = image->data;
 
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
+    for (int y = offsetY; y < height + offsetY; y++) {
+        for (int x = offsetX; x < width + offsetX; x++) {
             //  set true if alpha channel for pixel is above threshold
             if (imageData[((height - y - 1) * width + x) * 4 + 3] > 128) {
                 collisionMask[y * width + x] = true;
@@ -90,7 +90,7 @@ void Sprite::buildCollisionMask() {
     }
 }
 
-void Sprite::uploadToGPU() {
+void Sprite::uploadToGPU(bool retainImage) {
     texture = std::make_shared<Texture>(image);
 
     u1 = 0.0f;
@@ -98,23 +98,27 @@ void Sprite::uploadToGPU() {
     u2 = texture->u2;
     v2 = texture->v2;
 
-    if (image) {
-        delete image;
-        image = NULL;
-    }
+	if (!retainImage) {
+		if (image) {
+			delete image;
+			image = NULL;
+		}
+	}
 }
 
-void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2) {
+void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage) {
     this->texture = texture;
     this->u1 = u1;
     this->v1 = v1;
     this->u2 = u2;
     this->v2 = v2;
 
-    if (image) {
-        delete image;
-        image = NULL;
-    }
+	if (!retainImage) {
+		if (image) {
+			delete image;
+			image = NULL;
+		}
+	}
 }
 
 void Sprite::render(RenderLayer *renderer, Vec3 pos, float rotation, Vec2 scale, Vec4 color) {

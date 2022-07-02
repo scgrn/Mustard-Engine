@@ -178,10 +178,10 @@ static int luaLoadAtlas(lua_State* luaVM) {
 	int spritesLoaded;
     if (lua_gettop(luaVM) >= 5) {
         index = (int)lua_tonumber(luaVM, 5);
-		spritesLoaded = loadAtlas(filename, index, width, height);
+		spritesLoaded = loadAtlas(filename, index, width, height, createMask);
     } else {
 		index = spriteHandle;
-		spritesLoaded = loadAtlas(filename, index, width, height);
+		spritesLoaded = loadAtlas(filename, index, width, height, createMask);
 		spriteHandle += spritesLoaded;
 	}
 

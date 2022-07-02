@@ -1,6 +1,6 @@
 @echo off
 
-if not exist bin\Mustard-Debug.lib (
+if not exist bin\Mustard-win64-Debug.lib (
 	cls
 	echo BUILDING MUSTARD ENGINE
 	echo. 

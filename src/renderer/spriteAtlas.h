@@ -31,7 +31,7 @@ namespace AB {
 
 void addToAtlas(Sprite *sprite);
 void buildAtlas();
-int loadAtlas(std::string const& filename, int firstIndex, int width, int height);
+int loadAtlas(std::string const& filename, int firstIndex, int width, int height, bool buildCollisionMasks = false);
 
 }   //  namespace
 
