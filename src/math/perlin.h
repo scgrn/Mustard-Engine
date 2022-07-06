@@ -40,7 +40,7 @@ namespace AB {
 class PerlinNoise {
     public:
         PerlinNoise();
-        PerlinNoise(int seed);
+        PerlinNoise(u32 seed);
         ~PerlinNoise();
 
         f32 noise(f32 x, f32 y, f32 z, int octaves, f32 persistence);

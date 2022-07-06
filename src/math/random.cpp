@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "../pch.h"
 
 #include "random.h"
+#include "../core/log.h"
 
 #include <stdint.h>
 #include <ctime>
@@ -65,11 +66,11 @@ void rndSeed(u32 seed) {
 }
 
 f64 rnd() {
-    return randomUint32() * (1.0 / 4294967296.0); // 2^32 − 1
+    return randomUint32() * (1.0 / 4294967296.0); // 2 ^ 32 − 1
 }
 
 u32 rnd(u32 n) {
-    return rnd() * n;   // TODO: looks weird. test.
+    return (u32)(rnd() * (f64)n); 		// TODO: looks weird. test.
 }
 
 i32 rnd(i32 lb, i32 ub) {

@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 
 #include "../pch.h"
 
+#include "../core/log.h"
+
 #include "perlin.h"
 #include "random.h"
 #include "math.h"
@@ -34,7 +36,7 @@ PerlinNoise::PerlinNoise() {
     init();
 }
 
-PerlinNoise::PerlinNoise(int seed) {
+PerlinNoise::PerlinNoise(u32 seed) {
     rndSeed(seed);
     init();
 }
@@ -85,13 +87,13 @@ f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     //  create hash
     int aaa, aba, aab, abb, baa, bba, bab, bbb;
     aaa = p[p[p[xi] + yi] + zi];
-    aba = p[p[p[xi] + (yi+ 1)] + zi];
-    aab = p[p[p[xi] + yi] + (zi+ 1)];
-    abb = p[p[p[xi] + (yi+ 1)] + (zi+ 1)];
-    baa = p[p[p[(xi+ 1)] + yi] + zi];
-    bba = p[p[p[(xi+ 1)] + (yi+ 1)] + zi];
-    bab = p[p[p[(xi+ 1)] + yi] + (zi+ 1)];
-    bbb = p[p[p[(xi+ 1)] + (yi+ 1)] + (zi+ 1)];
+    aba = p[p[p[xi] + (yi + 1)] + zi];
+    aab = p[p[p[xi] + yi] + (zi + 1)];
+    abb = p[p[p[xi] + (yi + 1)] + (zi + 1)];
+    baa = p[p[p[(xi + 1)] + yi] + zi];
+    bba = p[p[p[(xi + 1)] + (yi + 1)] + zi];
+    bab = p[p[p[(xi + 1)] + yi] + (zi + 1)];
+    bbb = p[p[p[(xi + 1)] + (yi + 1)] + (zi + 1)];
 
     //  interpolate gradients
     f32 x1, x2, y1, y2;
