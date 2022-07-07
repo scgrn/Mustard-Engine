@@ -558,6 +558,7 @@ static int luaRenderCanvas(lua_State* luaVM) {
 // @function AB.graphics.createLayer
 // @param index Layer index
 // @param depthSorting (false) Whether this layer needs to support depth sorting
+// @return layer index
 static int luaCreateLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     bool depthSorting = false;
@@ -566,7 +567,9 @@ static int luaCreateLayer(lua_State* luaVM) {
     }
 	renderer.layers[index] = new RenderLayer(nullptr, nullptr, blend::identity(), depthSorting);
 
-	return 0;
+	lua_pushnumber(luaVM, index);
+
+	return 1;
 }
 
 ///	Removes a rendering layer
