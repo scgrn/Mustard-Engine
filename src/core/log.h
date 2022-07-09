@@ -44,7 +44,7 @@ enum {
 	LOG_FATAL,
 	LOG_ERROR,
 	LOG_WARN,
-	LOG_INDO,
+	LOG_INFO,
 
 	// (V debug builds V)
 	LOG_DEBUG,
