@@ -608,7 +608,7 @@ static int luaGamepadWasReleased(lua_State* luaVM) {
 }
 
 /// Gets current value of a gamepad axis, accounting for deadzone
-// @function AB.input.getGamepadAxis
+// @function AB.input.gamepadGetAxis
 // @param axis Axis index
 // @param index (0) Gamepad index
 // @return position

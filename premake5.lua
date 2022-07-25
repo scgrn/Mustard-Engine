@@ -37,6 +37,7 @@ workspace("Mustard")
 	}
 
 	linkoptions {
+		"-static",
 		"-static-libstdc++",
 		"-static-libgcc"
 	}
