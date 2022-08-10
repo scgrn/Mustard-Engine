@@ -39,7 +39,7 @@ Clone repo and run [premake](https://github.com/premake/premake-core) in project
 
 Usage
 -------
-Copy projectTemplate folder and rename
+Run mustard.cmd create [project folder]
 
 Edit premake.lua in project root
 
