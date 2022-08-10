@@ -1,7 +1,7 @@
 workspace("Mustard")
 	location("./build")
 	
-	configurations({"Debug", "Release" })
+	configurations({"Debug", "Development", "Release" })
 	
 	platforms({
 		"win64",
@@ -42,11 +42,11 @@ workspace("Mustard")
 		"-static-libgcc"
 	}
 
-	filter "configurations:Debug"
+	filter("configurations:Debug")
 		defines { "DEBUG" }
 		symbols "On"
 		
-	filter "configurations:Release"
+	filter("configurations:Release", "configurations:Development")
 		defines { "NDEBUG" }
 		optimize "On"
 
@@ -111,12 +111,12 @@ project("Mustard") ---------------------------------------------------------
 			"SDL2.dll"
 		}
 
-		filter "configurations:Debug"
+		filter("configurations:Debug")
 			buildoptions { "-finstrument-functions" }
 	 
-		filter { "platforms:win64steam" }
-			includedirs { "./vendor/steam" }
-			links { "steam_api64.lib" }
+		filter({ "platforms:win64steam" })
+			includedirs({ "./vendor/steam" })
+			links({ "steam_api64.lib" })
 			
 project("AssetCompiler") ---------------------------------------------------------
 	kind("ConsoleApp")

@@ -25,12 +25,18 @@ workspace("SampleProject")
 		"-msse2"
 	}
 
+	linkoptions {
+		"-static-libstdc++",
+		"-static-libgcc",
+		"-static"
+	}
+
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		kind("ConsoleApp")
 		symbols "On"
 
-	filter "configurations:Release"
+	filter("configurations:Release", "configurations:Development")
 		defines { "NDEBUG" }
 		kind("WindowedApp")
 		optimize "On"
@@ -42,6 +48,8 @@ project("SampleProject") -------------------------------------------------------
 	
 	local projectName = os.getenv("AB_PROJECT_NAME") or "MUSTARD_GAME"
 	targetname(projectName)
+
+	staticruntime("on")
 	
 	filter { "platforms:win64" }
 		files {
