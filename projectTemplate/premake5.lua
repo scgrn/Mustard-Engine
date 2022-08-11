@@ -61,8 +61,6 @@ project("SampleProject") -------------------------------------------------------
 			"../../Mustard/src",
 
 			"../../Mustard/vendor",
-			"../../Mustard/vendor/glee",
-			"../../Mustard/vendor/glm",
 			"../../Mustard/vendor/lua-5.3.5/src",
 			"../../Mustard/vendor/SDL2-2.0.12/x86_64-w64-mingw32/include",
 			"../../Mustard/vendor/SDL2-2.0.12/x86_64-w64-mingw32/include/SDL2",
