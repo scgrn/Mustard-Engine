@@ -1,3 +1,10 @@
+--  define globals for luacheck
+std = {
+  globals = {
+    "AB",
+  }
+}
+
 function AB.loadConfig()
 	videoConfig = {
 		title = "AB SAMPLE PROJECT",
