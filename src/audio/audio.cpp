@@ -96,7 +96,8 @@ void Music::setLoopPoint(float loopPoint) {
     wavStream->setLoopPoint(loopPoint);
 }
 
-void Music::play() {
+void Music::play(bool loop) {
+    wavStream->setLooping(loop);
     musicHandle = audio.soloud->play(*wavStream);
     audio.soloud->seek(musicHandle, 0.0f);
     audio.soloud->setVolume(musicHandle, audio.musicVolume);

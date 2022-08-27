@@ -81,7 +81,7 @@ project("SampleProject") -------------------------------------------------------
 		
 		links {
 			"mingw32",
-			"Mustard-Debug:static",
+			"Mustard-win64-Debug:static",
 			"opengl32",
 			"SDL2main",
 			"SDL2",
