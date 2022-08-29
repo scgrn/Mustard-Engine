@@ -554,7 +554,7 @@ static int luaRenderCanvas(lua_State* luaVM) {
 }
 
 /// Creates a new rendering layer. (RenderLayer internally). Layers are renderered back to front, largest indices first.
-// A default layer of 0 is provided
+// A default layer of 0 is provided (with depth sorting)
 // @function AB.graphics.createLayer
 // @param index Layer index
 // @param depthSorting (false) Whether this layer needs to support depth sorting

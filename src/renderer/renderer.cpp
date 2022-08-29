@@ -76,7 +76,8 @@ bool Renderer::startup() {
 	CALL_GL(glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 	
 	layers.clear();
-	layers[0] = new RenderLayer();
+	//layers[0] = new RenderLayer();
+	layers[0] = new RenderLayer(nullptr, nullptr, blend::identity(), true);
 	//batchRenderers.insert(std::pair<int, RenderLayer>(0, new RenderLayer()));
 	
     CALL_GL(glGenVertexArrays(1, &fullscreenQuadVAO));
