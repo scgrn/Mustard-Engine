@@ -57,6 +57,7 @@ static int luaLog(lua_State* luaVM) {
 
 /// Loads and executes a script
 // @param filename
+// @param forceLocal (false) If false, prepends "scripts//"
 // @function AB.system.loadScript
 static int luaLoadScript(lua_State* luaVM) {
     std::string filename = std::string(lua_tostring(luaVM, 1));
