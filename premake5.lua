@@ -37,7 +37,7 @@ workspace("Mustard")
 	}
 
 	linkoptions {
-		"-static",
+		--"-static",
 		"-static-libstdc++",
 		"-static-libgcc"
 	}
@@ -45,9 +45,14 @@ workspace("Mustard")
 	filter("configurations:Debug")
 		defines { "DEBUG" }
 		symbols "On"
+
+	filter "configurations:Development"
+		defines { "DEBUG" }
+		optimize "On"
 		
-	filter("configurations:Release", "configurations:Development")
+	filter("configurations:Release")
 		defines { "NDEBUG" }
+		--defines { "DEBUG" }
 		optimize "On"
 
 project("Mustard") ---------------------------------------------------------
@@ -114,31 +119,45 @@ project("Mustard") ---------------------------------------------------------
 		filter("configurations:Debug")
 			buildoptions { "-finstrument-functions" }
 	 
-		filter({ "platforms:win64steam" })
+		filter("platforms:win64steam")
 			includedirs({ "./vendor/steam" })
 			links({ "steam_api64.lib" })
 			
 project("AssetCompiler") ---------------------------------------------------------
-	kind("ConsoleApp")
-	cppdialect("gnu++17")
+	removeplatforms({
+		"win32",
+		"linux64",
+		"linux86",
+		"android",
+		"web",
+		"win64steam",
+	})
 
-	targetdir("./bin")
-	targetname("Mustard-AssetCompiler")
-	
-	files {
-		"./src/assetCompiler.cpp",
-		"./vendor/tinyxml/**.cpp",
-		"./vendor/zlib-1.2.11/*.c"
-	}
+	filter("configurations:Debug")
+		kind("None")
+	filter("configurations:Development")
+		kind("None")
+	filter("configurations:Release")
+		kind("ConsoleApp")
 
-	removefiles {
-		"./vendor/tinyxml/xmltest.cpp",
-	}
+		cppdialect("gnu++17")
 
-	includedirs {
-		"./vendor/tinyxml",
-		"./vendor/zlib-1.2.11"
-	}
+		targetdir("./bin")
+		targetname("Mustard-AssetCompiler")
+		
+		files {
+			"./src/assetCompiler.cpp",
+			"./vendor/tinyxml/**.cpp",
+			"./vendor/zlib-1.2.11/*.c"
+		}
 
+		removefiles {
+			"./vendor/tinyxml/xmltest.cpp",
+		}
+
+		includedirs {
+			"./vendor/tinyxml",
+			"./vendor/zlib-1.2.11"
+		}
 
 include("projectTemplate")

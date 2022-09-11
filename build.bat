@@ -25,6 +25,7 @@ type nul >> .\src\core\version.h
 CD build
 ::make verbose=1 %*
 make config=debug_win64
+make config=development_win64
 make config=release_win64
 make config=release_win64steam
 CD ..
