@@ -1,6 +1,10 @@
 workspace("Mustard")
 	location("./build")
 	
+	toolset("gcc")
+	--toolset("clang")
+	--toolset("msc")
+	
 	configurations({"Debug", "Development", "Release" })
 	
 	platforms({
@@ -133,10 +137,9 @@ project("AssetCompiler") -------------------------------------------------------
 		"win64steam",
 	})
 
-	filter("configurations:Debug")
+	filter("configurations:Debug or Development")
 		kind("None")
-	filter("configurations:Development")
-		kind("None")
+
 	filter("configurations:Release")
 		kind("ConsoleApp")
 

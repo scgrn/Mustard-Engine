@@ -3,31 +3,29 @@
 :: HI, HERE'S A WINDOWS BATCH SCRIPT TO BUILD THE MUSTARD ENGINE
 
 SETLOCAL
-SET PREMAKE_PATH=\premake\premake5
 
 :: clean previous build artifacts
-CLS
-IF EXIST build (
-	rd /S /Q build
-)
-IF EXIST bin (
-	rd /S /Q bin
-)
-
+::CLS
+::IF EXIST build (
+::	rd /S /Q build
+::)
+::IF EXIST bin (
+::	rd /S /Q bin
+::)
 
 :: touch
 type nul >> .\src\core\version.h
 
 :: TODO: get premake path
-%PREMAKE_PATH% gmake2
+premake5 gmake2
 
 :: TODO: determine make program by platform
 CD build
-::make verbose=1 %*
-make config=debug_win64
-make config=development_win64
-make config=release_win64
-make config=release_win64steam
+make verbose=1 %*
+::make config=debug_win64
+::make config=development_win64
+::make config=release_win64
+::make config=release_win64steam
 CD ..
 
 
@@ -44,8 +42,7 @@ CD ..
 :: \lua51\lua \ldoc\ldoc.lua -p "Mustard Engine" -d docs src\script\
 call genDocs.bat
 
-mshta "javascript:code(close((V=(v=new ActiveXObject('SAPI.SpVoice')).GetVoices()).count&&v.Speak('ENGINE BUILD COMPLETE')))"
-
+mshta "javascript:code(close((V=(v=new ActiveXObject('SAPI.SpVoice')).GetVoices()).count&&v.Speak('Here, have some mustard.')))"
 
 :: It is a deliberate misuse of the choice command, that Echo's nothing via a pipe to Choice,
 :: causing a non-breaking error. STDERR is redirected to nul, and the default choice prompt
