@@ -18,7 +18,7 @@ make verbose=1 %*
 CD ..
 
 CD assets
-%MUSTARD_PATH%\bin\Mustard-AssetCompiler "..\Peterman.dat" %ENCYPTION_KEY%
+%MUSTARD_PATH%\bin\Mustard-AssetCompiler "..\Assets.dat" %ENCYPTION_KEY%
 CD ..
 
 ENDLOCAL
