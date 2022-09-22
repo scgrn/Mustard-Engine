@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #include "sprite.h"
 #include "../misc/misc.h"
 #include "../core/resourceManager.h"
+#include "tga.h"
 
 namespace AB {
 
@@ -216,6 +217,8 @@ void buildAtlas() {
     CALL_GL(glActiveTexture(GL_TEXTURE0));
     CALL_GL(glBindTexture(GL_TEXTURE_2D, atlas->glHandle));
     CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+
+	// saveTGA(data, atlasWidth, atlasHeight, "atlas.tga");
 
     atlas.reset();
     delete [] data;

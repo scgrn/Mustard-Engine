@@ -60,7 +60,7 @@ class Music : public Resource {
         void release();
 		
 		void setLoopPoint(float loopPoint);
-		void play();
+		void play(bool loop = true);
 		void pause();
 		void resume();
 		void setVolume(float volume);

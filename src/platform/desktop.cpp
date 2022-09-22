@@ -277,6 +277,7 @@ void mainLoop(Application *app) {
 				console.update();
 #else
 				app->update();
+				audio.update();
                 input.update();
 #endif
                 eventQueue.clear();

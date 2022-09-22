@@ -23,7 +23,7 @@ INCLUDES += -I../src -I../../src -I../../vendor -I../../vendor/glee -I../../vend
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -Wl,-Bstatic -lMustard-Debug -Wl,-Bdynamic -lmingw32 -lopengl32 -lSDL2main -lSDL2
+LIBS += -Wl,-Bstatic -lMustard-win64-Debug -Wl,-Bdynamic -lmingw32 -lopengl32 -lSDL2main -lSDL2
 LDDEPS +=
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -40,7 +40,7 @@ OBJDIR = obj/win64/Debug
 DEFINES += -DWIN32 -DWINDOWS_VERSION -DWITH_SDL2 -DLUA_COMPAT_ALL -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -Wno-pragmas -Wpsabi -msse2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=gnu++11 -Wno-pragmas -Wpsabi -msse2
-ALL_LDFLAGS += $(LDFLAGS) -L/projects/Mustard/bin -L/projects/Mustard/vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/pkgconfig -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake/SDL2 -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -L/projects/Mustard/bin -L/projects/Mustard/vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/pkgconfig -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake/SDL2 -L/usr/lib64 -m64 -static-libstdc++ -static-libgcc -static
 
 else ifeq ($(config),release_win64)
 TARGETDIR = ../bin/Release
@@ -49,7 +49,7 @@ OBJDIR = obj/win64/Release
 DEFINES += -DWIN32 -DWINDOWS_VERSION -DWITH_SDL2 -DLUA_COMPAT_ALL -DNDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -Wno-pragmas -Wpsabi -msse2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=gnu++11 -Wno-pragmas -Wpsabi -msse2
-ALL_LDFLAGS += $(LDFLAGS) -L/projects/Mustard/bin -L/projects/Mustard/vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/pkgconfig -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake/SDL2 -L/usr/lib64 -m64 -mwindows -s
+ALL_LDFLAGS += $(LDFLAGS) -L/projects/Mustard/bin -L/projects/Mustard/vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/pkgconfig -L../../vendor/SDL2-2.0.12/x86_64-w64-mingw32/lib/cmake/SDL2 -L/usr/lib64 -m64 -mwindows -s -static-libstdc++ -static-libgcc -static
 
 endif
 

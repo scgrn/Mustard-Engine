@@ -68,6 +68,8 @@ void Sprite::release() {
 }
 
 void Sprite::buildCollisionMask(int offsetX, int offsetY) {
+	LOG("Building collision mask: DIM(%d, %d), OFFSET(%d, %d)", width, height, offsetX, offsetY);
+	
     if (collisionMask) {
         return;
     }

@@ -158,9 +158,15 @@ static int luaLoadMusic(lua_State* luaVM) {
 
 /// Plays a music loop
 // @function AB.audio.playMusic
+// @param loop (true) If music should repeat
 // @param index Music loop handle
 static int luaPlayMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
+	
+	bool loop = true;
+    if (lua_gettop(luaVM) >= 2) {
+        loop = (bool)lua_toboolean(luaVM, 2);
+	}
 	
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
@@ -168,7 +174,7 @@ static int luaPlayMusic(lua_State* luaVM) {
 			return 0;
 		}
 	}
-	music.get(index)->play();
+	music.get(index)->play(loop);
 
     return 0;
 }

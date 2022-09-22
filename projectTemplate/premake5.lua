@@ -1,7 +1,11 @@
-workspace("SampleProject")
+local project = {
+	name = "MUSTARD PROJECT"
+}
+
+workspace(project.name)
 	location("./build")
 
-	configurations({"Debug", "Release"})
+	configurations({"Debug", "Development", "Release"})
 	
 	platforms({
 		"win64",
@@ -28,26 +32,25 @@ workspace("SampleProject")
 	linkoptions {
 		"-static-libstdc++",
 		"-static-libgcc",
-		"-static"
+		--"-static"
 	}
 
-	filter "configurations:Debug"
+	filter({ "configurations:Debug or Development" })
 		defines { "DEBUG" }
 		kind("ConsoleApp")
 		symbols "On"
 
-	filter("configurations:Release", "configurations:Development")
+	filter("configurations:Release")
 		defines { "NDEBUG" }
 		kind("WindowedApp")
 		optimize "On"
 		
-project("SampleProject") ---------------------------------------------------------
+project(project.name) ---------------------------------------------------------
 	removeplatforms({"android", "web"})
 	
 	targetdir("./bin/%{cfg.buildcfg}")
 	
-	local projectName = os.getenv("AB_PROJECT_NAME") or "MUSTARD_GAME"
-	targetname(projectName)
+	targetname(project.name)
 
 	staticruntime("on")
 	
@@ -79,9 +82,17 @@ project("SampleProject") -------------------------------------------------------
 		
 		links {
 			"mingw32",
-			"Mustard-Debug:static",
 			"opengl32",
 			"SDL2main",
 			"SDL2",
 		}
+
+		filter { "configurations:Debug" } 
+			links { "Mustard-win64-Debug:static" }
+
+		filter { "configurations:Development" } 
+			links { "Mustard-win64-Development:static" }
+
+		filter { "configurations:Release" } 
+			links { "Mustard-win64-Release:static" }
 
