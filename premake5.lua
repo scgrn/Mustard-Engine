@@ -1,3 +1,8 @@
+--[[
+SDL_thread.h
+#include process.h no such file or directory
+]]
+
 workspace("Mustard")
 	location("./build")
 	

@@ -1,8 +1,8 @@
-local project = {
+local projectSpecs = {
 	name = "MUSTARD PROJECT"
 }
 
-workspace(project.name)
+workspace(projectSpecs.name)
 	location("./build")
 
 	configurations({"Debug", "Development", "Release"})
@@ -32,7 +32,7 @@ workspace(project.name)
 	linkoptions {
 		"-static-libstdc++",
 		"-static-libgcc",
-		--"-static"
+		"-static"
 	}
 
 	filter({ "configurations:Debug or Development" })
@@ -45,12 +45,12 @@ workspace(project.name)
 		kind("WindowedApp")
 		optimize "On"
 		
-project(project.name) ---------------------------------------------------------
+project(projectSpecs.name) ---------------------------------------------------------
 	removeplatforms({"android", "web"})
 	
 	targetdir("./bin/%{cfg.buildcfg}")
 	
-	targetname(project.name)
+	targetname(projectSpecs.name)
 
 	staticruntime("on")
 	

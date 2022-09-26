@@ -9,40 +9,44 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug_win64)
-  SampleProject_config = debug_win64
+  MUSTARD_PROJECT_config = debug_win64
+
+else ifeq ($(config),development_win64)
+  MUSTARD_PROJECT_config = development_win64
 
 else ifeq ($(config),release_win64)
-  SampleProject_config = release_win64
+  MUSTARD_PROJECT_config = release_win64
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := SampleProject
+PROJECTS := MUSTARD\ PROJECT
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-SampleProject:
-ifneq (,$(SampleProject_config))
-	@echo "==== Building SampleProject ($(SampleProject_config)) ===="
-	@${MAKE} --no-print-directory -C . -f SampleProject.make config=$(SampleProject_config)
+MUSTARD\ PROJECT:
+ifneq (,$(MUSTARD_PROJECT_config))
+	@echo "==== Building MUSTARD PROJECT ($(MUSTARD_PROJECT_config)) ===="
+	@${MAKE} --no-print-directory -C . -f MUSTARD\ PROJECT.make config=$(MUSTARD_PROJECT_config)
 endif
 
 clean:
-	@${MAKE} --no-print-directory -C . -f SampleProject.make clean
+	@${MAKE} --no-print-directory -C . -f MUSTARD\ PROJECT.make clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
 	@echo ""
 	@echo "CONFIGURATIONS:"
 	@echo "  debug_win64"
+	@echo "  development_win64"
 	@echo "  release_win64"
 	@echo ""
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   SampleProject"
+	@echo "   MUSTARD PROJECT"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"
