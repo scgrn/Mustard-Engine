@@ -17,7 +17,7 @@ SETLOCAL
 type nul >> .\src\core\version.h
 
 :: TODO: get premake path
-premake5 gmake2
+premake\premake5 gmake2
 
 :: TODO: determine make program by platform
 CD build

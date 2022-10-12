@@ -1,4 +1,6 @@
 /bin/*
 /build/*
 /dev/*
-
+projectTemplate/bin/*
+projectTemplate/build/*
+projectTemplate/dev/*
