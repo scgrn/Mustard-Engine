@@ -1,6 +1,8 @@
 # Mustard engine
 
-Minimalist C++ game framework with no graphical editor that provides utility functions on top of SDL2 / OpenGL. Uses the common subset of OpenGL 3.3 core profile and OpenGL ES 3.0.
+Minimalist C++ game framework with no graphical editor that provides utility functions on top of SDL2 / OpenGL. Uses the common subset of OpenGL 3.3 core profile and OpenGL ES 3.0.  
+Tested under Ubuntu and Windows using GCC/Clang/MSVC.
+
 
 [![License](https://img.shields.io/badge/license-zlib%2Flibpng-blue.svg)](LICENSE)
 
@@ -46,6 +48,15 @@ Edit premake.lua in project root
 See [Lua API]
 
 <expand>
+
+C++
+
+You will need to rerun cmake after adding source files for recursive globbing.
+
+Steamworks Integration
+-------
+
+(where to copy files...)
 
 Asset Compiler
 -------

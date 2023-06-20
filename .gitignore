@@ -1,6 +1,13 @@
 /bin/*
 /build/*
 /dev/*
-projectTemplate/bin/*
-projectTemplate/build/*
-projectTemplate/dev/*
+
+/src/platform/desktop/redistributable_bin/*
+/src/platform/desktop/steam/*
+
+/src/platform/desktop/win64/SDL2-2.26.0/*
+
+/projectTemplate/bin/*
+/projectTemplate/build/*
+/projectTemplate/dev/*
+
