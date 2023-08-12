@@ -29,18 +29,18 @@ freely, subject to the following restrictions:
 #include "../misc/misc.h"
 
 namespace AB {
-	
+    
 extern Window window;
 
 OrthographicCamera::OrthographicCamera() {}
 
 void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
-	projectionMatrix = ortho(left, right, bottom, top, -1.0f, 1000.0f);
+    projectionMatrix = ortho(left, right, bottom, top, -1.0f, 1000.0f);
 }
 
 PerspectiveCamera::PerspectiveCamera() {
-	projectionMatrix = Mat4();
-	viewMatrix = Mat4();
+    projectionMatrix = Mat4();
+    viewMatrix = Mat4();
 }
 
 void PerspectiveCamera::setProjection(float fov) {
@@ -48,35 +48,35 @@ void PerspectiveCamera::setProjection(float fov) {
 }
 
 void PerspectiveCamera::setView(Mat4 view) {
-	viewMatrix = view;
+    viewMatrix = view;
 }
 
 void PerspectiveCamera::recalculateViewMatrix() {
-	viewMatrix = Mat4();
-	
-	viewMatrix = viewMatrix * rotateX(rotation.x);
-	viewMatrix = viewMatrix * rotateY(rotation.y);
-	viewMatrix = viewMatrix * rotateZ(rotation.z);
-	
-	viewMatrix = viewMatrix * translate(position);
+    viewMatrix = Mat4();
+    
+    viewMatrix = viewMatrix * rotateX(rotation.x);
+    viewMatrix = viewMatrix * rotateY(rotation.y);
+    viewMatrix = viewMatrix * rotateZ(rotation.z);
+    
+    viewMatrix = viewMatrix * translate(position);
 }
 
 Vec2 PerspectiveCamera::project(Vec3 point, Mat4 modelMatrix) {
-	AB::Mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
-	
-	AB::Vec4 p = AB::Vec4(point.x, point.y, point.z, 1.0f);
-	AB::Vec4 result = transform * p;
+    AB::Mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
+    
+    AB::Vec4 p = AB::Vec4(point.x, point.y, point.z, 1.0f);
+    AB::Vec4 result = transform * p;
 
-	if (fabs(result.w) >= std::numeric_limits<float>::epsilon()) {
-		result *= (1.0f / result.w);
-	}
-	
-	result.x = (result.x + 1.0f) * 0.5f;
-	result.y = (-result.y + 1.0f) * 0.5f;
-	
-	AB::Vec2 ret = AB::Vec2(result.x * window.currentMode.xRes, result.y * window.currentMode.yRes);
-	
-	return ret;
+    if (fabs(result.w) >= std::numeric_limits<float>::epsilon()) {
+        result *= (1.0f / result.w);
+    }
+    
+    result.x = (result.x + 1.0f) * 0.5f;
+    result.y = (-result.y + 1.0f) * 0.5f;
+    
+    AB::Vec2 ret = AB::Vec2(result.x * window.currentMode.xRes, result.y * window.currentMode.yRes);
+    
+    return ret;
 }
 
 }

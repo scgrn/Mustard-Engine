@@ -51,7 +51,7 @@ void Shader::load(std::string const& filename) {
     CALL_GL(vertexShader = glCreateShader(GL_VERTEX_SHADER));
     vertSource = getHeader() + vertSource;
     const char* vertexShaderSource = vertSource.c_str();
-	//LOG("VERTEX SHADER SOURCE: %s", vertexShaderSource);
+    //LOG("VERTEX SHADER SOURCE: %s", vertexShaderSource);
 
     CALL_GL(glShaderSource(vertexShader, 1, &vertexShaderSource, NULL));
     CALL_GL(glCompileShader(vertexShader));
@@ -69,7 +69,7 @@ void Shader::load(std::string const& filename) {
     CALL_GL(fragmentShader = glCreateShader(GL_FRAGMENT_SHADER));
     fragSource = getHeader() + fragSource;
     const char* fragmentShaderSource = fragSource.c_str();
-	//LOG("FRAGMENT SHADER SOURCE: %s", fragmentShaderSource);
+    //LOG("FRAGMENT SHADER SOURCE: %s", fragmentShaderSource);
 
     CALL_GL(glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL));
     CALL_GL(glCompileShader(fragmentShader));
@@ -93,21 +93,21 @@ void Shader::load(std::string const& filename) {
     }
     CALL_GL(glUseProgram(shaderProgram));
 
-	GLint textureSamplers[16];
+    GLint textureSamplers[16];
     for (GLint i = 0; i < 16; i++) {
         textureSamplers[i] = i;
     }
-	GLuint textureSamplersLoc;
+    GLuint textureSamplersLoc;
     CALL_GL(textureSamplersLoc = glGetUniformLocation(shaderProgram, "textureSamplers"));
-	if (textureSamplersLoc != -1) {
-		CALL_GL(glUniform1iv(textureSamplersLoc, 16, textureSamplers));
-	}
+    if (textureSamplersLoc != -1) {
+        CALL_GL(glUniform1iv(textureSamplersLoc, 16, textureSamplers));
+    }
 
 
     CALL_GL(glDeleteShader(vertexShader));
     CALL_GL(glDeleteShader(fragmentShader));
-	
-	LOG("Shader compilation successful.", 0);
+    
+    LOG("Shader compilation successful.", 0);
 }
 
 void Shader::release() {
@@ -119,52 +119,52 @@ void Shader::bind() {
 }
 
 void Shader::setInt(const std::string& name, int value) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniform1i(location, value));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform1i(location, value));
 }
 
 void Shader::setIntArray(const std::string& name, int* values, uint32_t count) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniform1iv(location, count, values));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform1iv(location, count, values));
 }
 
 void Shader::setFloat(const std::string& name, float value) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniform1f(location, value));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform1f(location, value));
 }
 
 void Shader::setVec2(const std::string& name, const Vec2& value) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniform2f(location, value.x, value.y));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform2f(location, value.x, value.y));
 }
 
 void Shader::setVec3(const std::string& name, const Vec3& value) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniform3f(location, value.x, value.y, value.z));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform3f(location, value.x, value.y, value.z));
 }
 
 void Shader::setVec4(const std::string& name, const Vec4& value) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniform4f(location, value.x, value.y, value.z, value.w));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform4f(location, value.x, value.y, value.z, value.w));
 }
 
 void Shader::setMat3(const std::string& name, const Mat3& matrix) {
-	GLint location = getUniformLocation(name);
-	CALL_GL(glUniformMatrix3fv(location, 1, GL_FALSE, (f32*)(&matrix)));
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniformMatrix3fv(location, 1, GL_FALSE, (f32*)(&matrix)));
 }
 
 void Shader::setMat4(const std::string& name, const Mat4& matrix) {
-	GLint location = getUniformLocation(name);
-	//CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix)));
-	CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, (f32*)(&matrix)));
+    GLint location = getUniformLocation(name);
+    //CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix)));
+    CALL_GL(glUniformMatrix4fv(location, 1, GL_FALSE, (f32*)(&matrix)));
 }
 
 GLint Shader::getUniformLocation(const std::string& name) const {
-	if (uniformLocations.find(name) != uniformLocations.end()) {
-		return uniformLocations[name];
-	}
-	CALL_GL(uniformLocations[name] = glGetUniformLocation(shaderProgram, name.c_str()));
-	return uniformLocations[name];
+    if (uniformLocations.find(name) != uniformLocations.end()) {
+        return uniformLocations[name];
+    }
+    CALL_GL(uniformLocations[name] = glGetUniformLocation(shaderProgram, name.c_str()));
+    return uniformLocations[name];
 }
 
 std::string Shader::getHeader() {
@@ -175,7 +175,7 @@ std::string Shader::getHeader() {
         "#version 300 es\n\n"
         "// precision mediump float\n"
         "// precision lowp int\n\n"
-		"#line -1\n";
+        "#line -1\n";
 #else
     header =
         "#version 330 core\n\n"
@@ -183,7 +183,7 @@ std::string Shader::getHeader() {
         "#define lowp\n"
         "#define mediump\n"
         "#define highp\n\n"
-		"#line -1\n";
+        "#line -1\n";
 #endif
 
     return header;

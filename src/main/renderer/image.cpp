@@ -31,20 +31,20 @@ freely, subject to the following restrictions:
 namespace AB {
 
 Image::Image(int width, int height) {
-	this->width = width;
-	this->height = height;
+    this->width = width;
+    this->height = height;
     imageSize = width * height * 4;
 
     data = new unsigned char[imageSize];
 }
 
 Image::Image(const std::string& tgaFilename) {
-	int bpp;
-	
-	data = loadTGA(tgaFilename, width, height, bpp);
-	
-	//	TODO: pad alpha if 24bit. who knows what happens if we don't?
-	
+    int bpp;
+    
+    data = loadTGA(tgaFilename, width, height, bpp);
+    
+    //    TODO: pad alpha if 24bit. who knows what happens if we don't?
+    
     imageSize = width * height * 4;
 }
 

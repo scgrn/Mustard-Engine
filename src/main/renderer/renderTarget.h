@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class RenderTarget {
-	public:
+    public:
         RenderTarget(int width, int height, bool depthStencil = false);
         ~RenderTarget();
 

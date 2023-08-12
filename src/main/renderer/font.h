@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
     @date 07.14.10
 
     Font rendering! Based on BMFont http://www.angelcode.com/products/bmfont/
-    Depends on TinyXML http://www.grinninglizard.com/tinyxml/
+    Depends on TinyXML http://www.grinninglizard.com    inyxml/
 
 */
 
@@ -45,34 +45,34 @@ namespace AB {
 
 class Font : public Resource {
     public:
-		enum Align {LEFT, RIGHT, CENTER};
+        enum Align {LEFT, RIGHT, CENTER};
 
-		Font() {}
+        Font() {}
         virtual ~Font() {}
 
         /**
         *    Loads a font and its associated texture from file
         *
         *    @param filename XML font descriptor file -
-		*		Passing "default1" creates a built-in 8x16 pixel font.
-		*		Passing "default2" creates a built-in 8x8 pixel font.
-		*		Passing "default3" creates a built-in 3x5 pixel font.
+        *        Passing "default1" creates a built-in 8x16 pixel font.
+        *        Passing "default2" creates a built-in 8x8 pixel font.
+        *        Passing "default3" creates a built-in 3x5 pixel font.
         */
         virtual void load(std::string const& filename);
 
-		virtual void release();
+        virtual void release();
 
         /**
         *    Renders a string on screen
         *
-		*	 @param renderGroup render group
+        *     @param renderGroup render group
         *    @param x screen X coordinate of string
         *    @param y screen Y coordinate of string
         *    @param scale scaling factor
         *    @param align alignment of string (LEFT, RIGHT, CENTER)
         *    @param string the string to print
         */
-		void printString(RenderLayer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string);
+        void printString(RenderLayer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string);
 
         /**
         *    Returns pixel-width of string
@@ -82,9 +82,9 @@ class Font : public Resource {
         *
         *    @return length of string in pixels
         */
-		int stringLength(std::string const& string, GLfloat scale);
+        int stringLength(std::string const& string, GLfloat scale);
 
-		void setColor(float r, float g, float b, float a);
+        void setColor(float r, float g, float b, float a);
 
         class Character : public Sprite {
             public:
@@ -97,8 +97,8 @@ class Font : public Resource {
                 Character() {}
         };
 
-		float scaleW, scaleH;
-		int height;
+        float scaleW, scaleH;
+        int height;
 
     protected:
         Character* chars[256];
@@ -106,14 +106,14 @@ class Font : public Resource {
 
         std::unordered_map<int, std::unordered_map<int, int> > kernings;
         std::shared_ptr<Texture> texture;
-		
-		Vec4 color;
+        
+        Vec4 color;
 
         int lineHeight, base;
 
     private:
         void build8x8Default(bool stretch);
-		void build3x5Default();
+        void build3x5Default();
 };
 
 }   //  namespace

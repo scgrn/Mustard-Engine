@@ -38,26 +38,26 @@ class Shader : public Resource {
         virtual ~Shader();
 
         virtual void load(std::string const& filename);
-		virtual void release();
-		
-		void bind();
+        virtual void release();
+        
+        void bind();
 
-		void setInt(const std::string& name, int value);
-		void setIntArray(const std::string& name, int* values, uint32_t count);
-		void setFloat(const std::string& name, float value);
-		void setVec2(const std::string& name, const Vec2& value);
-		void setVec3(const std::string& name, const Vec3& value);
-		void setVec4(const std::string& name, const Vec4& value);
-		void setMat3(const std::string& name, const Mat3& matrix);
-		void setMat4(const std::string& name, const Mat4& matrix);
-		
-		GLuint getProgram() { return shaderProgram; }
-		
+        void setInt(const std::string& name, int value);
+        void setIntArray(const std::string& name, int* values, uint32_t count);
+        void setFloat(const std::string& name, float value);
+        void setVec2(const std::string& name, const Vec2& value);
+        void setVec3(const std::string& name, const Vec3& value);
+        void setVec4(const std::string& name, const Vec4& value);
+        void setMat3(const std::string& name, const Mat3& matrix);
+        void setMat4(const std::string& name, const Mat4& matrix);
+        
+        GLuint getProgram() { return shaderProgram; }
+        
     protected:
         static std::string getHeader();
 
-		GLint getUniformLocation(const std::string& name) const;
-		mutable std::unordered_map<std::string, GLint> uniformLocations;
+        GLint getUniformLocation(const std::string& name) const;
+        mutable std::unordered_map<std::string, GLint> uniformLocations;
 
         GLuint shaderProgram;
 };

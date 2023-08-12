@@ -22,38 +22,14 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef AB_PALETTE_H
-#define AB_PALETTE_H
-
-#include "../core/resourceManager.h"
-
-#include "texture.h"
+#ifndef AB_PLANE_H
+#define AB_PLANE_H
 
 namespace AB {
 
-class Palette : public Resource {
-    public:
-        struct Color {
-            uint8_t r, g, b;
-        };
-        
-        struct LABColor {
-            float L, a, b;
-        };
-        
-        virtual void load(std::string const& filename);
-        virtual void release();
-        
-        Texture *closestColor, *secondClosestColor;
-        std::vector<Color> palette;
-        std::vector<LABColor> LABpalette;
-        
-    private:
-        LABColor RGBtoLAB(Color color);
-        void findClosestColors(Color target, uint32_t &closest, uint32_t &secondClosest); 
-    
+class Plane {
 };
 
-}
+}   //  namespace
 
 #endif

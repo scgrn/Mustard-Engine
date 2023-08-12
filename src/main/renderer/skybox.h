@@ -30,24 +30,24 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class Skybox : public Renderer {
-	public:
-		Skybox(std::vector<std::string> faces);
-		~Skybox();
-		
-		virtual void beginScene(const Camera& camera);
-		virtual void endScene();
-		
-	protected:
-		Skybox() {}
-		
-	private:
-		Shader shader;
-		
-		GLuint glHandle;		//  handle to OpenGL cubemap texture
+    public:
+        Skybox(std::vector<std::string> faces);
+        ~Skybox();
+        
+        virtual void beginScene(const Camera& camera);
+        virtual void endScene();
+        
+    protected:
+        Skybox() {}
+        
+    private:
+        Shader shader;
+        
+        GLuint glHandle;        //  handle to OpenGL cubemap texture
 
-		GLuint vao;				//	vertex array object
-		GLuint vbo;				//	vertex buffer
-	
+        GLuint vao;                //    vertex array object
+        GLuint vbo;                //    vertex buffer
+    
 };
 
 }

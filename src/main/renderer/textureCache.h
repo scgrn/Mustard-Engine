@@ -28,26 +28,26 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class TextureCache {
-	public:
-		TextureCache();
-		~TextureCache()  {}
-	
-		//	returns texture unit or -1 if no slot available
-		//	will not evict textures bound after the last call to advanceFrame
-		//	reserve is not currently used
-		unsigned int bindTexture(unsigned int textureID, bool reserve = false);
+    public:
+        TextureCache();
+        ~TextureCache()  {}
+    
+        //    returns texture unit or -1 if no slot available
+        //    will not evict textures bound after the last call to advanceFrame
+        //    reserve is not currently used
+        unsigned int bindTexture(unsigned int textureID, bool reserve = false);
 
-		//  resets all slots to fair game
-		void advanceFrame();
-		
-		void invalidate();
-		
-	private:
-		unsigned int frameID;
-		
-		//	meh, maybe query for max. for now the spec min is fine.
+        //  resets all slots to fair game
+        void advanceFrame();
+        
+        void invalidate();
+        
+    private:
+        unsigned int frameID;
+        
+        //    meh, maybe query for max. for now the spec min is fine.
         static const int MAX_TEXTURE_UNITS = 16;
-		
+        
         struct CachedTexture {
             CachedTexture() {}
             CachedTexture(unsigned int textureID, int lastFrame) : textureID(textureID), lastFrame(lastFrame) {}

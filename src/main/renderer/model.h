@@ -36,7 +36,7 @@ class Model : public Resource {
         static void resetLoadTransform();
 
         virtual void load(std::string const& filename);
-		virtual void release();
+        virtual void release();
         virtual ~Model() {}
 
         void render();
@@ -79,9 +79,9 @@ class Model : public Resource {
         GLuint vertexBuffer, uvBuffer, normalBuffer, elementBuffer;
         GLuint vertexArrayID;
 
-		bool textured;
-		float radius;
-		int indicesSize;
+        bool textured;
+        float radius;
+        int indicesSize;
 };
 
 }   //  namespace

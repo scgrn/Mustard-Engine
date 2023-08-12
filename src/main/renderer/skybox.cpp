@@ -74,12 +74,12 @@ Skybox::Skybox(std::vector<std::string> faces) {
         -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f
     };
-	
-	if (faces.size() != 6) {
-		ERR("Skyboxes have SIX (%d) faces. Six!", 6);
-	}
-	
-	//	initialize VAO
+    
+    if (faces.size() != 6) {
+        ERR("Skyboxes have SIX (%d) faces. Six!", 6);
+    }
+    
+    //    initialize VAO
     CALL_GL(glGenVertexArrays(1, &vao));
     CALL_GL(glGenBuffers(1, &vbo));
     CALL_GL(glBindVertexArray(vao));
@@ -88,50 +88,50 @@ Skybox::Skybox(std::vector<std::string> faces) {
     CALL_GL(glEnableVertexAttribArray(0));
     CALL_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
 
-	//	load cubemap
-	CALL_GL(glGenTextures(1, &glHandle));
-	CALL_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, glHandle));
-	
+    //    load cubemap
+    CALL_GL(glGenTextures(1, &glHandle));
+    CALL_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, glHandle));
+    
     for (int i = 0; i < faces.size(); i++) {
-		Image image(faces[i]);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
+        Image image(faces[i]);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
     }
-	
-	//	TODO: do we want linear?
+    
+    //    TODO: do we want linear?
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		
-	//	load shader
-	shader.load("shaders/skybox");
-	shader.bind();
+        
+    //    load shader
+    shader.load("shaders/skybox");
+    shader.bind();
     shader.setInt("skybox", 0);
 }
-	
+    
 Skybox::~Skybox() {
-	glDeleteTextures(1, &glHandle);
+    glDeleteTextures(1, &glHandle);
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vao);
 }
 
 void Skybox::beginScene(const Camera& camera) {
-	shader.bind();
-	
-	Mat4 viewMatrix = camera.viewMatrix;
-	viewMatrix = Mat4(Mat3(viewMatrix)); // remove translation from the view matrix
+    shader.bind();
+    
+    Mat4 viewMatrix = camera.viewMatrix;
+    viewMatrix = Mat4(Mat3(viewMatrix)); // remove translation from the view matrix
 
-	shader.setMat4("projection", camera.projectionMatrix);
-	shader.setMat4("view", viewMatrix);
+    shader.setMat4("projection", camera.projectionMatrix);
+    shader.setMat4("view", viewMatrix);
 }
 
 void Skybox::endScene() {
-	glBindVertexArray(vao);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, glHandle);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
+    glBindVertexArray(vao);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, glHandle);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
 }
 
 }

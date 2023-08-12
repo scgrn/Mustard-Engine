@@ -67,8 +67,8 @@ Texture::Texture(int width, int height) {
 
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter));
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter));
-	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-	CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+    CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
 
     this->width = width;
@@ -80,13 +80,13 @@ Texture::Texture(Image *image) {
 }
 
 void Texture::init(Image *image) {
-	int rWidth = image->width;
-	int rHeight = image->height;
-	width = nextPowerOfTwo(rWidth);
-	height = nextPowerOfTwo(rHeight);
+    int rWidth = image->width;
+    int rHeight = image->height;
+    width = nextPowerOfTwo(rWidth);
+    height = nextPowerOfTwo(rHeight);
 
-	u2 = (float)rWidth / (float)width;
-	v2 = (float)rHeight / (float)height;
+    u2 = (float)rWidth / (float)width;
+    v2 = (float)rHeight / (float)height;
 
     //  create new image padded to ^2
     unsigned char *data = NULL;
@@ -106,7 +106,7 @@ void Texture::init(Image *image) {
     }
     CALL_GL(glBindTexture(GL_TEXTURE_2D, glHandle));
 
-    //	copy the pixel data over to the new OGL texture
+    //    copy the pixel data over to the new OGL texture
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter));
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter));
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
@@ -121,13 +121,13 @@ void Texture::init(Image *image) {
 }
 
 Texture::Texture(std::string const& filename) {
-	Image *image = new Image(filename);
-	init(image);
-	delete image;
+    Image *image = new Image(filename);
+    init(image);
+    delete image;
 }
 
 Texture::~Texture() {
-	glDeleteTextures(1, &glHandle);
+    glDeleteTextures(1, &glHandle);
 }
 
 }   //  namespace

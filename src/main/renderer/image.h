@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 
 **/
 
-//	represents a 32bit RGBA image in system memory
+//    represents a 32bit RGBA image in system memory
 
 #ifndef AB_IMAGE_H
 #define AB_IMAGE_H
@@ -32,11 +32,11 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class Image {
-	public:
-		Image(const int width, const int height);
-		Image(const std::string& tgaFilename);
-		~Image();
-		
+    public:
+        Image(const int width, const int height);
+        Image(const std::string& tgaFilename);
+        ~Image();
+        
         inline void pset(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
             //  TODO: implement alpha blending?
 
@@ -47,13 +47,13 @@ class Image {
             data[ofs + 2] = b;
             data[ofs + 3] = a;
         }
-		
+        
         unsigned char *data;
         int width, height;
-		int imageSize;	// in bytes
+        int imageSize;    // in bytes
 
-	protected:
-		Image() {}
+    protected:
+        Image() {}
 };
 
 }

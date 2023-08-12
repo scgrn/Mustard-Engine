@@ -30,32 +30,32 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class Camera {
-	public:
-		Mat4 projectionMatrix;
-		Mat4 viewMatrix;
-		Mat4 viewProjectionMatrix;
+    public:
+        Mat4 projectionMatrix;
+        Mat4 viewMatrix;
+        Mat4 viewProjectionMatrix;
 
-		virtual void recalculateViewMatrix() {}
+        virtual void recalculateViewMatrix() {}
 };
 
 
 class OrthographicCamera : public Camera {
-	public:
-		OrthographicCamera();
-		void setProjection(float left, float right, float bottom, float top);
+    public:
+        OrthographicCamera();
+        void setProjection(float left, float right, float bottom, float top);
 };
 
 
 class PerspectiveCamera : public Camera {
-	public:
-		PerspectiveCamera();
-		void setProjection(float fov);
-		void setView(Mat4 view);
-		virtual void recalculateViewMatrix();
-		Vec2 project(Vec3 point, Mat4 modelMatrix = Mat4());
-		
-		Vec3 rotation;
-		Vec3 position;
+    public:
+        PerspectiveCamera();
+        void setProjection(float fov);
+        void setView(Mat4 view);
+        virtual void recalculateViewMatrix();
+        Vec2 project(Vec3 point, Mat4 modelMatrix = Mat4());
+        
+        Vec3 rotation;
+        Vec3 position;
 };
 
 }

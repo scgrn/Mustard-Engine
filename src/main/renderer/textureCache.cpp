@@ -49,12 +49,12 @@ freely, subject to the following restrictions:
 
 
 namespace AB {
-	
+    
 TextureCache::TextureCache() {
-	frameID = 1;
-	invalidate();
+    frameID = 1;
+    invalidate();
 }
-		
+        
 GLuint TextureCache::bindTexture(GLuint textureID, bool reserve) {
     int oldestIndex = 0;
     int oldestFrame = frameID;
@@ -72,16 +72,16 @@ GLuint TextureCache::bindTexture(GLuint textureID, bool reserve) {
             oldestIndex = i;
         }
     }
-	
-	if (oldestFrame == frameID) {
-		ERR("OLDEST FRAME: %d / FRAMEID: %d", oldestFrame, frameID);
-		return -1;
-	}
+    
+    if (oldestFrame == frameID) {
+        ERR("OLDEST FRAME: %d / FRAMEID: %d", oldestFrame, frameID);
+        return -1;
+    }
 
     int unit = oldestIndex;
-	assert(unit != -1);
+    assert(unit != -1);
 
-	//	TODO: LOG_V
+    //    TODO: LOG_V
     // LOG("Loading texture into unit %d", unit);
 
     textureBindings[unit].textureID = textureID;
@@ -94,7 +94,7 @@ GLuint TextureCache::bindTexture(GLuint textureID, bool reserve) {
 }
 
 void TextureCache::advanceFrame() {
-	frameID++;
+    frameID++;
 }
 
 void TextureCache::invalidate() {

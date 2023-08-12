@@ -56,13 +56,13 @@ class Texture {
 
         virtual ~Texture();
 
-		GLuint glHandle;		//  handle to OpenGL texture object
-		GLuint textureUnit; // not used...?
+        GLuint glHandle;        //  handle to OpenGL texture object
+        GLuint textureUnit; // not used...?
 
         static void setMinFilter(GLenum filter) { Texture::minFilter = filter; }
         static void setMagFilter(GLenum filter) { Texture::magFilter = filter; }
 
-		int width, height;		//  size padded to nearest 2^
+        int width, height;        //  size padded to nearest 2^
         float u2, v2;
 
         static GLenum minFilter, magFilter;

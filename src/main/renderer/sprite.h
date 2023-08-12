@@ -44,29 +44,29 @@ class Sprite : public Resource {
         virtual ~Sprite() {}
 
         virtual void load(std::string const& filename);
-		virtual void release();
+        virtual void release();
 
-		Image* getImage() { return image; }
+        Image* getImage() { return image; }
 
-		/**
+        /**
             This is called after a sprite has been added to a sprite atlas.
-		*/
+        */
         void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage = false);
 
-		void buildCollisionMask(int offsetX = 0, int offsetY = 0);
-		void uploadToGPU(bool retainImage = false);
-		void render(RenderLayer *renderer, Vec3 pos, float rotation = 0.0f, Vec2 scale = Vec2(1.0f, 1.0f), Vec4 color = Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		
-		std::shared_ptr<Texture> texture;
+        void buildCollisionMask(int offsetX = 0, int offsetY = 0);
+        void uploadToGPU(bool retainImage = false);
+        void render(RenderLayer *renderer, Vec3 pos, float rotation = 0.0f, Vec2 scale = Vec2(1.0f, 1.0f), Vec4 color = Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        
+        std::shared_ptr<Texture> texture;
 
         int width, height;
         int atlasX, atlasY;
         float u1, v1, u2, v2;
 
-		float radius;			//  radius of bounding circle
+        float radius;            //  radius of bounding circle
 
-		float uSpan, vSpan;		//	percentage of actual size/padded size
-		int halfX, halfY;		//  width and height / 2
+        float uSpan, vSpan;        //    percentage of actual size/padded size
+        int halfX, halfY;        //  width and height / 2
 
         bool *collisionMask;
         Image *image;

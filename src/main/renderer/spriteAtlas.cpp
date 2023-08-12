@@ -218,7 +218,7 @@ void buildAtlas() {
     CALL_GL(glBindTexture(GL_TEXTURE_2D, atlas->glHandle));
     CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
 
-	// saveTGA(data, atlasWidth, atlasHeight, "atlas.tga");
+    // saveTGA(data, atlasWidth, atlasHeight, "atlas.tga");
 
     atlas.reset();
     delete [] data;
@@ -230,58 +230,58 @@ void buildAtlas() {
 
 int loadAtlas(std::string const& filename, int firstIndex, int width, int height, bool buildCollisionMasks) {
     sprites.mapResource(firstIndex, filename);
-	sprites.get(firstIndex)->uploadToGPU(true);
-	
-	int atlasWidth = sprites.get(firstIndex)->width;
-	int atlasHeight = sprites.get(firstIndex)->height;
-	
-	int columns = atlasWidth / width;
-	int rows = atlasHeight / height;
-	int numSprites = rows * columns;
-	
-	float uIncrease = ((float)width / (float)atlasWidth) *
-		((float)atlasWidth / (float)sprites.get(firstIndex)->texture->width);
-	float vIncrease = ((float)height / (float)atlasHeight) *
-		((float)atlasHeight / (float)sprites.get(firstIndex)->texture->height);
-	
-	int spriteIndex = firstIndex;
-	float v = 0.0f;
-	for (int y = 0; y < rows; y++) {
-		float u = 0.0f;
-		for (int x = 0; x < columns; x++) {
-			if (spriteIndex > firstIndex) {
-				sprites.mapResource(spriteIndex, ".");
-			}
+    sprites.get(firstIndex)->uploadToGPU(true);
+    
+    int atlasWidth = sprites.get(firstIndex)->width;
+    int atlasHeight = sprites.get(firstIndex)->height;
+    
+    int columns = atlasWidth / width;
+    int rows = atlasHeight / height;
+    int numSprites = rows * columns;
+    
+    float uIncrease = ((float)width / (float)atlasWidth) *
+        ((float)atlasWidth / (float)sprites.get(firstIndex)->texture->width);
+    float vIncrease = ((float)height / (float)atlasHeight) *
+        ((float)atlasHeight / (float)sprites.get(firstIndex)->texture->height);
+    
+    int spriteIndex = firstIndex;
+    float v = 0.0f;
+    for (int y = 0; y < rows; y++) {
+        float u = 0.0f;
+        for (int x = 0; x < columns; x++) {
+            if (spriteIndex > firstIndex) {
+                sprites.mapResource(spriteIndex, ".");
+            }
 
-			Sprite* sprite = sprites.get(spriteIndex);
-			sprite->image = sprites.get(firstIndex)->image;
-			sprite->width = width;
-			sprite->height = height;
-			sprite->halfX = width / 2;
-			sprite->halfY = height / 2;
-			sprite->radius = sqrt((float)((sprite->halfX * sprite->halfX) + (sprite->halfY * sprite->halfY)));
-			
-			float u1 = u;
-			float v1 = v;
-			float u2 = u + uIncrease;
-			float v2 = v + vIncrease;
-			
-			if (buildCollisionMasks) {
-				sprite->buildCollisionMask((int)(u * atlasWidth), (int)(v * atlasHeight));
-			}
-			sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2, true);
-			
-			spriteIndex++;
-			u += uIncrease;
-		}
-		v += vIncrease;
-	}
-	delete sprites.get(firstIndex)->image;
-	for (int i = firstIndex; i < spriteIndex; i++) {
-		sprites.get(i)->image = NULL;
-	}
-	
-	return numSprites;
+            Sprite* sprite = sprites.get(spriteIndex);
+            sprite->image = sprites.get(firstIndex)->image;
+            sprite->width = width;
+            sprite->height = height;
+            sprite->halfX = width / 2;
+            sprite->halfY = height / 2;
+            sprite->radius = sqrt((float)((sprite->halfX * sprite->halfX) + (sprite->halfY * sprite->halfY)));
+            
+            float u1 = u;
+            float v1 = v;
+            float u2 = u + uIncrease;
+            float v2 = v + vIncrease;
+            
+            if (buildCollisionMasks) {
+                sprite->buildCollisionMask((int)(u * atlasWidth), (int)(v * atlasHeight));
+            }
+            sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2, true);
+            
+            spriteIndex++;
+            u += uIncrease;
+        }
+        v += vIncrease;
+    }
+    delete sprites.get(firstIndex)->image;
+    for (int i = firstIndex; i < spriteIndex; i++) {
+        sprites.get(i)->image = NULL;
+    }
+    
+    return numSprites;
 }
 
 }   //  namespace

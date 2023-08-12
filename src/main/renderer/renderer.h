@@ -60,37 +60,37 @@ namespace AB {
 extern GLuint whiteTexture;
 
 class Renderer : public SubSystem {
-	public:
-		std::map<int, RenderLayer*> layers;
-		std::map<int, RenderTarget*> canvases;
+    public:
+        std::map<int, RenderLayer*> layers;
+        std::map<int, RenderTarget*> canvases;
 
-		bool startup();
-		void shutdown();
-		
-		void render(const Camera& camera);
-		
-		void clear(float r, float g, float b, float a);
-		void renderFullscreenQuad();
-		
-	private:
-		// no samplers in uniform blocks :(
-		struct Uniforms {
+        bool startup();
+        void shutdown();
+        
+        void render(const Camera& camera);
+        
+        void clear(float r, float g, float b, float a);
+        void renderFullscreenQuad();
+        
+    private:
+        // no samplers in uniform blocks :(
+        struct Uniforms {
             Mat4 projectionMatrix;
-			Mat4 viewMatrix;
-			Mat4 colorTransform;
+            Mat4 viewMatrix;
+            Mat4 colorTransform;
             int timer;
             float randomSeed;
-		} uniforms;
-		
-		struct State {
-			
-		} state;
-		
-		//std::vector<RenderCommand> commandQueue;
+        } uniforms;
+        
+        struct State {
+            
+        } state;
+        
+        //std::vector<RenderCommand> commandQueue;
 
-		GLuint ubo;		//	uniform buffer
-		GLuint fullscreenQuadVAO;	
-		
+        GLuint ubo;        //    uniform buffer
+        GLuint fullscreenQuadVAO;    
+        
 };
 
 }

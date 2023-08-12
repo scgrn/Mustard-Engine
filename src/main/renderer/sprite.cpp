@@ -40,17 +40,17 @@ Sprite::Sprite() {
 }
 
 void Sprite::load(std::string const& filename) {
-	if (filename != ".") {
-		LOG("Loading <%s>", filename.c_str());
+    if (filename != ".") {
+        LOG("Loading <%s>", filename.c_str());
 
-		image = new Image(filename.c_str());
+        image = new Image(filename.c_str());
 
-		width = image->width;
-		height = image->height;
-		halfX = width / 2;
-		halfY = height / 2;
-		radius = sqrt((float)((halfX * halfX) + (halfY * halfY)));
-	}
+        width = image->width;
+        height = image->height;
+        halfX = width / 2;
+        halfY = height / 2;
+        radius = sqrt((float)((halfX * halfX) + (halfY * halfY)));
+    }
 }
 
 void Sprite::release() {
@@ -68,8 +68,8 @@ void Sprite::release() {
 }
 
 void Sprite::buildCollisionMask(int offsetX, int offsetY) {
-	LOG("Building collision mask: DIM(%d, %d), OFFSET(%d, %d)", width, height, offsetX, offsetY);
-	
+    LOG("Building collision mask: DIM(%d, %d), OFFSET(%d, %d)", width, height, offsetX, offsetY);
+    
     if (collisionMask) {
         return;
     }
@@ -101,12 +101,12 @@ void Sprite::uploadToGPU(bool retainImage) {
     u2 = texture->u2;
     v2 = texture->v2;
 
-	if (!retainImage) {
-		if (image) {
-			delete image;
-			image = NULL;
-		}
-	}
+    if (!retainImage) {
+        if (image) {
+            delete image;
+            image = NULL;
+        }
+    }
 }
 
 void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage) {
@@ -116,30 +116,30 @@ void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u
     this->u2 = u2;
     this->v2 = v2;
 
-	if (!retainImage) {
-		if (image) {
-			delete image;
-			image = NULL;
-		}
-	}
+    if (!retainImage) {
+        if (image) {
+            delete image;
+            image = NULL;
+        }
+    }
 }
 
 void Sprite::render(RenderLayer *renderer, Vec3 pos, float rotation, Vec2 scale, Vec4 color) {
     if (texture.get() == 0) {
         uploadToGPU();
     }
-	
-	RenderLayer::Quad quad;
-	
-	quad.pos = pos;
-	quad.size = Vec2(width, height);
-	quad.scale = scale;
-	quad.rotation = rotation;
-	quad.uv = Vec4(u1, v1, u2, v2);
-	quad.textureID = texture->glHandle;
-	quad.color = color;
+    
+    RenderLayer::Quad quad;
+    
+    quad.pos = pos;
+    quad.size = Vec2(width, height);
+    quad.scale = scale;
+    quad.rotation = rotation;
+    quad.uv = Vec4(u1, v1, u2, v2);
+    quad.textureID = texture->glHandle;
+    quad.color = color;
 
-	renderer->renderQuad(quad);
+    renderer->renderQuad(quad);
 }
 
 struct Scan {
