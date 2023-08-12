@@ -41,14 +41,14 @@ freely, subject to the following restrictions:
 #include <sstream>
 
 enum {
-	LOG_FATAL,
-	LOG_ERROR,
-	LOG_WARN,
-	LOG_INFO,
+    LOG_FATAL,
+    LOG_ERROR,
+    LOG_WARN,
+    LOG_INFO,
 
-	// (V debug builds V)
-	LOG_DEBUG,
-	LOG_TRACE
+    // (V debug builds V)
+    LOG_DEBUG,
+    LOG_TRACE
 };
 
 // switches for warn...trace

@@ -42,27 +42,27 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class FileSystem : public SubSystem {
-	public:
-		bool startup() override;
-		void shutdown() override;
-		
-		//	this is the only function that should be called before engine startup
-		void addArchive(std::string const& path, std::string const& key = "");
+    public:
+        bool startup() override;
+        void shutdown() override;
+        
+        //    this is the only function that should be called before engine startup
+        void addArchive(std::string const& path, std::string const& key = "");
 
-		//  caller is responsible to delete() returned pointer
-		unsigned char* readFile(std::string const& path, size_t *size);
-	
-		std::string loadData(std::string key);
-		void saveData(std::string key, std::string value);
+        //  caller is responsible to delete() returned pointer
+        unsigned char* readFile(std::string const& path, size_t *size);
+    
+        std::string loadData(std::string key);
+        void saveData(std::string key, std::string value);
 
-	private:
-		void loadArchive(std::string const& path, std::string const& key = "");
-		
-		struct ArchiveFile {
-			std::string path;
-			std::string key;
-		};
-		std::vector<ArchiveFile> archiveFiles;
+    private:
+        void loadArchive(std::string const& path, std::string const& key = "");
+        
+        struct ArchiveFile {
+            std::string path;
+            std::string key;
+        };
+        std::vector<ArchiveFile> archiveFiles;
 };
 
 class DataObject {
@@ -71,13 +71,13 @@ class DataObject {
         ~DataObject();
 
         unsigned char* getData() { return data; } 
-		size_t getSize() { return size; }
+        size_t getSize() { return size; }
 
     protected:
         DataObject() {}
 
         unsigned char *data;
-		size_t size;
+        size_t size;
 
 };
 

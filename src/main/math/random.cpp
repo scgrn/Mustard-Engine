@@ -70,7 +70,7 @@ f64 rnd() {
 }
 
 u32 rnd(u32 n) {
-    return (u32)(rnd() * (f64)n); 		// TODO: looks weird. test.
+    return (u32)(rnd() * (f64)n);         // TODO: looks weird. test.
 }
 
 i32 rnd(i32 lb, i32 ub) {

@@ -36,7 +36,7 @@ System functions
 #include "script.h"
 
 namespace AB {
-	
+    
 extern Script script;
 extern Window window;
 extern FileSystem fileSystem;
@@ -50,9 +50,9 @@ extern void quit();
 // @function AB.system.log
 static int luaLog(lua_State* luaVM) {
     std::string str = std::string(lua_tostring(luaVM, 1));
-	LOG("LUA: %s", str.c_str());
+    LOG("LUA: %s", str.c_str());
 
-	return 0;
+    return 0;
 }
 
 /// Loads and executes a script
@@ -79,10 +79,10 @@ static int luaLoadScript(lua_State* luaVM) {
 
         LOG("Lua Error: %s", errorMsg.c_str());
 #ifdef ANDROID
-		extern void reportError(std::string errorMessage);
-		reportError(errorMsg);
+        extern void reportError(std::string errorMessage);
+        reportError(errorMsg);
 #else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
 #endif
    }
 
@@ -94,10 +94,10 @@ static int luaLoadScript(lua_State* luaVM) {
 
         LOG("Lua Error: %s", errorMsg.c_str());
 #ifdef ANDROID
-		extern void reportError(std::string errorMessage);
-		reportError(errorMsg);
+        extern void reportError(std::string errorMessage);
+        reportError(errorMsg);
 #else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
 #endif
 
     }
@@ -118,9 +118,9 @@ static int luaLoadData(lua_State* luaVM) {
         return 0;
     }
 
-	std::string value = fileSystem.loadData(key);
-	LOG_EXP(value);
-	lua_pushstring(luaVM, value.c_str());
+    std::string value = fileSystem.loadData(key);
+    LOG_EXP(value);
+    lua_pushstring(luaVM, value.c_str());
 /*
     int error = luaL_loadbuffer(luaVM, value.c_str(), value.size(), key.c_str());
     if (error) {
@@ -129,10 +129,10 @@ static int luaLoadData(lua_State* luaVM) {
 
         LOG("Lua Error: %s", errorMsg.c_str());
 #ifdef ANDROID
-		extern void reportError(std::string errorMessage);
-		reportError(errorMsg);
+        extern void reportError(std::string errorMessage);
+        reportError(errorMsg);
 #else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
 #endif
    }
 
@@ -144,14 +144,14 @@ static int luaLoadData(lua_State* luaVM) {
 
         LOG("Lua Error: %s", errorMsg.c_str());
 #ifdef ANDROID
-		extern void reportError(std::string errorMessage);
-		reportError(errorMsg);
+        extern void reportError(std::string errorMessage);
+        reportError(errorMsg);
 #else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
 #endif
     }
 */
-	return 1;
+    return 1;
 }
 
 /// Saves string to file
@@ -160,16 +160,16 @@ static int luaLoadData(lua_State* luaVM) {
 // @param compile (false) obfuscates by compiling to Lua bytecode
 // @function AB.system.saveData
 static int luaSaveData(lua_State* luaVM) {
-	//	TODO: compile switch
+    //    TODO: compile switch
     std::string key = std::string(lua_tostring(luaVM, 1));
     std::string value = std::string(lua_tostring(luaVM, 2));
-	
+    
     fileSystem.saveData(key, value);
 
-	return 0;
+    return 0;
 }
 
-///	Gets milliseconds since program start
+///    Gets milliseconds since program start
 // @function AB.system.getTime
 static int luaGetTime(lua_State* luaVM) {
     lua_pushinteger(luaVM, SDL_GetTicks());
@@ -177,7 +177,7 @@ static int luaGetTime(lua_State* luaVM) {
     return 1;
 }
 
-///	Resynchronise engine timing. Good to call after long-running operations
+///    Resynchronise engine timing. Good to call after long-running operations
 // @function AB.system.resync
 static int luaResync(lua_State* luaVM) {
     extern bool resync;
@@ -208,37 +208,37 @@ static int luaGetOS(lua_State* luaVM) {
 // @return debugMode
 static int luaDebugMode(lua_State* luaVM) {
 #ifdef DEBUG
-	lua_pushboolean(luaVM, 1);
+    lua_pushboolean(luaVM, 1);
 #else
-	lua_pushboolean(luaVM, 0);
+    lua_pushboolean(luaVM, 0);
 #endif
-	return 1;
+    return 1;
 }
 
 /// Exits the program
 // @function AB.system.quit
 static int luaQuit(lua_State* luaVM) {
-	quit();
+    quit();
 
     return 0;
 }
 
 void registerSystemFunctions() {
-	static const luaL_Reg systemFuncs[] = {
-		{ "log", luaLog},
-		{ "loadScript", luaLoadScript},
-		{ "loadData", luaLoadData},
-		{ "saveData", luaSaveData},
-		{ "getTime", luaGetTime},
-		{ "resync", luaResync},
-		{ "openURL", luaOpenURL},
-		{ "getOS", luaGetOS},
-		{ "debugMode", luaDebugMode},
-		{ "quit", luaQuit},
+    static const luaL_Reg systemFuncs[] = {
+        { "log", luaLog},
+        { "loadScript", luaLoadScript},
+        { "loadData", luaLoadData},
+        { "saveData", luaSaveData},
+        { "getTime", luaGetTime},
+        { "resync", luaResync},
+        { "openURL", luaOpenURL},
+        { "getOS", luaGetOS},
+        { "debugMode", luaDebugMode},
+        { "quit", luaQuit},
 
-		{ NULL, NULL }
-	};
-	script.registerFuncs("AB", "system", systemFuncs);
+        { NULL, NULL }
+    };
+    script.registerFuncs("AB", "system", systemFuncs);
 }
 
 }

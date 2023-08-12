@@ -32,40 +32,40 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class Window : public SubSystem {
-	public:
-		struct VideoMode {
-			int xRes, yRes;
-			
-			//	TODO: use this
-			enum Mode {
-				WINDOWED = 0,
-				FULLSCREEN_WINDOW,
-				FULLSCREEN_EXCLUSIVE,
-				MODE_MAX
-			} mode;
-			
-			// TODO: remove once enumeration is tested
-			bool fullscreen;
+    public:
+        struct VideoMode {
+            int xRes, yRes;
+            
+            //    TODO: use this
+            enum Mode {
+                WINDOWED = 0,
+                FULLSCREEN_WINDOW,
+                FULLSCREEN_EXCLUSIVE,
+                MODE_MAX
+            } mode;
+            
+            // TODO: remove once enumeration is tested
+            bool fullscreen;
 
-			bool vsync;
-		} currentMode;
-		
-		//	kinda ugly but we need to create a gl context so renderer can start up
-		bool startup() override { return false; };
-		
-		bool startup(Application *app);
-		void shutdown() override;
-		
-		void setVideoMode(Application *app);
-		Vec2 getDesktopResolution();
-		void resetViewport();
-		void present();
-		
-		SDL_Window *window;
-		SDL_GLContext glContext;
+            bool vsync;
+        } currentMode;
+        
+        //    kinda ugly but we need to create a gl context so renderer can start up
+        bool startup() override { return false; };
+        
+        bool startup(Application *app);
+        void shutdown() override;
+        
+        void setVideoMode(Application *app);
+        Vec2 getDesktopResolution();
+        void resetViewport();
+        void present();
+        
+        SDL_Window *window;
+        SDL_GLContext glContext;
 
 };
 
-}	//  namespace
+}    //  namespace
 
 #endif

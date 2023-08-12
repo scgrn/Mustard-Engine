@@ -80,7 +80,7 @@ bool takeScreenshot(std::string filename, int width, int height) {
 
     unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
     unsigned char header[6] = { (unsigned char)(width % 256), (unsigned char)(width / 256),
-		(unsigned char)(height % 256), (unsigned char)(height / 256), 24, 0};
+        (unsigned char)(height % 256), (unsigned char)(height / 256), 24, 0};
 
     fwrite(TGAheader, sizeof(unsigned char), 12, filePtr);
     fwrite(header, sizeof(unsigned char), 6, filePtr);
@@ -121,8 +121,8 @@ void endCapture() {
 
     //  close SFX log file
     sfxLog.close();
-	
-	recording = false;
+    
+    recording = false;
 }
 
 void recordSFX(int index) {

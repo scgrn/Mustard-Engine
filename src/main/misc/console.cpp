@@ -95,27 +95,27 @@ bool Console::startup() {
     addMessage("Debug build", false);
 #endif
     addMessage((std::string("Buildstamp ") + BUILD_STAMP).c_str(), false);
-	addMessage("", false);
+    addMessage("", false);
 
     commandLineHistory.clear();
     commandLineHistoryPos = commandLineHistory.end();
-	
-	batchRenderer = new RenderLayer();
-	font.load("default1");
-	font.setColor(0.2f, 0.3f, 0.4f, 1.0f);	// TEXT_COLOR_1
+    
+    batchRenderer = new RenderLayer();
+    font.load("default1");
+    font.setColor(0.2f, 0.3f, 0.4f, 1.0f);    // TEXT_COLOR_1
 
-	extern Window window;
-	camera.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
+    extern Window window;
+    camera.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
 
-	return true;
+    return true;
 }
 
 void Console::shutdown() {
 }
 
 void Console::update() {
-	lua_State* luaVM = script.getVM();
-	
+    lua_State* luaVM = script.getVM();
+    
     for (std::vector<SDL_Event>::iterator event = eventQueue.begin(); event != eventQueue.end(); event++) {
         if (event->type == SDL_KEYDOWN) {
             // tilde key
@@ -124,11 +124,11 @@ void Console::update() {
                 if (active) {
                     // pause();
                     SDL_StartTextInput();
-					LOG("Console opened", 0);
+                    LOG("Console opened", 0);
                 } else {
                     // resume();
                     SDL_StopTextInput();
-					LOG("Console closed", 0);
+                    LOG("Console closed", 0);
                 }
             }
 
@@ -184,49 +184,49 @@ void Console::update() {
 
 void Console::render() {
     if (!active) return;
-		
-	AB::RenderLayer::Quad quad;
-	
-	int width = 780;
-	int height = 420;
+        
+    AB::RenderLayer::Quad quad;
+    
+    int width = 780;
+    int height = 420;
 
-	//	TODO: this should call a generic quad renderer in renderer.h
-	quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);
-	quad.size = Vec2(width, height); 
-	quad.scale = Vec2(1.0f, 1.0f);
-	quad.rotation = 0.0f;
-	quad.uv = Vec4(0.0f, 1.0f, 1.0f, 0.0f);
-	quad.textureID = 0;
-	quad.color = Vec4(0.0f, 0.0f, 0.0f, 0.75f);
-	batchRenderer->renderQuad(quad);	
+    //    TODO: this should call a generic quad renderer in renderer.h
+    quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);
+    quad.size = Vec2(width, height); 
+    quad.scale = Vec2(1.0f, 1.0f);
+    quad.rotation = 0.0f;
+    quad.uv = Vec4(0.0f, 1.0f, 1.0f, 0.0f);
+    quad.textureID = 0;
+    quad.color = Vec4(0.0f, 0.0f, 0.0f, 0.75f);
+    batchRenderer->renderQuad(quad);    
 
-	width = 760;
-	height = 1;
-	quad.pos = Vec3(width / 2 + 30, height / 2 + 395, -1.0f);
-	quad.size = Vec2(width, height); 
-	quad.color = TEXT_COLOR_1;
-	batchRenderer->renderQuad(quad);	
-	
-	batchRenderer->render(camera);
-	
-	font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
-	font.printString(batchRenderer, 30, 423, 1.0f, Font::LEFT, "> " + commandLine + (time(NULL) % 2 == 0 ? "_" : ""));
+    width = 760;
+    height = 1;
+    quad.pos = Vec3(width / 2 + 30, height / 2 + 395, -1.0f);
+    quad.size = Vec2(width, height); 
+    quad.color = TEXT_COLOR_1;
+    batchRenderer->renderQuad(quad);    
+    
+    batchRenderer->render(camera);
+    
+    font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
+    font.printString(batchRenderer, 30, 423, 1.0f, Font::LEFT, "> " + commandLine + (time(NULL) % 2 == 0 ? "_" : ""));
 
-	float y = 383;
-	for (std::list<ConsoleMessage>::iterator message = messages.begin(); message != messages.end(); message++) {
-		if (message->entered) {
-			font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
-		} else {
-			font.setColor(TEXT_COLOR_2.r, TEXT_COLOR_2.g, TEXT_COLOR_2.b, TEXT_COLOR_2.a);
-		}
-		font.printString(batchRenderer, 30, y, 1.0f, Font::LEFT, message->message);
-		y -= 20;
-		if (y < 25) {
-			break;
-		}
-	}
+    float y = 383;
+    for (std::list<ConsoleMessage>::iterator message = messages.begin(); message != messages.end(); message++) {
+        if (message->entered) {
+            font.setColor(TEXT_COLOR_1.r, TEXT_COLOR_1.g, TEXT_COLOR_1.b, TEXT_COLOR_1.a);
+        } else {
+            font.setColor(TEXT_COLOR_2.r, TEXT_COLOR_2.g, TEXT_COLOR_2.b, TEXT_COLOR_2.a);
+        }
+        font.printString(batchRenderer, 30, y, 1.0f, Font::LEFT, message->message);
+        y -= 20;
+        if (y < 25) {
+            break;
+        }
+    }
 
-	batchRenderer->render(camera);
+    batchRenderer->render(camera);
 }
 
 }   //  namespace

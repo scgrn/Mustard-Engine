@@ -43,7 +43,7 @@ namespace AB {
 
 template<class T>
 inline std::string toString(T val, bool groupDigits = true) {
-	std::ostringstream o;
+    std::ostringstream o;
     o << val;
     std::string s(o.str());
 

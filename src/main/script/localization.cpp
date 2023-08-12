@@ -41,9 +41,9 @@ extern Script script;
 static int luaInit(lua_State* luaVM) {
     std::string filename = lua_tostring(luaVM, 1);
 
-	initLocalization(filename);
-	
-	return 0;
+    initLocalization(filename);
+    
+    return 0;
 }
 
 /// Sets the current language
@@ -74,7 +74,7 @@ static int luaGetString(lua_State* luaVM) {
 
 void registerLocalizationFunctions() {
     static const luaL_Reg l10nFuncs[] = {
-		{ "init", luaInit},
+        { "init", luaInit},
         { "setLanguage", luaSetLanguage},
         { "getString", luaGetString},
 

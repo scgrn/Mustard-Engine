@@ -28,13 +28,13 @@ These are called from the engine during the main loop or when system events occu
 
 /// Load configuration. Called before window and renderer are created.
 // This should set a global table:
-//	videoConfig = {
-//		title,
-//		xRes,
-//		yRes,
-//		fullscreen,
-//		vsync
-//	}	
+//    videoConfig = {
+//        title,
+//        xRes,
+//        yRes,
+//        fullscreen,
+//        vsync
+//    }    
 // @function AB.loadConfig
 
 /// Called once before the main loop is entered.

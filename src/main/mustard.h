@@ -52,27 +52,27 @@ freely, subject to the following restrictions:
 #include "misc/misc.h"
 
 namespace AB {
-	extern FileSystem fileSystem;
-	extern Renderer renderer;
-	extern Audio audio;
-	extern Script script;
-	extern Input input;
-	extern Window window;
+    extern FileSystem fileSystem;
+    extern Renderer renderer;
+    extern Audio audio;
+    extern Script script;
+    extern Input input;
+    extern Window window;
 #ifdef DEBUG
-	extern Console console;
-#endif	
+    extern Console console;
+#endif    
 
-	void startup(Application *app);
-	void shutdown();
-	
-	extern ResourceManager<Sprite> sprites;
-	extern ResourceManager<Shader> shaders;
-	extern ResourceManager<Font> fonts;
+    void startup(Application *app);
+    void shutdown();
+    
+    extern ResourceManager<Sprite> sprites;
+    extern ResourceManager<Shader> shaders;
+    extern ResourceManager<Font> fonts;
 
-	extern ResourceManager<Sound> sounds;
-	extern ResourceManager<Music> music;
-	
-	extern OrthographicCamera camera2d;
+    extern ResourceManager<Sound> sounds;
+    extern ResourceManager<Music> music;
+    
+    extern OrthographicCamera camera2d;
 }
 
 #endif // AB_H

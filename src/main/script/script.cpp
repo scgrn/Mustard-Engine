@@ -39,7 +39,7 @@ void registerAudioFunctions();
 void registerLocalizationFunctions();
 
 static int luaDummyFunc(lua_State* luaVM) {
-	return 0;
+    return 0;
 }
 
 void Script::registerFuncs(std::string const& parent, std::string const& name, const luaL_Reg *funcs) {
@@ -66,7 +66,7 @@ void Script::registerFuncs(std::string const& parent, std::string const& name, c
 
 bool Script::startup() {
     // init lua VM and load libraries
-	LOG("Scripting subsystem startup", 0);
+    LOG("Scripting subsystem startup", 0);
 
     luaVM = luaL_newstate();
     if (!luaVM) {
@@ -109,16 +109,16 @@ bool Script::startup() {
         { NULL, NULL }
     };
     registerFuncs("", "AB", callbackFuncs);
-	
-	registerSystemFunctions();
-	registerMathFunctions();
-	registerGraphicsFunctions();
-	registerCollisionFunctions();
-	registerFontFunctions();
-	registerInputFunctions();
-	registerAudioFunctions();
-	registerLocalizationFunctions();
-	
+    
+    registerSystemFunctions();
+    registerMathFunctions();
+    registerGraphicsFunctions();
+    registerCollisionFunctions();
+    registerFontFunctions();
+    registerInputFunctions();
+    registerAudioFunctions();
+    registerLocalizationFunctions();
+    
 #ifdef DEBUG
     extern int luaPrint (lua_State *L);
     lua_register(luaVM, "print", luaPrint);
@@ -128,12 +128,12 @@ bool Script::startup() {
     execute("AB.system.loadScript('main.lua')");
     execute("AB.loadConfig()");
 
-	// check stack is balanced
-	assert(lua_gettop(luaVM) == 0);
+    // check stack is balanced
+    assert(lua_gettop(luaVM) == 0);
 
-	initialized = true;
+    initialized = true;
 
-	return true;
+    return true;
 }
 
 static int traceback(lua_State *luaVM) {
@@ -164,7 +164,7 @@ void Script::execute(std::string command) {
             std::string errorMsg = lua_tostring(luaVM, -1);
             lua_pop(luaVM, 2);
 
-			LOG("Lua Error: %s", errorMsg.c_str());
+            LOG("Lua Error: %s", errorMsg.c_str());
 
 #ifdef ANDROID
             extern void reportError(std::string errorMessage);
@@ -185,7 +185,7 @@ void Script::shutdown() {
         luaVM = 0;
     }
 
-	LOG("Scripting subsystem shutdown", 0);
+    LOG("Scripting subsystem shutdown", 0);
 }
 
 }   //   namespace

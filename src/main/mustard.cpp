@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "core/version.h"
 
 namespace AB {
-	
+    
 // each subsystem has a single global instance...
 FileSystem fileSystem;
 Renderer renderer;
@@ -48,52 +48,52 @@ std::map<int, RenderTarget*> canvases;
 OrthographicCamera camera2d;
 
 void startup(Application *app) {
-	LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
-	LOG(std::string(79, '-').c_str(), 0);
+    LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
+    LOG(std::string(79, '-').c_str(), 0);
 
-	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
+    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
         ERR("Unable to initialize SDL: %s", SDL_GetError());
-	}
-	
-	LOG("\tPlatform: %s", SDL_GetPlatform());
-	LOG("\tCPU count: %d", SDL_GetCPUCount());
-	LOG("\tSystem RAM: %dMB", SDL_GetSystemRAM());
-	
-	//	...so i have full control of when and what order they're initialized...
-	fileSystem.startup();
-	script.startup();
-	input.startup();
-	audio.startup();
-	window.startup(app);
-	renderer.startup();
+    }
+    
+    LOG("\tPlatform: %s", SDL_GetPlatform());
+    LOG("\tCPU count: %d", SDL_GetCPUCount());
+    LOG("\tSystem RAM: %dMB", SDL_GetSystemRAM());
+    
+    //    ...so i have full control of when and what order they're initialized...
+    fileSystem.startup();
+    script.startup();
+    input.startup();
+    audio.startup();
+    window.startup(app);
+    renderer.startup();
 #ifdef DEBUG
-	console.startup();
+    console.startup();
 #endif
 }
 
 void shutdown() {
-	shaders.clear(true);
-	sprites.clear(true);
-	fonts.clear(true);
-	sounds.clear(true);
-	music.clear(true);
-	
-	LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
-	
-	//  ... and shutdown.
+    shaders.clear(true);
+    sprites.clear(true);
+    fonts.clear(true);
+    sounds.clear(true);
+    music.clear(true);
+    
+    LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
+    
+    //  ... and shutdown.
 #ifdef DEBUG
-	console.shutdown();
+    console.shutdown();
 #endif
-	renderer.shutdown();
-	window.shutdown();
-	audio.shutdown();
-	input.shutdown();
-	script.shutdown();
-	fileSystem.shutdown();
+    renderer.shutdown();
+    window.shutdown();
+    audio.shutdown();
+    input.shutdown();
+    script.shutdown();
+    fileSystem.shutdown();
 
     SDL_Quit();
-	
-	LOG("Goodbye.", 0);
+    
+    LOG("Goodbye.", 0);
 }
 
 }

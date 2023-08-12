@@ -38,7 +38,7 @@ namespace AB {
 
 void redirectLog(std::streambuf* dest) { std::clog.rdbuf(dest); }
 
-//	oh wow variadic functions
+//    oh wow variadic functions
 
 void error(int line, const char* file, const char* msg, ...) {
     va_list args;
@@ -47,7 +47,7 @@ void error(int line, const char* file, const char* msg, ...) {
     vsprintf(szBuf, msg, args);
     va_end(args);
 
-	std::ostringstream o;
+    std::ostringstream o;
     o << file << " [" << line << "] \t" << szBuf << std::endl;
     std::string s(o.str());
 
@@ -61,14 +61,14 @@ void log(int line, const char* file, const char* msg, ...) {
     vsprintf(szBuf, msg, args);
     va_end(args);
 
-	std::stringstream  meta;
-	meta << file << " [" << line << "]";
-	if (meta.str().length() < 40) {
-		meta << std::string(40 - meta.str().length(), ' ');
-	} else {
-		meta << std::string(3, ' ');
-	}
-	
+    std::stringstream  meta;
+    meta << file << " [" << line << "]";
+    if (meta.str().length() < 40) {
+        meta << std::string(40 - meta.str().length(), ' ');
+    } else {
+        meta << std::string(3, ' ');
+    }
+    
     std::clog << meta.str() << szBuf << std::endl;
 }
 

@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 #include "../script/script.h"
 
 namespace AB {
-	
+    
 std::map<std::string, std::string> strings[LAST];
 Language language;
 

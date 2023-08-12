@@ -324,7 +324,7 @@ extern Input input;
 
 // generate lua scancode constant list for documentation here
 
-///	Set mouse cursor visibility
+///    Set mouse cursor visibility
 // @function AB.input.showCursor
 // @param visible (true) Mouse cursor visible
 static int luaShowCursor(lua_State* luaVM) {
@@ -343,14 +343,14 @@ static int luaShowCursor(lua_State* luaVM) {
 // @return Right mouse button
 // @usage x, y, left, middle, right = AB.input.getMouseState()
 static int luaGetMouseState(lua_State* luaVM) {
-	Vec2 pos = input.getMousePosition();
+    Vec2 pos = input.getMousePosition();
     lua_pushinteger(luaVM, (int)pos.x);
     lua_pushinteger(luaVM, (int)pos.y);
-	
-	for (int i = 0; i < 3; i++) {
-		lua_pushboolean(luaVM, input.isMousePressed(i));
-	}
-	
+    
+    for (int i = 0; i < 3; i++) {
+        lua_pushboolean(luaVM, input.isMousePressed(i));
+    }
+    
     return 5;
 }
 
@@ -361,8 +361,8 @@ static int luaGetMouseState(lua_State* luaVM) {
 static int luaSetMousePosition(lua_State* luaVM) {
     int x = (int)lua_tonumber(luaVM, 1);
     int y = (int)lua_tonumber(luaVM, 2);
-	
-	input.setMousePosition(Vec2(x, y));
+    
+    input.setMousePosition(Vec2(x, y));
 
     return 0;
 }
@@ -471,38 +471,38 @@ static int luaButtonName(lua_State* luaVM) {
     int button = (int)lua_tonumber(luaVM, 1);
 
     std::string name;
-	switch (button) {
-		case input.BUTTON_A: name = "A"; break;
-		case input.BUTTON_B: name = "B"; break;
-		case input.BUTTON_X: name = "X"; break;
-		case input.BUTTON_Y: name = "Y"; break;
-		case input.BUTTON_BACK: name = "Back"; break;
-		case input.BUTTON_GUIDE: name = "Guide"; break;
-		case input.BUTTON_START: name = "Start"; break;
-		case input.BUTTON_LEFTSTICK: name = "Left stick"; break;
-		case input.BUTTON_RIGHTSTICK: name = "Right stick"; break;
-		case input.BUTTON_LEFTSHOULDER: name = "Left shoulder"; break;
-		case input.BUTTON_RIGHTSHOULDER: name = "Right shoulder"; break;
-		case input.BUTTON_DPAD_UP: name = "D-pad up"; break;
-		case input.BUTTON_DPAD_DOWN: name = "D-pad down"; break;
-		case input.BUTTON_DPAD_LEFT: name = "D-pad left"; break;
-		case input.BUTTON_DPAD_RIGHT: name = "D-pad right"; break;
-		
-		case input.BUTTON_MAX: name = "wut"; break;
-		
-		case input.BUTTON_LSTICK_UP: name = "Left stick up"; break;
-		case input.BUTTON_LSTICK_DOWN: name = "Left stick down"; break;
-		case input.BUTTON_LSTICK_LEFT: name = "Left stick left"; break;
-		case input.BUTTON_LSTICK_RIGHT: name = "Left stick right"; break;
-		case input.BUTTON_RSTICK_UP: name = "Right stick up"; break;
-		case input.BUTTON_RSTICK_DOWN: name = "Right stick down"; break;
-		case input.BUTTON_RSTICK_LEFT: name = "Right stick left"; break;
-		case input.BUTTON_RSTICK_RIGHT: name = "Right stick right"; break;
-		case input.BUTTON_LTRIGGER: name = "Left trigger"; break;
-		case input.BUTTON_RTRIGGER: name = "Right trigger"; break;	
-		
-		default: name = "UNKNOWN";
-	}
+    switch (button) {
+        case input.BUTTON_A: name = "A"; break;
+        case input.BUTTON_B: name = "B"; break;
+        case input.BUTTON_X: name = "X"; break;
+        case input.BUTTON_Y: name = "Y"; break;
+        case input.BUTTON_BACK: name = "Back"; break;
+        case input.BUTTON_GUIDE: name = "Guide"; break;
+        case input.BUTTON_START: name = "Start"; break;
+        case input.BUTTON_LEFTSTICK: name = "Left stick"; break;
+        case input.BUTTON_RIGHTSTICK: name = "Right stick"; break;
+        case input.BUTTON_LEFTSHOULDER: name = "Left shoulder"; break;
+        case input.BUTTON_RIGHTSHOULDER: name = "Right shoulder"; break;
+        case input.BUTTON_DPAD_UP: name = "D-pad up"; break;
+        case input.BUTTON_DPAD_DOWN: name = "D-pad down"; break;
+        case input.BUTTON_DPAD_LEFT: name = "D-pad left"; break;
+        case input.BUTTON_DPAD_RIGHT: name = "D-pad right"; break;
+        
+        case input.BUTTON_MAX: name = "wut"; break;
+        
+        case input.BUTTON_LSTICK_UP: name = "Left stick up"; break;
+        case input.BUTTON_LSTICK_DOWN: name = "Left stick down"; break;
+        case input.BUTTON_LSTICK_LEFT: name = "Left stick left"; break;
+        case input.BUTTON_LSTICK_RIGHT: name = "Left stick right"; break;
+        case input.BUTTON_RSTICK_UP: name = "Right stick up"; break;
+        case input.BUTTON_RSTICK_DOWN: name = "Right stick down"; break;
+        case input.BUTTON_RSTICK_LEFT: name = "Right stick left"; break;
+        case input.BUTTON_RSTICK_RIGHT: name = "Right stick right"; break;
+        case input.BUTTON_LTRIGGER: name = "Left trigger"; break;
+        case input.BUTTON_RTRIGGER: name = "Right trigger"; break;    
+        
+        default: name = "UNKNOWN";
+    }
     lua_pushstring(luaVM, name.c_str());
 
     return 1;
@@ -517,22 +517,22 @@ static int luaAxisName(lua_State* luaVM) {
     int axis = (int)lua_tonumber(luaVM, 1);
 
     std::string name;
-	switch (axis) {
-		case input.AXIS_LEFT_X: name = "Left stick X"; break;
-		case input.AXIS_LEFT_Y: name = "Left stick Y"; break;
-		case input.AXIS_RIGHT_X: name = "Right stick X"; break;
-		case input.AXIS_RIGHT_Y: name = "Right stick Y"; break;
-		case input.AXIS_TRIGGER_LEFT: name = "Left trigger"; break;
-		case input.AXIS_TRIGGER_RIGHT: name = "Right trigger"; break;
+    switch (axis) {
+        case input.AXIS_LEFT_X: name = "Left stick X"; break;
+        case input.AXIS_LEFT_Y: name = "Left stick Y"; break;
+        case input.AXIS_RIGHT_X: name = "Right stick X"; break;
+        case input.AXIS_RIGHT_Y: name = "Right stick Y"; break;
+        case input.AXIS_TRIGGER_LEFT: name = "Left trigger"; break;
+        case input.AXIS_TRIGGER_RIGHT: name = "Right trigger"; break;
 
-		default: name = "UNKNOWN";
-	}
+        default: name = "UNKNOWN";
+    }
     lua_pushstring(luaVM, name.c_str());
 
     return 1;
 }
 
-//	BONUS BONER BARBECUE
+//    BONUS BONER BARBECUE
 
 /// Checks if a gamepad button was pressed this frame
 // @function AB.input.gamepadWasPressed
@@ -552,7 +552,7 @@ static int luaGamepadWasPressed(lua_State* luaVM) {
     if (button >= 0 && button < input.BUTTON_MAX) {
         lua_pushboolean(luaVM, input.gamepadWasPressed(index, button));
     } else {
-		LOG("Invalid button: %d", button);
+        LOG("Invalid button: %d", button);
         lua_pushboolean(luaVM, 0);
     }
 
@@ -576,7 +576,7 @@ static int luaGamepadPressed(lua_State* luaVM) {
     if (button >= 0 && button < input.BUTTON_MAX) {
         lua_pushboolean(luaVM, input.gamepadIsPressed(index, button));
     } else {
-		LOG("Invalid button: %d", button);
+        LOG("Invalid button: %d", button);
         lua_pushboolean(luaVM, 0);
     }
 
@@ -600,7 +600,7 @@ static int luaGamepadWasReleased(lua_State* luaVM) {
     if (button >= 0 && button < input.BUTTON_MAX) {
         lua_pushboolean(luaVM, input.gamepadWasReleased(index, button));
     } else {
-		LOG("Invalid button: %d", button);
+        LOG("Invalid button: %d", button);
         lua_pushboolean(luaVM, 0);
     }
 
@@ -623,12 +623,12 @@ static int luaGamepadGetAxis(lua_State* luaVM) {
 
     if (axis >= 0 && axis < input.AXIS_MAX) {
         lua_pushnumber(luaVM, input.gamepadAxis(index, axis));
-	} else {
-		LOG("Invalid axis: %d", axis);
+    } else {
+        LOG("Invalid axis: %d", axis);
         lua_pushnumber(luaVM, 0);
-	}
-	
-	return 1;
+    }
+    
+    return 1;
 }
 
 /// Gets current number of gamepads attached to the system
@@ -644,9 +644,9 @@ static int luaNumGamepads(lua_State* luaVM) {
 // @function AB.input.showGamepadControls
 // @return showGamepadControls
 static int luaShowGamepadControls(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.showGamepadControls);
-	
-	return 1;
+    lua_pushboolean(luaVM, input.showGamepadControls);
+    
+    return 1;
 }
 
 /// Vibrates!
@@ -662,141 +662,141 @@ static int luaVibrate(lua_State* luaVM) {
     if (lua_gettop(luaVM) >= 3) {
         index = (int)lua_tonumber(luaVM, 3);
     }
-	
+    
 #ifdef ANDROID
 #else
-	input.vibrate(index, strength, duration);
+    input.vibrate(index, strength, duration);
 #endif
 
-	return 0;
+    return 0;
 }
 
 /// Checks if a menu up event has occured
 // @function AB.input.menuUp
 // @return pressed
 static int luaMenuUp(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.menuUp());
-	return 1;
+    lua_pushboolean(luaVM, input.menuUp());
+    return 1;
 }
 
 /// Checks if a menu down event has occured
 // @function AB.input.menuDown
 // @return pressed
 static int luaMenuDown(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.menuDown());
-	return 1;
+    lua_pushboolean(luaVM, input.menuDown());
+    return 1;
 }
 
 /// Checks if a menu left event has occured
 // @function AB.input.menuLeft
 // @return pressed
 static int luaMenuLeft(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.menuLeft());
-	return 1;
+    lua_pushboolean(luaVM, input.menuLeft());
+    return 1;
 }
 
 /// Checks if a menu right event has occured
 // @function AB.input.menuRight
 // @return pressed
 static int luaMenuRight(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.menuRight());
-	return 1;
+    lua_pushboolean(luaVM, input.menuRight());
+    return 1;
 }
 
 /// Checks if a menu select event has occured
 // @function AB.input.menuSelect
 // @return pressed
 static int luaMenuSelect(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.menuSelect());
-	return 1;
+    lua_pushboolean(luaVM, input.menuSelect());
+    return 1;
 }
 
 /// Checks if a menu back event has occured
 // @function AB.input.menuBack
 // @return pressed
 static int luaMenuBack(lua_State* luaVM) {
-	lua_pushboolean(luaVM, input.menuBack());
-	return 1;
+    lua_pushboolean(luaVM, input.menuBack());
+    return 1;
 }
 
 void registerInputFunctions() {
     static const luaL_Reg inputFuncs[] = {
         { "getMouseState", luaGetMouseState},
         { "showCursor", luaShowCursor},
-		{ "setMousePosition", luaSetMousePosition},
-		{ "mouseWasPressed", luaMouseWasPressed},
-		{ "mousePressed", luaMousePressed},
-		{ "mouseWasReleased", luaMouseWasReleased},
-		
+        { "setMousePosition", luaSetMousePosition},
+        { "mouseWasPressed", luaMouseWasPressed},
+        { "mousePressed", luaMousePressed},
+        { "mouseWasReleased", luaMouseWasReleased},
+        
         { "keyWasPressed", luaKeyWasPressed},
         { "keyPressed", luaKeyPressed},
         { "keyWasReleased", luaKeyWasReleased},
         { "keyName", luaKeyName},
 
         { "buttonName", luaButtonName},
-		{ "axisName", luaAxisName},
-		{ "gamepadWasPressed", luaGamepadWasPressed}, 
+        { "axisName", luaAxisName},
+        { "gamepadWasPressed", luaGamepadWasPressed}, 
         { "gamepadPressed", luaGamepadPressed},
-		{ "gamepadWasReleased", luaGamepadWasReleased},
-		{ "gamepadGetAxis", luaGamepadGetAxis},
+        { "gamepadWasReleased", luaGamepadWasReleased},
+        { "gamepadGetAxis", luaGamepadGetAxis},
         { "numGamepads", luaNumGamepads},
-		{ "showGamepadControls", luaShowGamepadControls},
+        { "showGamepadControls", luaShowGamepadControls},
 
-		{ "vibrate", luaVibrate},
-		
-		{ "menuUp", luaMenuUp},
-		{ "menuDown", luaMenuDown},
-		{ "menuLeft", luaMenuLeft},
-		{ "menuRight", luaMenuRight},
-		{ "menuSelect", luaMenuSelect},
-		{ "menuBack", luaMenuBack},
-		
+        { "vibrate", luaVibrate},
+        
+        { "menuUp", luaMenuUp},
+        { "menuDown", luaMenuDown},
+        { "menuLeft", luaMenuLeft},
+        { "menuRight", luaMenuRight},
+        { "menuSelect", luaMenuSelect},
+        { "menuBack", luaMenuBack},
+        
         { NULL, NULL }
     };
     script.registerFuncs("AB", "input", inputFuncs);
 
-	std::string command = "AB.input.scancodes = {";
+    std::string command = "AB.input.scancodes = {";
 #define X(a, b) command += #a; command += "=" + toString(b) + ",";
 #include "../input/scancodes.h"
 #undef X
-	command += "}";
-	script.execute(command);
+    command += "}";
+    script.execute(command);
 
-	script.execute("AB.input.gamepadButtons={"
-		"A=0,"
-		"B=1,"
-		"X=2,"
-		"Y=3,"
-		"BACK=4,"
-		"GUIDE=5,"
-		"START=6,"
-		"LEFTSTICK=7,"
-		"RIGHTSTICK=8,"
-		"LEFTSHOULDER=9,"
-		"RIGHTSHOULDER=10,"
-		"DPAD_UP=11,"
-		"DPAD_DOWN=12,"
-		"DPAD_LEFT=13,"
-		"DPAD_RIGHT=14,"
-		
-		"LSTICK_UP=16,"
-		"LSTICK_DOWN=17,"
-		"LSTICK_LEFT=18,"
-		"LSTICK_RIGHT=19,"
-		"RSTICK_UP=20,"
-		"RSTICK_DOWN=21,"
-		"RSTICK_LEFT=22,"
-		"RSTICK_RIGHT=23,"
-		"LTRIGGER=24,"
-		"RTRIGGER=25}");
+    script.execute("AB.input.gamepadButtons={"
+        "A=0,"
+        "B=1,"
+        "X=2,"
+        "Y=3,"
+        "BACK=4,"
+        "GUIDE=5,"
+        "START=6,"
+        "LEFTSTICK=7,"
+        "RIGHTSTICK=8,"
+        "LEFTSHOULDER=9,"
+        "RIGHTSHOULDER=10,"
+        "DPAD_UP=11,"
+        "DPAD_DOWN=12,"
+        "DPAD_LEFT=13,"
+        "DPAD_RIGHT=14,"
+        
+        "LSTICK_UP=16,"
+        "LSTICK_DOWN=17,"
+        "LSTICK_LEFT=18,"
+        "LSTICK_RIGHT=19,"
+        "RSTICK_UP=20,"
+        "RSTICK_DOWN=21,"
+        "RSTICK_LEFT=22,"
+        "RSTICK_RIGHT=23,"
+        "LTRIGGER=24,"
+        "RTRIGGER=25}");
 
-	script.execute("AB.input.gamepadAxes={"
-		"LEFT_X=0,"
-		"LEFT_Y=1,"
-		"RIGHT_X=2,"
-		"RIGHT_Y=3,"
-		"TRIGGER_LEFT=4,"
-		"TRIGGER_RIGHT=5}");
+    script.execute("AB.input.gamepadAxes={"
+        "LEFT_X=0,"
+        "LEFT_Y=1,"
+        "RIGHT_X=2,"
+        "RIGHT_Y=3,"
+        "TRIGGER_LEFT=4,"
+        "TRIGGER_RIGHT=5}");
 }
 
 }

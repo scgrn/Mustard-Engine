@@ -42,7 +42,7 @@ static int fontHandle = 1;
 
 //----------------------------------------------------------------- Text functions --------------------------------
 
-///	Loads a font
+///    Loads a font
 // @function AB.font.loadFont
 // @param filename Filename.<br/>
 // &nbsp;&nbsp;&nbsp;&nbsp;Pass in "default1" for a built-in 8x16 font<br/>
@@ -53,18 +53,18 @@ static int fontHandle = 1;
 static int luaLoadFont(lua_State* luaVM) {
     std::string filename = std::string(lua_tostring(luaVM, 1));
     
-	int index;
+    int index;
     if (lua_gettop(luaVM) >= 2) {
         index = (int)lua_tonumber(luaVM, 2);
     } else {
-		index = fontHandle;
-		fontHandle++;
-	}
+        index = fontHandle;
+        fontHandle++;
+    }
 
-	fonts.mapResource(index, filename);
+    fonts.mapResource(index, filename);
 
-	//  return handle
-	lua_pushnumber(luaVM, index);
+    //  return handle
+    lua_pushnumber(luaVM, index);
 
     return 1;
 }
@@ -79,7 +79,7 @@ static int luaLoadFont(lua_State* luaVM) {
 // @param str String to print
 // @function AB.font.printString
 static int luaPrintString(lua_State* luaVM) {
-	int layer = (int)lua_tonumber(luaVM, 1);
+    int layer = (int)lua_tonumber(luaVM, 1);
     int fontIndex = (int)lua_tonumber(luaVM, 2);
     float x = (float)lua_tonumber(luaVM, 3);
     float y = (float)lua_tonumber(luaVM, 4);
@@ -92,22 +92,22 @@ static int luaPrintString(lua_State* luaVM) {
     y += scale * 32.0f;
     alignment++;
 */
-	Font::Align align;
-	switch (alignment) {
-		case 1: align = Font::LEFT; break;
-		case 2: align = Font::CENTER; break;
-		case 3: align = Font::RIGHT; break;
-		default: align = Font::LEFT;
-	}
+    Font::Align align;
+    switch (alignment) {
+        case 1: align = Font::LEFT; break;
+        case 2: align = Font::CENTER; break;
+        case 3: align = Font::RIGHT; break;
+        default: align = Font::LEFT;
+    }
 
-	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
+    RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
 
     fonts.get(fontIndex)->printString(batchRenderer, x, y, scale, align, str);
 
-	return 0;
+    return 0;
 }
 
-///	Calculates width of string
+///    Calculates width of string
 // @param index Font index
 // @param str String
 // @param scale Scale
@@ -118,10 +118,10 @@ static int luaStringLength(lua_State* luaVM) {
     std::string str = std::string(lua_tostring(luaVM, 2));
     float scale = (float)lua_tonumber(luaVM, 3);
 
-	//	why
+    //    why
     // scale /= 36.0f;
 
-	lua_pushnumber(luaVM, fonts.get(fontIndex)->stringLength(str, scale));
+    lua_pushnumber(luaVM, fonts.get(fontIndex)->stringLength(str, scale));
 
     return 1;
 }
@@ -136,13 +136,13 @@ static int luaStringLength(lua_State* luaVM) {
 // @function AB.font.setColor
 static int luaSetColor(lua_State* luaVM) {
     int fontIndex = (int)lua_tonumber(luaVM, 1);
-	
-	float r = 1.0f;
-	float g = 1.0f;
-	float b = 1.0f;
-	float opacity = 1.0f;
-	float additivity = 0.0f;
-	
+    
+    float r = 1.0f;
+    float g = 1.0f;
+    float b = 1.0f;
+    float opacity = 1.0f;
+    float additivity = 0.0f;
+    
     if (lua_gettop(luaVM) >= 2) {
         r = (float)lua_tonumber(luaVM, 2);
     }
@@ -153,15 +153,15 @@ static int luaSetColor(lua_State* luaVM) {
         b = (float)lua_tonumber(luaVM, 4);
     }
     if (lua_gettop(luaVM) >= 5) {
-		opacity = (float)lua_tonumber(luaVM, 5);
+        opacity = (float)lua_tonumber(luaVM, 5);
     }
     if (lua_gettop(luaVM) >= 6) {
-		additivity = (float)lua_tonumber(luaVM, 6);
+        additivity = (float)lua_tonumber(luaVM, 6);
     }
-	
-	fonts.get(fontIndex)->setColor(r * opacity, g * opacity, b * opacity, 1.0f - additivity);
-	
-	return 0;
+    
+    fonts.get(fontIndex)->setColor(r * opacity, g * opacity, b * opacity, 1.0f - additivity);
+    
+    return 0;
 }
 
 void registerFontFunctions() {
@@ -169,15 +169,15 @@ void registerFontFunctions() {
         { "loadFont", luaLoadFont},
         { "printString", luaPrintString},
         { "stringLength", luaStringLength},
-		{ "setColor", luaSetColor},
+        { "setColor", luaSetColor},
 
         { NULL, NULL }
     };
     script.registerFuncs("AB", "font", fontFuncs);
-	
-	script.execute("AB.font.LEFT = 1");
-	script.execute("AB.font.CENTER = 2");
-	script.execute("AB.font.RIGHT = 3");
+    
+    script.execute("AB.font.LEFT = 1");
+    script.execute("AB.font.CENTER = 2");
+    script.execute("AB.font.RIGHT = 3");
 }
 
 }

@@ -30,77 +30,77 @@ freely, subject to the following restrictions:
 #include "../core/resourceManager.h"
 
 namespace SoLoud {
-	class Soloud;
-	class Wav;
-	class WavStream;
+    class Soloud;
+    class Wav;
+    class WavStream;
 };
 
 namespace AB {
 
 class Sound : public Resource {
     public:
-		Sound() {};
-		
+        Sound() {};
+        
         void load(std::string const& filename);
         void release();
-		
-		void play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
-		void stop();
-		bool isPlaying();
-		
-	protected:
-		SoLoud::Wav *wav;
-		DataObject *data;
+        
+        void play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
+        void stop();
+        bool isPlaying();
+        
+    protected:
+        SoLoud::Wav *wav;
+        DataObject *data;
 
 };
 
 class Music : public Resource {
-	public:
+    public:
         void load(std::string const& filename);
         void release();
-		
-		void setLoopPoint(float loopPoint);
-		void play(bool loop = true);
-		void pause();
-		void resume();
-		void setVolume(float volume);
-		void fadeIn(float duration);
-		void fadeOut(float duration);
-		void stop();
-		bool isPlaying();
-		
-	protected:
-		SoLoud::WavStream *wavStream;
-		DataObject *data;
-		int musicHandle;
-		
+        
+        void setLoopPoint(float loopPoint);
+        void play(bool loop = true);
+        void pause();
+        void resume();
+        void setVolume(float volume);
+        void fadeIn(float duration);
+        void fadeOut(float duration);
+        void stop();
+        bool isPlaying();
+        
+    protected:
+        SoLoud::WavStream *wavStream;
+        DataObject *data;
+        int musicHandle;
+        
 };
 
 class Audio : public SubSystem {
-	public:
-		bool startup() override;
-		void shutdown() override;
-		
-		//	plays all queued sound effects
-		void update();
-		
-		//	queues a sound effect if it hasn't already been played this frame
-		void play(Sound *sound, float volume, float pan, bool loop);
-		
-		float soundVolume = 1.0f;
-		float musicVolume = 1.0f;
+    public:
+        bool startup() override;
+        void shutdown() override;
+        
+        //    plays all queued sound effects
+        void update();
+        
+        //    queues a sound effect if it hasn't already been played this frame
+        void play(Sound *sound, float volume, float pan, bool loop);
+        
+        float soundVolume = 1.0f;
+        float musicVolume = 1.0f;
 
-		SoLoud::Soloud *soloud;
-		
-	private:
-		struct QueuedSound {
-			Sound* sound;
-			float volume;
-			float pan;
-			bool loop;
-		};
-		
-		std::vector<QueuedSound> soundQueue;
+        SoLoud::Soloud *soloud;
+        
+    private:
+        struct QueuedSound {
+            Sound* sound;
+            float volume;
+            float pan;
+            bool loop;
+        };
+        
+        std::vector<QueuedSound> soundQueue;
 
 };
 

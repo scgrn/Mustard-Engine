@@ -30,11 +30,11 @@ freely, subject to the following restrictions:
 namespace AB {
 
 Mat3::Mat3(Mat4 &mat4) {
-	for (int y = 0; y < 3; y++) {
-		for (int x = 0; x < 3; x++) {
-			data2d[y][x] = mat4.data2d[y][x];
-		}
-	}
+    for (int y = 0; y < 3; y++) {
+        for (int x = 0; x < 3; x++) {
+            data2d[y][x] = mat4.data2d[y][x];
+        }
+    }
 }
 
 Mat4 ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
@@ -52,18 +52,18 @@ Mat4 ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
     ret.data2d[3][1] = (top + bottom) * bt;
     ret.data2d[3][2] = (far + near) * nf;
 
-	return ret;
+    return ret;
 }
 
 Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
     Mat4 ret;
 
-	for (int y = 0; y < 4; y++) {
-		for (int x = 0; x < 4; x++) {
-			ret.data2d[y][x] = 0.0f;
-		}
-	}
-		
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            ret.data2d[y][x] = 0.0f;
+        }
+    }
+        
     f32 halfTanFOV = tan(fov * 0.5f);
     ret.data2d[0][0] = 1.0f / (aspect * halfTanFOV);
     ret.data2d[1][1] = 1.0f / halfTanFOV;
@@ -71,15 +71,15 @@ Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
     ret.data2d[2][3] = -1.0f;
     ret.data2d[3][2] = -((2.0f * far * near) / (far - near));
 
-	return ret;
+    return ret;
 }
 
 Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
-	Mat4 ret;
-	
-	axis = normalize(axis);
+    Mat4 ret;
+    
+    axis = normalize(axis);
 
-	float sinTheta = sin(toRadians(theta));
+    float sinTheta = sin(toRadians(theta));
     float cosTheta = cos(toRadians(theta));
     float cosValue = 1.0f - cosTheta;
 
@@ -99,23 +99,23 @@ Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
 }
 
 Mat4 translate(Vec3 offset) {
-	Mat4 ret;
-	
-	ret.data2d[3][0] = offset.x;
-	ret.data2d[3][1] = offset.y;
-	ret.data2d[3][2] = offset.z;
-	
-	return ret;
+    Mat4 ret;
+    
+    ret.data2d[3][0] = offset.x;
+    ret.data2d[3][1] = offset.y;
+    ret.data2d[3][2] = offset.z;
+    
+    return ret;
 }
 
 Mat4 scale(Vec3 scale) {
-	Mat4 ret;
-	
-	ret.data2d[0][0] = scale.x;
-	ret.data2d[1][1] = scale.y;
-	ret.data2d[2][2] = scale.z;
-	
-	return ret;
+    Mat4 ret;
+    
+    ret.data2d[0][0] = scale.x;
+    ret.data2d[1][1] = scale.y;
+    ret.data2d[2][2] = scale.z;
+    
+    return ret;
 }
 
 Mat4 rotateX(float theta) {
@@ -224,14 +224,14 @@ Mat4 inverse(Mat4 matrix) {
 Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     Mat4 ret;
     Vec3 zAxis;
-	
+    
     zAxis.x = target.x - position.x;
     zAxis.y = target.y - position.y;
     zAxis.z = target.z - position.z;
 
     zAxis = normalize(zAxis);
     Vec3 cross = crossProduct(zAxis, up);
-	Vec3 xAxis = normalize(cross);
+    Vec3 xAxis = normalize(cross);
     Vec3 yAxis = crossProduct(xAxis, zAxis);
 
     ret.data1d[0] = xAxis.x;
@@ -251,27 +251,27 @@ Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     ret.data1d[14] = dotProduct(zAxis, position);
     ret.data1d[15] = 1.0f;
 
-	//ret = translate(Vec3(-position.x, -position.y, -position.z)) * ret;
-	
+    //ret = translate(Vec3(-position.x, -position.y, -position.z)) * ret;
+    
     return ret;
 }
 
 Vec3 forward(Mat4 const& matrix) {
-	Vec3 forward;
-	forward.x = -matrix.data1d[2];
-	forward.y = -matrix.data1d[6];
-	forward.z = -matrix.data1d[10];
+    Vec3 forward;
+    forward.x = -matrix.data1d[2];
+    forward.y = -matrix.data1d[6];
+    forward.z = -matrix.data1d[10];
 
-	return normalize(forward);	
+    return normalize(forward);    
 }
 
 Vec3 backward(Mat4 const& matrix) {
-	Vec3 backward;
+    Vec3 backward;
     backward.x = matrix.data1d[2];
     backward.y = matrix.data1d[6];
     backward.z = matrix.data1d[10];
 
-	return normalize(backward);
+    return normalize(backward);
 }
 
 Vec3 up(Mat4 const& matrix) {
@@ -280,7 +280,7 @@ Vec3 up(Mat4 const& matrix) {
     up.y = matrix.data1d[5];
     up.z = matrix.data1d[9];
 
-    return normalize(up);	
+    return normalize(up);    
 }
 
 Vec3 down(Mat4 const& matrix) {

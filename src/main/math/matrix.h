@@ -58,13 +58,13 @@ struct Mat3 {
     Mat3() {
         loadIdentity();
     }
-	
-	Mat3(f32 data2d[]) {
-		// TODO: populate!
-	}
+    
+    Mat3(f32 data2d[]) {
+        // TODO: populate!
+    }
 
-	Mat3(Mat4 &mat4);
-	
+    Mat3(Mat4 &mat4);
+    
     void loadIdentity() {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
@@ -81,9 +81,9 @@ struct Mat3 {
         ret.z = data2d[0][2] * v.x + data2d[1][2] * v.y + data2d[2][2] * v.z + data2d[3][2];
 
         return ret;
-	}
+    }
 
-	Mat3 operator* (Mat3 const& m) {
+    Mat3 operator* (Mat3 const& m) {
         Mat3 ret;
 
         for (int c = 0; c < 3; c++) {
@@ -99,34 +99,34 @@ struct Mat3 {
 };
 
 struct Mat4 {
-	union {
-		f32 data2d[4][4];
-		f32 data1d[16];
-	};
-	
+    union {
+        f32 data2d[4][4];
+        f32 data1d[16];
+    };
+    
     Mat4() {
         loadIdentity();
     }
-	
-	Mat4(f32 data2d[]) {
-		int index = 0;
+    
+    Mat4(f32 data2d[]) {
+        int index = 0;
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
-				this->data2d[y][x] = data2d[index];
-				index++;
-			}
-		}
-	}
+                this->data2d[y][x] = data2d[index];
+                index++;
+            }
+        }
+    }
 
-	Mat4(Mat3 m) {
-		loadIdentity();
-		
+    Mat4(Mat3 m) {
+        loadIdentity();
+        
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 data2d[y][x] = m.data2d[y][x];
             }
         }
-	}
+    }
 
     void loadIdentity() {
         for (int y = 0; y < 4; y++) {
@@ -144,7 +144,7 @@ struct Mat4 {
         ret.z = data2d[0][2] * v.x + data2d[1][2] * v.y + data2d[2][2] * v.z + data2d[3][2];
 
         return ret;
-	}
+    }
 
     Vec4 operator* (Vec4 const& v) {
         Vec4 ret;
@@ -157,7 +157,7 @@ struct Mat4 {
         return ret;
      }
 
-	Mat4 operator* (Mat4 const& m) {
+    Mat4 operator* (Mat4 const& m) {
         Mat4 ret;
 
         for (int c = 0; c < 4; c++) {

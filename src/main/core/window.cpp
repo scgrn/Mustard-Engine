@@ -35,20 +35,20 @@ extern Script script;
 extern OrthographicCamera camera2d;
 
 bool Window::startup(Application *app) {
-	LOG("Window subsystem startup", 0);
-	
-	window = NULL;
+    LOG("Window subsystem startup", 0);
+    
+    window = NULL;
 
-	setVideoMode(app);
-	
-	initialized = true;
+    setVideoMode(app);
+    
+    initialized = true;
 
-	return true;
+    return true;
 }
 
 void Window::shutdown() {
-	LOG("Window subsystem shutdown", 0);
-	
+    LOG("Window subsystem shutdown", 0);
+    
     SDL_DestroyWindow(window);
 }
 
@@ -60,8 +60,8 @@ void Window::setVideoMode(Application *app) {
     std::string title = "Application";
 
     //  read settings from lua
-	lua_State* luaVM = AB::script.getVM();
-	
+    lua_State* luaVM = AB::script.getVM();
+    
     lua_getglobal(luaVM, "videoConfig");
     if (!lua_isnil(luaVM, -1)) {
         lua_pushstring(luaVM, "fullscreen");
@@ -107,14 +107,14 @@ void Window::setVideoMode(Application *app) {
 
     lua_pop(luaVM, -1);
 
-	if (xRes == 0 || yRes == 0) {
+    if (xRes == 0 || yRes == 0) {
         xRes = 800;
         yRes = 480;
         fullscreen = false;
-	}
+    }
 
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
     Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_INPUT_GRABBED | SDL_WINDOW_HIDDEN;
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);    // needed? GODDAMMIT
@@ -144,7 +144,7 @@ void Window::setVideoMode(Application *app) {
     //windowFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
 #endif // DEBUG
 
-	if (window == NULL) {
+    if (window == NULL) {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -166,7 +166,7 @@ void Window::setVideoMode(Application *app) {
         if (app) {
             app->glContextCreated(xRes, yRes, fullscreen);
         }
-	} else {
+    } else {
         if (fullscreen) {
             SDL_SetWindowFullscreen(window, windowFlags);
         } else {
@@ -175,45 +175,45 @@ void Window::setVideoMode(Application *app) {
             SDL_SetWindowPosition(window, windowXPos, windowYPos);
         }
         SDL_GL_SetSwapInterval(vsync ? 1 : 0);
-	}
+    }
 
     SDL_DisableScreenSaver();
-	
-	gladLoadGLLoader(SDL_GL_GetProcAddress);
-	glEnable(GL_MULTISAMPLE);
+    
+    gladLoadGLLoader(SDL_GL_GetProcAddress);
+    glEnable(GL_MULTISAMPLE);
 
-	//	avoids white screen flash at startup
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+    //    avoids white screen flash at startup
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     SDL_GL_SwapWindow(window);
-	SDL_ShowWindow(window);
-	
-	LOG("\tVendor: %s", glGetString(GL_VENDOR));
-	LOG("\tRenderer: %s", glGetString(GL_RENDERER));
-	LOG("\tVersion: %s", glGetString(GL_VERSION));
-	LOG("\tShading language version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	
-	// TODO: clean this up. replace the stack vars above
-	currentMode.xRes = xRes;
-	currentMode.yRes = yRes;
-	currentMode.fullscreen = fullscreen;
-	currentMode.vsync = vsync;
-	
-	camera2d.setProjection(0, currentMode.xRes, currentMode.yRes, 0);
+    SDL_ShowWindow(window);
+    
+    LOG("\tVendor: %s", glGetString(GL_VENDOR));
+    LOG("\tRenderer: %s", glGetString(GL_RENDERER));
+    LOG("\tVersion: %s", glGetString(GL_VERSION));
+    LOG("\tShading language version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+    
+    // TODO: clean this up. replace the stack vars above
+    currentMode.xRes = xRes;
+    currentMode.yRes = yRes;
+    currentMode.fullscreen = fullscreen;
+    currentMode.vsync = vsync;
+    
+    camera2d.setProjection(0, currentMode.xRes, currentMode.yRes, 0);
 }
 
 Vec2 Window::getDesktopResolution() {
-	Vec2 res;
-	
-	SDL_DisplayMode dm;
-	if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
-		LOG("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
-	} else {
-		res.x = dm.w;
-		res.y = dm.h;
-	}
-	
-	return res;
+    Vec2 res;
+    
+    SDL_DisplayMode dm;
+    if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
+        LOG("SDL_GetDesktopDisplayMode failed: %s", SDL_GetError());
+    } else {
+        res.x = dm.w;
+        res.y = dm.h;
+    }
+    
+    return res;
 }
 
 void Window::present() {
@@ -222,7 +222,7 @@ void Window::present() {
 }
 
 void Window::resetViewport() {
-	CALL_GL(glViewport(0, 0, currentMode.xRes, currentMode.yRes));
+    CALL_GL(glViewport(0, 0, currentMode.xRes, currentMode.yRes));
 }
 
 }

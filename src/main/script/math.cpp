@@ -71,13 +71,13 @@ static int luaRandomSeed(lua_State* luaVM) {
 static int luaRandom(lua_State* luaVM) {
     if (lua_gettop(luaVM) == 1) {
         u32 n = (u32)lua_tointeger(luaVM, 1);
-    	lua_pushinteger(luaVM, rnd(n) + 1);
+        lua_pushinteger(luaVM, rnd(n) + 1);
     } else if (lua_gettop(luaVM) >= 2) {
         i32 lb = (i32)lua_tointeger(luaVM, 1);
         i32 ub = (i32)lua_tointeger(luaVM, 2);
-    	lua_pushinteger(luaVM, rnd(lb, ub));
+        lua_pushinteger(luaVM, rnd(lb, ub));
     } else {
-    	lua_pushnumber(luaVM, rnd());
+        lua_pushnumber(luaVM, rnd());
     }
 
     return 1;
@@ -87,7 +87,7 @@ static int luaRandom(lua_State* luaVM) {
 // @param seed (optional) Seeds the Perlin noise generator for deterministic ouput
 // @function AB.math.noiseSeed
 static int luaNoiseSeed(lua_State *luaVM) {
-	u32 seed = (u32)lua_tointeger(luaVM, 1);
+    u32 seed = (u32)lua_tointeger(luaVM, 1);
     perlinNoise = PerlinNoise(seed);
 
     return 0;

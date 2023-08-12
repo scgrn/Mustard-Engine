@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #include <cmath>
 
 namespace AB {
-	
+    
 template<class T>
 inline T min(T a, T b) {
     return a < b ? a : b;
@@ -55,25 +55,25 @@ inline T round(T val) {
 }
 
 float inline toRadians(float val) {
-	return val * (M_PI / 180.0f);
+    return val * (M_PI / 180.0f);
 }
 
 float inline toDegrees(float val) {
-	return val / (M_PI / 180.0f);
+    return val / (M_PI / 180.0f);
 }
 
 //  round up to next highest power of 2
 //  from http://graphics.stanford.edu/~seander/bithacks.html
 inline int nextPowerOfTwo(int v) {
-	v--;
-	v |= v >> 1;
-	v |= v >> 2;
-	v |= v >> 4;
-	v |= v >> 8;
-	v |= v >> 16;
-	v++;
+    v--;
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v++;
 
-	return v;
+    return v;
 }
 
 template<class T>
@@ -81,7 +81,7 @@ T greatestCommonDevisor(T a, T b) {
     return (b == 0) ? a : greatestCommonDevisor(b, a % b);
 }
 
-}	// namespace
+}    // namespace
 
 #include "vector.h"
 #include "matrix.h"

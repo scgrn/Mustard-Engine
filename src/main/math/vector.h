@@ -144,9 +144,9 @@ template <typename T> struct Vector<T, 2> {
 
     Vector<T, 2>() : x(0), y(0) {}
     Vector<T, 2>(T x, T y) : x(x), y(y) {}
-	Vector<T, 2>(Vector<T, 3> v) : x(v.x), y(v.y) {}
-	Vector<T, 2>(Vector<T, 4> v) : x(v.x), y(v.y) {}
-	
+    Vector<T, 2>(Vector<T, 3> v) : x(v.x), y(v.y) {}
+    Vector<T, 2>(Vector<T, 4> v) : x(v.x), y(v.y) {}
+    
     //  Subscript
     T& operator[](int i) { return data[i]; }
     const T& operator[](int i) const { return data[i]; }
@@ -233,8 +233,8 @@ template <typename T> struct Vector<T, 3> {
 
     Vector<T, 3>() : x(0), y(0), z(0) {}
     Vector<T, 3>(T x, T y, T z) : x(x), y(y), z(z) {}
-	Vector<T, 3>(Vector<T, 2> v) : x(v.x), y(v.y), z(0) {}
-	Vector<T, 3>(Vector<T, 4> v) : x(v.x), y(v.y), z(v.z) {}
+    Vector<T, 3>(Vector<T, 2> v) : x(v.x), y(v.y), z(0) {}
+    Vector<T, 3>(Vector<T, 4> v) : x(v.x), y(v.y), z(v.z) {}
 
     //  Subscript
     T& operator[](int i) { return data[i]; }
@@ -339,9 +339,9 @@ template <typename T> struct Vector<T, 4> {
 
     Vector<T, 4>() : x(0), y(0), z(0), w(0) {}
     Vector<T, 4>(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-	Vector<T, 4>(Vector<T, 2> v) : x(v.x), y(v.y), z(0), w(0) {}
-	Vector<T, 4>(Vector<T, 3> v) : x(v.x), y(v.y), z(v.z), w(0) {}
-	
+    Vector<T, 4>(Vector<T, 2> v) : x(v.x), y(v.y), z(0), w(0) {}
+    Vector<T, 4>(Vector<T, 3> v) : x(v.x), y(v.y), z(v.z), w(0) {}
+    
     //  Addition, subtraction, multiplication, division
     Vector<T, 4> operator- (const Vector<T, 4> &v) {
         Vector<T, 4> ret;
@@ -446,27 +446,27 @@ float magnitude(Vector<T, n> const& v) {
 
 template <typename T, int n>
 Vector<T, n> normalize(Vector<T, n> &v) {
-	float l = magnitude(v);
+    float l = magnitude(v);
 
-	if (l != 0.0f) {
-	    Vector<T, n> ret = v / l;
-	    return ret;
-	}
+    if (l != 0.0f) {
+        Vector<T, n> ret = v / l;
+        return ret;
+    }
 
-	return v;
+    return v;
 }
 
 template <typename T, int n>
 Vector<T, n> truncate(Vector<T, n> &v, float const& length) {
-	float l = magnitude(v);
+    float l = magnitude(v);
 
-	if (l > length) {
-	    Vector<T, n> ret = v / l;
-		ret *= length;
-		return ret;
-	}
+    if (l > length) {
+        Vector<T, n> ret = v / l;
+        ret *= length;
+        return ret;
+    }
 
-	return v;
+    return v;
 }
 
 template <typename T, int n>

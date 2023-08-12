@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 
 **/
 
-//	memory.cpp
+//    memory.cpp
 
 // https://stackoverflow.com/questions/8186018/how-to-properly-replace-global-new-delete-operators
 // https://en.cppreference.com/w/cpp/memory/new/operator_new
@@ -51,18 +51,18 @@ struct MemoryAnalytics {
 static MemoryAnalytics analytics;
 
 void* operator new(std::size_t sz, const char *file, int line) {
-	analytics.used += sz;
+    analytics.used += sz;
 
 #ifdef DEBUG
-	LOG("Allocating %zu bytes from %s, line %d. Current memory allocated: %zu", sz, file, line, analytics.used);
+    LOG("Allocating %zu bytes from %s, line %d. Current memory allocated: %zu", sz, file, line, analytics.used);
 #endif // DEBUG
 
-	void *ptr = std::malloc(sz);
-	if (ptr) {
-		return ptr;
-	} else {
-		throw std::bad_alloc{};
-	}
+    void *ptr = std::malloc(sz);
+    if (ptr) {
+        return ptr;
+    } else {
+        throw std::bad_alloc{};
+    }
 }
 
 void* operator new[](std::size_t sz, const char *file, int line) {
@@ -71,12 +71,12 @@ void* operator new[](std::size_t sz, const char *file, int line) {
 
 
 void operator delete(void* ptr, std::size_t sz) noexcept {
-	analytics.used -= sz;
+    analytics.used -= sz;
 
-	std::free(ptr);
+    std::free(ptr);
 
 #ifdef DEBUG
-	LOG("Freeing %zu bytes. Current memory allocated: %zu", sz, analytics.used);
+    LOG("Freeing %zu bytes. Current memory allocated: %zu", sz, analytics.used);
 #endif // DEBUG
 }
 

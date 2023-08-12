@@ -85,12 +85,12 @@ static int luaResetVideo(lua_State* luaVM) {
 // @return xRes X resolution
 // @return yRes Y resolution
 static int luaGetDesktopResolution(lua_State* luaVM) {
-	Vec2 res = window.getDesktopResolution();
-	
-	lua_pushnumber(luaVM, res.x);
-	lua_pushnumber(luaVM, res.y);
+    Vec2 res = window.getDesktopResolution();
+    
+    lua_pushnumber(luaVM, res.x);
+    lua_pushnumber(luaVM, res.y);
 
-	return 2;
+    return 2;
 }
 
 /// Clears the screen or current canvas
@@ -100,29 +100,29 @@ static int luaGetDesktopResolution(lua_State* luaVM) {
 // @param b (0.0) Blue color component
 // @param a (1.0) Alpha component
 static int luaClear(lua_State* luaVM) {
-	float r = 0.0f;
-	float g = 0.0f;
-	float b = 0.0f;
-	float a = 1.0f;
-	
+    float r = 0.0f;
+    float g = 0.0f;
+    float b = 0.0f;
+    float a = 1.0f;
+    
     if (lua_gettop(luaVM) >= 1) {
-		r = (float)lua_tonumber(luaVM, 1);
+        r = (float)lua_tonumber(luaVM, 1);
     }
     if (lua_gettop(luaVM) >= 2) {
-		g = (float)lua_tonumber(luaVM, 2);
+        g = (float)lua_tonumber(luaVM, 2);
     }
     if (lua_gettop(luaVM) >= 3) {
-		b = (float)lua_tonumber(luaVM, 3);
+        b = (float)lua_tonumber(luaVM, 3);
     }
     if (lua_gettop(luaVM) >= 4) {
-		a = (float)lua_tonumber(luaVM, 4);
+        a = (float)lua_tonumber(luaVM, 4);
     }
-	renderer.clear(r, g, b, a);
-	
-	return 0;
+    renderer.clear(r, g, b, a);
+    
+    return 0;
 }
 
-///	Loads a sprite
+///    Loads a sprite
 // @function AB.graphics.loadSprite
 // @param filename Filename
 // @param collisionMask (true) If a collision mask should be created
@@ -136,21 +136,21 @@ static int luaLoadSprite(lua_State* luaVM) {
         createMask = (bool)lua_toboolean(luaVM, 2);
     }
 
-	int index;
+    int index;
     if (lua_gettop(luaVM) >= 3) {
         index = (int)lua_tonumber(luaVM, 3);
     } else {
-		index = spriteHandle;
-		spriteHandle++;
-	}
+        index = spriteHandle;
+        spriteHandle++;
+    }
 
     sprites.mapResource(index, filename);
     if (createMask) {
         sprites.get(index)->buildCollisionMask();
     }
 
-	//  return handle
-	lua_pushnumber(luaVM, index);
+    //  return handle
+    lua_pushnumber(luaVM, index);
 
     return 1;
 }
@@ -166,28 +166,28 @@ static int luaLoadSprite(lua_State* luaVM) {
 // @return number of sprites loaded
 static int luaLoadAtlas(lua_State* luaVM) {
     std::string filename = std::string(lua_tostring(luaVM, 1));
-	int width = (int)lua_tonumber(luaVM, 2);
-	int height = (int)lua_tonumber(luaVM, 3);
-	
+    int width = (int)lua_tonumber(luaVM, 2);
+    int height = (int)lua_tonumber(luaVM, 3);
+    
     bool createMask = true;
     if (lua_gettop(luaVM) >= 4) {
         createMask = (bool)lua_toboolean(luaVM, 4);
     }
 
-	int index;
-	int spritesLoaded;
+    int index;
+    int spritesLoaded;
     if (lua_gettop(luaVM) >= 5) {
         index = (int)lua_tonumber(luaVM, 5);
-		spritesLoaded = loadAtlas(filename, index, width, height, createMask);
+        spritesLoaded = loadAtlas(filename, index, width, height, createMask);
     } else {
-		index = spriteHandle;
-		spritesLoaded = loadAtlas(filename, index, width, height, createMask);
-		spriteHandle += spritesLoaded;
-	}
+        index = spriteHandle;
+        spritesLoaded = loadAtlas(filename, index, width, height, createMask);
+        spriteHandle += spritesLoaded;
+    }
 
-	//  return handle and number of sprites loaded
-	lua_pushnumber(luaVM, index);
-	lua_pushnumber(luaVM, spritesLoaded);
+    //  return handle and number of sprites loaded
+    lua_pushnumber(luaVM, index);
+    lua_pushnumber(luaVM, spritesLoaded);
 
     return 2;
 }
@@ -211,7 +211,7 @@ static int luaBuildAtlas(lua_State* luaVM) {
     return 0;
 }
 
-///	Queues a sprite to be renderer on the screen or current canvas.
+///    Queues a sprite to be renderer on the screen or current canvas.
 // @function AB.graphics.renderSprite
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param index Sprite index
@@ -231,24 +231,24 @@ static int luaRenderSprite(lua_State* luaVM) {
     float angle = 0.0f;
     float scaleX = 1.0f;
     float scaleY = 1.0f;
-	
+    
     if (lua_gettop(luaVM) >= 5) {
-		z = (float)lua_tonumber(luaVM, 5);
+        z = (float)lua_tonumber(luaVM, 5);
     }
     if (lua_gettop(luaVM) >= 6) {
-		angle = (float)lua_tonumber(luaVM, 6);
+        angle = (float)lua_tonumber(luaVM, 6);
     }
     if (lua_gettop(luaVM) >= 7) {
-		scaleX = (float)lua_tonumber(luaVM, 7);
+        scaleX = (float)lua_tonumber(luaVM, 7);
     }
     if (lua_gettop(luaVM) >= 8) {
-		scaleY = (float)lua_tonumber(luaVM, 8);
+        scaleY = (float)lua_tonumber(luaVM, 8);
     } else {
         scaleY = scaleX;
     }
 
-	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
-	sprites.get(index)->render(batchRenderer, Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
+    RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
+    sprites.get(index)->render(batchRenderer, Vec3(x, y, z), angle, Vec2(scaleX, scaleY), currentColor);
 
     return 0;
 }
@@ -265,12 +265,12 @@ static int luaSpriteSize(lua_State* luaVM) {
     int height = sprites.get(index)->height;
 
     lua_pushinteger(luaVM, width);
-	lua_pushinteger(luaVM, height);
+    lua_pushinteger(luaVM, height);
 
     return 2;
 }
 
-///	Queues a quad to be renderer on the screen or current canvas.
+///    Queues a quad to be renderer on the screen or current canvas.
 // @function AB.graphics.renderQuad
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param width Width
@@ -290,23 +290,23 @@ static int luaRenderQuad(lua_State* luaVM) {
     float angle = 0.0f;
 
     if (lua_gettop(luaVM) >= 6) {
-		z = (float)lua_tonumber(luaVM, 6);
+        z = (float)lua_tonumber(luaVM, 6);
     }
     if (lua_gettop(luaVM) >= 7) {
-		angle = (float)lua_tonumber(luaVM, 7);
+        angle = (float)lua_tonumber(luaVM, 7);
     }
-	
-	RenderLayer::Quad quad;
-	
-	quad.pos = Vec3(x, y, z);
-	quad.size = Vec2(width, height);
-	quad.scale = Vec2(1.0f, 1.0f);
-	quad.rotation = angle;
-	quad.uv = Vec4(0, 0, 1, 1);
-	quad.textureID = 0;
-	quad.color = currentColor;
+    
+    RenderLayer::Quad quad;
+    
+    quad.pos = Vec3(x, y, z);
+    quad.size = Vec2(width, height);
+    quad.scale = Vec2(1.0f, 1.0f);
+    quad.rotation = angle;
+    quad.uv = Vec4(0, 0, 1, 1);
+    quad.textureID = 0;
+    quad.color = currentColor;
 
-	renderer.layers[layer]->renderQuad(quad);
+    renderer.layers[layer]->renderQuad(quad);
 
     return 0;
 }
@@ -329,14 +329,14 @@ static int luaRenderTri(lua_State* luaVM) {
     float x3 = (float)lua_tonumber(luaVM, 6);
     float y3 = (float)lua_tonumber(luaVM, 7);
 
-	renderer.layers[layer]->setColor(currentColor); 	// TODO: move this to renderer.state
-	renderer.layers[layer]->renderTri(x1, y1, x2, y2, x3, y3);
-	
-	return 0;
+    renderer.layers[layer]->setColor(currentColor);     // TODO: move this to renderer.state
+    renderer.layers[layer]->renderTri(x1, y1, x2, y2, x3, y3);
+    
+    return 0;
 }
 
 
-///	Queues an arc to be renderer on the screen or current canvas.
+///    Queues an arc to be renderer on the screen or current canvas.
 // @function AB.graphics.renderArc
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param x X position
@@ -352,16 +352,16 @@ static int luaRenderArc(lua_State* luaVM) {
     float radius = (float)lua_tonumber(luaVM, 4);
     float angle1 = (float)lua_tonumber(luaVM, 5);
     float angle2 = (float)lua_tonumber(luaVM, 6);
-	
-	int segments = 8;
+    
+    int segments = 8;
     if (lua_gettop(luaVM) >= 7) {
-		segments = (int)lua_tonumber(luaVM, 7);
+        segments = (int)lua_tonumber(luaVM, 7);
     }
 
-	renderer.layers[layer]->setColor(currentColor); 	// TODO: move this to renderer.state
-	renderer.layers[layer]->renderArc(x, y, radius, angle1, angle2, segments);
-	
-	return 0;
+    renderer.layers[layer]->setColor(currentColor);     // TODO: move this to renderer.state
+    renderer.layers[layer]->renderArc(x, y, radius, angle1, angle2, segments);
+    
+    return 0;
 }
 
 /// Renders a list of line segments
@@ -371,33 +371,33 @@ static int luaRenderArc(lua_State* luaVM) {
 static int luaRenderLines(lua_State* luaVM) {
     int layer = (int)lua_tonumber(luaVM, 1);
 
-	if (!lua_istable(luaVM, -1)) {
-		LOG("Not a table!", 0);
-	}
-	
-	//  make sure array is %4
-	size_t length = lua_rawlen(luaVM, -1);
-	if (length % 4 != 0) {
-		LOG("Vertex size is not multiple of four!", 0);
-	}
+    if (!lua_istable(luaVM, -1)) {
+        LOG("Not a table!", 0);
+    }
+    
+    //  make sure array is %4
+    size_t length = lua_rawlen(luaVM, -1);
+    if (length % 4 != 0) {
+        LOG("Vertex size is not multiple of four!", 0);
+    }
 
-	// https://dav3.co/blog/looping-through-lua-table-in-c/
-	float endpoints[length];
-	for (int i = 0; i <= length; i++) {
-		lua_pushinteger(luaVM, i + 1);
-		
-		lua_gettable(luaVM, -2);
-		if (lua_type(luaVM, -1) == LUA_TNIL) {
-			break;
-		}
-		endpoints[i] = luaL_checknumber(luaVM, -1);
-		lua_pop(luaVM, 1);
-	}
-	
-	renderer.layers[layer]->setColor(currentColor); 	// TODO: move this to renderer.state
-	renderer.layers[layer]->renderLines(endpoints, length / 4);
+    // https://dav3.co/blog/looping-through-lua-table-in-c/
+    float endpoints[length];
+    for (int i = 0; i <= length; i++) {
+        lua_pushinteger(luaVM, i + 1);
+        
+        lua_gettable(luaVM, -2);
+        if (lua_type(luaVM, -1) == LUA_TNIL) {
+            break;
+        }
+        endpoints[i] = luaL_checknumber(luaVM, -1);
+        lua_pop(luaVM, 1);
+    }
+    
+    renderer.layers[layer]->setColor(currentColor);     // TODO: move this to renderer.state
+    renderer.layers[layer]->renderLines(endpoints, length / 4);
 
-	return 0;
+    return 0;
 }
 
 /// Sets current (premultiplied) color
@@ -408,34 +408,34 @@ static int luaRenderLines(lua_State* luaVM) {
 // @param opacity (1.0) Opacity
 // @param additivity (0.0) Additivity
 static int luaSetColor(lua_State* luaVM) {
-	float r = 1.0f;
-	float g = 1.0f;
-	float b = 1.0f;
-	float opacity = 1.0f;
-	float additivity = 0.0f;
-	
+    float r = 1.0f;
+    float g = 1.0f;
+    float b = 1.0f;
+    float opacity = 1.0f;
+    float additivity = 0.0f;
+    
     if (lua_gettop(luaVM) >= 1) {
-		r = (float)lua_tonumber(luaVM, 1);
+        r = (float)lua_tonumber(luaVM, 1);
     }
     if (lua_gettop(luaVM) >= 2) {
-		g = (float)lua_tonumber(luaVM, 2);
+        g = (float)lua_tonumber(luaVM, 2);
     }
     if (lua_gettop(luaVM) >= 3) {
-		b = (float)lua_tonumber(luaVM, 3);
+        b = (float)lua_tonumber(luaVM, 3);
     }
     if (lua_gettop(luaVM) >= 4) {
-		opacity = (float)lua_tonumber(luaVM, 4);
+        opacity = (float)lua_tonumber(luaVM, 4);
     }
     if (lua_gettop(luaVM) >= 5) {
-		additivity = (float)lua_tonumber(luaVM, 5);
+        additivity = (float)lua_tonumber(luaVM, 5);
     }
-	
-	currentColor = Vec4(r * opacity, g * opacity, b * opacity, 1.0f - additivity);
+    
+    currentColor = Vec4(r * opacity, g * opacity, b * opacity, 1.0f - additivity);
 
-	return 0;
+    return 0;
 }
 
-///	Creates a rendering canvas.
+///    Creates a rendering canvas.
 // @function AB.graphics.createCanvas
 // @param width Width of canvas
 // @param height Height of canvas
@@ -445,61 +445,61 @@ static int luaCreateCanvas(lua_State* luaVM) {
     int width = (int)lua_tonumber(luaVM, 1);
     int height = (int)lua_tonumber(luaVM, 2);
 
-	int index;
+    int index;
     if (lua_gettop(luaVM) >= 3) {
         index = (int)lua_tonumber(luaVM, 3);
     } else {
-		index = canvasHandle;
-		canvasHandle++;
-	}
-	renderer.canvases[index] = new RenderTarget(width, height);
+        index = canvasHandle;
+        canvasHandle++;
+    }
+    renderer.canvases[index] = new RenderTarget(width, height);
 
-	//  return handle
-	lua_pushnumber(luaVM, index);
+    //  return handle
+    lua_pushnumber(luaVM, index);
 
-	return 1;
+    return 1;
 }
 
-///	Deletes a canvas.
+///    Deletes a canvas.
 // @function AB.graphics.deleteCanvas
 // @param index Handle to canvas
 static int luaDeleteCanvas(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
-	std::map<int, AB::RenderTarget*>::iterator it;
-	it = renderer.canvases.find(index);
-	delete renderer.canvases[index];
-	renderer.canvases.erase(it);
+    std::map<int, AB::RenderTarget*>::iterator it;
+    it = renderer.canvases.find(index);
+    delete renderer.canvases[index];
+    renderer.canvases.erase(it);
 
-	return 0;
+    return 0;
 }
 
-///	Uses a canvas for rendering. Pass 0 to restore default frameBuffer.
+///    Uses a canvas for rendering. Pass 0 to restore default frameBuffer.
 // @function AB.graphics.useCanvas
 // @param index
 static int luaUseCanvas(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
-	renderer.render(camera2d);
-	
-	if (currentRenderTarget != 0) {
-		renderer.canvases[currentRenderTarget]->end();
-	}
-	
-	currentRenderTarget = index;
-	if (currentRenderTarget != 0) {
-		renderer.canvases[currentRenderTarget]->begin();
-		
-		//	TODO: not sure about setting the projection this way.. (y coords are flipped)
-		camera2d.setProjection(0, renderer.canvases[currentRenderTarget]->width, 0, renderer.canvases[currentRenderTarget]->height);
-	} else {
-		camera2d.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
-	}
-	
-	return 0;
+    renderer.render(camera2d);
+    
+    if (currentRenderTarget != 0) {
+        renderer.canvases[currentRenderTarget]->end();
+    }
+    
+    currentRenderTarget = index;
+    if (currentRenderTarget != 0) {
+        renderer.canvases[currentRenderTarget]->begin();
+        
+        //    TODO: not sure about setting the projection this way.. (y coords are flipped)
+        camera2d.setProjection(0, renderer.canvases[currentRenderTarget]->width, 0, renderer.canvases[currentRenderTarget]->height);
+    } else {
+        camera2d.setProjection(0, window.currentMode.xRes, window.currentMode.yRes, 0);
+    }
+    
+    return 0;
 }
 
-///	Queues a canvas's texture to be renderer on the screen or another canvas.
+///    Queues a canvas's texture to be renderer on the screen or another canvas.
 // @function AB.graphics.renderCanvas
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param index Canvas index
@@ -519,38 +519,38 @@ static int luaRenderCanvas(lua_State* luaVM) {
     float angle = 0.0f;
     float scaleX = 1.0f;
     float scaleY = 1.0f;
-	
+    
     if (lua_gettop(luaVM) >= 5) {
-		z = (float)lua_tonumber(luaVM, 5);
+        z = (float)lua_tonumber(luaVM, 5);
     }
     if (lua_gettop(luaVM) >= 6) {
-		angle = (float)lua_tonumber(luaVM, 6);
+        angle = (float)lua_tonumber(luaVM, 6);
     }
     if (lua_gettop(luaVM) >= 7) {
-		scaleX = (float)lua_tonumber(luaVM, 7);
+        scaleX = (float)lua_tonumber(luaVM, 7);
     }
     if (lua_gettop(luaVM) >= 8) {
-		scaleY = (float)lua_tonumber(luaVM, 8);
+        scaleY = (float)lua_tonumber(luaVM, 8);
     } else {
         scaleY = scaleX;
     }
 
-	RenderTarget *canvas = renderer.canvases[index];
-	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
-	
-	RenderLayer::Quad quad;
-	
-	quad.pos = Vec3(x, y, z);
-	quad.size = Vec2(canvas->width, canvas->height);
-	quad.scale = Vec2(scaleX, scaleY);
-	quad.rotation = angle;
-	quad.uv = Vec4(0, 0, 1, 1);
-	quad.textureID = canvas->texture;
-	quad.color = currentColor;
+    RenderTarget *canvas = renderer.canvases[index];
+    RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layer]);
+    
+    RenderLayer::Quad quad;
+    
+    quad.pos = Vec3(x, y, z);
+    quad.size = Vec2(canvas->width, canvas->height);
+    quad.scale = Vec2(scaleX, scaleY);
+    quad.rotation = angle;
+    quad.uv = Vec4(0, 0, 1, 1);
+    quad.textureID = canvas->texture;
+    quad.color = currentColor;
 
-	batchRenderer->renderQuad(quad);
-	
-	return 0;
+    batchRenderer->renderQuad(quad);
+    
+    return 0;
 }
 
 /// Creates a new rendering layer. (RenderLayer internally). Layers are renderered back to front, largest indices first.
@@ -562,26 +562,26 @@ static int luaRenderCanvas(lua_State* luaVM) {
 static int luaCreateLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     bool depthSorting = false;
-	if (lua_gettop(luaVM) >= 2) {
-		depthSorting = (bool)lua_toboolean(luaVM, 2);
+    if (lua_gettop(luaVM) >= 2) {
+        depthSorting = (bool)lua_toboolean(luaVM, 2);
     }
-	renderer.layers[index] = new RenderLayer(nullptr, nullptr, blend::identity(), depthSorting);
+    renderer.layers[index] = new RenderLayer(nullptr, nullptr, blend::identity(), depthSorting);
 
-	lua_pushnumber(luaVM, index);
+    lua_pushnumber(luaVM, index);
 
-	return 1;
+    return 1;
 }
 
-///	Removes a rendering layer
+///    Removes a rendering layer
 // @function AB.graphics.removeLayer
 // @param index Layer index
 static int luaRemoveLayer(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
-	auto iterator = renderer.layers.find(index);
-	renderer.layers.erase(iterator);
+    auto iterator = renderer.layers.find(index);
+    renderer.layers.erase(iterator);
 
-	return 0;
+    return 0;
 }
 
 /// Adds a color transform for layer. Chained with any previous color transforms
@@ -597,56 +597,56 @@ static int luaRemoveLayer(lua_State* luaVM) {
 // @see colorTransforms
 static int luaAddColorTransform(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-	int colorTransform = (int)lua_tonumber(luaVM, 2);
-	
-	float r = 1.0f;
-	float g = 1.0f;
-	float b = 1.0f;
-	float a = 1.0f;
-	
-	if (lua_gettop(luaVM) >= 3) {
-		r = (float)lua_tonumber(luaVM, 3);
+    int colorTransform = (int)lua_tonumber(luaVM, 2);
+    
+    float r = 1.0f;
+    float g = 1.0f;
+    float b = 1.0f;
+    float a = 1.0f;
+    
+    if (lua_gettop(luaVM) >= 3) {
+        r = (float)lua_tonumber(luaVM, 3);
     }
-	if (lua_gettop(luaVM) >= 4) {
-		g = (float)lua_tonumber(luaVM, 4);
+    if (lua_gettop(luaVM) >= 4) {
+        g = (float)lua_tonumber(luaVM, 4);
     }
-	if (lua_gettop(luaVM) >= 5) {
-		b = (float)lua_tonumber(luaVM, 5);
+    if (lua_gettop(luaVM) >= 5) {
+        b = (float)lua_tonumber(luaVM, 5);
     }
-	if (lua_gettop(luaVM) >= 6) {
-		a = (float)lua_tonumber(luaVM, 6);
+    if (lua_gettop(luaVM) >= 6) {
+        a = (float)lua_tonumber(luaVM, 6);
     }
-	
-	float theta = r;
-	float value = r;
+    
+    float theta = r;
+    float value = r;
 
-	Mat4 transform;
-	switch (colorTransform) {
-		case 0: transform = blend::identity(); break;
-		case 1: transform = blend::invert(); break;
-		case 2: transform = blend::multiply(r, g, b); break;
-		case 3: transform = blend::screen(r, g, b); break;
-		case 4: transform = blend::colorFill(r, g, b, a); break;
-		case 5: transform = blend::linearDodge(r, g, b); break;
-		case 6: transform = blend::linearBurn(r, g, b); break;
-		case 7: transform = blend::colorDodge(r, g, b); break;
-		case 8: transform = blend::colorBurn(r, g, b); break;
-		case 9: transform = blend::tintedMonochrome(r, g, b, a); break;
-		case 10: transform = blend::hueShift(theta); break;
-		case 11: transform = blend::saturate(value); break;
-		case 12: transform = blend::brightness(value); break;
-		case 13: transform = blend::darkness(value); break;
-		case 14: transform = blend::contrast(value); break;
-		case 15: transform = blend::swapRG(); break;
-		case 16: transform = blend::swapRB(); break;
-		case 17: transform = blend::swapGB(); break;
-		
-		default: break;
-	}
+    Mat4 transform;
+    switch (colorTransform) {
+        case 0: transform = blend::identity(); break;
+        case 1: transform = blend::invert(); break;
+        case 2: transform = blend::multiply(r, g, b); break;
+        case 3: transform = blend::screen(r, g, b); break;
+        case 4: transform = blend::colorFill(r, g, b, a); break;
+        case 5: transform = blend::linearDodge(r, g, b); break;
+        case 6: transform = blend::linearBurn(r, g, b); break;
+        case 7: transform = blend::colorDodge(r, g, b); break;
+        case 8: transform = blend::colorBurn(r, g, b); break;
+        case 9: transform = blend::tintedMonochrome(r, g, b, a); break;
+        case 10: transform = blend::hueShift(theta); break;
+        case 11: transform = blend::saturate(value); break;
+        case 12: transform = blend::brightness(value); break;
+        case 13: transform = blend::darkness(value); break;
+        case 14: transform = blend::contrast(value); break;
+        case 15: transform = blend::swapRG(); break;
+        case 16: transform = blend::swapRB(); break;
+        case 17: transform = blend::swapGB(); break;
+        
+        default: break;
+    }
 
-	renderer.layers[index]->colorTransform = renderer.layers[index]->colorTransform * transform;
-	
-	return 0;
+    renderer.layers[index]->colorTransform = renderer.layers[index]->colorTransform * transform;
+    
+    return 0;
 }
 
 /// Resets any color transformation for layer.
@@ -654,11 +654,11 @@ static int luaAddColorTransform(lua_State* luaVM) {
 // @param index Layer index
 static int luaResetColorTransforms(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-	
-	RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[index]);
-	batchRenderer->colorTransform = blend::identity();
-	
-	return 0;
+    
+    RenderLayer *batchRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[index]);
+    batchRenderer->colorTransform = blend::identity();
+    
+    return 0;
 }
 
 /// Loads a shader program. ".vert" will be appended to the filename for the vertex shader,
@@ -670,9 +670,9 @@ static int luaLoadShader(lua_State* luaVM) {
     std::string filename = std::string(lua_tostring(luaVM, 1));
     int index = (int)lua_tonumber(luaVM, 2);
 
-	AB::shaders.mapResource(index, filename);
-	
-	return 0;
+    AB::shaders.mapResource(index, filename);
+    
+    return 0;
 }
 
 /// Sets a layer's shader
@@ -683,9 +683,9 @@ static int luaSetShader(lua_State* luaVM) {
     int layerIndex = (int)lua_tonumber(luaVM, 1);
     int shaderIndex = (int)lua_tonumber(luaVM, 2);
 
-	renderer.layers[layerIndex]->shader = shaders.get(shaderIndex);
-	
-	return 0;
+    renderer.layers[layerIndex]->shader = shaders.get(shaderIndex);
+    
+    return 0;
 }
 
 /// Sets a layer's batch shader
@@ -696,78 +696,78 @@ static int luaSetBatchShader(lua_State* luaVM) {
     int layerIndex = (int)lua_tonumber(luaVM, 1);
     int shaderIndex = (int)lua_tonumber(luaVM, 2);
 
-	renderer.layers[layerIndex]->batchShader = shaders.get(shaderIndex);
-	
-	return 0;
+    renderer.layers[layerIndex]->batchShader = shaders.get(shaderIndex);
+    
+    return 0;
 }
 
 /// Performs any pending rendering operations
 // @function AB.graphics.flushGraphics
 static int luaFlushGraphics(lua_State* luaVM) {
-	renderer.render(camera2d);
-	
-	return 0;
+    renderer.render(camera2d);
+    
+    return 0;
 }
 
 void registerGraphicsFunctions() {
     static const luaL_Reg graphicsFuncs[] = {
         { "resetVideo", luaResetVideo},
-		{ "getDesktopResolution", luaGetDesktopResolution},
-		{ "clear", luaClear},
-			
+        { "getDesktopResolution", luaGetDesktopResolution},
+        { "clear", luaClear},
+            
         { "loadSprite", luaLoadSprite},
-		{ "loadAtlas", luaLoadAtlas},
+        { "loadAtlas", luaLoadAtlas},
         { "addToAtlas", luaAddToAtlas},
         { "buildAtlas", luaBuildAtlas},
 
         { "renderSprite", luaRenderSprite},
         { "spriteSize", luaSpriteSize},
-		{ "renderQuad", luaRenderQuad},
-		{ "renderTri", luaRenderTri},
-		{ "renderArc", luaRenderArc},
-		{ "renderLines", luaRenderLines},
+        { "renderQuad", luaRenderQuad},
+        { "renderTri", luaRenderTri},
+        { "renderArc", luaRenderArc},
+        { "renderLines", luaRenderLines},
 
-		{ "setColor", luaSetColor},
-		{ "createCanvas", luaCreateCanvas},
-		{ "deleteCanvas", luaDeleteCanvas},
-		{ "useCanvas", luaUseCanvas},
-		{ "renderCanvas", luaRenderCanvas}, 
+        { "setColor", luaSetColor},
+        { "createCanvas", luaCreateCanvas},
+        { "deleteCanvas", luaDeleteCanvas},
+        { "useCanvas", luaUseCanvas},
+        { "renderCanvas", luaRenderCanvas}, 
 
-		{ "createLayer", luaCreateLayer},
-		{ "removeLayer", luaRemoveLayer},
-		
-		{ "addColorTransform", luaAddColorTransform},
-		{ "resetColorTransforms", luaResetColorTransforms},
+        { "createLayer", luaCreateLayer},
+        { "removeLayer", luaRemoveLayer},
+        
+        { "addColorTransform", luaAddColorTransform},
+        { "resetColorTransforms", luaResetColorTransforms},
 
-		{ "loadShader", luaLoadShader},
-		{ "setShader", luaSetShader},
-		{ "setBatchShader", luaSetBatchShader},
-		
-		{ "flushGraphics", luaFlushGraphics},
-		
+        { "loadShader", luaLoadShader},
+        { "setShader", luaSetShader},
+        { "setBatchShader", luaSetBatchShader},
+        
+        { "flushGraphics", luaFlushGraphics},
+        
         { NULL, NULL }
     };
     script.registerFuncs("AB", "graphics", graphicsFuncs);
 
-	script.execute("AB.graphics.colorTransforms = {"
-		"NONE = 0,"
-		"INVERT = 1,"
-		"MULTIPLY = 2,"
-		"SCREEN = 3,"
-		"COLOR_FILL = 4,"
-		"LINEAR_DODGE = 5,"
-		"LINEAR_BURN = 6,"
-		"COLOR_DODGE = 7,"
-		"COLOR_BURN = 8,"
-		"TINTED_MONOCHROME = 9,"
-		"HUE_SHIFT = 10,"
-		"SATURATE = 11,"
-		"BRIGHTNESS = 12,"
-		"DARKNESS = 13,"
-		"CONTRAST = 14,"
-		"SWAP_R_G = 15,"
-		"SWAP_R_B = 16,"
-		"SWAP_G_B = 17}");
+    script.execute("AB.graphics.colorTransforms = {"
+        "NONE = 0,"
+        "INVERT = 1,"
+        "MULTIPLY = 2,"
+        "SCREEN = 3,"
+        "COLOR_FILL = 4,"
+        "LINEAR_DODGE = 5,"
+        "LINEAR_BURN = 6,"
+        "COLOR_DODGE = 7,"
+        "COLOR_BURN = 8,"
+        "TINTED_MONOCHROME = 9,"
+        "HUE_SHIFT = 10,"
+        "SATURATE = 11,"
+        "BRIGHTNESS = 12,"
+        "DARKNESS = 13,"
+        "CONTRAST = 14,"
+        "SWAP_R_G = 15,"
+        "SWAP_R_B = 16,"
+        "SWAP_G_B = 17}");
 }
 
 }

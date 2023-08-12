@@ -28,16 +28,16 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class SubSystem {
-	public:
-		SubSystem() {}
-		~SubSystem() {}
-		
-		virtual bool startup() = 0;
-		virtual void shutdown() = 0;
-		
-	protected:
-		bool initialized = false;
-		
+    public:
+        SubSystem() {}
+        ~SubSystem() {}
+        
+        virtual bool startup() = 0;
+        virtual void shutdown() = 0;
+        
+    protected:
+        bool initialized = false;
+        
 };
 
 }

@@ -37,25 +37,25 @@ namespace AB {
 
 class Console : public SubSystem {
     public:
-		bool startup();
-		void shutdown();
+        bool startup();
+        void shutdown();
 
         void update();
         void render();
         
-		bool active = false;
+        bool active = false;
 
     protected:
         std::list<std::string> commandLineHistory;
         std::list<std::string>::iterator commandLineHistoryPos;
         std::string commandLine;
-		
-		RenderLayer *batchRenderer;
-		Font font;
-		
-		//	it seems really ridiculous to me that we need to create a camera for the fucking DEBUG CONSOLE.
-		//	maybe we should generally do away wiht cameras and the renderers could just take a projection matrix?
-		OrthographicCamera camera;
+        
+        RenderLayer *batchRenderer;
+        Font font;
+        
+        //    it seems really ridiculous to me that we need to create a camera for the fucking DEBUG CONSOLE.
+        //    maybe we should generally do away wiht cameras and the renderers could just take a projection matrix?
+        OrthographicCamera camera;
 
 };
 

@@ -34,7 +34,7 @@ void __cyg_profile_func_enter(void *thisFunc, void *callSite) __attribute__((no_
 void __cyg_profile_func_exit(void *thisFunc, void *callSite) __attribute__((no_instrument_function));
 
 void __cyg_profile_func_enter(void *thisFunc, void *callSite) {
-	//	why does this crash?
+    //    why does this crash?
   //printf("ENTER: %p, from %p\n", thisFunc, callSite);
 }
 

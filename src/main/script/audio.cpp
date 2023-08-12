@@ -52,18 +52,18 @@ static int musicHandle = 1;
 static int luaLoadSound(lua_State* luaVM) {
     std::string filename = std::string(lua_tostring(luaVM, 1));
 
-	int index;
+    int index;
     if (lua_gettop(luaVM) >= 2) {
         index = (int)lua_tonumber(luaVM, 2);
     } else {
-		index = sfxHandle;
-		sfxHandle++;
-	}
-	
-	sounds.mapResource(index, filename, true);
+        index = sfxHandle;
+        sfxHandle++;
+    }
+    
+    sounds.mapResource(index, filename, true);
 
-	//  return handle
-	lua_pushnumber(luaVM, index);
+    //  return handle
+    lua_pushnumber(luaVM, index);
 
     return 1;
 }
@@ -90,8 +90,8 @@ static int luaPlaySound(lua_State* luaVM) {
     if (lua_gettop(luaVM) >= 4) {
         loop = (bool)lua_toboolean(luaVM, 4);
     }
-	audio.play(sounds.get(index), volume, pan, loop);
-	
+    audio.play(sounds.get(index), volume, pan, loop);
+    
     return 0;
 }
 
@@ -100,7 +100,7 @@ static int luaPlaySound(lua_State* luaVM) {
 // @function AB.audio.stopSound
 static int luaStopSound(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-	sounds.get(index)->stop();
+    sounds.get(index)->stop();
 
     return 0;
 }
@@ -112,8 +112,8 @@ static int luaStopSound(lua_State* luaVM) {
 static int luaIsSoundPlaying(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     lua_pushboolean(luaVM, sounds.get(index)->isPlaying());
-	
-	return 1;
+    
+    return 1;
 }
 
 /// Loads a music loop for later playback
@@ -131,24 +131,24 @@ static int luaLoadMusic(lua_State* luaVM) {
         int beats = (int)lua_tonumber(luaVM, 2);
         int BPM = (int)lua_tonumber(luaVM, 3);
 
-		float BPS = (float)BPM / 60.0f;
+        float BPS = (float)BPM / 60.0f;
 
-		// TODO: figure out (shouldn't it be 4? why does 2 work?)
+        // TODO: figure out (shouldn't it be 4? why does 2 work?)
         loopPoint = (1.0f / BPS) * (beats * 2);
     }
 
-	int index;
+    int index;
     if (lua_gettop(luaVM) >= 4) {
         index = (int)lua_tonumber(luaVM, 4);
     } else {
-		index = musicHandle;
-		musicHandle++;
-	}
-	
-	music.mapResource(index, filename, true);
-	if (loopPoint > 0) {
-		music.get(index)->setLoopPoint(loopPoint);
-	}
+        index = musicHandle;
+        musicHandle++;
+    }
+    
+    music.mapResource(index, filename, true);
+    if (loopPoint > 0) {
+        music.get(index)->setLoopPoint(loopPoint);
+    }
 
     //  return handle
     lua_pushnumber(luaVM, index);
@@ -162,19 +162,19 @@ static int luaLoadMusic(lua_State* luaVM) {
 // @param index Music loop handle
 static int luaPlayMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-	
-	bool loop = true;
+    
+    bool loop = true;
     if (lua_gettop(luaVM) >= 2) {
         loop = (bool)lua_toboolean(luaVM, 2);
-	}
-	
+    }
+    
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
-	music.get(index)->play(loop);
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
+    music.get(index)->play(loop);
 
     return 0;
 }
@@ -187,11 +187,11 @@ static int luaPauseMusic(lua_State* luaVM) {
 
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
-	music.get(index)->pause();
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
+    music.get(index)->pause();
 
     return 0;
 }
@@ -204,12 +204,12 @@ static int luaResumeMusic(lua_State* luaVM) {
 
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
-	music.get(index)->resume();
-	
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
+    music.get(index)->resume();
+    
     return 0;
 }
 
@@ -223,11 +223,11 @@ static int luaFadeMusicIn(lua_State* luaVM) {
     
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
-	music.get(index)->fadeIn(duration);
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
+    music.get(index)->fadeIn(duration);
 
     return 0;
 }
@@ -238,16 +238,16 @@ static int luaFadeMusicIn(lua_State* luaVM) {
 // @param duration Duration in seconds
 static int luaFadeMusicOut(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
-	float duration = (float)lua_tonumber(luaVM, 2);
+    float duration = (float)lua_tonumber(luaVM, 2);
 
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
-	music.get(index)->fadeOut(duration);
-	
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
+    music.get(index)->fadeOut(duration);
+    
     return 0;
 }
 
@@ -259,12 +259,12 @@ static int luaStopMusic(lua_State* luaVM) {
 
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
-	music.get(index)->stop();
-	
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
+    music.get(index)->stop();
+    
     return 0;
 }
 
@@ -277,13 +277,13 @@ static int luaIsMusicPlaying(lua_State* luaVM) {
 
     if (!music.find(index)) {
         if (music.resourceInfo[index].empty()) {
-			LOG("Unknown music loop: %d", index);
-			return 0;
-		}
-	}
+            LOG("Unknown music loop: %d", index);
+            return 0;
+        }
+    }
     lua_pushboolean(luaVM, music.get(index)->isPlaying());
-	
-	return 1;
+    
+    return 1;
 }
 
 /// Sets global sound effect volume
@@ -302,10 +302,10 @@ static int luaSetSoundVolume(lua_State* luaVM) {
 static int luaSetMusicVolume(lua_State* luaVM) {
     float volume = (float)lua_tonumber(luaVM, 1);
     audio.musicVolume = volume;
-	
-	for (auto const& loop : music.resourceData) {
-		loop.second->setVolume(audio.musicVolume);
-	}
+    
+    for (auto const& loop : music.resourceData) {
+        loop.second->setVolume(audio.musicVolume);
+    }
 
     return 0;
 }
@@ -315,7 +315,7 @@ void registerAudioFunctions() {
         { "loadSound", luaLoadSound},
         { "playSound", luaPlaySound},
         { "stopSound", luaStopSound},
-		{ "isSoundPlaying", luaIsSoundPlaying},
+        { "isSoundPlaying", luaIsSoundPlaying},
 
         { "loadMusic", luaLoadMusic},
         { "playMusic", luaPlayMusic},
@@ -324,7 +324,7 @@ void registerAudioFunctions() {
         { "fadeMusicIn", luaFadeMusicIn},
         { "fadeMusicOut", luaFadeMusicOut},
         { "stopMusic", luaStopMusic},
-		{ "isMusicPlaying", luaIsMusicPlaying},
+        { "isMusicPlaying", luaIsMusicPlaying},
 
         { "setSoundVolume", luaSetSoundVolume},
         { "setMusicVolume", luaSetMusicVolume},

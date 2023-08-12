@@ -51,45 +51,45 @@ float volumeTodB(float volume) {
 //----------------------------------------------------------------------------------------------------------------------------------
 
 void Sound::load(std::string const& filename) {
-	data = new DataObject(filename.c_str());
+    data = new DataObject(filename.c_str());
 
-	wav = new SoLoud::Wav();
-	wav->loadMem(data->getData(), data->getSize(), false, false);
+    wav = new SoLoud::Wav();
+    wav->loadMem(data->getData(), data->getSize(), false, false);
 }
 
 void Sound::release() {
-	delete data;
-	delete wav;
+    delete data;
+    delete wav;
 }
 
 void Sound::play(float volume, float pan, bool loop) {
-	wav->setLooping(loop);
+    wav->setLooping(loop);
     if (audio.soundVolume > 0.01f) {
         int handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
-	}
+    }
 }
 
 void Sound::stop() {
-	wav->stop();
+    wav->stop();
 }
 
 bool Sound::isPlaying() {
-	return audio.soloud->countAudioSource(*wav) > 0;
+    return audio.soloud->countAudioSource(*wav) > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
 void Music::load(std::string const& filename) {
-	data = new DataObject(filename.c_str());
-	wavStream = new SoLoud::WavStream();
-	wavStream->loadMem(data->getData(), data->getSize(), false, false);
-	
+    data = new DataObject(filename.c_str());
+    wavStream = new SoLoud::WavStream();
+    wavStream->loadMem(data->getData(), data->getSize(), false, false);
+    
     wavStream->setLooping(true);
     wavStream->setSingleInstance(true);
 }
 
 void Music::release() {
-	delete wavStream;
+    delete wavStream;
 }
 
 void Music::setLoopPoint(float loopPoint) {
@@ -132,71 +132,71 @@ void Music::stop() {
 }
 
 bool Music::isPlaying() {
-	return audio.soloud->countAudioSource(*wavStream) > 0;
+    return audio.soloud->countAudioSource(*wavStream) > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
 bool Audio::startup() {
-	LOG("Audio subsystem startup", 0);
+    LOG("Audio subsystem startup", 0);
 
-	soloud = new SoLoud::Soloud();
+    soloud = new SoLoud::Soloud();
     soloud->init(SoLoud::Soloud::CLIP_ROUNDOFF, SoLoud::Soloud::MINIAUDIO, SoLoud::Soloud::AUTO, SoLoud::Soloud::AUTO);
-	
-	//	check for error
-	
-	//	print device info
-	
-	
-	initialized = true;
-	
-	return true;
+    
+    //    check for error
+    
+    //    print device info
+    
+    
+    initialized = true;
+    
+    return true;
 }
 
 void Audio::shutdown() {
-	LOG("Audio subsystem shutdown", 0);
+    LOG("Audio subsystem shutdown", 0);
 
-	extern ResourceManager<Sound> sounds;
-	extern ResourceManager<Music> music;
+    extern ResourceManager<Sound> sounds;
+    extern ResourceManager<Music> music;
 
-	sounds.clear();
-	music.clear();
-	
+    sounds.clear();
+    music.clear();
+    
     soloud->deinit(); // Clean up!
-	delete soloud;
+    delete soloud;
 }
 
 void Audio::update() {
-	for (auto& queuedSound : soundQueue) {
-		queuedSound.sound->play(queuedSound.volume, queuedSound.pan, queuedSound.loop);
-	}
-	soundQueue.clear();
+    for (auto& queuedSound : soundQueue) {
+        queuedSound.sound->play(queuedSound.volume, queuedSound.pan, queuedSound.loop);
+    }
+    soundQueue.clear();
 }
 
 void Audio::play(Sound *sound, float volume = 1.0f, float pan = 0.0f, bool loop = false) {
-	bool found = false;
-	for (auto& queuedSound : soundQueue) {
-		if (queuedSound.sound == sound) {
-			found = true;
-			
-			if (volume > queuedSound.volume) {
-				queuedSound.volume = volume;
-				queuedSound.pan = pan;
-			}
-			
-			break;
-		}
-	}
-	if (!found) {
-		QueuedSound queuedSound;
-		queuedSound.sound = sound;
-		queuedSound.volume = volume;
-		queuedSound.pan = pan;
-		queuedSound.loop = loop;
-		
-		soundQueue.push_back(queuedSound);
-	}
+    bool found = false;
+    for (auto& queuedSound : soundQueue) {
+        if (queuedSound.sound == sound) {
+            found = true;
+            
+            if (volume > queuedSound.volume) {
+                queuedSound.volume = volume;
+                queuedSound.pan = pan;
+            }
+            
+            break;
+        }
+    }
+    if (!found) {
+        QueuedSound queuedSound;
+        queuedSound.sound = sound;
+        queuedSound.volume = volume;
+        queuedSound.pan = pan;
+        queuedSound.loop = loop;
+        
+        soundQueue.push_back(queuedSound);
+    }
 }
 
-		
+        
 }   //  namespace

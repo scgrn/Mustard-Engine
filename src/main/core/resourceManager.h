@@ -49,30 +49,30 @@ freely, subject to the following restrictions:
 namespace AB {
 
 class Resource {
-	public:
+    public:
         //  represents resource's eligibility for garbage collection.
         enum {PERMANENT, TEMPORARY, MOMENTARY} lifeSpan;
 
         virtual void load(std::string const& id) = 0;
-		virtual void release() = 0;
+        virtual void release() = 0;
 };
 
 template<class T>
 class ResourceManager {
-	public:
-		typedef int Handle;
+    public:
+        typedef int Handle;
 
-		ResourceManager();
+        ResourceManager();
         ~ResourceManager();
 
         /**
             returns a pointer to a resource based on it's handle.
             the resource's load function will be called if it's not loaded.
         */
-		T* get(Handle handle);
+        T* get(Handle handle);
 
         //  returns whether a resource exists without loading it if it doesn't
-		bool find(Handle handle);
+        bool find(Handle handle);
 
         //  clears it.
         void clear(bool clearInfoMap = false);
@@ -92,9 +92,9 @@ class ResourceManager {
 
         void precacheAll();
 
-//	private:
+//    private:
         //  this is a list of the pointers to the actual resource data
-		std::map<Handle, T*> resourceData;
+        std::map<Handle, T*> resourceData;
 
         //  this maps resource handles to ids (typically filenames)
         std::map<Handle, std::string> resourceInfo;
@@ -110,7 +110,7 @@ ResourceManager<T>::~ResourceManager() {
 
 template<class T>
 bool ResourceManager<T>::find(Handle handle) {
-	return resourceData.find(handle) != resourceData.end();
+    return resourceData.find(handle) != resourceData.end();
 };
 
 template<class T>
@@ -132,9 +132,9 @@ template<class T>
 void ResourceManager<T>::precacheAll() {
     typename std::map<int, std::string>::iterator i;
 
-	for (i = resourceInfo.begin(); i != resourceInfo.end(); i++) {
+    for (i = resourceInfo.begin(); i != resourceInfo.end(); i++) {
         get(i->first);
-	}
+    }
 }
 
 template<class T>
@@ -145,12 +145,12 @@ void ResourceManager<T>::collect() {
 template<class T>
 void ResourceManager<T>::clear(bool clearInfoMap) {
     //  call release() on all resources.
-	for (typename std::map<Handle, T*>::iterator i = resourceData.begin();
+    for (typename std::map<Handle, T*>::iterator i = resourceData.begin();
         i != resourceData.end(); i++) {
 
-		i->second->release();
-		delete i->second;
-	}
+        i->second->release();
+        delete i->second;
+    }
     resourceData.clear();
 
     if (clearInfoMap) {
@@ -164,7 +164,7 @@ void ResourceManager<T>::mapResource(Handle handle, std::string const& id, bool 
 
     if (preCache && !find(handle)) {
         resourceData[handle] = new T();
-		resourceData[handle]->load(id);
+        resourceData[handle]->load(id);
     }
 }
 
@@ -172,7 +172,7 @@ template<class T>
 bool ResourceManager<T>::isMapped(std::string id, Handle *handle) {
     typename std::map<int, std::string>::iterator i;
 
-	for (i = resourceInfo.begin(); i != resourceInfo.end(); i++) {
+    for (i = resourceInfo.begin(); i != resourceInfo.end(); i++) {
         if (i->second == id) {
             if (handle)
                 *handle = i->first;

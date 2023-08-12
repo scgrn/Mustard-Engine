@@ -38,20 +38,20 @@ extern "C" {
 namespace AB {
 
 class Script : public SubSystem {
-	public:
-		bool startup() override;
-		void shutdown() override;
-		
-		void registerFuncs(std::string const& parent, std::string const& name, const luaL_Reg *funcs);
-		void execute(std::string command);
-		void reset();
-		
-		lua_State* getVM() { return luaVM; }
-		
-		bool luaError = false;
-		
-	protected:
-		lua_State* luaVM;
+    public:
+        bool startup() override;
+        void shutdown() override;
+        
+        void registerFuncs(std::string const& parent, std::string const& name, const luaL_Reg *funcs);
+        void execute(std::string command);
+        void reset();
+        
+        lua_State* getVM() { return luaVM; }
+        
+        bool luaError = false;
+        
+    protected:
+        lua_State* luaVM;
 };
 
 }   //  namespace

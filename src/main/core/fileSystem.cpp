@@ -38,21 +38,21 @@ namespace AB {
 
 extern FileSystem fileSystem;
 
-//	TODO: i'd like to move these as members of filesystem but then dataobject can't see them
-//			maybe just have it read from the global filesystem instance?
+//    TODO: i'd like to move these as members of filesystem but then dataobject can't see them
+//            maybe just have it read from the global filesystem instance?
 struct FileResource {
-	std::string path;
-	uint32_t offset, sizeCompressed, sizeDecompressed;
+    std::string path;
+    uint32_t offset, sizeCompressed, sizeDecompressed;
 };
 
 struct Archive {
-	std::string path, key;
-	std::vector<FileResource> resources;
-	uint32_t headerSizeCompressed, headerSizeDecompressed;
+    std::string path, key;
+    std::vector<FileResource> resources;
+    uint32_t headerSizeCompressed, headerSizeDecompressed;
 };
 
 std::vector<Archive> archives;
-		
+        
 
 void crypt(uint8_t *data, uint32_t size, std::string const& key) {
 
@@ -73,33 +73,33 @@ void crypt(uint8_t *data, uint32_t size, std::string const& key) {
 
 
 bool FileSystem::startup() {
-	LOG("FileSystem subsystem startup", 0);
+    LOG("FileSystem subsystem startup", 0);
 
-	//	load all queued archives
-	for (std::vector<ArchiveFile>::iterator archiveFile = archiveFiles.begin(); archiveFile != archiveFiles.end(); archiveFile++) {
-		loadArchive(archiveFile->path, archiveFile->key);
-	}
-	
-	initialized = true;
-	
-	return true;
+    //    load all queued archives
+    for (std::vector<ArchiveFile>::iterator archiveFile = archiveFiles.begin(); archiveFile != archiveFiles.end(); archiveFile++) {
+        loadArchive(archiveFile->path, archiveFile->key);
+    }
+    
+    initialized = true;
+    
+    return true;
 }
 
 
 void FileSystem::shutdown() {
-	LOG("FileSystem subsystem shutdown", 0);
+    LOG("FileSystem subsystem shutdown", 0);
 }
 
 void FileSystem::addArchive(std::string const& path, std::string const& key) {
-	ArchiveFile archiveFile;
-	archiveFile.path = path;
-	archiveFile.key = key;
-	
-	archiveFiles.push_back(archiveFile);
+    ArchiveFile archiveFile;
+    archiveFile.path = path;
+    archiveFile.key = key;
+    
+    archiveFiles.push_back(archiveFile);
 
-	if (initialized) {
-		loadArchive(path, key);
-	}
+    if (initialized) {
+        loadArchive(path, key);
+    }
 }
 
 // TODO: read entire file and keep it in memory?
