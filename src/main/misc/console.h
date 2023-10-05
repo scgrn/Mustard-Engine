@@ -22,8 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#ifndef AB_CONSOLE_H
+#define AB_CONSOLE_H
 
 #include <list>
 #include <iostream>
