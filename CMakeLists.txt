@@ -18,9 +18,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 
-if(WIN32)
-    list(APPEND CMAKE_PREFIX_PATH "./vendor/SDL2-2.26.5")
-endif()
 find_package(SDL2 REQUIRED)
 
 set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/src/vendor")
