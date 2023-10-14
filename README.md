@@ -13,8 +13,6 @@ Target platforms:
 * Android
 * Web (via Emscripten)
 
-(possible future support for Mac / iOS)
-
 Dependencies
 -------
 | Library | Purpose |
@@ -37,35 +35,23 @@ Features
 Build and installation
 -------
 
-Clone repo and run [premake](https://github.com/premake/premake-core) in project root
+TODO
 
 Usage
 -------
-Run mustard.cmd create [project folder]
 
-Edit premake.lua in project root
-
-See [Lua API]
-
-<expand>
-
-C++
-
-You will need to rerun cmake after adding source files for recursive globbing.
+TODO
 
 Steamworks Integration
 -------
 
-(where to copy files...)
+TODO (where to copy files, etc...)
 
 Asset Compiler
 -------
 Binary is Mustard-AssetCompiler in engine root. This is a command line
 tool that compiles *every* file in the directory it was launched, and every file in
 every subdirectory recursively, into a single glob.
-
-You'll want to only have game ready files in here. IE, *.PSDs are not supported
-by the engine, but they *will* be included in the archive. Hidden files are excluded. Don't worry about thumbs.db.
 
 There is an option to specify a key for a laughably weak encryption scheme.
 
