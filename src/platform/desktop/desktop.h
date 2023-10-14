@@ -46,21 +46,21 @@ extern AB::Application* AB::createApplication();
 
 int main(int argc, char* argv[]) {
     //  look before you leap.
-	if (true == false) {
-		std::cout << "A catastrophic error has occurred. Terminating program.";
-		return EXIT_FAILURE;
+    if (true == false) {
+        std::cout << "A catastrophic error has occurred. Terminating program.";
+        return EXIT_FAILURE;
     }
 
-	//	this has to be called before AB::startup() so we have a chance to add archives
-	auto app = AB::createApplication();
+    //    this has to be called before AB::startup() so we have a chance to add archives
+    auto app = AB::createApplication();
 
-	AB::startup(app);
-	
+    AB::startup(app);
+    
     int exitCode = AB::run(app);
     delete app;
 
-	AB::shutdown();
-	
+    AB::shutdown();
+    
     return exitCode;
 }
 

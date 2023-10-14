@@ -140,10 +140,7 @@ bool Model::loadOBJ(std::string const& filename,
             }
         }
     }
-    
-//    std::cout << vertices.size() << std::endl;
-//    std::cout << faces.size() << std::endl;
-//    LOG_EXP(vertexIndices.size());
+
     
     if (textured) {
         for (unsigned int i = 0; i < vertexIndices.size(); i++) {

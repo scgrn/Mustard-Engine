@@ -187,7 +187,6 @@ void buildAtlas() {
         delete sprite tga data
         set sprite gl texture to atlas texture
     upload atlas texture to gpu
-
 */
 
     for (std::vector<Sprite*>::iterator sprite = atlasSprites.begin(); sprite != atlasSprites.end(); sprite++) {

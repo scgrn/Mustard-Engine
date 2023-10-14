@@ -198,5 +198,4 @@ void Audio::play(Sound *sound, float volume = 1.0f, float pan = 0.0f, bool loop 
     }
 }
 
-        
 }   //  namespace

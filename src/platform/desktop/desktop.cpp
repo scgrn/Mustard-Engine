@@ -58,13 +58,13 @@ void checkOpenGLError(const char* stmt, const char* fname, int line) {
     while (GLenum errorCode = glGetError() != GL_NO_ERROR) {
         std::string error;
         switch (errorCode) {
-            case GL_INVALID_ENUM:							error = "INVALID_ENUM"; break;
-            case GL_INVALID_VALUE:							error = "INVALID_VALUE"; break;
-            case GL_INVALID_OPERATION:						error = "INVALID_OPERATION"; break;
-            case GL_STACK_OVERFLOW:							error = "STACK_OVERFLOW"; break;
-            case GL_STACK_UNDERFLOW:						error = "STACK_UNDERFLOW"; break;
-            case GL_OUT_OF_MEMORY:							error = "OUT_OF_MEMORY"; break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:			error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+            case GL_INVALID_ENUM:                            error = "INVALID_ENUM"; break;
+            case GL_INVALID_VALUE:                            error = "INVALID_VALUE"; break;
+            case GL_INVALID_OPERATION:                        error = "INVALID_OPERATION"; break;
+            case GL_STACK_OVERFLOW:                            error = "STACK_OVERFLOW"; break;
+            case GL_STACK_UNDERFLOW:                        error = "STACK_UNDERFLOW"; break;
+            case GL_OUT_OF_MEMORY:                            error = "OUT_OF_MEMORY"; break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:            error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
 
         LOG("OpenGL error %08x: %s at %s:%i - for %s\n", errorCode, error.c_str(), fname, line, stmt);
@@ -89,7 +89,7 @@ extern Window window;
 std::vector<SDL_Event> eventQueue;
 
 #ifdef DEBUG
-	extern Console console;
+    extern Console console;
 #endif
 
 // float accumulator = 0.0f;
@@ -124,7 +124,7 @@ int64_t time_averager[time_history_count] = {desired_frametime, desired_frametim
 int64_t prev_frame_time = SDL_GetPerformanceCounter();
 int64_t frame_accumulator = 0;
 
-//	this is some temp shit just for recording
+//    this is some temp shit just for recording
 long currentTime = SDL_GetTicks();
 long lastTime = currentTime;
 
@@ -151,7 +151,7 @@ void mainLoop(Application *app) {
 
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-				app->onBackPressed();
+                app->onBackPressed();
             }
 #ifdef DEBUG
             if (event.key.keysym.sym == SDLK_PAUSE) {
@@ -163,14 +163,14 @@ void mainLoop(Application *app) {
 /*
                 int canvasWidth = graphics->canvasWidth;
                 int canvasHeight = graphics->canvasHeight;
-				int xRes = graphics->xRes;
-				int yRes = graphics->yRes;
-				bool fullscreen = graphics->fullscreen;
+                int xRes = graphics->xRes;
+                int yRes = graphics->yRes;
+                bool fullscreen = graphics->fullscreen;
 
-				script.shutdown();
-				script.startup();
-				
-				app->glContextDestroyed();
+                script.shutdown();
+                script.startup();
+                
+                app->glContextDestroyed();
                 app->glContextCreated(canvasWidth, canvasHeight, xRes, yRes, fullscreen);
                 script.execute("AB.init()");
 
@@ -192,8 +192,8 @@ void mainLoop(Application *app) {
         app->update();
         eventQueue.clear();
         app->update();
-		input.update();
-		audio.update();
+        input.update();
+        audio.update();
 
         currentTime = SDL_GetTicks();
         while (currentTime < lastTime + 30) {
@@ -269,15 +269,15 @@ void mainLoop(Application *app) {
         while(frame_accumulator >= desired_frametime * update_multiplicity) {
             for(int i = 0; i<update_multiplicity; i++){
 #ifdef DEBUG
-				if (!console.active) {
-					app->update();
-				}
+                if (!console.active) {
+                    app->update();
+                }
                 input.update();
-				audio.update();
-				console.update();
+                audio.update();
+                console.update();
 #else
-				app->update();
-				audio.update();
+                app->update();
+                audio.update();
                 input.update();
 #endif
                 eventQueue.clear();
@@ -288,7 +288,7 @@ void mainLoop(Application *app) {
 
     app->render();
 #ifdef DEBUG
-	console.render();
+    console.render();
 #endif
 
 #ifdef DEBUG
@@ -297,7 +297,7 @@ void mainLoop(Application *app) {
     }
 #endif // DEBUG
 
-	window.present();
+    window.present();
 
     //  yield to other processes. sharing is caring.
     SDL_Delay(1);
@@ -309,23 +309,23 @@ int run(Application *app) {
     try {
         if (app == NULL) {
             //app = new AB::Application();
-			
-			//	NO GAME
-			return -1;
+            
+            //    NO GAME
+            return -1;
         }
 
         app->startup();
         script.execute("AB.init()");
 
-		LOG("Entering main loop", 0);
-		LOG(std::string(79, '-').c_str(), 0);
+        LOG("Entering main loop", 0);
+        LOG(std::string(79, '-').c_str(), 0);
 
         while (!AB::done) {
             mainLoop(app);
         }
-		
-		LOG("Shutting down engine", 0);
-		LOG(std::string(79, '-').c_str(), 0);
+        
+        LOG("Shutting down engine", 0);
+        LOG(std::string(79, '-').c_str(), 0);
 
     } catch(std::exception &e) {
         LOG("ERROR: %s", e.what());
@@ -340,7 +340,7 @@ int run(Application *app) {
     app->glContextDestroyed();
     app->shutdown();
 
-	return exitCode;
+    return exitCode;
 }
 
 }   //  namespace

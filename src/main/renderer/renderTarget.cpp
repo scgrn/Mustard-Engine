@@ -115,8 +115,9 @@ void RenderTarget::begin() {
 
 void RenderTarget::end() {
     CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-    //    TODO: need to reset viewport here but we don't know the dimensions. maybe the renderer or window class should
-    //        be responsible for setting / resetting render targets?
+    //    TODO: need to reset viewport here but we don't know the dimensions.
+    //          maybe the renderer or window class should
+    //          be responsible for setting / resetting render targets?
     window.resetViewport();
 }
 

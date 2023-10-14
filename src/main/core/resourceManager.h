@@ -30,12 +30,8 @@ freely, subject to the following restrictions:
 
     Provides a template and management for resources.
 
-    @todo So much... so much.
+    @todo So much
 */
-
-// http://www.shmup-dev.com/forum/index.php?topic=1718.0
-// http://www.gamedev.net/reference/articles/article2503.asp
-// http://www.gamedev.net/community/forums    opic.asp?topic_id=577509
 
 #ifndef AB_RESOURCE_MANAGER_H
 #define AB_RESOURCE_MANAGER_H

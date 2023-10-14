@@ -52,12 +52,10 @@ struct Archive {
 };
 
 std::vector<Archive> archives;
-        
 
 void crypt(uint8_t *data, uint32_t size, std::string const& key) {
 
     return; //  TODO: remove after testing
-
 
     if (key.empty()) return;
 

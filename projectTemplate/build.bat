@@ -8,7 +8,7 @@ SET MUSTARD_PATH=\projects\Mustard
 :: clean previous build artifacts
 CLS
 IF EXIST build (
-	rd /S /Q build
+    rd /S /Q build
 )
 
 %PREMAKE_PATH% gmake2

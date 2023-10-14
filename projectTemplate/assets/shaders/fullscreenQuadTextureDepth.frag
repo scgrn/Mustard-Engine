@@ -7,5 +7,5 @@ out vec4 color;
 
 void main() {
     gl_FragDepth = texture(depthTexture, textureCoords).r;
-	color = texture(textureUnit, textureCoords);
+    color = texture(textureUnit, textureCoords);
 }

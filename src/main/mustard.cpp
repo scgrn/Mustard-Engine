@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 
 namespace AB {
     
-// each subsystem has a single global instance...
+// each subsystem has a single global instance
 FileSystem fileSystem;
 Renderer renderer;
 Audio audio;
@@ -59,7 +59,6 @@ void startup(Application *app) {
     LOG("\tCPU count: %d", SDL_GetCPUCount());
     LOG("\tSystem RAM: %dMB", SDL_GetSystemRAM());
     
-    //    ...so i have full control of when and what order they're initialized...
     fileSystem.startup();
     script.startup();
     input.startup();
@@ -80,7 +79,6 @@ void shutdown() {
     
     LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
     
-    //  ... and shutdown.
 #ifdef DEBUG
     console.shutdown();
 #endif

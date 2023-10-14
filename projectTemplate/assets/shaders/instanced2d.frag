@@ -11,15 +11,15 @@ out vec4 color;
 
 /*
 layout (std140) uniform UniformBlock {
-	mat4 projectionMatrix;
-	mat4 viewMatrix;
-	mat4 colorTransform;
-	int timer;
-	float randomSeed;
+    mat4 projectionMatrix;
+    mat4 viewMatrix;
+    mat4 colorTransform;
+    int timer;
+    float randomSeed;
 };
 */
 
 void main() {
-	color = texture(textureSamplers[TextureUnit], TexCoord) * Color;
-	color = color * colorTransform;
+    color = texture(textureSamplers[TextureUnit], TexCoord) * Color;
+    color = color * colorTransform;
 }

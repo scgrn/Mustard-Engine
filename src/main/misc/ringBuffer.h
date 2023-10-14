@@ -33,25 +33,21 @@ namespace AB {
 //    adapted from https://embeddedartistry.com/blog/2017/05/17/creating-a-circular-buffer-in-c-and-c/
 //  https://github.com/embeddedartistry/embedded-resources/blob/master/examples/cpp/circular_buffer.cpp
 
-
 template <class T>
 class RingBuffer {
     public:
         explicit RingBuffer(size_t size) :
             buf_(std::unique_ptr<T[]>(new T[size])),
-            max_size_(size)
-        {
+            max_size_(size) {
 
         }
 
-        void put(T item)
-        {
+        void put(T item) {
             std::lock_guard<std::mutex> lock(mutex_);
 
             buf_[head_] = item;
 
-            if(full_)
-            {
+            if (full_) {
                 tail_ = (tail_ + 1) % max_size_;
             }
 
@@ -60,12 +56,10 @@ class RingBuffer {
             full_ = head_ == tail_;
         }
 
-        T get()
-        {
+        T get() {
             std::lock_guard<std::mutex> lock(mutex_);
 
-            if(empty())
-            {
+            if (empty()) {
                 return T();
             }
 
@@ -77,42 +71,33 @@ class RingBuffer {
             return val;
         }
 
-        void reset()
-        {
+        void reset() {
             std::lock_guard<std::mutex> lock(mutex_);
             head_ = tail_;
             full_ = false;
         }
 
-        bool empty() const
-        {
+        bool empty() const {
             //if head and tail are equal, we are empty
             return (!full_ && (head_ == tail_));
         }
 
-        bool full() const
-        {
+        bool full() const {
             //If tail is ahead the head by 1, we are full
             return full_;
         }
 
-        size_t capacity() const
-        {
+        size_t capacity() const {
             return max_size_;
         }
 
-        size_t size() const
-        {
+        size_t size() const {
             size_t size = max_size_;
 
-            if(!full_)
-            {
-                if(head_ >= tail_)
-                {
+            if (!full_) {
+                if (head_ >= tail_) {
                     size = head_ - tail_;
-                }
-                else
-                {
+                } else {
                     size = max_size_ + head_ - tail_;
                 }
             }

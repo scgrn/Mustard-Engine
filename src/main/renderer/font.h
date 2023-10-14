@@ -65,7 +65,7 @@ class Font : public Resource {
         /**
         *    Renders a string on screen
         *
-        *     @param renderGroup render group
+        *    @param renderGroup render group
         *    @param x screen X coordinate of string
         *    @param y screen Y coordinate of string
         *    @param scale scaling factor

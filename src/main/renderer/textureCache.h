@@ -31,7 +31,7 @@ class TextureCache {
     public:
         TextureCache();
         ~TextureCache()  {}
-    
+
         //    returns texture unit or -1 if no slot available
         //    will not evict textures bound after the last call to advanceFrame
         //    reserve is not currently used
