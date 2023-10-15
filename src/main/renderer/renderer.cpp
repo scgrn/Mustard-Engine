@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 #include "renderLayer.h"
 #include "renderTarget.h"
 
+#ifdef WIN32
 //  force use of discrete GPU
 //  https://stackoverflow.com/questions/16823372/forcing-machine-to-use-dedicated-graphics-card/39047129
 extern "C" 
@@ -36,6 +37,9 @@ extern "C"
     __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
     __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
+#else
+    //  TODO: handle this on Linux
+#endif
 
 namespace AB {
     
