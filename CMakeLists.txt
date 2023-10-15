@@ -13,6 +13,14 @@ set(CMAKE_CXX_FLAGS
 # Set the output directory for static libraries
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
+add_compile_definitions(
+    WITH_MINIAUDIO
+
+    # for emscripten
+    # https://uncovergame.com/2015/01/21/porting-a-complete-c-game-engine-to-html5-through-emscripten/
+    LUA_COMPAT_ALL
+)
+
 # Find SDL2 package
 find_package(SDL2 REQUIRED)
 
@@ -120,6 +128,9 @@ target_include_directories(${PROJECT_NAME}
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
 
 if(WIN32)
+    add_compile_definitions(
+        WIN32
+    )
     target_link_libraries(${PROJECT_NAME}
         mingw32
         opengl32
