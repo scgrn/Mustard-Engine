@@ -178,7 +178,6 @@ void Window::setVideoMode(Application *app) {
     }
 
     SDL_DisableScreenSaver();
-    
     gladLoadGLLoader(SDL_GL_GetProcAddress);
     glEnable(GL_MULTISAMPLE);
 

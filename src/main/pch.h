@@ -49,13 +49,14 @@ freely, subject to the following restrictions:
 #include <GLES3/gl3ext.h>
 #else
 
-#ifndef __EMSCRIPTEN__
-#include "glad/glad.h"
-#else
+#ifdef __EMSCRIPTEN__
 #include <GLES3/gl3.h>
 #include <GLES3/gl2ext.h>
-#endif
+#include <emscripten.h>
+#else
+#include "glad/glad.h"
 #include <SDL2/SDL.h>
+#endif
 #endif
 
 extern "C" {
@@ -63,10 +64,6 @@ extern "C" {
 #include "lua-5.3.5/src//lualib.h"
 #include "lua-5.3.5/src//lauxlib.h"
 }
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
 
 #ifdef DEBUG
 extern void checkOpenGLError(const char* stmt, const char* fname, int line);
@@ -79,3 +76,4 @@ extern void checkOpenGLError(const char* stmt, const char* fname, int line);
 #endif // DEBUG
 
 #endif // AB_PCH_H
+
