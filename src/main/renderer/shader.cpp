@@ -178,12 +178,12 @@ std::string Shader::getHeader() {
         "#line -1\n";
 #else
     header =
-        "#version 330 core\n\n"
+        "#version 420 core\n\n"
         "#define precision\n"
         "#define lowp\n"
         "#define mediump\n"
         "#define highp\n\n"
-        "#line -1\n";
+        "#line 0\n";  // s/b -1
 #endif
 
     return header;

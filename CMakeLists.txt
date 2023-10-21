@@ -14,6 +14,7 @@ set(CMAKE_CXX_FLAGS
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 add_compile_definitions(
+    DEBUG
     WITH_MINIAUDIO
 
     # for emscripten
