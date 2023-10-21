@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set compile flags
 set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2"
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
 )
 
 # Set the output directory for static libraries
@@ -80,15 +80,15 @@ set(MAIN_SOURCE
 
 set(PLATFORM_SOURCE
     ${PLATFORM_DIR}/desktop.cpp
-    ${PLATFORM_DIR}/win64/glad/glad.c
 )
 
 # Collect third-party sources
+aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/tinyxml" TINYXML_SOURCE)
 aux_source_directory("${VENDOR_DIR}/zlib-1.2.11" ZLIB_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/core" SOLOUD_CORE_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource" SOLOUD_AUDIOSOURCE_SOURCE)
+aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource/wav" SOLOUD_AUDIOSOURCE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/filter" SOLOUD_FILTER_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/backend/miniaudio" SOLOUD_BACKEND_SOURCE)
 
