@@ -23,6 +23,7 @@ add_compile_definitions(
 )
 
 # Find SDL2 package
+set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 find_package(SDL2 REQUIRED)
 
 set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/src/vendor")

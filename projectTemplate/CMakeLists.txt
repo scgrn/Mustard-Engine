@@ -2,16 +2,17 @@ cmake_minimum_required(VERSION 3.12)
 
 set(PROJECT_NAME "SampleGame")
 set(MUSTARD_DIR "../mustard")
+set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 
 project(${PROJECT_NAME})
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
+    # "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -lm -lpthread -pthread"
 )
 
-set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "../library/vendor/SDL2-2.26.5")
 endif()
@@ -29,6 +30,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/src/vendor)
 target_link_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/bin)
 
 if(WIN32)
+    include_directories(${PROJECT_NAME} ${SDL2_INCLUDE_DIRS})
+
     if (TARGET SDL2::SDL2main)
         target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
     endif()
