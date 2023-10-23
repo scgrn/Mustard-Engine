@@ -31,6 +31,8 @@ set(PLATFORM_DIR "${PROJECT_SOURCE_DIR}/src/platform/desktop")
 
 # Define your project sources
 set(MAIN_SOURCE
+    ${PROJECT_SOURCE_DIR}/src/main/core/memory.cpp
+
     ${PROJECT_SOURCE_DIR}/src/main/mustard.cpp
     ${PROJECT_SOURCE_DIR}/src/main/pch.cpp
     
@@ -39,7 +41,6 @@ set(MAIN_SOURCE
     ${PROJECT_SOURCE_DIR}/src/main/core/fileSystem.cpp
     ${PROJECT_SOURCE_DIR}/src/main/core/localization.cpp
     ${PROJECT_SOURCE_DIR}/src/main/core/log.cpp
-    ${PROJECT_SOURCE_DIR}/src/main/core/memory.cpp
     ${PROJECT_SOURCE_DIR}/src/main/core/window.cpp
 
     ${PROJECT_SOURCE_DIR}/src/main/input/input.cpp

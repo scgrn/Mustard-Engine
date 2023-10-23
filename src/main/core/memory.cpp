@@ -69,9 +69,14 @@ void* operator new[](std::size_t sz, const char *file, int line) {
     return operator new(sz, file, line);
 }
 
-
 void operator delete(void* ptr, std::size_t sz) noexcept {
-    analytics.used -= sz;
+    if (analytics.used >= sz) {
+        analytics.used -= sz;
+    } else {
+#ifdef DEBUG
+    LOG("Unmatched delete: %zu bytes.", sz);
+#endif // DEBUG
+    }
 
     std::free(ptr);
 
