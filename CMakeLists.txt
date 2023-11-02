@@ -10,9 +10,6 @@ set(CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
 )
 
-# Set the output directory for static libraries
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-
 add_compile_definitions(
     DEBUG
     WITH_MINIAUDIO
