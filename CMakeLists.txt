@@ -29,9 +29,11 @@ find_package(SDL2 REQUIRED)
 set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/src/vendor")
 set(PLATFORM_DIR "${PROJECT_SOURCE_DIR}/src/platform/desktop")
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
 # Define your project sources
 set(MAIN_SOURCE
-    ${PROJECT_SOURCE_DIR}/src/main/core/memory.cpp
+    #${PROJECT_SOURCE_DIR}/src/main/core/memory.cpp
 
     ${PROJECT_SOURCE_DIR}/src/main/mustard.cpp
     ${PROJECT_SOURCE_DIR}/src/main/pch.cpp
