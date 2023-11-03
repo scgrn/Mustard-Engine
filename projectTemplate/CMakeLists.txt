@@ -7,6 +7,7 @@ set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 project(${PROJECT_NAME})
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 set(CMAKE_CXX_FLAGS
     # "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
