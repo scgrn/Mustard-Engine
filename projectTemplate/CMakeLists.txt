@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(PROJECT_NAME "SampleGame")
+set(PROJECT_NAME "SampleGame-${CMAKE_BUILD_TYPE}")
 set(MUSTARD_DIR "../mustard")
 set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 
@@ -38,12 +38,12 @@ if(WIN32)
     endif()
     
     # library must come before SDL
-    target_link_libraries(${PROJECT_NAME} PRIVATE libMustard.a SDL2::SDL2)
+    target_link_libraries(${PROJECT_NAME} PRIVATE libMustard-${CMAKE_BUILD_TYPE}.a SDL2::SDL2)
 else()
     # tells GCC to link as an executable rather than shared object
     target_link_options(${PROJECT_NAME} PRIVATE -no-pie)
 
     include_directories(${PROJECT_NAME} ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} libMustard.a ${SDL2_LIBRARIES} dl)
+    target_link_libraries(${PROJECT_NAME} libMustard-${CMAKE_BUILD_TYPE}.a ${SDL2_LIBRARIES} dl)
 endif()
 
