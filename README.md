@@ -32,10 +32,27 @@ Features
 * Pixel-precise collision detection with rotation and scaling
 * OpenGL immediate mode emulation
 * Steamworks integration
+* Lightweight and fast
 
 Build and installation
 -------
-Install the latest [SDL2 Development Libraries](https://www.libsdl.org/) as SDL2 is not vendored in this repo.
+You will need [CMake](https://cmake.org/) to build. 
+You will also need to install SDL2 as it is not vendored in this repo.
+
+#### Windows:  
+Download the latest [SDL2 Development Libraries](https://www.libsdl.org/) for your compiler and extract them somewhere.  
+Clone the Mustard repository and navigate into it.  
+
+Edit this line of CMakeLists.txt:
+  `set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")`  
+...to point to your SDL2 installation's cmake directory.  
+
+From the command line, run `build all`  
+
+#### Linux:  
+Install SDL2 with `sudo apt-get install libsdl2-dev`  
+Clone the Mustard repository and navigate into it.  
+Run `./build.sh all`
 
 <!-- TODO -->
 
