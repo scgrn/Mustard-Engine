@@ -46,6 +46,7 @@ elif [ "$config" == "all" ]; then
     buildDebug
     buildRelease
     buildDocs
+    buildTests
 else
     echo usage: ./build.sh config
     echo
