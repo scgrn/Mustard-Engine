@@ -40,11 +40,13 @@ You will need [CMake](https://cmake.org/) to build.
 You will also need to install SDL2 as it is not vendored in this repo.
 
 #### Windows:  
-Download the latest [SDL2 Development Libraries](https://www.libsdl.org/) for your compiler and extract them somewhere.  
+Download the latest [SDL2 Development Library](https://www.libsdl.org/) for your compiler and extract it somewhere permanently.  
 Clone the Mustard repository and navigate into it.  
 
-Edit this line of CMakeLists.txt:
-  `set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")`  
+Edit this line of CMakeLists.txt:  
+
+`set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")`  
+
 ...to point to your SDL2 installation's cmake directory.  
 
 From the command line, run `build all`  
@@ -66,6 +68,8 @@ edit the build scripts to point them back to Mustard.
 
 ...
 
+Run `build` or `./build.sh` (depending on your development platform) without arguments to see a list of options.
+
 Both debug and release mode will read assets from the assets folder.
 
 <!-- TODO -->
@@ -78,11 +82,10 @@ Steamworks Integration
 Asset Compiler
 -------
 During development you will typically not need to invoke the asset compiler-
-building a project in `dist` config will call the asset compiler to build the archive for you.
+building a project in the `dist` configuration will call the asset compiler to build the archive for you.
 
-Binary is Mustard-AssetCompiler in the `bin` directory. This is a command line
-tool that compiles *every* file in the directory it was launched, and every file in
-every subdirectory recursively, into a single glob.
+If you must use it for some exotic reason, the binary is Mustard-AssetCompiler in the `bin` directory. This is a command line
+tool that compiles *every* file in the directory it was launched, and every file in every subdirectory recursively, into a single glob.
 
 There is an option to specify a key for a laughably weak encryption scheme.
 
