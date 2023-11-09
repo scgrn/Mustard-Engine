@@ -28,12 +28,20 @@ function buildDocs() {
     # TODO: implement
 }
 
+function buildTests() {
+    echo "Building tests..."
+
+    # TODO: implement
+}
+
 if [ "$config" == "debug" ]; then
     buildDebug
 elif [ "$config" == "release" ]; then
     buildRelease
 elif [ "$config" == "docs" ]; then
     buildDocs
+elif [ "$config" == "tests" ]; then
+    buildTests
 elif [ "$config" == "all" ]; then
     buildDebug
     buildRelease
@@ -46,6 +54,7 @@ else
     echo debug
     echo release
     echo docs
+    echo tests
     echo all
     echo
 fi
