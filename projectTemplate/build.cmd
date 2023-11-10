@@ -1,21 +1,69 @@
-@ECHO OFF
+@echo off
 
-:: remove previous build artifacts
-RD /S /Q bin 2> nul
-RD /S /Q build 2> nul
+setlocal ENABLEEXTENSIONS
 
-MD build
-CD build
-cmake ..
-CD..
-cmake --build build
+setlocal
+set config=%1
 
-SETLOCAL
-SET ENCYPTION_KEY="Jordan, I SWEAR TO GOD!!"
-SET MUSTARD_PATH=..\Mustard
+if "%config%" == "debug" (
+    call:buildDebug
+) else if "%config%" == "release" (
+    call:buildRelease
+) else if "%config%" == "assets" (
+    call:buildAssets
+) else if "%config%" == "dist" (
+    call:buildDist
+) else if "%config%" == "all" (
+    call:buildDebug
+    call:buildRelease
+    call:buildAssets
+) else (
+    echo usage: build config
+    echo.
+    echo Where config is one of:
+    echo.
+    echo debug
+    echo release
+    echo assets
+    echo dist
+    echo all
+)
 
-CD assets
-%MUSTARD_PATH%\bin\Mustard-AssetCompiler "..\Assets.dat" %ENCYPTION_KEY%
-CD ..
+endlocal
+exit /b 0
 
-ENDLOCAL
+:buildDebug
+    echo Building project in debug mode...
+
+    md build\debug 2> nul
+    cd build\debug
+    cmake ..\.. -D CMAKE_BUILD_TYPE=Debug
+    cd ..\..
+    cmake --build build\debug    
+exit /b 0
+
+:buildRelease
+    echo Building project in release mode...
+
+    md build\release 2> nul
+    cd build\release
+    cmake ..\.. -D CMAKE_BUILD_TYPE=Release
+    cd ..\..
+    cmake --build build\release    
+exit /b 0
+
+:buildAssets
+    echo Building asset archive...
+
+    SET ENCYPTION_KEY="Jordan, I SWEAR TO GOD!!"
+    SET MUSTARD_PATH=..\Mustard
+
+    CD assets
+    %MUSTARD_PATH%\bin\Mustard-AssetCompiler "..\Assets.dat" %ENCYPTION_KEY%
+    CD ..
+exit /b 0
+
+:buildDist
+    :: TODO: implement
+exit /b 0
+
