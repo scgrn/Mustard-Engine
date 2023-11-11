@@ -24,3 +24,4 @@ function GameState:new()
 end
 
 currentState = GameState:new()
+

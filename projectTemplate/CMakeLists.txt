@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(PROJECT_NAME "SampleGame-${CMAKE_BUILD_TYPE}")
-set(MUSTARD_DIR "../mustard")
-set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
-
-project(${PROJECT_NAME})
+project("${PROJECT_NAME}-${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 set(CMAKE_CXX_FLAGS
-    # "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
     "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -lm -lpthread -pthread"
 )
 

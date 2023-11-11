@@ -7,7 +7,7 @@ std = {
 
 function AB.loadConfig()
     videoConfig = {
-        title = "AB SAMPLE PROJECT",
+        title = "MUSTARD PROJECT",
         xRes = 800,
         yRes = 600,
         xOffset = 0,
@@ -24,6 +24,9 @@ function AB.init()
 end
 
 function AB.update()
+    if (AB.input.keyPressed(AB.input.scancodes.ESCAPE)) then
+        AB.system.quit()
+    end
 end
 
 function AB.render()

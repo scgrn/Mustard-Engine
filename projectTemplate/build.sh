@@ -1,23 +1,24 @@
 #!/bin/bash
 
 config=$1
+source project.cfg
 
 function buildDebug() {
-    echo "Building project in debug mode..."
+    echo "Building $PROJECT_NAME in debug mode..."
 
     mkdir -p build/debug
     cd build/debug
-    cmake ../.. -D CMAKE_BUILD_TYPE=Debug
+    cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
     cd ../..
     cmake --build build/debug
 }
 
 function buildRelease() {
-    echo "Building project in release mode..."
+    echo "Building $PROJECT_NAME in release mode..."
 
     mkdir -p build/release
     cd build/release
-    cmake ../.. -D CMAKE_BUILD_TYPE=Release
+    cmake ../.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
     cd ../..
     cmake --build build/release
 }
@@ -29,6 +30,8 @@ function buildAssets() {
 }
 
 function buildDist() {
+    echo "Building $PROJECT_NAME for distribution..."
+    
     buildAssets
     buildRelease
     
