@@ -66,12 +66,13 @@ Copy the projectTemplate folder somwhere (Mustard's parent folder is a good plac
 Edit `project.cfg`:
 Change PROJECT_NAME to the name of your project, obvi.  
 
-MUSTARD_PATH should point to wherever you've installed Mustard. You'll need to edit this if you've copied the  
+MUSTARD_PATH should point to wherever you've installed Mustard. You'll need to edit this if you've copied the 
 projectTemplate folder to anywhere other than Mustard's parent folder.  
 
 If you're on Windows, you'll also need to edit SDL2_PATH to point to your SDL2 installation's cmake directory.
 
-Run `build` or `./build.sh` (depending on your development platform) without arguments to see a list of build options.
+Run `build` or `./build.sh` (depending on your development platform) without arguments to see a list of build options. Use the
+`run` script to run your project after building.
 
 <!-- Both debug and release mode will read assets from the assets folder. -->
 
