@@ -5,6 +5,8 @@ setlocal ENABLEEXTENSIONS
 setlocal
 set config=%1
 
+for /f "delims=" %%x in (project.cfg) do (set "%%x")
+
 if "%config%" == "debug" (
     call:buildDebug
 ) else if "%config%" == "release" (
@@ -37,7 +39,7 @@ exit /b 0
 
     md build\debug 2> nul
     cd build\debug
-    cmake ..\.. -D CMAKE_BUILD_TYPE=Debug
+    cmake ..\.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
     cd ..\..
     cmake --build build\debug    
 exit /b 0
@@ -47,7 +49,7 @@ exit /b 0
 
     md build\release 2> nul
     cd build\release
-    cmake ..\.. -D CMAKE_BUILD_TYPE=Release
+    cmake ..\.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
     cd ..\..
     cmake --build build\release    
 exit /b 0
