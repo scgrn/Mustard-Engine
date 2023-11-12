@@ -27,8 +27,8 @@ Dependencies
 
 Features
 -------
-* Online texture atlassing
 * Full Lua API for 2D (you don't need to touch any C++ code if you don't want to)
+* Online texture atlassing
 * Pixel-precise collision detection with rotation and scaling
 * OpenGL immediate mode emulation
 * Steamworks integration
@@ -61,18 +61,21 @@ Run `./build.sh all`
 Usage
 -------
 
-Copy the projectTemplate folder into Mustard's parent folder and rename it to your project name.
+Copy the projectTemplate folder somwhere (Mustard's parent folder is a good place) and rename it to your project name.
 
-You're also free to copy the projectTemplate folder to wherever you'd like, but you'll have to  
-edit the build scripts to point them back to Mustard.
+Edit `project.cfg`:
+Change PROJECT_NAME to the name of your project, obvi.  
 
-...
+MUSTARD_PATH should point to wherever you've installed Mustard. You'll need to edit this if you've copied the  
+projectTemplate folder to anywhere other than Mustard's parent folder.  
 
-Run `build` or `./build.sh` (depending on your development platform) without arguments to see a list of options.
+If you're on Windows, you'll also need to edit SDL2_PATH to point to your SDL2 installation's cmake directory.
 
-Both debug and release mode will read assets from the assets folder.
+Run `build` or `./build.sh` (depending on your development platform) without arguments to see a list of build options.
 
-<!-- TODO -->
+<!-- Both debug and release mode will read assets from the assets folder. -->
+
+<!-- TODO (link to APIs, etc -->
 
 Steamworks Integration
 -------
