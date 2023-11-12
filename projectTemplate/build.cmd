@@ -3,10 +3,9 @@
 setlocal ENABLEEXTENSIONS
 
 setlocal
-set config=%1
-
 for /f "delims=" %%x in (project.cfg) do (set "%%x")
 
+set config=%1
 if "%config%" == "debug" (
     call:buildDebug
 ) else if "%config%" == "release" (
@@ -35,33 +34,30 @@ endlocal
 exit /b 0
 
 :buildDebug
-    echo Building project in debug mode...
+    echo Building %PROJECT_NAME% in debug mode...
 
     md build\debug 2> nul
     cd build\debug
-    cmake ..\.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
+    cmake ..\.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=%PROJECT_NAME% -DMUSTARD_DIR=%MUSTARD_PATH% -DSDL2_DIR=%SDL2_PATH%
     cd ..\..
-    cmake --build build\debug    
+    cmake --build build\debug
 exit /b 0
 
 :buildRelease
-    echo Building project in release mode...
+    echo Building %PROJECT_NAME% in release mode...
 
     md build\release 2> nul
     cd build\release
-    cmake ..\.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
+    cmake ..\.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=%PROJECT_NAME% -DMUSTARD_DIR=%MUSTARD_PATH% -DSDL2_DIR=%SDL2_PATH%
     cd ..\..
-    cmake --build build\release    
+    cmake --build build\release
 exit /b 0
 
 :buildAssets
     echo Building asset archive...
 
-    SET ENCYPTION_KEY="Jordan, I SWEAR TO GOD!!"
-    SET MUSTARD_PATH=..\Mustard
-
     CD assets
-    %MUSTARD_PATH%\bin\Mustard-AssetCompiler "..\Assets.dat" %ENCYPTION_KEY%
+    %MUSTARD_PATH%\bin\Mustard-AssetCompiler %PROJECT_NAME%".dat" %ENCYPTION_KEY%
     CD ..
 exit /b 0
 
