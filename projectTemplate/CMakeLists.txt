@@ -20,6 +20,10 @@ add_executable(${PROJECT_NAME}
     # add other project sources here
 )
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif ()
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/src/main)
 target_include_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/src/vendor)
 

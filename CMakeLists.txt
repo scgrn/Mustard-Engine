@@ -11,13 +11,16 @@ set(CMAKE_CXX_FLAGS
 )
 
 add_compile_definitions(
-    DEBUG
     WITH_MINIAUDIO
 
     # for emscripten
     # https://uncovergame.com/2015/01/21/porting-a-complete-c-game-engine-to-html5-through-emscripten/
     LUA_COMPAT_ALL
 )
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif ()
 
 # Find SDL2 package
 set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")

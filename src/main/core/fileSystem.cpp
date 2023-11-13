@@ -239,10 +239,10 @@ DataObject::DataObject(const char* path, bool forceLocal) {
         }
     }
     LOG("File <%s> not found in archive, loading from local filesystem", path);
-#ifdef DEBUG
+// #ifdef DEBUG
     data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
     return;
-#endif
+// #endif
     std::string filename = path;
     ERR("File not found: %s", filename.c_str());
 }
