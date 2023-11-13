@@ -121,7 +121,7 @@ These are called from the engine during the main loop or when system events occu
 // @param index Gamepad index
 
 /// Called when a gamepad is disconnected
-// @function AB.onGamepadDisonnected
+// @function AB.onGamepadDisconnected
 // @param index Gamepad index
 
 /// Called when a gamedpad button is pressed
