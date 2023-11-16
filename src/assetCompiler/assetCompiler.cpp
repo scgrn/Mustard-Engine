@@ -31,8 +31,8 @@ freely, subject to the following restrictions:
 #include <vector>
 #include <sstream>
 
-#include "zlib.h"
-#include "tinyxml.h"
+#include "../vendor/zlib-1.2.11/zlib.h"
+#include "../vendor/tinyxml/tinyxml.h"
 
 std::string key;
 

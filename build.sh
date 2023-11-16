@@ -22,6 +22,15 @@ function buildRelease() {
     cmake --build build/release
 }
 
+function buildAssetCompiler() {
+    echo "Building asset compiler...."
+    
+    mkdir -p build/assetCompiler
+    cd build/assetCompiler
+    cmake ../../src/assetCompiler -D CMAKE_BUILD_TYPE=Release
+    cd ../..
+}
+
 function buildDocs() {
     echo "Building Lua API Documentation..."
 
@@ -38,6 +47,8 @@ if [ "$config" == "debug" ]; then
     buildDebug
 elif [ "$config" == "release" ]; then
     buildRelease
+elif [ "$config" == "assetCompiler" ]; then
+    buildAssetCompiler
 elif [ "$config" == "docs" ]; then
     buildDocs
 elif [ "$config" == "tests" ]; then
@@ -45,6 +56,7 @@ elif [ "$config" == "tests" ]; then
 elif [ "$config" == "all" ]; then
     buildDebug
     buildRelease
+    buildAssetCompiler
     buildDocs
     buildTests
 else
@@ -54,6 +66,7 @@ else
     echo
     echo debug
     echo release
+    echo assetCompiler
     echo docs
     echo tests
     echo all
