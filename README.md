@@ -36,7 +36,9 @@ Features
 
 Build and installation
 -------
-You will need [CMake](https://cmake.org/) to build. 
+You will need [CMake](https://cmake.org/) version 3.12 or above for build configuration. Mustard has been tested generating Unix Makefiles on Linux and MinGW Makefiles
+on Windows. No other generators have been tested, so YMMV.  
+
 You will also need to install SDL2 as it is not vendored in this repo.
 
 #### Windows:  
