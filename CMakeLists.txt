@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(Mustard-${CMAKE_BUILD_TYPE} VERSION 1.0.0)
+project(Mustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE} VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -9,6 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
 )
+if (DEFINED EMSCRIPTEN)
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} -msimd128"
+    )
+endif()
 
 add_compile_definitions(
     WITH_MINIAUDIO
@@ -131,6 +136,9 @@ target_include_directories(${PROJECT_NAME}
 
 # Link libraries and options
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
+if (DEFINED EMSCRIPTEN)
+    target_link_options(${PROJECT_NAME} PRIVATE "-sUSE_SDL=2")    
+endif()
 
 if(WIN32)
     add_compile_definitions(

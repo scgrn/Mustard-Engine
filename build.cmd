@@ -9,6 +9,10 @@ if "%config%" == "debug" (
     call:buildDebug
 ) else if "%config%" == "release" (
     call:buildRelease
+) else if "%config%" == "web" (
+    call:buildWeb
+) else if "%config%" == "assetCompiler" (
+    call:buildAssetCompiler
 ) else if "%config%" == "docs" (
     call:buildDocs
 ) else if "%config%" == "tests" (
@@ -16,6 +20,8 @@ if "%config%" == "debug" (
 ) else if "%config%" == "all" (
     call:buildDebug
     call:buildRelease
+    call:buildWeb
+    call:buildAssetCompiler
     call:buildDocs
     call:buildTests
 ) else (
@@ -25,6 +31,8 @@ if "%config%" == "debug" (
     echo.
     echo debug
     echo release
+    echo web
+    echo assetCompiler
     echo docs
     echo tests
     echo all
@@ -53,6 +61,27 @@ exit /b 0
     cmake --build build\release    
 exit /b 0
 
+:buildWeb
+    echo Building Mustard Engine for web...
+
+    md build\web 2> nul
+    cd build\web
+    :: TODO: set output name, ie libMustard-Web.a
+    call emcmake cmake ..\.. -D CMAKE_BUILD_TYPE=Release
+    cd ..\..
+    cmake --build build\web 
+exit /b 0
+
+:buildAssetCompiler
+    echo Building asset compiler...
+
+    md build\assetCompiler 2> nul
+    cd build\assetCompiler
+    cmake ..\..\src\assetCompiler -D CMAKE_BUILD_TYPE=Release
+    cd ..\..
+    cmake --build build\assetCompiler
+exit /b 0
+
 :buildDocs
     echo Building Lua API Documentation...
 
@@ -65,4 +94,3 @@ exit /b 0
 
     :: TODO: implement
 exit /b 0
-

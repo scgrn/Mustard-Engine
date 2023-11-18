@@ -56,9 +56,10 @@ exit /b 0
 :buildAssets
     echo Building asset archive...
 
-    CD assets
-    %MUSTARD_PATH%\bin\Mustard-AssetCompiler %PROJECT_NAME%".dat" %ENCYPTION_KEY%
-    CD ..
+    set MUSTARD_PATH=%MUSTARD_PATH:/=\%
+    cd assets
+    ..\%MUSTARD_PATH%\bin\Mustard-AssetCompiler ..\%PROJECT_NAME%.dat %ENCYPTION_KEY%
+    cd ..
 exit /b 0
 
 :buildDist

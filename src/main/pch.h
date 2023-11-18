@@ -52,6 +52,7 @@ freely, subject to the following restrictions:
 #ifdef __EMSCRIPTEN__
 #include <GLES3/gl3.h>
 #include <GLES3/gl2ext.h>
+#include <SDL.h>
 #include <emscripten.h>
 #else
 #include "glad/glad.h"
