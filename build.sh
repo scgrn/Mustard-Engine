@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 config=$1
 
 function buildDebug() {
