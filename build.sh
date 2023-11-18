@@ -29,6 +29,7 @@ function buildAssetCompiler() {
     cd build/assetCompiler
     cmake ../../src/assetCompiler -D CMAKE_BUILD_TYPE=Release
     cd ../..
+    cmake --build build/assetCompiler
 }
 
 function buildDocs() {

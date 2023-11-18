@@ -26,7 +26,9 @@ function buildRelease() {
 function buildAssets() {
     echo "Building asset archive..."
 
-    # TODO: implement
+    cd assets
+    ../$MUSTARD_PATH/bin/Mustard-AssetCompiler ../$PROJECT_NAME.dat $ENCYPTION_KEY
+    cd ..
 }
 
 function buildDist() {
