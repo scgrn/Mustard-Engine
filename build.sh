@@ -23,14 +23,24 @@ function buildRelease() {
     cmake --build build/release
 }
 
-function buildWeb() {
-    echo "Building Mustard Engine for web..."
+function buildWebDebug() {
+    echo "Building Mustard Engine for web in debug mode..."
 
-    mkdir -p build/web
-    cd build/web
+    mkdir -p build/web-debug
+    cd build/web-debug
+    emcmake cmake ../.. -D CMAKE_BUILD_TYPE=Debug
+    cd ../..
+    cmake --build build/web-debug
+}
+
+function buildWebRelease() {
+    echo "Building Mustard Engine for web in release..."
+
+    mkdir -p build/web-release
+    cd build/web-release
     emcmake cmake ../.. -D CMAKE_BUILD_TYPE=Release
     cd ../..
-    cmake --build build/web 
+    cmake --build build/web-release
 }
 
 function buildAssetCompiler() {
@@ -59,8 +69,10 @@ if [ "$config" == "debug" ]; then
     buildDebug
 elif [ "$config" == "release" ]; then
     buildRelease
-elif [ "$config" == "web" ]; then
-    buildWeb
+elif [ "$config" == "web-debug" ]; then
+    buildWebDebug
+elif [ "$config" == "web-release" ]; then
+    buildWebRelease
 elif [ "$config" == "assetCompiler" ]; then
     buildAssetCompiler
 elif [ "$config" == "docs" ]; then
@@ -70,7 +82,8 @@ elif [ "$config" == "tests" ]; then
 elif [ "$config" == "all" ]; then
     buildDebug
     buildRelease
-    buildWeb
+    buildWebDebug
+    buildWebRelease
     buildAssetCompiler
     buildDocs
     buildTests
@@ -81,7 +94,8 @@ else
     echo
     echo debug
     echo release
-    echo web
+    echo web-debug
+    echo web-release
     echo assetCompiler
     echo docs
     echo tests

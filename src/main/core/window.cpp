@@ -178,8 +178,10 @@ void Window::setVideoMode(Application *app) {
     }
 
     SDL_DisableScreenSaver();
+#ifndef __EMSCRIPTEN__
     gladLoadGLLoader(SDL_GL_GetProcAddress);
     glEnable(GL_MULTISAMPLE);
+#endif
 
     //    avoids white screen flash at startup
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

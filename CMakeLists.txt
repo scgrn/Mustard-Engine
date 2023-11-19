@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(Mustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE} VERSION 1.0.0)
+if (DEFINED EMSCRIPTEN)
+    project(Mustard-Web-${CMAKE_BUILD_TYPE} VERSION 1.0.0)
+else()
+    project(Mustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE} VERSION 1.0.0)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -11,7 +15,7 @@ set(CMAKE_CXX_FLAGS
 )
 if (DEFINED EMSCRIPTEN)
     set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS} -msimd128"
+        "${CMAKE_CXX_FLAGS} -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1"
     )
 endif()
 
@@ -57,10 +61,6 @@ set(MAIN_SOURCE
     ${PROJECT_SOURCE_DIR}/src/main/math/random.cpp
     ${PROJECT_SOURCE_DIR}/src/main/math/vector.cpp
 
-    ${PROJECT_SOURCE_DIR}/src/main/misc/capture.cpp
-    ${PROJECT_SOURCE_DIR}/src/main/misc/console.cpp
-    ${PROJECT_SOURCE_DIR}/src/main/misc/profiler.cpp
-
     ${PROJECT_SOURCE_DIR}/src/main/renderer/camera.cpp
     ${PROJECT_SOURCE_DIR}/src/main/renderer/font.cpp
     ${PROJECT_SOURCE_DIR}/src/main/renderer/image.cpp
@@ -88,19 +88,32 @@ set(MAIN_SOURCE
     ${PROJECT_SOURCE_DIR}/src/main/script/system.cpp
 )
 
-set(PLATFORM_SOURCE
-    ${PLATFORM_DIR}/desktop.cpp
-)
+if (NOT DEFINED EMSCRIPTEN)
+    set(MAIN_SOURCE
+        ${MAIN_SOURCE}
+        ${PROJECT_SOURCE_DIR}/src/main/misc/capture.cpp
+        ${PROJECT_SOURCE_DIR}/src/main/misc/console.cpp
+        ${PROJECT_SOURCE_DIR}/src/main/misc/profiler.cpp
+    )
+endif()
+
+if (NOT DEFINED EMSCRIPTEN)
+    set(PLATFORM_SOURCE
+        ${PLATFORM_DIR}/desktop.cpp
+    )
+endif()
 
 # Collect third-party sources
 aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/tinyxml" TINYXML_SOURCE)
-aux_source_directory("${VENDOR_DIR}/zlib-1.2.11" ZLIB_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/core" SOLOUD_CORE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource/wav" SOLOUD_AUDIOSOURCE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/filter" SOLOUD_FILTER_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/backend/miniaudio" SOLOUD_BACKEND_SOURCE)
+if (NOT DEFINED EMSCRIPTEN)
+    aux_source_directory("${VENDOR_DIR}/zlib-1.2.11" ZLIB_SOURCE)
+endif()
 
 # Remove unused source files
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/lua.c")
@@ -136,9 +149,6 @@ target_include_directories(${PROJECT_NAME}
 
 # Link libraries and options
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
-if (DEFINED EMSCRIPTEN)
-    target_link_options(${PROJECT_NAME} PRIVATE "-sUSE_SDL=2")    
-endif()
 
 if(WIN32)
     add_compile_definitions(
