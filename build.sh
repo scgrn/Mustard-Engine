@@ -8,7 +8,7 @@ function buildDebug() {
 
     mkdir -p build/debug
     cd build/debug
-    cmake ../.. -D CMAKE_BUILD_TYPE=Debug
+    cmake ../../src/platform/desktop -D CMAKE_BUILD_TYPE=Debug
     cd ../..
     cmake --build build/debug
 }
@@ -18,7 +18,7 @@ function buildRelease() {
 
     mkdir -p build/release
     cd build/release
-    cmake ../.. -D CMAKE_BUILD_TYPE=Release
+    cmake ../../src/platform/desktop -D CMAKE_BUILD_TYPE=Release
     cd ../..
     cmake --build build/release
 }
@@ -28,7 +28,7 @@ function buildWebDebug() {
 
     mkdir -p build/web-debug
     cd build/web-debug
-    emcmake cmake ../.. -D CMAKE_BUILD_TYPE=Debug
+    emcmake cmake ../../src/platform/web -D CMAKE_BUILD_TYPE=Debug
     cd ../..
     cmake --build build/web-debug
 }
@@ -38,7 +38,7 @@ function buildWebRelease() {
 
     mkdir -p build/web-release
     cd build/web-release
-    emcmake cmake ../.. -D CMAKE_BUILD_TYPE=Release
+    emcmake cmake ../../src/platform/web -D CMAKE_BUILD_TYPE=Release
     cd ../..
     cmake --build build/web-release
 }
