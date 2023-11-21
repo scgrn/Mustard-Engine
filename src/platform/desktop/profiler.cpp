@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 
 **/
 
-#include "../pch.h"
+#include "pch.h"
 
 #include "profiler.h"
 

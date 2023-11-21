@@ -9,8 +9,10 @@ if "%config%" == "debug" (
     call:buildDebug
 ) else if "%config%" == "release" (
     call:buildRelease
-) else if "%config%" == "web" (
-    call:buildWeb
+) else if "%config%" == "web-debug" (
+    call:buildWebDebug
+) else if "%config%" == "web-release" (
+    call:buildWebRelease
 ) else if "%config%" == "assetCompiler" (
     call:buildAssetCompiler
 ) else if "%config%" == "docs" (
@@ -20,7 +22,8 @@ if "%config%" == "debug" (
 ) else if "%config%" == "all" (
     call:buildDebug
     call:buildRelease
-    call:buildWeb
+    call:buildWebDebug
+    call:buildWebRelease
     call:buildAssetCompiler
     call:buildDocs
     call:buildTests
@@ -31,7 +34,8 @@ if "%config%" == "debug" (
     echo.
     echo debug
     echo release
-    echo web
+    echo web-debug
+    echo web-release
     echo assetCompiler
     echo docs
     echo tests
@@ -46,7 +50,7 @@ exit /b 0
 
     md build\debug 2> nul
     cd build\debug
-    cmake ..\.. -D CMAKE_BUILD_TYPE=Debug
+    cmake ../../src/platform/desktop -D CMAKE_BUILD_TYPE=Debug
     cd ..\..
     cmake --build build\debug    
 exit /b 0
@@ -56,20 +60,29 @@ exit /b 0
 
     md build\release 2> nul
     cd build\release
-    cmake ..\.. -D CMAKE_BUILD_TYPE=Release
+    cmake ../../src/platform/desktop -D CMAKE_BUILD_TYPE=Release
     cd ..\..
     cmake --build build\release    
 exit /b 0
 
-:buildWeb
-    echo Building Mustard Engine for web...
+:buildWebDebug
+    echo Building Mustard Engine for web in debug mode...
 
-    md build\web 2> nul
-    cd build\web
-    :: TODO: set output name, ie libMustard-Web.a
-    call emcmake cmake ..\.. -D CMAKE_BUILD_TYPE=Release
+    md build\web-debug 2> nul
+    cd build\web-debug
+    call emcmake cmake ..\..\src\platform\web -D CMAKE_BUILD_TYPE=Debug
     cd ..\..
-    cmake --build build\web 
+    cmake --build build\web-debug
+exit /b 0
+
+:buildWebRelease
+    echo Building Mustard Engine for web in release mode...
+
+    md build\web-release 2> nul
+    cd build\web-release
+    call emcmake cmake ..\..\src\platform\web -D CMAKE_BUILD_TYPE=Release
+    cd ..\..
+    cmake --build build\web-release
 exit /b 0
 
 :buildAssetCompiler

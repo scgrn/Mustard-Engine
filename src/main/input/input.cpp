@@ -22,22 +22,27 @@ freely, subject to the following restrictions:
 
 **/
 
-#include "../pch.h"
+#include "pch.h"
 
 #include "input.h"
-#include "../script/script.h"
-#include "../core/log.h"
-#include "../core/fileSystem.h"
-#include "../core/window.h"
-#include "../misc/misc.h"
-#include "../misc/console.h"
+#include "script/script.h"
+#include "core/log.h"
+#include "core/fileSystem.h"
+#include "core/window.h"
+#include "misc/misc.h"
+
+#ifdef DEBUG
+#include "../../platform/desktop/console.h"
+#endif
 
 namespace AB {
 
 static const int MAX_GAMEPADS = 4;
 static const float DEFAULT_DEADZONE = 0.1f;
 
+#ifdef DEBUG
 extern Console console;
+#endif
 extern Script script;
 extern std::vector<SDL_Event> eventQueue;
 
@@ -242,10 +247,12 @@ void Input::update() {
             if (event->key.keysym.sym == SDLK_RETURN && (event->key.keysym.mod & KMOD_ALT)) {
                 script.execute("AB.onToggleFullscreen()");
             } else {
+#ifdef DEBUG
                 if (!console.active) {
                     //  pass to lua
                     script.execute("AB.onKeyPressed(" + toString(event->key.keysym.scancode) + ")");
                 }
+#endif
             }
             
             if (event->key.keysym.sym == SDLK_ESCAPE) {

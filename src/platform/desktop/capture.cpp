@@ -22,11 +22,11 @@ freely, subject to the following restrictions:
 
 **/
 
-#include "../pch.h"
+#include "../../main/pch.h"
 
 #include "capture.h"
-#include "../misc/misc.h"
-#include "../core/log.h"
+#include "../../main/misc/misc.h"
+#include "../../main/core/log.h"
 
 namespace AB {
 

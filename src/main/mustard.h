@@ -35,7 +35,9 @@ freely, subject to the following restrictions:
 #include "core/fileSystem.h"
 #include "core/window.h"
 #include "core/log.h"
-#include "misc/console.h"
+#ifdef DEBUG
+#include "../platform/desktop/console.h"
+#endif
 
 #include "renderer/renderer.h"
 #include "renderer/sprite.h"

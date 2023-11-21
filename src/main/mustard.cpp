@@ -34,7 +34,9 @@ Audio audio;
 Script script;
 Input input;
 Window window;
+#ifdef DEBUG
 Console console;
+#endif
 
 ResourceManager<Sprite> sprites;
 ResourceManager<Shader> shaders;

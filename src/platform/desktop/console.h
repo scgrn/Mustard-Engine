@@ -28,10 +28,10 @@ freely, subject to the following restrictions:
 #include <list>
 #include <iostream>
 
-#include "../core/subsystem.h"
+#include "../../main/core/subsystem.h"
 
-#include "../renderer/font.h"
-#include "../renderer/camera.h"
+#include "../../main/renderer/font.h"
+#include "../../main/renderer/camera.h"
 
 namespace AB {
 

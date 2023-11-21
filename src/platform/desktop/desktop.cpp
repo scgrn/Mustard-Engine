@@ -46,8 +46,8 @@ freely, subject to the following restrictions:
 #include "../../main/core/window.h"
 
 #ifdef DEBUG
-#include "../../main/misc/capture.h"
-#include "../../main/misc/console.h"
+#include "capture.h"
+#include "console.h"
 #endif  //  DEBUG
 
 //  TODO: this needs to be in common code somewhere for android, web

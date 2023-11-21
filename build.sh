@@ -34,7 +34,7 @@ function buildWebDebug() {
 }
 
 function buildWebRelease() {
-    echo "Building Mustard Engine for web in release..."
+    echo "Building Mustard Engine for web in release mode..."
 
     mkdir -p build/web-release
     cd build/web-release

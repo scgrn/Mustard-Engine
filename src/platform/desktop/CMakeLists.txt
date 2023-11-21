@@ -24,7 +24,6 @@ set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
 find_package(SDL2 REQUIRED)
 
 set(VENDOR_DIR "../../vendor")
-set(PLATFORM_DIR "../../platform/desktop")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../../bin)
 
@@ -75,12 +74,17 @@ set(MAIN_SOURCE
     ../../main/script/script.cpp
     ../../main/script/system.cpp
 
-    ../../main/misc/capture.cpp
-    ../../main/misc/console.cpp
-    ../../main/misc/profiler.cpp
-
     desktop.cpp
 )
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(MAIN_SOURCE
+        ${MAIN_SOURCE}
+        capture.cpp
+        console.cpp
+        profiler.cpp
+    )
+endif()
 
 # Collect third-party sources
 aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
@@ -99,7 +103,6 @@ list(REMOVE_ITEM TINYXML_SOURCE "${VENDOR_DIR}/tinyxml/xmltest.cpp")
 
 add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
-    ${PLATFORM_SOURCE}
     ${LUA_SOURCE}
     ${TINYXML_SOURCE}
     ${ZLIB_SOURCE}
@@ -111,14 +114,13 @@ add_library(${PROJECT_NAME} STATIC
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC "../../main"
+    PUBLIC "."
     PUBLIC "${VENDOR_DIR}"
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
     PUBLIC "${VENDOR_DIR}/soloud20200207/include"
     PUBLIC "${VENDOR_DIR}/tinyxml"
     PUBLIC "${VENDOR_DIR}/zlib-1.2.11"
-    PUBLIC "${PLATFORM_DIR}/win64"
-    PUBLIC "${PLATFORM_DIR}/win64/glad"
-    PUBLIC ${SDL2_INCLUDE_DIRS}
+    PUBLIC "${SDL2_INCLUDE_DIRS}"
 )
 
 # Link libraries and options

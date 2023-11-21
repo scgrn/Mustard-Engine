@@ -22,17 +22,17 @@ freely, subject to the following restrictions:
 
 **/
 
-#include "../pch.h"
+#include "../../main/pch.h"
 
 #include "console.h"
 
 #include <list>
 #include <time.h>
 
-#include "../core/version.h"
-#include "../script/script.h"
-#include "../core/log.h"
-#include "../core/window.h"
+#include "core/version.h"
+#include "script/script.h"
+#include "core/log.h"
+#include "core/window.h"
 
 namespace AB {
 
