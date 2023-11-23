@@ -43,7 +43,7 @@ class PerlinNoise {
         PerlinNoise(u32 seed);
         ~PerlinNoise();
 
-        f32 noise(f32 x, f32 y, f32 z, int octaves, f32 persistence);
+        f32 noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence);
 
     protected:
         static const int SAMPLE_SIZE = 256;
@@ -54,7 +54,7 @@ class PerlinNoise {
         f32 sample(f32 x, f32 y, f32 z);
         f32 grad(int hash, f32 x, f32 y, f32 z);
 
-        int p[SAMPLE_SIZE * 2];
+        i32 p[SAMPLE_SIZE * 2];
 };
 
 }   //  namespace

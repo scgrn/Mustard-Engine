@@ -33,7 +33,7 @@ class Quaternion {
     public:
         Vec4 q;
 
-        float magnitude() {
+        f32 magnitude() {
             return sqrt((q.x * q.x) + (q.y * q.y) + (q.z * q.z) + (q.w * q.w));
         }
 
@@ -41,23 +41,23 @@ class Quaternion {
             q /= magnitude();
         }
 
-        void fromEuler(float pitch, float yaw, float roll) {
+        void fromEuler(f32 pitch, f32 yaw, f32 roll) {
             // Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll
             // and multiply those together.
             // the calculation below does the same, just shorter
 
-            const float PIOVER180 = M_PI / 180.0f;
+            const f32 PIOVER180 = M_PI / 180.0f;
 
-            float p = pitch * PIOVER180 / 2.0f;
-            float y = yaw * PIOVER180 / 2.0f;
-            float r = roll * PIOVER180 / 2.0f;
+            f32 p = pitch * PIOVER180 / 2.0f;
+            f32 y = yaw * PIOVER180 / 2.0f;
+            f32 r = roll * PIOVER180 / 2.0f;
 
-            float sinp = sin(p);
-            float siny = sin(y);
-            float sinr = sin(r);
-            float cosp = cos(p);
-            float cosy = cos(y);
-            float cosr = cos(r);
+            f32 sinp = sin(p);
+            f32 siny = sin(y);
+            f32 sinr = sin(r);
+            f32 cosp = cos(p);
+            f32 cosy = cos(y);
+            f32 cosr = cos(r);
 
             q.x = sinr * cosp * cosy - cosr * sinp * siny;
             q.y = cosr * sinp * cosy + sinr * cosp * siny;
@@ -70,17 +70,17 @@ class Quaternion {
         Mat4 toMatrix() {
             Mat4 ret;
 
-            float xx = q.x * q.x;
-            float xy = q.x * q.y;
-            float xz = q.x * q.z;
-            float xw = q.x * q.w;
+            f32 xx = q.x * q.x;
+            f32 xy = q.x * q.y;
+            f32 xz = q.x * q.z;
+            f32 xw = q.x * q.w;
 
-            float yy = q.y * q.y;
-            float yz = q.y * q.z;
-            float yw = q.y * q.w;
+            f32 yy = q.y * q.y;
+            f32 yz = q.y * q.z;
+            f32 yw = q.y * q.w;
 
-            float zz = q.z * q.z;
-            float zw = q.z * q.w;
+            f32 zz = q.z * q.z;
+            f32 zw = q.z * q.w;
 
             ret.data2d[0][0] = 1 - 2 * (yy + zz);
             ret.data2d[1][0] =     2 * (xy - zw);

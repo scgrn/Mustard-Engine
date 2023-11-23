@@ -54,17 +54,17 @@ inline T round(T val) {
     return (val > 0.0) ? floor(val + 0.5) : ceil(val - 0.5);
 }
 
-float inline toRadians(float val) {
+f32 inline toRadians(f32 val) {
     return val * (M_PI / 180.0f);
 }
 
-float inline toDegrees(float val) {
+f32 inline toDegrees(f32 val) {
     return val / (M_PI / 180.0f);
 }
 
 //  round up to next highest power of 2
 //  from http://graphics.stanford.edu/~seander/bithacks.html
-inline int nextPowerOfTwo(int v) {
+inline i32 nextPowerOfTwo(i32 v) {
     v--;
     v |= v >> 1;
     v |= v >> 2;

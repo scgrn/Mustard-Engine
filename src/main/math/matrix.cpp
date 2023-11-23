@@ -30,8 +30,8 @@ freely, subject to the following restrictions:
 namespace AB {
 
 Mat3::Mat3(Mat4 &mat4) {
-    for (int y = 0; y < 3; y++) {
-        for (int x = 0; x < 3; x++) {
+    for (i32 y = 0; y < 3; y++) {
+        for (i32 x = 0; x < 3; x++) {
             data2d[y][x] = mat4.data2d[y][x];
         }
     }
@@ -58,8 +58,8 @@ Mat4 ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
 Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
     Mat4 ret;
 
-    for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 4; x++) {
+    for (i32 y = 0; y < 4; y++) {
+        for (i32 x = 0; x < 4; x++) {
             ret.data2d[y][x] = 0.0f;
         }
     }
@@ -79,20 +79,20 @@ Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
     
     axis = normalize(axis);
 
-    float sinTheta = sin(toRadians(theta));
-    float cosTheta = cos(toRadians(theta));
-    float cosValue = 1.0f - cosTheta;
+    f32 si32heta = sin(toRadians(theta));
+    f32 cosTheta = cos(toRadians(theta));
+    f32 cosValue = 1.0f - cosTheta;
 
     ret.data2d[0][0] = (axis.x * axis.x * cosValue) + cosTheta;
-    ret.data2d[0][1] = (axis.x * axis.y * cosValue) + (axis.z * sinTheta);
-    ret.data2d[0][2] = (axis.x * axis.z * cosValue) - (axis.y * sinTheta);
+    ret.data2d[0][1] = (axis.x * axis.y * cosValue) + (axis.z * si32heta);
+    ret.data2d[0][2] = (axis.x * axis.z * cosValue) - (axis.y * si32heta);
 
-    ret.data2d[1][0] = (axis.y * axis.x * cosValue) - (axis.z * sinTheta);
+    ret.data2d[1][0] = (axis.y * axis.x * cosValue) - (axis.z * si32heta);
     ret.data2d[1][1] = (axis.y * axis.y * cosValue) + cosTheta;
-    ret.data2d[1][2] = (axis.y * axis.z * cosValue) + (axis.x * sinTheta);
+    ret.data2d[1][2] = (axis.y * axis.z * cosValue) + (axis.x * si32heta);
 
-    ret.data2d[2][0] = (axis.z * axis.x * cosValue) + (axis.y * sinTheta);
-    ret.data2d[2][1] = (axis.z * axis.y * cosValue) - (axis.x * sinTheta);
+    ret.data2d[2][0] = (axis.z * axis.x * cosValue) + (axis.y * si32heta);
+    ret.data2d[2][1] = (axis.z * axis.y * cosValue) - (axis.x * si32heta);
     ret.data2d[2][2] = (axis.z * axis.z * cosValue) + cosTheta;
 
     return (ret);
@@ -118,7 +118,7 @@ Mat4 scale(Vec3 scale) {
     return ret;
 }
 
-Mat4 rotateX(float theta) {
+Mat4 rotateX(f32 theta) {
     Mat4 rot;
 
     rot.data2d[1][1] = cos(theta);
@@ -129,7 +129,7 @@ Mat4 rotateX(float theta) {
     return rot;
 }
 
-Mat4 rotateY(float theta) {
+Mat4 rotateY(f32 theta) {
     Mat4 rot;
 
     rot.data2d[0][0] = cos(theta);
@@ -140,7 +140,7 @@ Mat4 rotateY(float theta) {
     return rot;
 }
 
-Mat4 rotateZ(float theta) {
+Mat4 rotateZ(f32 theta) {
     Mat4 rot;
 
     rot.data2d[0][0] = cos(theta);
@@ -154,8 +154,8 @@ Mat4 rotateZ(float theta) {
 Mat4 transpose(Mat4 matrix) {
    Mat4 ret;
 
-    for (int y = 0; y < 3; y++) {
-        for (int x = 0; x < 3; x++) {
+    for (i32 y = 0; y < 3; y++) {
+        for (i32 x = 0; x < 3; x++) {
             ret.data2d[x][y] = matrix.data2d[2 - x][2 - y];
         }
     }

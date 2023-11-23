@@ -35,17 +35,17 @@ namespace AB {
 struct Mat4;
 
 //  Generic vector
-template <typename T, int n> struct Vector {
+template <typename T, i32 n> struct Vector {
     T data[n];
 
     //  Subscript
-    T& operator[](int i) { return data[i]; }
-    const T& operator[](int i) const { return data[i]; }
+    T& operator[](i32 i) { return data[i]; }
+    const T& operator[](i32 i) const { return data[i]; }
 
     //  Addition, subtraction, multiplication, division
     Vector<T, n> operator- (const Vector<T, n> &v) {
         Vector<T, n> ret;
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             ret[i] = data[i] - v[i];
         }
         return ret;
@@ -53,23 +53,23 @@ template <typename T, int n> struct Vector {
 
     Vector<T, n> operator+ (const Vector<T, n> &v) {
         Vector<T, n> ret;
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             ret[i] = data[i] + v[i];
         }
         return ret;
     }
 
-    Vector<T, n> operator* (float const& scalar) {
+    Vector<T, n> operator* (f32 const& scalar) {
         Vector<T, n> ret;
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             ret[i] = data[i] * scalar;
         }
         return ret;
     }
 
-    Vector<T, n> operator/ (float const& scalar) {
+    Vector<T, n> operator/ (f32 const& scalar) {
         Vector<T, n> ret;
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             ret[i] = data[i] / scalar;
         }
         return ret;
@@ -77,28 +77,28 @@ template <typename T, int n> struct Vector {
 
     //  Assignment operators
     Vector<T, n>& operator-= (const Vector<T, n> &v) {
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             data[i] -= v[i];
         }
         return *this;
     }
 
     Vector<T, n>& operator+= (const Vector<T, n> &v) {
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             data[i] += v[i];
         }
         return *this;
     }
 
-    Vector<T, n>& operator*= (float const& scalar) {
-        for (int i = 0; i < n; i++) {
+    Vector<T, n>& operator*= (f32 const& scalar) {
+        for (i32 i = 0; i < n; i++) {
             data[i] *= scalar;
         }
         return *this;
     }
 
-    Vector<T, n>& operator/= (float const& scalar) {
-        for (int i = 0; i < n; i++) {
+    Vector<T, n>& operator/= (f32 const& scalar) {
+        for (i32 i = 0; i < n; i++) {
             data[i] /= scalar;
         }
         return *this;
@@ -107,14 +107,14 @@ template <typename T, int n> struct Vector {
     //  Unary negation, equality, inequality
     Vector<T, n> operator- () {
         Vector<T, n> ret;
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             ret[i] = -data[i];
         }
         return ret;
     }
 
     bool operator== (const Vector<T, n> &v) {
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             if (data[i] != v[i]) {
                 return false;
             }
@@ -123,7 +123,7 @@ template <typename T, int n> struct Vector {
     }
 
     bool operator!= (const Vector<T, n> &v) {
-        for (int i = 0; i < n; i++) {
+        for (i32 i = 0; i < n; i++) {
             if (data[i] == v[i]) {
                 return false;
             }
@@ -148,8 +148,8 @@ template <typename T> struct Vector<T, 2> {
     Vector<T, 2>(Vector<T, 4> v) : x(v.x), y(v.y) {}
     
     //  Subscript
-    T& operator[](int i) { return data[i]; }
-    const T& operator[](int i) const { return data[i]; }
+    T& operator[](i32 i) { return data[i]; }
+    const T& operator[](i32 i) const { return data[i]; }
 
     //  Addition, subtraction, multiplication, division
     Vector<T, 2> operator- (const Vector<T, 2> &v) {
@@ -166,14 +166,14 @@ template <typename T> struct Vector<T, 2> {
         return ret;
     }
 
-    Vector<T, 2> operator* (float const& scalar) {
+    Vector<T, 2> operator* (f32 const& scalar) {
         Vector<T, 2> ret;
         ret[0] = data[0] * scalar;
         ret[1] = data[1] * scalar;
         return ret;
     }
 
-    Vector<T, 2> operator/ (float const& scalar) {
+    Vector<T, 2> operator/ (f32 const& scalar) {
         Vector<T, 2> ret;
         ret[0] = data[0] / scalar;
         ret[1] = data[1] / scalar;
@@ -193,13 +193,13 @@ template <typename T> struct Vector<T, 2> {
         return *this;
     }
 
-    Vector<T, 2>& operator*= (float const& scalar) {
+    Vector<T, 2>& operator*= (f32 const& scalar) {
         data[0] *= scalar;
         data[1] *= scalar;
         return *this;
     }
 
-    Vector<T, 2>& operator/= (float const& scalar) {
+    Vector<T, 2>& operator/= (f32 const& scalar) {
         data[0] /= scalar;
         data[1] /= scalar;
         return *this;
@@ -237,8 +237,8 @@ template <typename T> struct Vector<T, 3> {
     Vector<T, 3>(Vector<T, 4> v) : x(v.x), y(v.y), z(v.z) {}
 
     //  Subscript
-    T& operator[](int i) { return data[i]; }
-    const T& operator[](int i) const { return data[i]; }
+    T& operator[](i32 i) { return data[i]; }
+    const T& operator[](i32 i) const { return data[i]; }
 
     //  Addition, subtraction, multiplication, division
     Vector<T, 3> operator- (const Vector<T, 3> &v) {
@@ -257,7 +257,7 @@ template <typename T> struct Vector<T, 3> {
         return ret;
     }
 
-    Vector<T, 3> operator* (float const& scalar) {
+    Vector<T, 3> operator* (f32 const& scalar) {
         Vector<T, 3> ret;
         ret[0] = data[0] * scalar;
         ret[1] = data[1] * scalar;
@@ -270,7 +270,7 @@ template <typename T> struct Vector<T, 3> {
         return m * v;
     }
 
-    Vector<T, 3> operator/ (float const& scalar) {
+    Vector<T, 3> operator/ (f32 const& scalar) {
         Vector<T, 3> ret;
         ret[0] = data[0] / scalar;
         ret[1] = data[1] / scalar;
@@ -293,14 +293,14 @@ template <typename T> struct Vector<T, 3> {
         return *this;
     }
 
-    Vector<T, 3>& operator*= (float const& scalar) {
+    Vector<T, 3>& operator*= (f32 const& scalar) {
         data[0] *= scalar;
         data[1] *= scalar;
         data[2] *= scalar;
         return *this;
     }
 
-    Vector<T, 3>& operator/= (float const& scalar) {
+    Vector<T, 3>& operator/= (f32 const& scalar) {
         data[0] /= scalar;
         data[1] /= scalar;
         data[2] /= scalar;
@@ -334,8 +334,8 @@ template <typename T> struct Vector<T, 4> {
     };
 
     //  Subscript
-    T& operator[](int i) { return data[i]; }
-    const T& operator[](int i) const { return data[i]; }
+    T& operator[](i32 i) { return data[i]; }
+    const T& operator[](i32 i) const { return data[i]; }
 
     Vector<T, 4>() : x(0), y(0), z(0), w(0) {}
     Vector<T, 4>(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
@@ -361,7 +361,7 @@ template <typename T> struct Vector<T, 4> {
         return ret;
     }
 
-    Vector<T, 4> operator* (float const& scalar) {
+    Vector<T, 4> operator* (f32 const& scalar) {
         Vector<T, 4> ret;
         ret[0] = data[0] * scalar;
         ret[1] = data[1] * scalar;
@@ -370,7 +370,7 @@ template <typename T> struct Vector<T, 4> {
         return ret;
     }
 
-    Vector<T, 4> operator/ (float const& scalar) {
+    Vector<T, 4> operator/ (f32 const& scalar) {
         Vector<T, 4> ret;
         ret[0] = data[0] / scalar;
         ret[1] = data[1] / scalar;
@@ -396,7 +396,7 @@ template <typename T> struct Vector<T, 4> {
         return *this;
     }
 
-    Vector<T, 4>& operator*= (float const& scalar) {
+    Vector<T, 4>& operator*= (f32 const& scalar) {
         data[0] *= scalar;
         data[1] *= scalar;
         data[2] *= scalar;
@@ -404,7 +404,7 @@ template <typename T> struct Vector<T, 4> {
         return *this;
     }
 
-    Vector<T, 4>& operator/= (float const& scalar) {
+    Vector<T, 4>& operator/= (f32 const& scalar) {
         data[0] /= scalar;
         data[1] /= scalar;
         data[2] /= scalar;
@@ -431,22 +431,22 @@ template <typename T> struct Vector<T, 4> {
     }
 };
 
-typedef Vector<float, 2> Vec2;
-typedef Vector<float, 3> Vec3;
-typedef Vector<float, 4> Vec4;
+typedef Vector<f32, 2> Vec2;
+typedef Vector<f32, 3> Vec3;
+typedef Vector<f32, 4> Vec4;
 
-template <typename T, int n>
-float magnitude(Vector<T, n> const& v) {
-    float sum = 0;
-    for (int i = 0; i < n; i++) {
+template <typename T, i32 n>
+f32 magnitude(Vector<T, n> const& v) {
+    f32 sum = 0;
+    for (i32 i = 0; i < n; i++) {
         sum += (v[i] * v[i]);
     }
     return sqrt(sum);
 }
 
-template <typename T, int n>
+template <typename T, i32 n>
 Vector<T, n> normalize(Vector<T, n> &v) {
-    float l = magnitude(v);
+    f32 l = magnitude(v);
 
     if (l != 0.0f) {
         Vector<T, n> ret = v / l;
@@ -456,9 +456,9 @@ Vector<T, n> normalize(Vector<T, n> &v) {
     return v;
 }
 
-template <typename T, int n>
-Vector<T, n> truncate(Vector<T, n> &v, float const& length) {
-    float l = magnitude(v);
+template <typename T, i32 n>
+Vector<T, n> truncate(Vector<T, n> &v, f32 const& length) {
+    f32 l = magnitude(v);
 
     if (l > length) {
         Vector<T, n> ret = v / l;
@@ -469,10 +469,10 @@ Vector<T, n> truncate(Vector<T, n> &v, float const& length) {
     return v;
 }
 
-template <typename T, int n>
+template <typename T, i32 n>
 T dotProduct(Vector<T, n> &a, Vector<T, n> &b) {
     T ret = 0;
-    for (int i = 0; i < n; i++) {
+    for (i32 i = 0; i < n; i++) {
         ret += (a[i] * b[i]);
     }
     return ret;

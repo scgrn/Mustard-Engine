@@ -52,13 +52,13 @@ f32 PerlinNoise::lerp(f32 a, f32 b, f32 x) {
     return a + x * (b - a);
 }
 
-f32 PerlinNoise::noise(f32 x, f32 y, f32 z, int octaves, f32 persistence) {
+f32 PerlinNoise::noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence) {
     f32 total = 0.0f;
     f32 frequency = 1.0f;
     f32 amplitude = 1.0f;
     f32 maxValue = 0.0f;
 
-    for (int i = 0; i < octaves; i++) {
+    for (i32 i = 0; i < octaves; i++) {
         total += sample(x * frequency, y * frequency, z * frequency) * amplitude;
 
         maxValue += amplitude;
@@ -71,12 +71,12 @@ f32 PerlinNoise::noise(f32 x, f32 y, f32 z, int octaves, f32 persistence) {
 }
 
 f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
-    const int SAMPLE_MASK = PerlinNoise::SAMPLE_SIZE - 1;
+    const i32 SAMPLE_MASK = PerlinNoise::SAMPLE_SIZE - 1;
 
-    //  calculate nearest vertices and offset into cubic lattice
-    int xi = (int)floor(x) & SAMPLE_MASK;
-    int yi = (int)floor(y) & SAMPLE_MASK;
-    int zi = (int)floor(z) & SAMPLE_MASK;
+    //  calculate nearest vertices and offset i32o cubic lattice
+    i32 xi = (i32)floor(x) & SAMPLE_MASK;
+    i32 yi = (i32)floor(y) & SAMPLE_MASK;
+    i32 zi = (i32)floor(z) & SAMPLE_MASK;
     f32 xf = x - floor(x);
     f32 yf = y - floor(y);
     f32 zf = z - floor(z);
@@ -85,7 +85,7 @@ f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     f32 w = fade(zf);
 
     //  create hash
-    int aaa, aba, aab, abb, baa, bba, bab, bbb;
+    i32 aaa, aba, aab, abb, baa, bba, bab, bbb;
     aaa = p[p[p[xi] + yi] + zi];
     aba = p[p[p[xi] + (yi + 1)] + zi];
     aab = p[p[p[xi] + yi] + (zi + 1)];
@@ -95,7 +95,7 @@ f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     bab = p[p[p[(xi + 1)] + yi] + (zi + 1)];
     bbb = p[p[p[(xi + 1)] + (yi + 1)] + (zi + 1)];
 
-    //  interpolate gradients
+    //  i32erpolate gradients
     f32 x1, x2, y1, y2;
     x1 = lerp(grad(aaa, xf, yf, zf), grad(baa, xf - 1, yf, zf), u);
     x2 = lerp(grad(aba, xf, yf - 1, zf), grad(bba, xf - 1, yf - 1, zf), u);
@@ -108,7 +108,7 @@ f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     return (lerp(y1, y2, w) + 1.0f) / 2.0f;
 }
 
-f32 PerlinNoise::grad(int hash, f32 x, f32 y, f32 z) {
+f32 PerlinNoise::grad(i32 hash, f32 x, f32 y, f32 z) {
     switch (hash & 0xF) {
         case 0x0: return  x + y;
         case 0x1: return -x + y;
@@ -133,20 +133,20 @@ f32 PerlinNoise::grad(int hash, f32 x, f32 y, f32 z) {
 
 void PerlinNoise::init() {
     //  initialize permutation table
-    for (int i = 0; i < SAMPLE_SIZE; i++) {
+    for (i32 i = 0; i < SAMPLE_SIZE; i++) {
         p[i] = i;
     }
 
     //  Fisher-Yates shuffle
-    for (int i = SAMPLE_SIZE - 1; i >= 1; i--) {
-        int j = rnd(i);
-        int temp = p[i];
+    for (i32 i = SAMPLE_SIZE - 1; i >= 1; i--) {
+        i32 j = rnd(i);
+        i32 temp = p[i];
         p[i] = p[j];
         p[j] = temp;
     }
 
     //  double permutation table to avoid overflow
-    for (int i = 0; i < SAMPLE_SIZE; i++) {
+    for (i32 i = 0; i < SAMPLE_SIZE; i++) {
         p[i + SAMPLE_SIZE] = p[i];
     }
 }

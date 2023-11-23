@@ -41,7 +41,7 @@ namespace AB {
 
 /*
 //  Generic matrix
-template <typename T, int rows, int cols>
+template <typename T, i32 rows, i32 cols>
 struct Matrix {
     T data2d[rows][cols];
 
@@ -66,8 +66,8 @@ struct Mat3 {
     Mat3(Mat4 &mat4);
     
     void loadIdentity() {
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
+        for (i32 y = 0; y < 3; y++) {
+            for (i32 x = 0; x < 3; x++) {
                 data2d[y][x] = (x == y) ? 1.0f : 0.0f;
             }
         }
@@ -86,8 +86,8 @@ struct Mat3 {
     Mat3 operator* (Mat3 const& m) {
         Mat3 ret;
 
-        for (int c = 0; c < 3; c++) {
-            for (int r = 0; r < 3; r++) {
+        for (i32 c = 0; c < 3; c++) {
+            for (i32 r = 0; r < 3; r++) {
                 ret.data2d[c][r] = data2d[0][r] * m.data2d[c][0] +
                             data2d[1][r] * m.data2d[c][1] +
                             data2d[2][r] * m.data2d[c][2];
@@ -109,9 +109,9 @@ struct Mat4 {
     }
     
     Mat4(f32 data2d[]) {
-        int index = 0;
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 4; x++) {
+        i32 index = 0;
+        for (i32 y = 0; y < 4; y++) {
+            for (i32 x = 0; x < 4; x++) {
                 this->data2d[y][x] = data2d[index];
                 index++;
             }
@@ -121,16 +121,16 @@ struct Mat4 {
     Mat4(Mat3 m) {
         loadIdentity();
         
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
+        for (i32 y = 0; y < 3; y++) {
+            for (i32 x = 0; x < 3; x++) {
                 data2d[y][x] = m.data2d[y][x];
             }
         }
     }
 
     void loadIdentity() {
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 4; x++) {
+        for (i32 y = 0; y < 4; y++) {
+            for (i32 x = 0; x < 4; x++) {
                 data2d[y][x] = (x == y) ? 1.0f : 0.0f;
             }
         }
@@ -160,8 +160,8 @@ struct Mat4 {
     Mat4 operator* (Mat4 const& m) {
         Mat4 ret;
 
-        for (int c = 0; c < 4; c++) {
-            for (int r = 0; r < 4; r++) {
+        for (i32 c = 0; c < 4; c++) {
+            for (i32 r = 0; r < 4; r++) {
                 ret.data2d[c][r] = data2d[0][r] * m.data2d[c][0] +
                             data2d[1][r] * m.data2d[c][1] +
                             data2d[2][r] * m.data2d[c][2] +
