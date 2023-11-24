@@ -24,6 +24,10 @@ function buildRelease() {
 }
 
 function buildWebDebug() {
+    if [[ -z "${EMCMAKE}" ]]; then
+        source ~/emsdk/emsdk_env.sh
+    fi
+
     echo "Building Mustard Engine for web in debug mode..."
 
     mkdir -p build/web-debug
@@ -34,6 +38,10 @@ function buildWebDebug() {
 }
 
 function buildWebRelease() {
+    if [[ -z "${EMCMAKE}" ]]; then
+        source ~/emsdk/emsdk_env.sh
+    fi
+
     echo "Building Mustard Engine for web in release mode..."
 
     mkdir -p build/web-release
