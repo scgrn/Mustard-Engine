@@ -25,9 +25,25 @@ freely, subject to the following restrictions:
 #ifndef AB_PLANE_H
 #define AB_PLANE_H
 
+#include "vector.h"
+
 namespace AB {
 
 class Plane {
+    public:
+        Plane(Vec3 &v1, Vec3 &v2, Vec3 &v3);
+        Plane(void);
+        ~Plane();
+
+        void setPoints(Vec3 &v1, Vec3 &v2, Vec3 &v3);
+        void setNormalAndPoint(Vec3 &normal, Vec3 &point);
+        void setCoefficients(f32 a, f32 b, f32 c, f32 d);
+        f32 distance(Vec3 &p);
+
+        void print();
+
+        Vec3 normal,point;
+        f32 d;
 };
 
 }   //  namespace

@@ -47,6 +47,7 @@ set(MAIN_SOURCE
     ../../main/math/perlin.cpp
     ../../main/math/random.cpp
     ../../main/math/vector.cpp
+    ../../main/math/plane.cpp
 
     ../../main/renderer/camera.cpp
     ../../main/renderer/font.cpp
