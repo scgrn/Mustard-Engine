@@ -40,8 +40,6 @@ class Plane {
         void setCoefficients(f32 a, f32 b, f32 c, f32 d);
         f32 distance(Vec3 &p);
 
-        void print();
-
         Vec3 normal,point;
         f32 d;
 };

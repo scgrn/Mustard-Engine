@@ -31,18 +31,18 @@ namespace AB {
 
 class AABB {
     public:
+        AABB(Vec3 &corner, f32 x, f32 y, f32 z);
+        AABB(void);
+        ~AABB();
+
+        void setBox(Vec3 &corner, f32 x, f32 y, f32 z);
+
+        //  for use in frustum computations
+        Vec3 getVertexP(Vec3 &normal);
+        Vec3 getVertexN(Vec3 &normal);
+
         Vec3 corner;
         f32 x, y, z;
-
-        AABox::AABox(Vec3 &corner, f32 x, f32 y, f32 z);
-        AABox::AABox(void);
-        AABox::~AABox();
-
-        void AABox::setBox(Vec3 &corner, f32 x, f32 y, f32 z);
-
-        // for use in frustum computations
-        Vec3 AABox::getVertexP(Vec3 &normal);
-        Vec3 AABox::getVertexN(Vec3 &normal);
 };
 
 }   //  namespace

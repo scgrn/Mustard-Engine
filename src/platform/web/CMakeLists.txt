@@ -48,6 +48,7 @@ set(MAIN_SOURCE
     ../../main/math/random.cpp
     ../../main/math/vector.cpp
     ../../main/math/plane.cpp
+    ../../main/math/aabb.cpp
 
     ../../main/renderer/camera.cpp
     ../../main/renderer/font.cpp

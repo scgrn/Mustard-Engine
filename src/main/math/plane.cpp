@@ -66,7 +66,5 @@ f32 Plane::distance(Vec3 &p) {
     return (d + dotProduct(normal, p));
 }
 
-void Plane::print() {}
-
 }   //  namespace
 
