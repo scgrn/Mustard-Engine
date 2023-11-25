@@ -27,6 +27,9 @@ freely, subject to the following restrictions:
 
 #include <cmath>
 
+#include "vector.h"
+
+
 namespace AB {
     
 template<class T>
@@ -79,6 +82,37 @@ inline i32 nextPowerOfTwo(i32 v) {
 template<class T>
 T greatestCommonDevisor(T a, T b) {
     return (b == 0) ? a : greatestCommonDevisor(b, a % b);
+}
+
+f32 distance(Vec2 a, Vec2 b) {
+    return sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
+}
+
+f32 distPointToLine(Vec2 a, Vec2 b, Vec2 c) {
+	f32 l = distance(a, b);
+	if (l == 0.0f) {
+		return distance(a, c);
+	}
+	f32 r = ((c.x - a.x) * (b.x - a.x) + (c.y - a.y) * (b.y - a.y)) / (l * l);
+	r = max(0.0f, min(1.0f, r));
+	Vec2 p(a.x + r * (b.x - a.x), a.y + r * (b.y - a.y));
+
+	return distance(p, c);
+}
+
+b8 lineSegmentIntersection(Vec2 a, Vec2 b, Vec2 c, Vec2 d) {
+	f32 r = (a.y - c.y) * (d.x - c.x) - (a.x - c.x) * (d.y - c.y);
+	f32 s = (a.y - c.y) * (b.x - a.x) - (a.x - c.x) * (b.y - a.y);
+
+	f32 denom = (b.x - a.x) * (d.y - c.y) - (b.y - a.y) * (d.x - c.x);
+	if (denom != 0.0f) {
+		r /= denom;
+		s /= denom;
+
+		return r > 0.0f && r <= 1.0f && s > 0.0f && s <= 1.0f;
+	} else {
+		return false;
+	}
 }
 
 }    // namespace
