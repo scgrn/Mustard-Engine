@@ -2,7 +2,7 @@
 
 zlib License
 
-(C) 2021 Andrew Krause
+(C) 2023 Andrew Krause
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -25,9 +25,40 @@ freely, subject to the following restrictions:
 #ifndef AB_FRUSTUM_H
 #define AB_FRUSTUM_H
 
+#include "aabb.h"
+#include "plane.h"
+
 namespace AB {
 
 class Frustum {
+    public:
+        Frustum();
+        ~Frustum();
+
+        void setCamInternals(f32 angle, f32 ratio, f32 nearD, f32 farD);
+        void setCamDef(Vec3 &p, Vec3 &l, Vec3 &u);
+        i32 pointInFrustum(Vec3 &p);
+        i32 sphereInFrustum(Vec3 &p, f32 radius);
+        i32 boxInFrustum(AABB &box);
+
+        enum {OUTSIDE, INTERSECT, INSIDE};
+
+        Plane pl[6];
+
+        Vec3 ntl, ntr, nbl, nbr, ftl, ftr, fbl, fbr;
+        f32 nearD, farD, ratio, angle, tang;
+        f32 nw, nh, fw, fh;
+
+    private:
+        enum {
+            TOP = 0,
+            BOTTOM,
+            LEFT,
+            RIGHT,
+            NEAR,
+            FAR
+        };
+
 };
 
 }   //  namespace
