@@ -43,6 +43,7 @@ set(MAIN_SOURCE
 
     ../../main/input/input.cpp
 
+    ../../main/math/math.cpp
     ../../main/math/matrix.cpp
     ../../main/math/perlin.cpp
     ../../main/math/random.cpp
