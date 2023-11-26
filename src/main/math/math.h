@@ -32,6 +32,7 @@ freely, subject to the following restrictions:
 #include "quaternion.h"
 #include "random.h"
 #include "perlin.h"
+#include "frustum.h"
 
 namespace AB {
     
