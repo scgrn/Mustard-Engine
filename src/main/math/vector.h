@@ -437,6 +437,10 @@ typedef Vector<f32, 2> Vec2;
 typedef Vector<f32, 3> Vec3;
 typedef Vector<f32, 4> Vec4;
 
+typedef Vector<i32, 2> Vec2i;
+typedef Vector<i32, 3> Vec3i;
+typedef Vector<i32, 4> Vec4i;   // yagni?
+
 template <typename T, i32 n>
 f32 magnitude(Vector<T, n> const& v) {
     f32 sum = 0;
