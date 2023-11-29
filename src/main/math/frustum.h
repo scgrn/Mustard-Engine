@@ -32,22 +32,14 @@ namespace AB {
 
 class Frustum {
     public:
-        Frustum();
-        ~Frustum();
+        Frustum() {}
+        ~Frustum() {}
+        
+        b8 pointInFrustum(Vec3 &p);
+        b8 sphereInFrustum(Vec3 &p, f32 radius);
+        b8 boxInFrustum(AABB &box);
 
-        void setCamInternals(f32 angle, f32 ratio, f32 nearD, f32 farD);
-        void setCamDef(Vec3 &p, Vec3 &l, Vec3 &u);
-        i32 pointInFrustum(Vec3 &p);
-        i32 sphereInFrustum(Vec3 &p, f32 radius);
-        i32 boxInFrustum(AABB &box);
-
-        enum {OUTSIDE, INTERSECT, INSIDE};
-
-        Plane pl[6];
-
-        Vec3 ntl, ntr, nbl, nbr, ftl, ftr, fbl, fbr;
-        f32 nearD, farD, ratio, angle, tang;
-        f32 nw, nh, fw, fh;
+        Plane plane[6];
 
     private:
         enum {
@@ -64,3 +56,4 @@ class Frustum {
 }   //  namespace
 
 #endif
+

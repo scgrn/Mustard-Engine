@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #define AB_CAMERA_H
 
 #include "../math/math.h"
+#include "../math/frustum.h"
 
 namespace AB {
 
@@ -42,22 +43,24 @@ class Camera {
 class OrthographicCamera : public Camera {
     public:
         OrthographicCamera();
-        void setProjection(float left, float right, float bottom, float top);
+        void setProjection(f32 left, f32 right, f32 bottom, f32 top);
 };
 
 
 class PerspectiveCamera : public Camera {
     public:
         PerspectiveCamera();
-        void setProjection(float fov);
+        void setProjection(f32 fov, f32 near = 1.0f, f32 far = 1000.0f);
         void setView(Mat4 view);
         virtual void recalculateViewMatrix();
         Vec2 project(Vec3 point, Mat4 modelMatrix = Mat4());
+        Frustum generateFrustum();
         
         Vec3 rotation;
         Vec3 position;
+        f32 fov, aspect, near, far;
 };
 
-}
+}   //  namespace
 
 #endif

@@ -34,7 +34,7 @@ extern Window window;
 
 OrthographicCamera::OrthographicCamera() {}
 
-void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
+void OrthographicCamera::setProjection(f32 left, f32 right, f32 bottom, f32 top) {
     projectionMatrix = ortho(left, right, bottom, top, -1.0f, 1000.0f);
 }
 
@@ -43,12 +43,17 @@ PerspectiveCamera::PerspectiveCamera() {
     viewMatrix = Mat4();
 }
 
-void PerspectiveCamera::setProjection(float fov) {
-    projectionMatrix = perspective(toRadians(fov), (float)window.currentMode.xRes / (float)window.currentMode.yRes, 0.1f, 1000.0f);
+void PerspectiveCamera::setProjection(f32 fov, f32 near, f32 far) {
+    this->near = near;
+    this->far = far;
+    this->fov = toRadians(fov);
+    aspect = (f32)window.currentMode.xRes / (f32)window.currentMode.yRes;
+    projectionMatrix = perspective(fov, aspect, near, far);
 }
 
 void PerspectiveCamera::setView(Mat4 view) {
     viewMatrix = view;
+    viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
 
 void PerspectiveCamera::recalculateViewMatrix() {
@@ -59,6 +64,8 @@ void PerspectiveCamera::recalculateViewMatrix() {
     viewMatrix = viewMatrix * rotateZ(rotation.z);
     
     viewMatrix = viewMatrix * translate(position);
+
+    viewProjectionMatrix = viewMatrix * projectionMatrix;
 }
 
 Vec2 PerspectiveCamera::project(Vec3 point, Mat4 modelMatrix) {
@@ -67,7 +74,7 @@ Vec2 PerspectiveCamera::project(Vec3 point, Mat4 modelMatrix) {
     AB::Vec4 p = AB::Vec4(point.x, point.y, point.z, 1.0f);
     AB::Vec4 result = transform * p;
 
-    if (fabs(result.w) >= std::numeric_limits<float>::epsilon()) {
+    if (fabs(result.w) >= std::numeric_limits<f32>::epsilon()) {
         result *= (1.0f / result.w);
     }
     
@@ -79,4 +86,25 @@ Vec2 PerspectiveCamera::project(Vec3 point, Mat4 modelMatrix) {
     return ret;
 }
 
+Frustum PerspectiveCamera::generateFrustum() {
+    Frustum frustum;
+
+    Vec3 frontVector = forward(viewMatrix);
+    Vec3 rightVector = right(viewMatrix);
+    Vec3 upVector = up(viewMatrix);
+
+    float halfVSide = far * tanf(fov * 0.5f);
+    float halfHSide = halfVSide * aspect;
+    Vec3 frontMultFar = frontVector * far;
+
+    frustum.plane[0] = Plane(position + (frontVector * near), frontVector);                                 //  near
+    frustum.plane[1] = Plane(position + frontMultFar, -frontVector);                                        //  far
+    frustum.plane[2] = Plane(position, crossProduct(frontMultFar - (rightVector * halfHSide), upVector));   //  right
+    frustum.plane[3] = Plane(position, crossProduct(upVector, frontMultFar + rightVector * halfHSide));     //  left
+    frustum.plane[4] = Plane(position, crossProduct(rightVector, frontMultFar - upVector * halfVSide));     //  top
+    frustum.plane[5] = Plane(position, crossProduct(frontMultFar + upVector * halfVSide, rightVector));     //  bottom
+
+    return frustum;
 }
+
+}   //  namespace

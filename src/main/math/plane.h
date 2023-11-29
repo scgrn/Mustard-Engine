@@ -2,7 +2,7 @@
 
 zlib License
 
-(C) 2021 Andrew Krause
+(C) 2023 Andrew Krause
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -31,19 +31,21 @@ namespace AB {
 
 class Plane {
     public:
-        Plane(Vec3 &v1, Vec3 &v2, Vec3 &v3);
-        Plane(void);
-        ~Plane();
+        Plane(Vec3 point, Vec3 normal);
+        Plane(void) {}
+        ~Plane() {}
 
-        void setPoints(Vec3 &v1, Vec3 &v2, Vec3 &v3);
-        void setNormalAndPoint(Vec3 &normal, Vec3 &point);
+        void setNormalAndPoint(Vec3& point, Vec3& normal);
         void setCoefficients(f32 a, f32 b, f32 c, f32 d);
-        f32 distance(Vec3 &p);
+        f32 getSignedDistanceToPoint(Vec3& point);
 
-        Vec3 normal,point;
+        Vec3 normal;
+
+        //  negative distance from origin the to the nearest point in the plane
         f32 d;
 };
 
 }   //  namespace
 
 #endif
+

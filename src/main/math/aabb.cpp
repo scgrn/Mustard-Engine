@@ -26,75 +26,23 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-AABB::AABB(Vec3 &corner, f32 x, f32 y, f32 z) {
-    setBox(corner, x, y, z);
+AABB::AABB(Vec3 centerPosition, Vec3 size) {
+    this->centerPosition = centerPosition;
+    this->size = size;
+    calculateExtents();
 }
 
 AABB::AABB(void) {
-    corner = Vec3();
-
-    x = 1.0f;
-    y = 1.0f;
-    z = 1.0f;
+    centerPosition = Vec3(0.0f, 0.0f, 0.0f);
+    size = Vec3(1.0f, 1.0f, 1.0f);
+    
+    min = Vec3(-0.5f, -0.5f, -0.5f);
+    max = Vec3( 0.5f,  0.5f,  0.5f);
 }
 
-AABB::~AABB() {}
-
-void AABB::setBox(Vec3 &corner, f32 x, f32 y, f32 z) {
-    this->corner = corner;
-
-    if (x < 0.0f) {
-        x = -x;
-        this->corner.x -= x;
-    }
-    if (y < 0.0f) {
-        y = -y;
-        this->corner.y -= y;
-    }
-    if (z < 0.0f) {
-        z = -z;
-        this->corner.z -= z;
-    }
-
-    this->x = x;
-    this->y = y;
-    this->z = z;
-}
-
-Vec3 AABB::getVertexP(Vec3 &normal) {
-    Vec3 res = corner;
-
-    if (normal.x > 0.0f) {
-        res.x += x;
-    }
-
-    if (normal.y > 0.0f) {
-        res.y += y;
-    }
-
-    if (normal.z > 0.0f) {
-        res.z += z;
-    }
-
-    return(res);
-}
-
-Vec3 AABB::getVertexN(Vec3 &normal) {
-    Vec3 res = corner;
-
-    if (normal.x < 0.0f) {
-        res.x += x;
-    }
-
-    if (normal.y < 0.0f) {
-        res.y += y;
-    }
-
-    if (normal.z < 0.0f) {
-        res.z += z;
-    }
-
-    return(res);
+void AABB::calculateExtents(void) {
+    min = centerPosition - (size / 2.0f);
+    max = centerPosition + (size / 2.0f);
 }
 
 }   //  namespace

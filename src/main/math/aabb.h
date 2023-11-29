@@ -31,18 +31,15 @@ namespace AB {
 
 class AABB {
     public:
-        AABB(Vec3 &corner, f32 x, f32 y, f32 z);
-        AABB(void);
-        ~AABB();
+        AABB(Vec3 centerPosition, Vec3 size);
+        AABB();
+        ~AABB() {}
 
-        void setBox(Vec3 &corner, f32 x, f32 y, f32 z);
+        void calculateExtents(void);
+        b8 collides(const AABB &other);
+        Vec3 centerPosition, size;
+        Vec3 min, max;
 
-        //  for use in frustum computations
-        Vec3 getVertexP(Vec3 &normal);
-        Vec3 getVertexN(Vec3 &normal);
-
-        Vec3 corner;
-        f32 x, y, z;
 };
 
 }   //  namespace

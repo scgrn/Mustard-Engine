@@ -2,7 +2,7 @@
 
 zlib License
 
-(C) 2021 Andrew Krause
+(C) 2023 Andrew Krause
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -26,44 +26,28 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-Plane::Plane(Vec3 &v1, Vec3 &v2, Vec3 &v3) {
-    setPoints(v1, v2, v3);
+Plane::Plane(Vec3 point, Vec3 normal) {
+    this->normal = normalize(normal);
+    d = dotProduct(this->normal, point);
 }
 
-Plane::Plane(void) {}
-Plane::~Plane() {}
-
-void Plane::setPoints(Vec3 &v1, Vec3 &v2, Vec3 &v3) {
-    Vec3 aux1, aux2;
-
-    aux1 = v1 - v2;
-    aux2 = v3 - v2;
-
-    normal = crossProduct(aux2, aux1);
-
-    normal = normalize(normal);
-    point = v2;
-    d = -(dotProduct(normal, point));
-}
-
-void Plane::setNormalAndPoint(Vec3 &normal, Vec3 &point) {
+void Plane::setNormalAndPoint(Vec3& point, Vec3& normal) {
     this->normal = normalize(normal);
     d = -(dotProduct(this->normal, point));
 }
 
 void Plane::setCoefficients(f32 a, f32 b, f32 c, f32 d) {
-    // set the normal vector
     normal = Vec3(a, b, c);
-    //compute the length of the vector
+
+    //  not calling the normalize function to avoid calculating the magnitude twice
     f32 length = magnitude(normal);
-    // normalize the vector
     normal = Vec3(a / length, b / length, c / length);
-    // and divide d by th length as well
+
     this->d = d / length;
 }
 
-f32 Plane::distance(Vec3 &p) {
-    return (d + dotProduct(normal, p));
+f32 Plane::getSignedDistanceToPoint(Vec3& point) {
+    return dotProduct(normal, point) - d;
 }
 
 }   //  namespace

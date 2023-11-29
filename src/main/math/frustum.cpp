@@ -27,81 +27,26 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-Frustum::Frustum() {}
-
-Frustum::~Frustum() {}
-
-void Frustum::setCamInternals(f32 angle, f32 ratio, f32 nearD, f32 farD) {
-    this->ratio = ratio;
-    this->angle = angle;
-    this->nearD = nearD;
-    this->farD = farD;
-
-    tang = (f32)tan(toRadians(angle) * 0.5f) ;
-    nh = nearD * tang;
-    nw = nh * ratio; 
-    fh = farD * tang;
-    fw = fh * ratio;
-}
-
-void Frustum::setCamDef(Vec3 &p, Vec3 &l, Vec3 &u) {
-    Vec3 dir,nc,fc,X,Y,Z;
-
-    Z = p - l;
-    Z = normalize(Z);
-    
-    X = crossProduct(u, Z);
-    X = normalize(X);
-    
-    Y = crossProduct(Z, X);
-
-    nc = p - Z * nearD;
-    fc = p - Z * farD;
-
-    ntl = nc + Y * nh - X * nw;
-    ntr = nc + Y * nh + X * nw;
-    nbl = nc - Y * nh - X * nw;
-    nbr = nc - Y * nh + X * nw;
-
-    ftl = fc + Y * fh - X * fw;
-    ftr = fc + Y * fh + X * fw;
-    fbl = fc - Y * fh - X * fw;
-    fbr = fc - Y * fh + X * fw;
-
-    pl[TOP].setPoints(ntr,ntl,ftl);
-    pl[BOTTOM].setPoints(nbl,nbr,fbr);
-    pl[LEFT].setPoints(ntl,nbl,fbl);
-    pl[RIGHT].setPoints(nbr,ntr,fbr);
-    pl[NEAR].setPoints(ntl,ntr,nbr);
-    pl[FAR].setPoints(ftr,ftl,fbl);
-}
-
-i32 Frustum::pointInFrustum(Vec3 &p) {
-    i32 result = INSIDE;
-    for(i32 i=0; i < 6; i++) {
-        if (pl[i].distance(p) < 0.0f) {
-            return OUTSIDE;
-        }
-    }
-    return(result);
-}
-
-i32 Frustum::sphereInFrustum(Vec3 &p, f32 radius) {
-    i32 result = INSIDE;
-    f32 distance;
-
+b8 Frustum::pointInFrustum(Vec3 &p) {
     for(i32 i = 0; i < 6; i++) {
-        distance = pl[i].distance(p);
-        if (distance < -radius) {
-            return OUTSIDE;
-        } else if (distance < radius) {
-            result = INTERSECT;
+        if (plane[i].getSignedDistanceToPoint(p) < 0.0f) {
+            return false;
         }
     }
-    return(result);
+    return true;
 }
 
-i32 Frustum::boxInFrustum(AABB &box) {
+b8 Frustum::sphereInFrustum(Vec3 &p, f32 radius) {
+    for(i32 i = 0; i < 6; i++) {
+        if (plane[i].getSignedDistanceToPoint(p) < -radius) {
+            return false;
+        }
+    }
+    return true;
+}
+
+b8 Frustum::boxInFrustum(AABB &box) {
+/*
     i32 result = INSIDE;
     for(i32 i = 0; i < 6; i++) {
         Vec3 vertexP = box.getVertexP(pl[i].normal); 
@@ -115,6 +60,8 @@ i32 Frustum::boxInFrustum(AABB &box) {
         }
     }
     return(result);
+*/
+    return false;
 }
 
 }   //  namespace
