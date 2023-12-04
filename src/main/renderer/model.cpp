@@ -92,9 +92,6 @@ bool Model::loadOBJ(std::string const& filename,
             double f1, f2, f3;
             line >> line_t >> f1 >> f2 >> f3;
 
-            // Vec4 vertex = loadTransform * Vec4((float)f1, (float)f2, (float)f3, 1.0f);
-            // tempVertices.push_back(Vec3(vertex.x, vertex.y, vertex.z));
-
             Vec4 vertex = loadTransform * Vec4((float)f1, (float)f2, (float)f3, 1.0f);
             tempVertices.push_back((Vec3)vertex);
 
@@ -236,68 +233,68 @@ void Model::load(std::string const& filename) {
     indexVBO(vertices, UVs, normals, indices, indexedVertices, indexedUVs, indexedNormals);
 
     // create VAO
-    glGenVertexArrays(1, &vertexArrayID);
-    glBindVertexArray(vertexArrayID);
+    CALL_GL(glGenVertexArrays(1, &vertexArrayID));
+    CALL_GL(glBindVertexArray(vertexArrayID));
 
     // Load it into a VBO
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(Vec3), &indexedVertices[0], GL_STATIC_DRAW);
+    CALL_GL(glGenBuffers(1, &vertexBuffer));
+    CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+    CALL_GL(glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(Vec3), &indexedVertices[0], GL_STATIC_DRAW));
 
     if (textured) {
-        glGenBuffers(1, &uvBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-        glBufferData(GL_ARRAY_BUFFER, indexedUVs.size() * sizeof(Vec2), &indexedUVs[0], GL_STATIC_DRAW);
+        CALL_GL(glGenBuffers(1, &uvBuffer));
+        CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, uvBuffer));
+        CALL_GL(glBufferData(GL_ARRAY_BUFFER, indexedUVs.size() * sizeof(Vec2), &indexedUVs[0], GL_STATIC_DRAW));
     }
     
-    glGenBuffers(1, &normalBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-    glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(Vec3), &indexedNormals[0], GL_STATIC_DRAW);
+    CALL_GL(glGenBuffers(1, &normalBuffer));
+    CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, normalBuffer));
+    CALL_GL(glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(Vec3), &indexedNormals[0], GL_STATIC_DRAW));
 
-    glGenBuffers(1, &elementBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0] , GL_STATIC_DRAW);
+    CALL_GL(glGenBuffers(1, &elementBuffer));
+    CALL_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer));
+    CALL_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0] , GL_STATIC_DRAW));
 
     indicesSize = indices.size();
 }
 
 void Model::release() {
-    glDeleteBuffers(1, &vertexBuffer);
-    glDeleteBuffers(1, &uvBuffer);
-    glDeleteBuffers(1, &normalBuffer);
-    glDeleteBuffers(1, &elementBuffer);
-    glDeleteVertexArrays(1, &vertexArrayID);
+    CALL_GL(glDeleteBuffers(1, &vertexBuffer));
+    CALL_GL(glDeleteBuffers(1, &uvBuffer));
+    CALL_GL(glDeleteBuffers(1, &normalBuffer));
+    CALL_GL(glDeleteBuffers(1, &elementBuffer));
+    CALL_GL(glDeleteVertexArrays(1, &vertexArrayID));
 }
 
 void Model::render() {
-    glBindVertexArray(vertexArrayID);
+    CALL_GL(glBindVertexArray(vertexArrayID));
 
     // 1rst attribute buffer : vertices
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    CALL_GL(glEnableVertexAttribArray(0));
+    CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+    CALL_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 
     // 2nd attribute buffer : UVs
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    CALL_GL(glEnableVertexAttribArray(1));
+    CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, uvBuffer));
+    CALL_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0));
 
     // 3rd attribute buffer : normals
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    CALL_GL(glEnableVertexAttribArray(2));
+    CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, normalBuffer));
+    CALL_GL(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
 
     // Index buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    CALL_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer));
 
     // draw tris
-    glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_SHORT, (void*)0);
+    CALL_GL(glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_SHORT, (void*)0));
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
+    CALL_GL(glDisableVertexAttribArray(0));
+    CALL_GL(glDisableVertexAttribArray(1));
+    CALL_GL(glDisableVertexAttribArray(2));
 
-    glBindVertexArray(0);
+    CALL_GL(glBindVertexArray(0));
 }
 
 }   //  namespace
