@@ -94,46 +94,46 @@ std::vector<SDL_Event> eventQueue;
 
 // float accumulator = 0.0f;
 // unsigned int lastTime = 0, currentTime;
-bool done = false;
-bool debugPause = false;
+b8 done = false;
+b8 debugPause = false;
 // float frameRate = 60.0f;
-bool resync = true;
+b8 resync = true;
 
 //these are loaded from Settings in production code
-double update_rate = 60;
-int update_multiplicity = 1;
-bool unlock_framerate = true;
+f64 update_rate = 60;
+i32 update_multiplicity = 1;
+b8 unlock_framerate = true;
 
 //compute how many ticks one update should be
-double fixed_deltatime = 1.0 / update_rate;
-int64_t desired_frametime = SDL_GetPerformanceFrequency() / update_rate;
+f64 fixed_deltatime = 1.0 / update_rate;
+i64 desired_frametime = SDL_GetPerformanceFrequency() / update_rate;
 
 //these are to snap deltaTime to vsync values if it's close enough
-int64_t vsync_maxerror = SDL_GetPerformanceFrequency() * .0002;
-int64_t time_60hz = SDL_GetPerformanceFrequency()/60; //since this is about snapping to common vsync values
-int64_t snap_frequencies[] = {time_60hz,        //60fps
+i64 vsync_maxerror = SDL_GetPerformanceFrequency() * .0002;
+i64 time_60hz = SDL_GetPerformanceFrequency()/60; //since this is about snapping to common vsync values
+i64 snap_frequencies[] = {time_60hz,        //60fps
                               time_60hz*2,      //30fps
                               time_60hz*3,      //20fps
                               time_60hz*4,      //15fps
                               (time_60hz+1)/2,  //120fps
                              };
 
-const int time_history_count = 4;
-int64_t time_averager[time_history_count] = {desired_frametime, desired_frametime, desired_frametime, desired_frametime};
+const i32 time_history_count = 4;
+i64 time_averager[time_history_count] = {desired_frametime, desired_frametime, desired_frametime, desired_frametime};
 
-int64_t prev_frame_time = SDL_GetPerformanceCounter();
-int64_t frame_accumulator = 0;
+i64 prev_frame_time = SDL_GetPerformanceCounter();
+i64 frame_accumulator = 0;
 
 //    this is some temp shit just for recording
-long currentTime = SDL_GetTicks();
-long lastTime = currentTime;
+i64 currentTime = SDL_GetTicks();
+i64 lastTime = currentTime;
 
 
 void quit() {
     done = true;
 }
 
-void setFrameRate(float const newRate) {
+void setFrameRate(f32 const newRate) {
     //frameRate = newRate;
 }
 
@@ -220,20 +220,20 @@ void mainLoop(Application *app) {
         }
         */
 
-        int64_t current_frame_time = SDL_GetPerformanceCounter();
-        int64_t delta_time = current_frame_time - prev_frame_time;
+        i64 current_frame_time = SDL_GetPerformanceCounter();
+        i64 delta_time = current_frame_time - prev_frame_time;
         prev_frame_time = current_frame_time;
 
         //handle unexpected timer anomalies (overflow, extra slow frames, etc)
-        if(delta_time > desired_frametime*8){ //ignore extra-slow frames
+        if (delta_time > desired_frametime * 8) { //ignore extra-slow frames
             delta_time = desired_frametime;
         }
-        if(delta_time < 0){
+        if (delta_time < 0) {
             delta_time = 0;
         }
 
         //vsync time snapping
-        for(int64_t snap : snap_frequencies){
+        for (i64 snap : snap_frequencies){
             if(std::abs(delta_time - snap) < vsync_maxerror){
                 delta_time = snap;
                 break;
@@ -241,12 +241,12 @@ void mainLoop(Application *app) {
         }
 
         //delta time averaging
-        for(int i = 0; i<time_history_count-1; i++){
+        for (i32 i = 0; i<time_history_count-1; i++){
             time_averager[i] = time_averager[i+1];
         }
         time_averager[time_history_count-1] = delta_time;
         delta_time = 0;
-        for(int i = 0; i<time_history_count; i++){
+        for (i32 i = 0; i<time_history_count; i++){
             delta_time += time_averager[i];
         }
         delta_time /= time_history_count;
@@ -267,7 +267,7 @@ void mainLoop(Application *app) {
         }
 
         while(frame_accumulator >= desired_frametime * update_multiplicity) {
-            for(int i = 0; i<update_multiplicity; i++){
+            for(i32 i = 0; i<update_multiplicity; i++){
 #ifdef DEBUG
                 if (!console.active) {
                     app->update();
@@ -303,8 +303,8 @@ void mainLoop(Application *app) {
     SDL_Delay(1);
 }
 
-int run(Application *app) {
-    int exitCode = EXIT_SUCCESS;
+i32 run(Application *app) {
+    i32 exitCode = EXIT_SUCCESS;
 
     try {
         if (app == NULL) {
