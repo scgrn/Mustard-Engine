@@ -4,6 +4,7 @@ Minimalist C++ game framework with no graphical editor that provides utility fun
 Uses the common subset of OpenGL 3.3 core profile and OpenGL ES 3.0.  
 Tested under Ubuntu and Windows using GCC/Clang/MSVC.
 
+![Mustard engine gif](https://github.com/scgrn/Mustard-Engine/blob/main/docs/mustard-20fps.gif)  
 
 [![License](https://img.shields.io/badge/license-zlib%2Flibpng-blue.svg)](LICENSE)
 
@@ -45,7 +46,7 @@ You will also need to install SDL2 as it is not vendored in this repo.
 Download the latest [SDL2 Development Library](https://www.libsdl.org/) for your compiler and extract it somewhere permanently.  
 Clone the Mustard repository and navigate into it.  
 
-Edit this line of CMakeLists.txt:  
+Edit this line of src/platform/desktop/CMakeLists.txt:  
 
 `set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")`  
 
