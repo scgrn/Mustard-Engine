@@ -62,10 +62,14 @@ void Sound::release() {
     delete wav;
 }
 
-void Sound::play(float volume, float pan, bool loop) {
+i32 Sound::play(float volume, float pan, bool loop) {
     wav->setLooping(loop);
     if (audio.soundVolume > 0.01f) {
-        int handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
+        i32 handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
+        
+        return handle;
+    } else {
+        return 0;
     }
 }
 

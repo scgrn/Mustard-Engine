@@ -126,8 +126,7 @@ static void removeGamepad(int id) {
 
 // -------------------------------------------------------------------------------------------------------------------------------------------
 
-static void associate(int a, std::string b) {
-}
+// static void associate(int a, std::string b) {}
 
 bool Input::startup() {
     LOG("Input subsystem startup", 0);

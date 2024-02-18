@@ -49,6 +49,7 @@ class Resource {
         //  represents resource's eligibility for garbage collection.
         enum {PERMANENT, TEMPORARY, MOMENTARY} lifeSpan;
 
+        virtual ~Resource() {};
         virtual void load(std::string const& id) = 0;
         virtual void release() = 0;
 };

@@ -40,11 +40,12 @@ namespace AB {
 class Sound : public Resource {
     public:
         Sound() {};
+        virtual ~Sound() {};
         
         void load(std::string const& filename);
         void release();
         
-        void play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
+        i32 play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
         void stop();
         bool isPlaying();
         
