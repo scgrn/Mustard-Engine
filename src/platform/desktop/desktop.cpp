@@ -51,20 +51,20 @@ freely, subject to the following restrictions:
 #endif  //  DEBUG
 
 //  TODO: this needs to be in common code somewhere for android, web
-//void checkOpenGLError(const char* stmt, const char* fname, int line);
+// void checkOpenGLError(const char* stmt, const char* fname, int line);
 // i hate it. i seriously hate that i can't put this code in renderer.cpp.
 void checkOpenGLError(const char* stmt, const char* fname, int line) {
     bool errorOccured = false;
     while (GLenum errorCode = glGetError() != GL_NO_ERROR) {
         std::string error;
         switch (errorCode) {
-            case GL_INVALID_ENUM:                            error = "INVALID_ENUM"; break;
-            case GL_INVALID_VALUE:                            error = "INVALID_VALUE"; break;
-            case GL_INVALID_OPERATION:                        error = "INVALID_OPERATION"; break;
-            case GL_STACK_OVERFLOW:                            error = "STACK_OVERFLOW"; break;
+            case GL_INVALID_ENUM:                           error = "INVALID_ENUM"; break;
+            case GL_INVALID_VALUE:                          error = "INVALID_VALUE"; break;
+            case GL_INVALID_OPERATION:                      error = "INVALID_OPERATION"; break;
+            case GL_STACK_OVERFLOW:                         error = "STACK_OVERFLOW"; break;
             case GL_STACK_UNDERFLOW:                        error = "STACK_UNDERFLOW"; break;
-            case GL_OUT_OF_MEMORY:                            error = "OUT_OF_MEMORY"; break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:            error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+            case GL_OUT_OF_MEMORY:                          error = "OUT_OF_MEMORY"; break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:          error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
 
         LOG("OpenGL error %08x: %s at %s:%i - for %s\n", errorCode, error.c_str(), fname, line, stmt);
@@ -92,37 +92,34 @@ std::vector<SDL_Event> eventQueue;
     extern Console console;
 #endif
 
-// float accumulator = 0.0f;
-// unsigned int lastTime = 0, currentTime;
 b8 done = false;
 b8 debugPause = false;
-// float frameRate = 60.0f;
 b8 resync = true;
 
-//these are loaded from Settings in production code
-f64 update_rate = 60;
-i32 update_multiplicity = 1;
-b8 unlock_framerate = true;
+// these are loaded from Settings in production code
+f64 updateRate = 60;
+i32 updateMultiplicity = 1;
+b8 unlockFramerate = true;
 
-//compute how many ticks one update should be
-f64 fixed_deltatime = 1.0 / update_rate;
-i64 desired_frametime = SDL_GetPerformanceFrequency() / update_rate;
+// compute how many ticks one update should be
+f64 fixedDeltatime = 1.0 / updateRate;
+i64 desiredFrametime = SDL_GetPerformanceFrequency() / updateRate;
 
-//these are to snap deltaTime to vsync values if it's close enough
-i64 vsync_maxerror = SDL_GetPerformanceFrequency() * .0002;
-i64 time_60hz = SDL_GetPerformanceFrequency()/60; //since this is about snapping to common vsync values
-i64 snap_frequencies[] = {time_60hz,        //60fps
-                              time_60hz*2,      //30fps
-                              time_60hz*3,      //20fps
-                              time_60hz*4,      //15fps
-                              (time_60hz+1)/2,  //120fps
+// these are to snap deltaTime to vsync values if it's close enough
+i64 vsyncMaxError = SDL_GetPerformanceFrequency() * .0002;
+i64 time60hz = SDL_GetPerformanceFrequency()/60; //since this is about snapping to common vsync values
+i64 snapFrequencies[] = {time60hz,        //60fps
+                              time60hz*2,      //30fps
+                              time60hz*3,      //20fps
+                              time60hz*4,      //15fps
+                              (time60hz+1)/2,  //120fps
                              };
 
-const i32 time_history_count = 4;
-i64 time_averager[time_history_count] = {desired_frametime, desired_frametime, desired_frametime, desired_frametime};
+const i32 timeHistoryCount = 4;
+i64 timeAverager[timeHistoryCount] = {desiredFrametime, desiredFrametime, desiredFrametime, desiredFrametime};
 
-i64 prev_frame_time = SDL_GetPerformanceCounter();
-i64 frame_accumulator = 0;
+i64 prevFrameTime = SDL_GetPerformanceCounter();
+i64 frameAccumulator = 0;
 
 //    this is some temp shit just for recording
 i64 currentTime = SDL_GetTicks();
@@ -220,54 +217,54 @@ void mainLoop(Application *app) {
         }
         */
 
-        i64 current_frame_time = SDL_GetPerformanceCounter();
-        i64 delta_time = current_frame_time - prev_frame_time;
-        prev_frame_time = current_frame_time;
+        i64 currentFrameTime = SDL_GetPerformanceCounter();
+        i64 deltaTime = currentFrameTime - prevFrameTime;
+        prevFrameTime = currentFrameTime;
 
-        //handle unexpected timer anomalies (overflow, extra slow frames, etc)
-        if (delta_time > desired_frametime * 8) { //ignore extra-slow frames
-            delta_time = desired_frametime;
+        // handle unexpected timer anomalies (overflow, extra slow frames, etc)
+        if (deltaTime > desiredFrametime * 8) { //ignore extra-slow frames
+            deltaTime = desiredFrametime;
         }
-        if (delta_time < 0) {
-            delta_time = 0;
+        if (deltaTime < 0) {
+            deltaTime = 0;
         }
 
-        //vsync time snapping
-        for (i64 snap : snap_frequencies){
-            if(std::abs(delta_time - snap) < vsync_maxerror){
-                delta_time = snap;
+        // vsync time snapping
+        for (i64 snap : snapFrequencies) {
+            if (std::abs(deltaTime - snap) < vsyncMaxError) {
+                deltaTime = snap;
                 break;
             }
         }
 
-        //delta time averaging
-        for (i32 i = 0; i<time_history_count-1; i++){
-            time_averager[i] = time_averager[i+1];
+        //d elta time averaging
+        for (i32 i = 0; i < timeHistoryCount-1; i++) {
+            timeAverager[i] = timeAverager[i+1];
         }
-        time_averager[time_history_count-1] = delta_time;
-        delta_time = 0;
-        for (i32 i = 0; i<time_history_count; i++){
-            delta_time += time_averager[i];
+        timeAverager[timeHistoryCount-1] = deltaTime;
+        deltaTime = 0;
+        for (i32 i = 0; i < timeHistoryCount; i++) {
+            deltaTime += timeAverager[i];
         }
-        delta_time /= time_history_count;
+        deltaTime /= timeHistoryCount;
 
         //add to the accumulator
-        frame_accumulator += delta_time;
+        frameAccumulator += deltaTime;
 
         //spiral of death protection
-        if(frame_accumulator > desired_frametime*8){
+        if (frameAccumulator > desiredFrametime * 8) {
             resync = true;
         }
 
         //timer resync if requested
-        if(resync) {
-            frame_accumulator = 0;
-            delta_time = desired_frametime;
+        if (resync) {
+            frameAccumulator = 0;
+            deltaTime = desiredFrametime;
             resync = false;
         }
 
-        while(frame_accumulator >= desired_frametime * update_multiplicity) {
-            for(i32 i = 0; i<update_multiplicity; i++){
+        while (frameAccumulator >= desiredFrametime * updateMultiplicity) {
+            for(i32 i = 0; i < updateMultiplicity; i++) {
 #ifdef DEBUG
                 if (!console.active) {
                     app->update();
@@ -281,7 +278,7 @@ void mainLoop(Application *app) {
                 input.update();
 #endif
                 eventQueue.clear();
-                frame_accumulator -= desired_frametime;
+                frameAccumulator -= desiredFrametime;
             }
         }
     }
