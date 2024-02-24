@@ -153,15 +153,16 @@ void Window::setVideoMode(Application *app) {
 
         glContext = SDL_GL_CreateContext(window);
 
-        // this *should* enable vsync
-        SDL_GL_SetSwapInterval(vsync ? 1 : 0);
+        // set vsync
+        if (vsync) {
+            //  try to enable adaptive vsync, fall back to regular vsync
+            if (SDL_GL_SetSwapInterval(-1) == -1) {
+                SDL_GL_SetSwapInterval(1);
+            }
+        } else {
+            SDL_GL_SetSwapInterval(0);
+        }
         SDL_SetWindowGrab(window, SDL_FALSE);
-
-
-        //  try to enable adaptive vsync, fall back to regular vsync
-        //if (SDL_GL_SetSwapInterval(-1) == -1) {
-        //    SDL_GL_SetSwapInterval(1);
-        //  }
 
         if (app) {
             app->glContextCreated(xRes, yRes, fullscreen);
