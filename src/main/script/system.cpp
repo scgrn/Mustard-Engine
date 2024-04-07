@@ -119,38 +119,8 @@ static int luaLoadData(lua_State* luaVM) {
     }
 
     std::string value = fileSystem.loadData(key);
-    LOG_EXP(value);
     lua_pushstring(luaVM, value.c_str());
-/*
-    int error = luaL_loadbuffer(luaVM, value.c_str(), value.size(), key.c_str());
-    if (error) {
-        std::string errorMsg = lua_tostring(luaVM, -1);
-        lua_pop(luaVM, 1);
 
-        LOG("Lua Error: %s", errorMsg.c_str());
-#ifdef ANDROID
-        extern void reportError(std::string errorMessage);
-        reportError(errorMsg);
-#else
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
-#endif
-   }
-
-    lua_pushvalue(luaVM, -1);
-    error = lua_pcall(luaVM, 0, 0, 0);
-    if (error) {
-        std::string errorMsg = lua_tostring(luaVM, -1);
-        lua_pop(luaVM, 1);
-
-        LOG("Lua Error: %s", errorMsg.c_str());
-#ifdef ANDROID
-        extern void reportError(std::string errorMessage);
-        reportError(errorMsg);
-#else
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", errorMsg.c_str(), NULL);
-#endif
-    }
-*/
     return 1;
 }
 
