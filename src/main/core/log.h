@@ -73,7 +73,11 @@ template <class T>
 void logExp(int line, const char* file, const char* name, T value) {
     std::stringstream out;
     out << name << " == " << value;
-    log(line, file, out.str().c_str());
+    if (out) {
+        log(line, file, out.str().c_str());
+    } else {
+        LOG("Couldn't convert value to string", 0);
+    }
 }
 
 }   //  namespace

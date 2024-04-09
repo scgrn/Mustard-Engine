@@ -195,11 +195,7 @@ void buildAtlas() {
         float u2 = (float)((*sprite)->atlasX + (*sprite)->width) / (float)atlasWidth;
         float v2 = (float)((*sprite)->atlasY + (*sprite)->height) / (float)atlasHeight;
 
-        //v1 = 1.0f - v1;
-        //v2 = 1.0f - v2;
-
         //  draw sprite to atlas texture
-        // unsigned char *tgaData = (*sprite)->getTGA()->getImage();
         unsigned char *imageData = (*sprite)->getImage()->data;
 
         for (int y = 0; y < (*sprite)->height; y++) {

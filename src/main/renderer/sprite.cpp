@@ -62,7 +62,7 @@ void Sprite::release() {
     texture.reset();
 
     if (collisionMask) {
-        delete collisionMask;
+        delete[] collisionMask;
         collisionMask = NULL;
     }
 }
@@ -78,6 +78,10 @@ void Sprite::buildCollisionMask(int offsetX, int offsetY) {
         ERR("Image data not loaded!", 0);
     }
 
+    if (offsetX < 0 || offsetY < 0 || offsetX + width > image->width || offsetY + height > image->height) {
+        ERR("Offset and dimensions exceed image boundaries!", 0);
+    }
+
     collisionMask = new bool[width * height];
     memset(collisionMask, 0, width * height);
 
@@ -86,8 +90,8 @@ void Sprite::buildCollisionMask(int offsetX, int offsetY) {
     for (int y = offsetY; y < height + offsetY; y++) {
         for (int x = offsetX; x < width + offsetX; x++) {
             //  set true if alpha channel for pixel is above threshold
-            if (imageData[((height - y - 1) * width + x) * 4 + 3] > 128) {
-                collisionMask[y * width + x] = true;
+            if (imageData[((image->height - y - 1) * image->width + x) * 4 + 3] > 128) {
+                collisionMask[(y - offsetY) * width + (x - offsetX)] = true;
             }
         }
     }
