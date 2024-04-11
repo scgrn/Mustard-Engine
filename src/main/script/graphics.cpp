@@ -488,8 +488,11 @@ static int luaUseCanvas(lua_State* luaVM) {
     
     currentRenderTarget = index;
     if (currentRenderTarget != 0) {
+        if (renderer.canvases.find(currentRenderTarget) == renderer.canvases.end()) {
+            ERR("Render target not created: %d", currentRenderTarget);
+        }
         renderer.canvases[currentRenderTarget]->begin();
-        
+
         //    TODO: not sure about setting the projection this way.. (y coords are flipped)
         camera2d.setProjection(0, renderer.canvases[currentRenderTarget]->width, 0, renderer.canvases[currentRenderTarget]->height);
     } else {
