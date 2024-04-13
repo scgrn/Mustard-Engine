@@ -43,14 +43,13 @@ bool Model::loadOBJ(std::string const& filename,
     std::vector<Vec2> &outUVs,
     std::vector<Vec3> &outNormals) {
 
-    unsigned int size;
-    DataObject dataObject(filename.c_str(), &size);
+    DataObject dataObject(filename.c_str());
 
     std::vector<Vec3> tempVertices;
     std::vector<Vec3> tempNormals;
     std::vector<Vec2> tempUVs;
 
-    std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+    std::vector<u64> vertexIndices, uvIndices, normalIndices;
 
     LOG("Loading OBJ file %s", filename.c_str());
 
@@ -78,25 +77,25 @@ bool Model::loadOBJ(std::string const& filename,
         }
 */
         /* else */ if (buffer.substr(0,2) == "vn") {
-            double f1, f2, f3;
+            f64 f1, f2, f3;
             line >> line_t >> f1 >> f2 >> f3;
-            tempNormals.push_back(Vec3((float)f1, (float)f2, (float)f3) );
+            tempNormals.push_back(Vec3((f32)f1, (f32)f2, (f32)f3) );
         }
         else if (buffer.substr(0,2) == "vt") {
-            double f1, f2;
+            f64 f1, f2;
             line >> line_t >> f1 >> f2;
-            tempUVs.push_back(Vec2((float)f1, (float)f2) );
+            tempUVs.push_back(Vec2((f32)f1, (f32)f2) );
             textured = true;
         }
         else if (buffer.substr(0,1) == "v") {
-            double f1, f2, f3;
+            f64 f1, f2, f3;
             line >> line_t >> f1 >> f2 >> f3;
 
-            Vec4 vertex = loadTransform * Vec4((float)f1, (float)f2, (float)f3, 1.0f);
+            Vec4 vertex = loadTransform * Vec4((f32)f1, (f32)f2, (f32)f3, 1.0f);
             tempVertices.push_back((Vec3)vertex);
 
-            //float newRadius = sqrt((f1 * f1) + (f2 * f2) + (f3 * f3));
-            float newRadius = ((f1 * f1) + (f2 * f2) + (f3 * f3));
+            //f32 newRadius = sqrt((f1 * f1) + (f2 * f2) + (f3 * f3));
+            f32 newRadius = ((f1 * f1) + (f2 * f2) + (f3 * f3));
             radius = std::max(radius, newRadius);
         }
         else if (buffer.substr(0,1) == "f" && buffer.substr(0,2) != "vt") {
@@ -104,7 +103,7 @@ bool Model::loadOBJ(std::string const& filename,
             line >> line_t;
 
             while (line >> element) {
-                int vi, vti, vni;
+                i32 vi, vti, vni;
                 std::string::size_type spos = 0;
                 std::string::size_type epos;
 
@@ -140,13 +139,13 @@ bool Model::loadOBJ(std::string const& filename,
 
     
     if (textured) {
-        for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+        for (u64 i = 0; i < vertexIndices.size(); i++) {
             outVertices.push_back(tempVertices[vertexIndices[i]]);
             outUVs.push_back(tempUVs[uvIndices[i]]);
             outNormals.push_back(tempNormals[normalIndices[i]]);
         }
     } else {
-        for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+        for (u64 i = 0; i < vertexIndices.size(); i++) {
             outVertices.push_back(tempVertices[vertexIndices[i]]);
             outNormals.push_back(tempNormals[normalIndices[i]]);
         }
@@ -184,7 +183,7 @@ void Model::indexVBO(std::vector<Vec3> &inVertices,
     LOG_EXP(inVertices.size());
     
     PackedVertex packed;
-    for (unsigned int i = 0; i < inVertices.size(); i++) {
+    for (u64 i = 0; i < inVertices.size(); i++) {
         if (textured) {
             packed = {inVertices[i], inUVs[i], inNormals[i]};
         } else {
@@ -236,7 +235,7 @@ void Model::load(std::string const& filename) {
     CALL_GL(glGenVertexArrays(1, &vertexArrayID));
     CALL_GL(glBindVertexArray(vertexArrayID));
 
-    // Load it into a VBO
+    // Load it i32o a VBO
     CALL_GL(glGenBuffers(1, &vertexBuffer));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
     CALL_GL(glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(Vec3), &indexedVertices[0], GL_STATIC_DRAW));
