@@ -56,7 +56,7 @@ void Palette::load(std::string const& filename) {
     Image targetColorImage(512, 512);
 #endif
 
-    for (int i = 0; i < palette.size(); i++) {
+    for (u64 i = 0; i < palette.size(); i++) {
         LABpalette.push_back(RGBtoLAB(palette[i]));
     }
     
@@ -187,7 +187,7 @@ void Palette::findClosestColors(Color target, uint32_t &closest, uint32_t &secon
     
     LABColor color = RGBtoLAB(target);
     
-    for (int i = 0; i < palette.size(); i++) {
+    for (u64 i = 0; i < palette.size(); i++) {
         float L = abs(LABpalette[i].L - color.L);
         float a = abs(LABpalette[i].a - color.a);
         float b = abs(LABpalette[i].b - color.b);
