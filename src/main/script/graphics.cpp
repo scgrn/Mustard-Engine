@@ -364,6 +364,29 @@ static int luaRenderArc(lua_State* luaVM) {
     return 0;
 }
 
+
+static int luaRenderRoundedRectangle(lua_State* luaVM) {
+    int layer = (int)lua_tonumber(luaVM, 1);
+    float x = (float)lua_tonumber(luaVM, 2);
+    float y = (float)lua_tonumber(luaVM, 3);
+    float width = (float)lua_tonumber(luaVM, 4);
+    float height = (float)lua_tonumber(luaVM, 5);
+    float radius = (float)lua_tonumber(luaVM, 6);
+
+    bool full = true;
+    if (lua_gettop(luaVM) >= 7) {
+        full = (bool)lua_toboolean(luaVM, 7);
+    }
+
+    int segments = 8;
+    if (lua_gettop(luaVM) >= 8) {
+        segments = (int)lua_tonumber(luaVM, 8);
+    }
+
+    renderer.layers[layer]->setColor(currentColor);     // TODO: move this to renderer.state
+    renderer.layers[layer]->renderRoundedRectangle(x, y, width, height, radius, full, segments);
+}
+
 /// Renders a list of line segments
 // @function AB.graphics.renderLines
 // @param layer Rendering layer. A default layer of 0 is provided
@@ -729,6 +752,7 @@ void registerGraphicsFunctions() {
         { "renderTri", luaRenderTri},
         { "renderArc", luaRenderArc},
         { "renderLines", luaRenderLines},
+        { "renderRoundedRectangle", luaRenderRoundedRectangle},
 
         { "setColor", luaSetColor},
         { "createCanvas", luaCreateCanvas},
