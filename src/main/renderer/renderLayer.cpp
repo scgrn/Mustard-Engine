@@ -26,18 +26,18 @@ freely, subject to the following restrictions:
 
 #include "renderLayer.h"
 
-static const i32 MAX_QUADS_PER_BATCH = 4096;
-
 namespace AB {
 
+static const i32 MAX_QUADS_PER_BATCH = 4096;
+
 // common quad mesh
-GLf32 RenderLayer::quadVertices[] = {
+GLfloat RenderLayer::quadVertices[] = {
     0.5f,  0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,
     -0.5f, -0.5f, 0.0f,
     -0.5f,  0.5f, 0.0f,
 };
-GLui32 RenderLayer::quadElements[] = {
+GLuint RenderLayer::quadElements[] = {
     0, 1, 2,
     2, 3, 0,
 };
@@ -67,11 +67,11 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
     // create vertex VBO
     CALL_GL(glGenBuffers(1, &batchVBO));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchVBO));
-    CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(GLf32) * 12, &quadVertices[0], GL_STATIC_DRAW));
+    CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 12, &quadVertices[0], GL_STATIC_DRAW));
 
     // set vertex attribute pointer
     CALL_GL(glEnableVertexAttribArray(0));
-    CALL_GL(glVertexAttribPointer(0, 3, GL_f32, GL_FALSE, 0, (void*)0));
+    CALL_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
     CALL_GL(glVertexAttribDivisor(0, 0));    // default buy hey clarity      
 
     // create EBO
@@ -88,37 +88,37 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
     
     //        position
     CALL_GL(glEnableVertexAttribArray(1));
-    CALL_GL(glVertexAttribPointer(1, 3, GL_f32, GL_FALSE, sizeof(Quad), (void*)0));
+    CALL_GL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)0));
     CALL_GL(glVertexAttribDivisor(1, 1));  
 
     //        size
     CALL_GL(glEnableVertexAttribArray(2));
-    CALL_GL(glVertexAttribPointer(2, 2, GL_f32, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLf32) * 3)));
+    CALL_GL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 3)));
     CALL_GL(glVertexAttribDivisor(2, 1));  
     
     //        scale
     CALL_GL(glEnableVertexAttribArray(3));
-    CALL_GL(glVertexAttribPointer(3, 2, GL_f32, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLf32) * 5)));
+    CALL_GL(glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 5)));
     CALL_GL(glVertexAttribDivisor(3, 1));  
 
     //        rotation
     CALL_GL(glEnableVertexAttribArray(4));
-    CALL_GL(glVertexAttribPointer(4, 1, GL_f32, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLf32) * 7)));
+    CALL_GL(glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 7)));
     CALL_GL(glVertexAttribDivisor(4, 1));  
 
     //        uv
     CALL_GL(glEnableVertexAttribArray(5));
-    CALL_GL(glVertexAttribPointer(5, 4, GL_f32, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLf32) * 8)));
+    CALL_GL(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 8)));
     CALL_GL(glVertexAttribDivisor(5, 1));  
 
     //        texture unit
     CALL_GL(glEnableVertexAttribArray(6));
-    CALL_GL(glVertexAttribIPointer(6, 1, GL_INT, sizeof(Quad), (void*)(sizeof(GLf32) * 12)));
+    CALL_GL(glVertexAttribIPointer(6, 1, GL_INT, sizeof(Quad), (void*)(sizeof(GLfloat) * 12)));
     CALL_GL(glVertexAttribDivisor(6, 1));  
 
     //        color
     CALL_GL(glEnableVertexAttribArray(7));
-    CALL_GL(glVertexAttribPointer(7, 4, GL_f32, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLf32) * 12 + sizeof(GLint))));
+    CALL_GL(glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 12 + sizeof(GLint))));
     CALL_GL(glVertexAttribDivisor(7, 1));
     
     quadBatch.reserve(MAX_QUADS_PER_BATCH);
@@ -196,7 +196,7 @@ void RenderLayer::renderBatch(const Camera& camera) {
         if (quad.textureID == 0) {
             quad.textureID = whiteTexture;
         }
-        unsigned i32 ret = textureCache.bindTexture(quad.textureID);
+        u32 ret = textureCache.bindTexture(quad.textureID);
         
         if (ret == -1) {
             //    no texture slots available. render and loop again without advancing index.
@@ -247,18 +247,18 @@ void RenderLayer::render(const Camera& camera) {
         shader->setInt("Texture", slot);
         
         CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
-        CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(GLf32) * renderItem.vertices.size(), &renderItem.vertices[0], GL_DYNAMIC_DRAW));
+        CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * renderItem.vertices.size(), &renderItem.vertices[0], GL_DYNAMIC_DRAW));
 
         // vertices
-        CALL_GL(glVertexAttribPointer(0, 3, GL_f32, GL_FALSE, 9 * sizeof(GLf32), (GLvoid*)0));
+        CALL_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)0));
         CALL_GL(glEnableVertexAttribArray(0));
 
         // texture coords
-        CALL_GL(glVertexAttribPointer(1, 2, GL_f32, GL_FALSE, 9 * sizeof(GLf32), (GLvoid*)(3 * sizeof(GLf32))));
+        CALL_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))));
         CALL_GL(glEnableVertexAttribArray(1));
 
         // colors
-        CALL_GL(glVertexAttribPointer(2, 4, GL_f32, GL_FALSE, 9 * sizeof(GLf32), (GLvoid*)(5 * sizeof(GLf32))));
+        CALL_GL(glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat))));
         CALL_GL(glEnableVertexAttribArray(2));
 
         // render!
@@ -271,7 +271,7 @@ void RenderLayer::render(const Camera& camera) {
     textureCache.advanceFrame();
 }
 
-void RenderLayer::begin(GLenum mode, GLui32 texture) {
+void RenderLayer::begin(GLenum mode, GLuint texture) {
     currentRenderItem.vertices.clear();
     currentRenderItem.mode = mode;
     currentRenderItem.texture = texture;
@@ -396,7 +396,7 @@ void RenderLayer::renderRoundedRectangle(f32 x, f32 y, f32 w, f32 h, f32 radius,
     begin(full ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
         //  center
         if (full) {
-            addVertex(x + w / 2.0f, y + h / 2.0f);
+            addVertex(x, y);
         }
 
         //  top right
@@ -404,7 +404,7 @@ void RenderLayer::renderRoundedRectangle(f32 x, f32 y, f32 w, f32 h, f32 radius,
             f32 theta = (M_PI / 2.0f) / segments * i;
             f32 cx = cos(theta) * radius;
             f32 cy = sin(theta) * radius;
-            addVertex(x + w - radius + cx, y + radius - cy);
+            addVertex(x + (w / 2.0f) - radius + cx, y - (h / 2.0f) + radius - cy);
         }
 
         //  top left
@@ -412,7 +412,7 @@ void RenderLayer::renderRoundedRectangle(f32 x, f32 y, f32 w, f32 h, f32 radius,
             f32 theta = (M_PI / 2.0f) + (M_PI / 2.0f) / segments * i;
             f32 cx = cos(theta) * radius;
             f32 cy = sin(theta) * radius;
-            addVertex(x + radius + cx, y + radius - cy);
+            addVertex(x - (w / 2.0f) + radius + cx, y - (h / 2.0f) + radius - cy);
         }
 
         //  bottom left
@@ -420,7 +420,7 @@ void RenderLayer::renderRoundedRectangle(f32 x, f32 y, f32 w, f32 h, f32 radius,
             f32 theta = M_PI + (M_PI / 2.0f) / segments * i;
             f32 cx = cos(theta) * radius;
             f32 cy = sin(theta) * radius;
-            addVertex(x + radius + cx, y + h - radius - cy);
+            addVertex(x - (w / 2.0f) + radius + cx, y + (h / 2.0f) - radius - cy);
         }
 
         //  bottom right
@@ -428,11 +428,11 @@ void RenderLayer::renderRoundedRectangle(f32 x, f32 y, f32 w, f32 h, f32 radius,
             f32 theta = (M_PI * 1.5f) + (M_PI / 2.0f) / segments * i;
             f32 cx = cos(theta) * radius;
             f32 cy = sin(theta) * radius;
-            addVertex(x + w - radius + cx, y + h - radius - cy);
+            addVertex(x + (w / 2.0f) - radius + cx, y + (h / 2.0f) - radius - cy);
         }
 
         if (full) {
-            addVertex(x + w, y + radius);
+            addVertex(x + (w / 2.0f), y - (h / 2.0f) + radius);
         }
     end();
 }
