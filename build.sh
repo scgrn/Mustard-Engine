@@ -64,7 +64,7 @@ function buildAssetCompiler() {
 function buildDocs() {
     echo "Building Lua API Documentation..."
 
-    # TODO: implement
+    ldoc -o index -p "Mustard Engine" -d docs ./src/main/script/
 }
 
 function buildTests() {
