@@ -270,7 +270,7 @@ static int luaSpriteSize(lua_State* luaVM) {
     return 2;
 }
 
-///    Queues a quad to be renderer on the screen or current canvas.
+///    Queues a quad to be rendered on the screen or current canvas.
 // @function AB.graphics.renderQuad
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param width Width
@@ -311,7 +311,7 @@ static int luaRenderQuad(lua_State* luaVM) {
     return 0;
 }
 
-/// Queues a triangle to be renderer on the screen or current canvas.
+/// Queues a triangle to be rendered on the screen or current canvas.
 // @function AB.graphics.renderTri
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param x1 X1 position
@@ -336,7 +336,7 @@ static int luaRenderTri(lua_State* luaVM) {
 }
 
 
-///    Queues an arc to be renderer on the screen or current canvas.
+///    Queues an arc to be rendered on the screen or current canvas.
 // @function AB.graphics.renderArc
 // @param layer Rendering layer. A default layer of 0 is provided
 // @param x X position
@@ -365,6 +365,16 @@ static int luaRenderArc(lua_State* luaVM) {
 }
 
 
+///    Queues a rounded rectangle to be rendered on the screen or current canvas.
+// @function AB.graphics.renderRoundedRectangle
+// @param layer Rendering layer. A default layer of 0 is provided
+// @param x X position
+// @param y Y position
+// @param width Width
+// @param height Height
+// @param radius Corner radius
+// @param full (true) Filled in or outline
+// @param segments (8) Number of corner segments
 static int luaRenderRoundedRectangle(lua_State* luaVM) {
     int layer = (int)lua_tonumber(luaVM, 1);
     float x = (float)lua_tonumber(luaVM, 2);
