@@ -395,6 +395,8 @@ static int luaRenderRoundedRectangle(lua_State* luaVM) {
 
     renderer.layers[layer]->setColor(currentColor);     // TODO: move this to renderer.state
     renderer.layers[layer]->renderRoundedRectangle(x, y, width, height, radius, full, segments);
+
+    return 0;
 }
 
 /// Renders a list of line segments
