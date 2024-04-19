@@ -687,6 +687,28 @@ static int luaAddColorTransform(lua_State* luaVM) {
     return 0;
 }
 
+/// Sets line width per layer.
+// @function AB.graphics.setLineWidth
+// @param (0) layer Layer. A default layer of 0 is provided
+// @param width (1) Line width
+static int luaSetLineWidth(lua_State* luaVM) {
+    int layerIndex = 0;
+    int width = 1;
+
+    if (lua_gettop(luaVM) >= 1) {
+        layerIndex = (int)lua_tonumber(luaVM, 1);
+    }
+    if (lua_gettop(luaVM) >= 2) {
+        width = (int)lua_tonumber(luaVM, 2);
+    }
+
+    RenderLayer *lineRenderer = reinterpret_cast<RenderLayer*>(renderer.layers[layerIndex]);
+    lineRenderer->setLineWidth(width);
+
+    return 0;
+}
+
+
 /// Resets any color transformation for layer.
 // @function AB.graphics.resetColorTransforms
 // @param index Layer index
@@ -766,6 +788,7 @@ void registerGraphicsFunctions() {
         { "renderLines", luaRenderLines},
         { "renderRoundedRectangle", luaRenderRoundedRectangle},
 
+        { "setLineWidth", luaSetLineWidth},
         { "setColor", luaSetColor},
         { "createCanvas", luaCreateCanvas},
         { "deleteCanvas", luaDeleteCanvas},
