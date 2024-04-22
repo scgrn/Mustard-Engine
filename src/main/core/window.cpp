@@ -152,6 +152,7 @@ void Window::setVideoMode(Application *app) {
         window = SDL_CreateWindow(title.c_str(), windowXPos, windowYPos, xRes, yRes, windowFlags);
 
         glContext = SDL_GL_CreateContext(window);
+        SDL_DisableScreenSaver();
 
         // set vsync
         if (vsync) {
