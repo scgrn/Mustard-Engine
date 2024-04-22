@@ -189,7 +189,7 @@ void RenderLayer::renderBatch(const Camera& camera) {
     i32 begin = 0;
     i32 end = -1;
 
-    for (i32 i = 0; i < quadBatch.size();) {
+    for (u64 i = 0; i < quadBatch.size();) {
         //    need pointer
         Quad &quad = quadBatch[i];
         
