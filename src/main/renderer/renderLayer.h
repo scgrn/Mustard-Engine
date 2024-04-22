@@ -48,7 +48,7 @@ class RenderLayer {
         };
 
         RenderLayer(Shader *batchShader = &defaultBatchShader, Shader *shader = &defaultShader, Mat4 colorTransform = Mat4(), bool depthSorting = false);
-        ~RenderLayer();
+        virtual ~RenderLayer();
         
         virtual void render(const Camera& camera);
 
