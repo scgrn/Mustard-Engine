@@ -196,7 +196,7 @@ void RenderLayer::renderBatch(const Camera& camera) {
         if (quad.textureID == 0) {
             quad.textureID = whiteTexture;
         }
-        u32 ret = textureCache.bindTexture(quad.textureID);
+        i32 ret = textureCache.bindTexture(quad.textureID);
         
         if (ret == -1) {
             //    no texture slots available. render and loop again without advancing index.

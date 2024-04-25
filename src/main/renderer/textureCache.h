@@ -35,7 +35,7 @@ class TextureCache {
         //    returns texture unit or -1 if no slot available
         //    will not evict textures bound after the last call to advanceFrame
         //    reserve is not currently used
-        unsigned int bindTexture(unsigned int textureID, bool reserve = false);
+        i32 bindTexture(unsigned int textureID, bool reserve = false);
 
         //  resets all slots to fair game
         void advanceFrame();
@@ -46,14 +46,14 @@ class TextureCache {
         unsigned int frameID;
         
         //    meh, maybe query for max. for now the spec min is fine.
-        static const int MAX_TEXTURE_UNITS = 16;
+        static const u32 MAX_TEXTURE_UNITS = 16;
         
         struct CachedTexture {
             CachedTexture() {}
-            CachedTexture(unsigned int textureID, int lastFrame) : textureID(textureID), lastFrame(lastFrame) {}
+            CachedTexture(u32 textureID, u32 lastFrame) : textureID(textureID), lastFrame(lastFrame) {}
 
-            unsigned int textureID;
-            int lastFrame;
+            u32 textureID;
+            u32 lastFrame;
         } textureBindings[MAX_TEXTURE_UNITS];
 
 };

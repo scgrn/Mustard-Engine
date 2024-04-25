@@ -55,12 +55,12 @@ TextureCache::TextureCache() {
     invalidate();
 }
         
-GLuint TextureCache::bindTexture(GLuint textureID, bool reserve) {
-    int oldestIndex = 0;
-    int oldestFrame = frameID;
+i32 TextureCache::bindTexture(GLuint textureID, bool reserve) {
+    i32 oldestIndex = 0;
+    u32 oldestFrame = frameID;
 
     // for (int i = 1; i < min(numTextureUnitsAvailable, MAX_TEXTURE_UNITS); i++) {
-    for (int i = 1; i < MAX_TEXTURE_UNITS; i++) {
+    for (u32 i = 1; i < MAX_TEXTURE_UNITS; i++) {
         if (textureBindings[i].textureID == textureID) {
             textureBindings[i].lastFrame = frameID;
 
@@ -78,7 +78,7 @@ GLuint TextureCache::bindTexture(GLuint textureID, bool reserve) {
         return -1;
     }
 
-    int unit = oldestIndex;
+    i32 unit = oldestIndex;
     assert(unit != -1);
 
     //    TODO: LOG_V
@@ -98,7 +98,7 @@ void TextureCache::advanceFrame() {
 }
 
 void TextureCache::invalidate() {
-    for (int i = 0; i < MAX_TEXTURE_UNITS; i++) {
+    for (u32 i = 0; i < MAX_TEXTURE_UNITS; i++) {
         textureBindings[i].textureID = 0;
         textureBindings[i].lastFrame = 0;
     }
