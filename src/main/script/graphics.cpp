@@ -211,6 +211,41 @@ static int luaBuildAtlas(lua_State* luaVM) {
     return 0;
 }
 
+/// Defines a sprite from an atlas texture
+// @param index Sprite atlas index
+// @function AB.graphics.spriteFromAtlas
+// @param u1
+// @param v1
+// @param u2
+// @param v2
+// @param index (optional) Sprite index
+// @return sprite handle
+static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
+    int atlasIndex = (int)lua_tonumber(luaVM, 1);
+
+    int u1 = (int)lua_tonumber(luaVM, 2);
+    int v1 = (int)lua_tonumber(luaVM, 3);
+    int u2 = (int)lua_tonumber(luaVM, 4);
+    int v2 = (int)lua_tonumber(luaVM, 5);
+
+    int index;
+    if (lua_gettop(luaVM) >= 6) {
+        index = (int)lua_tonumber(luaVM, 6);
+    } else {
+        index = spriteHandle;
+        spriteHandle++;
+    }
+
+    sprites.get(index)->adopt(sprites.get(atlasIndex)->texture, u1, v1, u2, v2);
+
+    //sprites.mapResource(index, filename);
+    // void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage = false);
+
+    lua_pushnumber(luaVM, index);
+
+    return 1;
+}
+
 ///    Queues a sprite to be renderer on the screen or current canvas.
 // @function AB.graphics.renderSprite
 // @param layer Rendering layer. A default layer of 0 is provided
@@ -779,6 +814,7 @@ void registerGraphicsFunctions() {
         { "loadAtlas", luaLoadAtlas},
         { "addToAtlas", luaAddToAtlas},
         { "buildAtlas", luaBuildAtlas},
+        { "defineSpriteFromAtlas", luaDefineSpriteFromAtlas},
 
         { "renderSprite", luaRenderSprite},
         { "spriteSize", luaSpriteSize},
