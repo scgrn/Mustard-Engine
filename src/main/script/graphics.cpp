@@ -417,8 +417,8 @@ static int luaRenderLines(lua_State* luaVM) {
     }
 
     // https://dav3.co/blog/looping-through-lua-table-in-c/
-    float endpoints[length];
-    for (int i = 0; i <= length; i++) {
+    f32 endpoints[length];
+    for (u32 i = 0; i <= length; i++) {
         lua_pushinteger(luaVM, i + 1);
         
         lua_gettable(luaVM, -2);

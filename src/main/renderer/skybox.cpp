@@ -31,7 +31,7 @@ namespace AB {
 
 Skybox::Skybox(std::vector<std::string> faces) {
 
-    float skyboxVertices[] = {
+    f32 skyboxVertices[] = {
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,
@@ -92,7 +92,7 @@ Skybox::Skybox(std::vector<std::string> faces) {
     CALL_GL(glGenTextures(1, &glHandle));
     CALL_GL(glBindTexture(GL_TEXTURE_CUBE_MAP, glHandle));
     
-    for (int i = 0; i < faces.size(); i++) {
+    for (u32 i = 0; i < faces.size(); i++) {
         Image image(faces[i]);
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
     }

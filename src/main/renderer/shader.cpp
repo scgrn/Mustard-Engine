@@ -97,7 +97,7 @@ void Shader::load(std::string const& filename) {
     for (GLint i = 0; i < 16; i++) {
         textureSamplers[i] = i;
     }
-    GLuint textureSamplersLoc;
+    GLint textureSamplersLoc;
     CALL_GL(textureSamplersLoc = glGetUniformLocation(shaderProgram, "textureSamplers"));
     if (textureSamplersLoc != -1) {
         CALL_GL(glUniform1iv(textureSamplersLoc, 16, textureSamplers));
