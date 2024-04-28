@@ -214,19 +214,19 @@ static int luaBuildAtlas(lua_State* luaVM) {
 /// Defines a sprite from an atlas texture
 // @function AB.graphics.defineSpriteFromAtlas
 // @param atlasIndex Sprite atlas index
-// @param u1
-// @param v1
-// @param u2
-// @param v2
+// @param x
+// @param y
+// @param width
+// @param height
 // @param index (optional) Sprite index
 // @return sprite handle
 static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
     int atlasIndex = (int)lua_tonumber(luaVM, 1);
 
-    int u1 = (int)lua_tonumber(luaVM, 2);
-    int v1 = (int)lua_tonumber(luaVM, 3);
-    int u2 = (int)lua_tonumber(luaVM, 4);
-    int v2 = (int)lua_tonumber(luaVM, 5);
+    int x = (int)lua_tonumber(luaVM, 2);
+    int y = (int)lua_tonumber(luaVM, 3);
+    int width = (int)lua_tonumber(luaVM, 4);
+    int height = (int)lua_tonumber(luaVM, 5);
 
     int index;
     if (lua_gettop(luaVM) >= 6) {
@@ -235,6 +235,12 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
         index = spriteHandle;
         spriteHandle++;
     }
+
+    std::shared_ptr<Texture> atlas = sprites.get(atlasIndex)->texture;
+    f32 u1 = x / (f32)atlas->width;
+    f32 v1 = y / (f32)atlas->width;
+    f32 u2 = (x + width) / (f32)atlas->width;
+    f32 v2 = (y + height)  / (f32)atlas->width;
 
     sprites.get(index)->adopt(sprites.get(atlasIndex)->texture, u1, v1, u2, v2);
 
