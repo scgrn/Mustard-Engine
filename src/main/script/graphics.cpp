@@ -212,8 +212,8 @@ static int luaBuildAtlas(lua_State* luaVM) {
 }
 
 /// Defines a sprite from an atlas texture
-// @param index Sprite atlas index
 // @function AB.graphics.defineSpriteFromAtlas
+// @param atlasIndex Sprite atlas index
 // @param u1
 // @param v1
 // @param u2
