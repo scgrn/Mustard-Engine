@@ -214,10 +214,10 @@ static int luaBuildAtlas(lua_State* luaVM) {
 /// Defines a sprite from an atlas texture
 // @function AB.graphics.defineSpriteFromAtlas
 // @param atlasIndex Sprite atlas index
-// @param x
-// @param y
-// @param width
-// @param height
+// @param x X coordinate of sprite
+// @param y Y coordinate of sprite
+// @param width Sprite width
+// @param height Sprite height
 // @param index (optional) Sprite index
 // @return sprite handle
 static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
