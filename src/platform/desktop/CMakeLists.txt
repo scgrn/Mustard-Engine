@@ -52,6 +52,8 @@ set(MAIN_SOURCE
     ../../main/math/aabb.cpp
     ../../main/math/frustum.cpp
 
+    ../../main/misc/poissonDiscSampling.cpp
+
     ../../main/renderer/camera.cpp
     ../../main/renderer/font.cpp
     ../../main/renderer/image.cpp
