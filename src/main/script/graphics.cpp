@@ -242,6 +242,7 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
     f32 u2 = (x + width) / (f32)atlas->width;
     f32 v2 = (y + height)  / (f32)atlas->height;
 
+    sprites.mapResource(index, ".");
     sprites.get(index)->adopt(atlas, u1, v1, u2, v2);
 
     //sprites.mapResource(index, filename);

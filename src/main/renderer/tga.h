@@ -39,8 +39,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-unsigned char* loadTGA(const std::string& filename, int &width, int &height, int &bpp);
-void saveTGA(unsigned char* data, const int width, const int height, const std::string& filename);
+u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp);
+void saveTGA(u8* data, const u32 width, const u32 height, const std::string& filename);
 
 }   // namespace
 

@@ -38,7 +38,7 @@ class Sprite : public Resource {
     public:
         Sprite();
         /*
-        Sprite(int textureHandle, int width, int height, float u1, float v1, float u2, float v2) :
+        Sprite(u32 textureHandle, u32 width, u32 height, f32 u1, f32 v1, f32 u2, f32 v2) :
             textureHandle(textureHandle), width(width), height(height), u1(u1), v1(v1), u2(u2), v2(v2) {}
         */
         virtual ~Sprite() {}
@@ -51,30 +51,30 @@ class Sprite : public Resource {
         /**
             This is called after a sprite has been added to a sprite atlas.
         */
-        void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage = false);
+        void adopt(std::shared_ptr<Texture> texture, f32 u1, f32 v1, f32 u2, f32 v2, b8 retainImage = false);
 
-        void buildCollisionMask(int offsetX = 0, int offsetY = 0);
-        void uploadToGPU(bool retainImage = false);
-        void render(RenderLayer *renderer, Vec3 pos, float rotation = 0.0f, Vec2 scale = Vec2(1.0f, 1.0f), Vec4 color = Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        void buildCollisionMask(u32 offsetX = 0, u32 offsetY = 0);
+        void uploadToGPU(b8 retainImage = false);
+        void render(RenderLayer *renderer, Vec3 pos, f32 rotation = 0.0f, Vec2 scale = Vec2(1.0f, 1.0f), Vec4 color = Vec4(1.0f, 1.0f, 1.0f, 1.0f));
         
         std::shared_ptr<Texture> texture;
 
-        int width, height;
-        int atlasX, atlasY;
-        float u1, v1, u2, v2;
+        u32 width, height;
+        u32 atlasX, atlasY;
+        f32 u1, v1, u2, v2;
 
-        float radius;            //  radius of bounding circle
+        f32 radius;            //  radius of bounding circle
 
-        float uSpan, vSpan;        //    percentage of actual size/padded size
-        int halfX, halfY;        //  width and height / 2
+        f32 uSpan, vSpan;        //    percentage of actual size/padded size
+        u32 halfX, halfY;        //  width and height / 2
 
-        bool *collisionMask;
+        b8 *collisionMask;
         Image *image;
 
 };
 
-extern bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
-    Sprite *s2, Vec2 pos2, float angle2, float scaleX2, float scaleY2);
+extern b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
+    Sprite *s2, Vec2 pos2, f32 angle2, f32 scaleX2, f32 scaleY2);
 
 }   //  namespace
 

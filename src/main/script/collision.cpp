@@ -51,28 +51,28 @@ extern ResourceManager<Sprite> sprites;
 // @param sx2 Sprite 2 x scale
 // @param sy2 Sprite 2 y scale
 // @return collision
-static int luaCollides(lua_State* luaVM) {
+static i32 luaCollides(lua_State* luaVM) {
 
     //  TODO: maybe check number of arguments?
 
-    int f1 = (int)lua_tonumber(luaVM, 1);
-    float x1 = (float)lua_tonumber(luaVM, 2);
-    float y1 = (float)lua_tonumber(luaVM, 3);
-    float r1 = (float)lua_tonumber(luaVM, 4);
-    float sx1 = (float)lua_tonumber(luaVM, 5);
-    float sy1 = (float)lua_tonumber(luaVM, 6);
+    i32 f1 = (i32)lua_tonumber(luaVM, 1);
+    f32 x1 = (f32)lua_tonumber(luaVM, 2);
+    f32 y1 = (f32)lua_tonumber(luaVM, 3);
+    f32 r1 = (f32)lua_tonumber(luaVM, 4);
+    f32 sx1 = (f32)lua_tonumber(luaVM, 5);
+    f32 sy1 = (f32)lua_tonumber(luaVM, 6);
 
-    int f2 = (int)lua_tonumber(luaVM, 7);
-    float x2 = (float)lua_tonumber(luaVM, 8);
-    float y2 = (float)lua_tonumber(luaVM, 9);
-    float r2 = (float)lua_tonumber(luaVM, 10);
-    float sx2 = (float)lua_tonumber(luaVM, 11);
-    float sy2 = (float)lua_tonumber(luaVM, 12);
+    i32 f2 = (int)lua_tonumber(luaVM, 7);
+    f32 x2 = (f32)lua_tonumber(luaVM, 8);
+    f32 y2 = (f32)lua_tonumber(luaVM, 9);
+    f32 r2 = (f32)lua_tonumber(luaVM, 10);
+    f32 sx2 = (f32)lua_tonumber(luaVM, 11);
+    f32 sy2 = (f32)lua_tonumber(luaVM, 12);
 
-extern bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
-    Sprite *s2, Vec2 pos2, float angle2, float scaleX2, float scaleY2);
-
-    bool collision = collides(sprites.get(f1), Vec2(x1, y1), r1, sx1, sy1,
+    extern b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
+        Sprite *s2, Vec2 pos2, f32 angle2, f32 scaleX2, f32 scaleY2);
+    
+    b8 collision = collides(sprites.get(f1), Vec2(x1, y1), r1, sx1, sy1,
         sprites.get(f2), Vec2(x2, y2), r2, sx2, sy2);
 
     lua_pushboolean(luaVM, collision);

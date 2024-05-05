@@ -49,7 +49,7 @@ void Sprite::load(std::string const& filename) {
         height = image->height;
         halfX = width / 2;
         halfY = height / 2;
-        radius = sqrt((float)((halfX * halfX) + (halfY * halfY)));
+        radius = sqrt((f32)((halfX * halfX) + (halfY * halfY)));
     }
 }
 
@@ -67,7 +67,7 @@ void Sprite::release() {
     }
 }
 
-void Sprite::buildCollisionMask(int offsetX, int offsetY) {
+void Sprite::buildCollisionMask(u32 offsetX, u32 offsetY) {
     LOG("Building collision mask: DIM(%d, %d), OFFSET(%d, %d)", width, height, offsetX, offsetY);
     
     if (collisionMask) {
@@ -78,17 +78,17 @@ void Sprite::buildCollisionMask(int offsetX, int offsetY) {
         ERR("Image data not loaded!", 0);
     }
 
-    if (offsetX < 0 || offsetY < 0 || offsetX + width > image->width || offsetY + height > image->height) {
+    if (offsetX + width > image->width || offsetY + height > image->height) {
         ERR("Offset and dimensions exceed image boundaries!", 0);
     }
 
-    collisionMask = new bool[width * height];
+    collisionMask = new b8[width * height];
     memset(collisionMask, 0, width * height);
 
-    unsigned char *imageData = image->data;
+    u8 *imageData = image->data;
 
-    for (int y = offsetY; y < height + offsetY; y++) {
-        for (int x = offsetX; x < width + offsetX; x++) {
+    for (u32 y = offsetY; y < height + offsetY; y++) {
+        for (u32 x = offsetX; x < width + offsetX; x++) {
             //  set true if alpha channel for pixel is above threshold
             if (imageData[((image->height - y - 1) * image->width + x) * 4 + 3] > 128) {
                 collisionMask[(y - offsetY) * width + (x - offsetX)] = true;
@@ -97,7 +97,7 @@ void Sprite::buildCollisionMask(int offsetX, int offsetY) {
     }
 }
 
-void Sprite::uploadToGPU(bool retainImage) {
+void Sprite::uploadToGPU(b8 retainImage) {
     texture = std::make_shared<Texture>(image);
 
     u1 = 0.0f;
@@ -113,7 +113,7 @@ void Sprite::uploadToGPU(bool retainImage) {
     }
 }
 
-void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage) {
+void Sprite::adopt(std::shared_ptr<Texture> texture, f32 u1, f32 v1, f32 u2, f32 v2, b8 retainImage) {
     this->texture = texture;
     this->u1 = u1;
     this->v1 = v1;
@@ -128,7 +128,7 @@ void Sprite::adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u
     }
 }
 
-void Sprite::render(RenderLayer *renderer, Vec3 pos, float rotation, Vec2 scale, Vec4 color) {
+void Sprite::render(RenderLayer *renderer, Vec3 pos, f32 rotation, Vec2 scale, Vec4 color) {
     if (texture.get() == 0) {
         uploadToGPU();
     }
@@ -147,11 +147,11 @@ void Sprite::render(RenderLayer *renderer, Vec3 pos, float rotation, Vec2 scale,
 }
 
 struct Scan {
-    float x1, u1, v1, x2, u2, v2;
+    f32 x1, u1, v1, x2, u2, v2;
 };
 
-void scanEdge(Vec2 p1, float u1, float v1, Vec2 p2,
-    float u2, float v2, Scan *scan, int range, float yMin) {
+void scanEdge(Vec2 p1, f32 u1, f32 v1, Vec2 p2,
+    f32 u2, f32 v2, Scan *scan, i32 range, f32 yMin) {
 
     if (p1.y == p2.y) return;   // hey! this a horizontal slice!! beat it!
 
@@ -163,19 +163,19 @@ void scanEdge(Vec2 p1, float u1, float v1, Vec2 p2,
         std::swap(v1, v2);
     }
 
-    float xStep = (p2.x - p1.x) / (p2.y - p1.y);
-    float uStep = (u2 - u1) / (p2.y - p1.y);
-    float vStep = (v2 - v1) / (p2.y - p1.y);
+    f32 xStep = (p2.x - p1.x) / (p2.y - p1.y);
+    f32 uStep = (u2 - u1) / (p2.y - p1.y);
+    f32 vStep = (v2 - v1) / (p2.y - p1.y);
 
-    int start = max(0, (int)(p1.y - yMin));
-    int stop = min(range, (int)(p2.y - yMin));
+    i32 start = max(0, (i32)(p1.y - yMin));
+    i32 stop = min(range, (i32)(p2.y - yMin));
 
-    float diff = max(0.0f, (yMin - p1.y));
-    float xPos = p1.x + (diff * xStep);
-    float uPos = u1 + (diff * uStep);
-    float vPos = v1 + (diff * vStep);
+    f32 diff = max(0, (i32)(yMin - p1.y));
+    f32 xPos = p1.x + (diff * xStep);
+    f32 uPos = u1 + (diff * uStep);
+    f32 vPos = v1 + (diff * vStep);
 
-    for (int index = start; index < stop; index++) {
+    for (i32 index = start; index < stop; index++) {
         if (xPos < scan[index].x1) {
             scan[index].x1 = xPos;
             scan[index].u1 = uPos;
@@ -194,20 +194,20 @@ void scanEdge(Vec2 p1, float u1, float v1, Vec2 p2,
     }
 }
 
-bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
-    Sprite *s2, Vec2 pos2, float angle2, float scaleX2, float scaleY2) {
+b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
+    Sprite *s2, Vec2 pos2, f32 angle2, f32 scaleX2, f32 scaleY2) {
 
     //  broad phase squared distance check
-    float dist = (pos1.x - pos2.x) * (pos1.x - pos2.x) + (pos1.y - pos2.y) * (pos1.y - pos2.y);
-    float sumRadii = abs(s1->radius * max(scaleX1, scaleY1)) + abs(s2->radius * max(scaleX2, scaleY2));
+    f32 dist = (pos1.x - pos2.x) * (pos1.x - pos2.x) + (pos1.y - pos2.y) * (pos1.y - pos2.y);
+    f32 sumRadii = abs(s1->radius * max(scaleX1, scaleY1)) + abs(s2->radius * max(scaleX2, scaleY2));
 
     if (dist <= (sumRadii * sumRadii)) {
         //  optimization.. if both scales are > 1, divide both scales by smaller scale
         //  (make smaller scale == 1) ...also modify positions
         if (scaleX1 > 1.0f && scaleY1 > 1.0f && scaleX2 > 1.0f && scaleY2) {
-            float smallerXScale = min(abs(scaleX1), abs(scaleX2));
-            float smallerYScale = min(abs(scaleY1), abs(scaleY2));
-            float smallerScale = min(smallerXScale, smallerYScale);
+            f32 smallerXScale = min(abs(scaleX1), abs(scaleX2));
+            f32 smallerYScale = min(abs(scaleY1), abs(scaleY2));
+            f32 smallerScale = min(smallerXScale, smallerYScale);
 
             scaleX1 /= smallerScale;
             scaleY1 /= smallerScale;
@@ -227,9 +227,9 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
         v1[2] = Vec2( s1->halfX,  s1->halfY);
         v1[3] = Vec2(-s1->halfX,  s1->halfY);
 
-        float ta = toRadians(-angle1);
+        f32 ta = toRadians(-angle1);
 
-        for (int i = 0; i < 4; i++) {
+        for (u32 i = 0; i < 4; i++) {
             Vec2 scaled = Vec2(v1[i].x * scaleX1, v1[i].y * scaleY1);
             Vec2 rotated;
 
@@ -247,7 +247,7 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
 
         ta = toRadians(-angle2);
 
-        for (int i = 0; i < 4; i++) {
+        for (u32 i = 0; i < 4; i++) {
             Vec2 scaled = Vec2(v2[i].x * scaleX2, v2[i].y * scaleY2);
             Vec2 rotated;
 
@@ -258,13 +258,13 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
         }
 
         //  initialize vertical extents to ludicrous values
-        float yMin1 = FLT_MAX;
-        float yMax1 = -FLT_MAX;
-        float yMin2 = FLT_MAX;
-        float yMax2 = -FLT_MAX;
+        f32 yMin1 = FLT_MAX;
+        f32 yMax1 = -FLT_MAX;
+        f32 yMin2 = FLT_MAX;
+        f32 yMax2 = -FLT_MAX;
 
         //  find vertical extents of both bounding boxes
-        for (int i = 0; i < 4; i++) {
+        for (u32 i = 0; i < 4; i++) {
             if (v1[i].y < yMin1) yMin1 = v1[i].y;
             if (v1[i].y > yMax1) yMax1 = v1[i].y;
 
@@ -278,17 +278,17 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
         }
 
         //  find extent of vertical overlap
-        float yMin = max(yMin1, yMin2);
-        float yMax = min(yMax1, yMax2);
+        f32 yMin = max(yMin1, yMin2);
+        f32 yMax = min(yMax1, yMax2);
 
         //  scan convert bounding boxes
-        int range = (int)(yMax - yMin);     // height of vertical overlap
+        i32 range = (i32)(yMax - yMin);     // height of vertical overlap
 
         //  adding yMin to array indices will yield actual screen space y value
         Scan scan1[range], scan2[range];
 
         //  again, initialize to preposterous values
-        for (int i = 0; i < range; i++) {
+        for (i32 i = 0; i < range; i++) {
             scan1[i].x1 = FLT_MAX;
             scan1[i].x2 = -FLT_MAX;
             scan2[i].x1 = FLT_MAX;
@@ -296,7 +296,7 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
         }
 
         //  initialize u/v extents based on flippage
-        float s1u1, s1v1, s1u2, s1v2, s2u1, s2v1, s2u2, s2v2;
+        f32 s1u1, s1v1, s1u2, s1v2, s2u1, s2v1, s2u2, s2v2;
 
         if (scaleX1 < 0.0f) {
             s1u1 = 1.0f;
@@ -340,7 +340,7 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
         scanEdge(v2[3], s2u1, s2v2, v2[0], s2u1, s2v1, &scan2[0], range, yMin);
 
         //  u/v coords were scanned at [0..1], scale them to actual size
-        for (int i = 0; i < range; i++) {
+        for (i32 i = 0; i < range; i++) {
             scan1[i].u1 *= s1->width;
             scan1[i].v1 *= s1->height;
             scan1[i].u2 *= s1->width;
@@ -352,7 +352,7 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
             scan2[i].v2 *= s2->height;
         }
 
-        for (int i = 0; i < range; i++) {
+        for (i32 i = 0; i < range; i++) {
             if (scan1[i].x1 <= scan2[i].x2 && scan2[i].x1 <= scan1[i].x2) {
                 if ((scan1[i].x2 - scan1[i].x1 < 1.0f) || (scan2[i].x2 - scan2[i].x1 < 1.0f)) {
                     //  not a scan! beat it!
@@ -360,32 +360,32 @@ bool collides(Sprite *s1, Vec2 pos1, float angle1, float scaleX1, float scaleY1,
                 }
 
                 //  extends of shared scan
-                float x1 = max(scan1[i].x1, scan2[i].x1);
-                float x2 = min(scan1[i].x2, scan2[i].x2);
+                f32 x1 = max(scan1[i].x1, scan2[i].x1);
+                f32 x2 = min(scan1[i].x2, scan2[i].x2);
 
                 //  perform horizontal scan
-                float uStep1 = (scan1[i].u2 - scan1[i].u1) / (scan1[i].x2 - scan1[i].x1);
-                float vStep1 = (scan1[i].v2 - scan1[i].v1) / (scan1[i].x2 - scan1[i].x1);
-                float uPos1 = scan1[i].u1 + ((x1 - scan1[i].x1) * uStep1);
-                float vPos1 = scan1[i].v1 + ((x1 - scan1[i].x1) * vStep1);
+                f32 uStep1 = (scan1[i].u2 - scan1[i].u1) / (scan1[i].x2 - scan1[i].x1);
+                f32 vStep1 = (scan1[i].v2 - scan1[i].v1) / (scan1[i].x2 - scan1[i].x1);
+                f32 uPos1 = scan1[i].u1 + ((x1 - scan1[i].x1) * uStep1);
+                f32 vPos1 = scan1[i].v1 + ((x1 - scan1[i].x1) * vStep1);
 
-                float uStep2 = (scan2[i].u2 - scan2[i].u1) / (scan2[i].x2 - scan2[i].x1);
-                float vStep2 = (scan2[i].v2 - scan2[i].v1) / (scan2[i].x2 - scan2[i].x1);
-                float uPos2 = scan2[i].u1 + ((x1 - scan2[i].x1) * uStep2);
-                float vPos2 = scan2[i].v1 + ((x1 - scan2[i].x1) * vStep2);
+                f32 uStep2 = (scan2[i].u2 - scan2[i].u1) / (scan2[i].x2 - scan2[i].x1);
+                f32 vStep2 = (scan2[i].v2 - scan2[i].v1) / (scan2[i].x2 - scan2[i].x1);
+                f32 uPos2 = scan2[i].u1 + ((x1 - scan2[i].x1) * uStep2);
+                f32 vPos2 = scan2[i].v1 + ((x1 - scan2[i].x1) * vStep2);
 
-                for (int x = (int)x1; x <= (int)x2; x++) {
+                for (i32 x = (i32)x1; x <= (i32)x2; x++) {
 
                     //  this lame and slow! correct with sub-pixel accuracy.
-                    int iUpos1 = (int)uPos1;
-                    iUpos1 = clamp(iUpos1, 0, s1->width - 1);
-                    int iVpos1 = (int)vPos1;
-                    iVpos1 = clamp(iVpos1, 0, s1->height - 1);
+                    i32 iUpos1 = (i32)uPos1;
+                    iUpos1 = clamp(iUpos1, 0, (i32)s1->width - 1);
+                    i32 iVpos1 = (i32)vPos1;
+                    iVpos1 = clamp(iVpos1, 0, (i32)s1->height - 1);
 
-                    int iUpos2 = (int)uPos2;
-                    iUpos2 = clamp(iUpos2, 0, s2->width - 1);
-                    int iVpos2 = (int)vPos2;
-                    iVpos2 = clamp(iVpos2, 0, s2->height - 1);
+                    i32 iUpos2 = (i32)uPos2;
+                    iUpos2 = clamp(iUpos2, 0, (i32)s2->width - 1);
+                    i32 iVpos2 = (i32)vPos2;
+                    iVpos2 = clamp(iVpos2, 0, (i32)s2->height - 1);
 
                     if (s1->collisionMask[iVpos1 * s1->width + iUpos1] &&
                         s2->collisionMask[iVpos2 * s2->width + iUpos2]) {

@@ -30,16 +30,16 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-Image::Image(int width, int height) {
+Image::Image(u32 width, u32 height) {
     this->width = width;
     this->height = height;
     imageSize = width * height * 4;
 
-    data = new unsigned char[imageSize];
+    data = new u8[imageSize];
 }
 
 Image::Image(const std::string& tgaFilename) {
-    int bpp;
+    u32 bpp;
     
     data = loadTGA(tgaFilename, width, height, bpp);
     

@@ -29,18 +29,20 @@ freely, subject to the following restrictions:
 
 #include <string>
 
+#include "../types.h"
+
 namespace AB {
 
 class Image {
     public:
-        Image(const int width, const int height);
+        Image(const u32 width, const u32 height);
         Image(const std::string& tgaFilename);
         ~Image();
         
-        inline void pset(int x, int y, unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
+        inline void pset(u32 x, u32 y, u8 r, u8 g, u8 b, u8 a = 255) {
             //  TODO: implement alpha blending?
 
-            int ofs = ((y * width) + x) * 4;
+            u32 ofs = ((y * width) + x) * 4;
 
             data[ofs + 0] = r;
             data[ofs + 1] = g;
@@ -48,9 +50,9 @@ class Image {
             data[ofs + 3] = a;
         }
         
-        unsigned char *data;
-        int width, height;
-        int imageSize;    // in bytes
+        u8 *data;
+        u32 width, height;
+        u32 imageSize;    // in bytes
 
     protected:
         Image() {}

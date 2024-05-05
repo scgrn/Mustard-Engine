@@ -44,20 +44,20 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-static void swapRB(unsigned char *data, int width, int height, int bpp) {
-    unsigned char *current = data;
+static void swapRB(u8 *data, u32 width, u32 height, u32 bpp) {
+    u8 *current = data;
     for (long index = 0; index != (width * height); index++) {
-        unsigned char temp = *current;  //  save blue value
+        u8 temp = *current;  //  save blue value
         *current = *(current + 2);      //  write red value into first pos
         *(current + 2) = temp;          //  write blue value to last pos
         current += (bpp / 8);
     }
 }
 
-static void flipImage(unsigned char *data, int width, int height, int bpp) {
-    unsigned char bTemp;
-    unsigned char *pLine1, *pLine2;
-    int iLineLen, iIndex;
+static void flipImage(u8 *data, u32 width, u32 height, u32 bpp) {
+    u8 bTemp;
+    u8 *pLine1, *pLine2;
+    u32 iLineLen, iIndex;
 
     iLineLen = width * (bpp / 8);
     pLine1 = data;
@@ -72,14 +72,14 @@ static void flipImage(unsigned char *data, int width, int height, int bpp) {
     }
 }
 
-static void premultiplyAlpha(unsigned char *data, int width, int height, int bpp) {
-    int size = width * height;
+static void premultiplyAlpha(u8 *data, u32 width, u32 height, u32 bpp) {
+    u32 size = width * height;
     
-    for (int i = 0; i < size; i++) {
-        float r = data[i * 4 + 0] / 255.0f;
-        float g = data[i * 4 + 1] / 255.0f;
-        float b = data[i * 4 + 2] / 255.0f;
-        float a = data[i * 4 + 3] / 255.0f;
+    for (u32 i = 0; i < size; i++) {
+        f32 r = data[i * 4 + 0] / 255.0f;
+        f32 g = data[i * 4 + 1] / 255.0f;
+        f32 b = data[i * 4 + 2] / 255.0f;
+        f32 a = data[i * 4 + 3] / 255.0f;
         
         r *= a;
         g *= a;
@@ -91,11 +91,11 @@ static void premultiplyAlpha(unsigned char *data, int width, int height, int bpp
     }
 }
 
-unsigned char* loadTGA(const std::string& filename, int &width, int &height, int &bpp) {
+u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
     DataObject dataObject(filename.c_str());
 
     //  read header
-    unsigned char* data = dataObject.getData();
+    u8* data = dataObject.getData();
     if (data[1] > 1) {
         ERR("Unsupported file type", 0);
     }
@@ -107,7 +107,7 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
     //               10 = RLE RGB
     //               11 = RLE greyscale
     //               32 & 33 Other compression, indexed
-    int encoding = data[2];
+    u32 encoding = data[2];
     if (encoding != 2 && encoding != 10) {
         ERR("Unsupported file type", 0);
     }
@@ -135,7 +135,7 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
 
     //  calculate image size // and verify file size not suspect
     //    TODO: will this work for RLE images?
-    int imageSize = (width * height * (bpp / 8));
+    u32 imageSize = (width * height * (bpp / 8));
 
     //  color map type. if this is 1, the image is indexed. screwy. bail.
     if (data[1] != 0) {
@@ -143,7 +143,7 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
     }
 
     //    allocate memory for image data
-    unsigned char* imageData = new unsigned char[imageSize];
+    u8* imageData = new u8[imageSize];
     if (imageData == NULL) {
         ERR("Unable to allocate memory for image", 0);
     }
@@ -151,7 +151,7 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
     
     // unmapped RGB
     if (encoding == 2) {
-        if (imageSize + 18 + data[0] > (int)dataObject.getSize()) {
+        if (imageSize + 18 + data[0] > (u32)dataObject.getSize()) {
             ERR("Bad image format", 0);
         }
         memcpy(imageData, &data[offset], imageSize);
@@ -160,29 +160,29 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
     //    RLE RGB
     if (encoding == 10) {
         //    pixel size in bytes
-        int pixelSize = bpp / 8;
+        u32 pixelSize = bpp / 8;
         
-        unsigned char* current = &data[offset];
-        int index = 0;
+        u8* current = &data[offset];
+        u32 index = 0;
 
         // decode RLE data
         while (index < imageSize) {
             if (*current & 0x80) {
                 //    run length chunk (high bit == 1)
-                unsigned char runLength = *current - 127;
+                u8 runLength = *current - 127;
                 current++;
                 
-                for (int loop = 0; loop != runLength; ++loop, index += pixelSize) {
+                for (u32 loop = 0; loop != runLength; ++loop, index += pixelSize) {
                     memcpy(&imageData[index], current, pixelSize);
                 }
                 
                 current += pixelSize;
             } else {
                 //    raw chunk
-                unsigned char chunkLength = *current + 1;
+                u8 chunkLength = *current + 1;
                 current++;
                 
-                for (int loop = 0; loop != chunkLength; ++loop, index += pixelSize, current += pixelSize) {
+                for (u32 loop = 0; loop != chunkLength; ++loop, index += pixelSize, current += pixelSize) {
                     memcpy(&imageData[index], current, pixelSize);
                 }
             }
@@ -203,20 +203,20 @@ unsigned char* loadTGA(const std::string& filename, int &width, int &height, int
 }
 
 //    TODO: profile this and see if it's faster to generate a BGR buffer rather than swizzle twice
-void saveTGA(unsigned char* data, const int width, const int height, const std::string& filename) {
+void saveTGA(u8* data, const u32 width, const u32 height, const std::string& filename) {
     FILE *filePtr = fopen(filename.c_str(), "wb");
     if (!filePtr) {
         LOG("Couldn't create TGA file: %s", filename.c_str());
     }
 
-    unsigned char TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
-    unsigned char header[6] = { (unsigned char)(width % 256), (unsigned char)(width / 256),
-        (unsigned char)(height % 256), (unsigned char)(height / 256), 32, 0};
+    u8 TGAheader[12]={0,0,2,0,0,0,0,0,0,0,0,0};
+    u8 header[6] = { (u8)(width % 256), (u8)(width / 256),
+        (u8)(height % 256), (u8)(height / 256), 32, 0};
 
     swapRB(data, width, height, 32);
 
-    fwrite(TGAheader, sizeof(unsigned char), 12, filePtr);
-    fwrite(header, sizeof(unsigned char), 6, filePtr);
+    fwrite(TGAheader, sizeof(u8), 12, filePtr);
+    fwrite(header, sizeof(u8), 6, filePtr);
     fwrite(data, sizeof(GLubyte), width * height * 4, filePtr);
     fclose(filePtr);
     
