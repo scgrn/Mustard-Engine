@@ -219,6 +219,7 @@ static int luaBuildAtlas(lua_State* luaVM) {
 // @param width Sprite width
 // @param height Sprite height
 // @param index (optional) Sprite index
+// @param collisionMask (true) If a collision mask should be created
 // @return sprite handle
 static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
     int atlasIndex = (int)lua_tonumber(luaVM, 1);
@@ -235,19 +236,19 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
         index = spriteHandle;
         spriteHandle++;
     }
-/*
-    std::shared_ptr<Texture> atlas = sprites.get(atlasIndex)->texture;
+
+    bool createMask = true;
+    if (lua_gettop(luaVM) >= 7) {
+        createMask = (bool)lua_toboolean(luaVM, 4);
+    }
+
     f32 u1 = x / (f32)atlas->width;
     f32 v1 = y / (f32)atlas->height;
     f32 u2 = (x + width) / (f32)atlas->width;
     f32 v2 = (y + height)  / (f32)atlas->height;
 
     sprites.mapResource(index, ".");
-    sprites.get(index)->adopt(atlas, u1, v1, u2, v2);
-
-    //sprites.mapResource(index, filename);
-    // void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage = false);
-*/
+    defineSpriteFromAtlas(atlasIndex, u1, v1, u2, v2, index, createMask);
 
     lua_pushnumber(luaVM, index);
 

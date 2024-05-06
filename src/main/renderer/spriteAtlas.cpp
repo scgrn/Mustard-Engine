@@ -223,7 +223,19 @@ void buildAtlas() {
     // GL_MAX_TEXTURE_SIZE
 }
 
-u32 defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 spriteIndex);
+void defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 spriteIndex, b8 buildCollisionMass);
+    Sprite* sprite = sprites.get(spriteIndex);
+    sprite->image = sprites.get(atlasIndex)->image;
+    sprite->width = width;
+    sprite->height = height;
+    sprite->halfX = width / 2;
+    sprite->halfY = height / 2;
+    sprite->radius = sqrt((f32)((sprite->halfX * sprite->halfX) + (sprite->halfY * sprite->halfY)));
+
+    if (buildCollisionMask) {
+        sprite->buildCollisionMask((u32)(u * atlasWidth), (u32)(v * atlasHeight));
+    }
+    sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2, true);
 
     return 0;
 }
@@ -253,24 +265,13 @@ u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height
                 sprites.mapResource(spriteIndex, ".");
             }
 
-            Sprite* sprite = sprites.get(spriteIndex);
-            sprite->image = sprites.get(firstIndex)->image;
-            sprite->width = width;
-            sprite->height = height;
-            sprite->halfX = width / 2;
-            sprite->halfY = height / 2;
-            sprite->radius = sqrt((f32)((sprite->halfX * sprite->halfX) + (sprite->halfY * sprite->halfY)));
-            
             f32 u1 = u;
             f32 v1 = v;
             f32 u2 = u + uIncrease;
             f32 v2 = v + vIncrease;
-            
-            if (buildCollisionMasks) {
-                sprite->buildCollisionMask((u32)(u * atlasWidth), (u32)(v * atlasHeight));
-            }
-            sprite->adopt(sprites.get(firstIndex)->texture, u1, v1, u2, v2, true);
-            
+
+            defineSpriteFromAtlas(firstIndex, u1, v1, u2, v2, spriteIndex, buildCollisionMasks);
+
             spriteIndex++;
             u += uIncrease;
         }
