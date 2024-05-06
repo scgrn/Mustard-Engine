@@ -32,7 +32,7 @@ namespace AB {
 void addToAtlas(Sprite *sprite);
 void buildAtlas();
 
-u32 defineSpriteFromAtlas(u32 atlasIndex, u32 x, u32 y, u32 width, u32 height, u32 spriteIndex);
+u32 defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 spriteIndex);
 u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height, b8 buildCollisionMasks = false);
 
 }   //  namespace

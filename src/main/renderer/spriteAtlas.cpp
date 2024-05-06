@@ -223,7 +223,8 @@ void buildAtlas() {
     // GL_MAX_TEXTURE_SIZE
 }
 
-u32 defineSpriteFromAtlas(u32 atlasIndex, u32 x, u32 y, u32 width, u32 height, u32 spriteIndex) {
+u32 defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 spriteIndex);
+
     return 0;
 }
 

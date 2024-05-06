@@ -235,7 +235,7 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
         index = spriteHandle;
         spriteHandle++;
     }
-
+/*
     std::shared_ptr<Texture> atlas = sprites.get(atlasIndex)->texture;
     f32 u1 = x / (f32)atlas->width;
     f32 v1 = y / (f32)atlas->height;
@@ -247,6 +247,7 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
 
     //sprites.mapResource(index, filename);
     // void adopt(std::shared_ptr<Texture> texture, float u1, float v1, float u2, float v2, bool retainImage = false);
+*/
 
     lua_pushnumber(luaVM, index);
 
