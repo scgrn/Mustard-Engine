@@ -226,12 +226,19 @@ void buildAtlas() {
 void defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 spriteIndex, b8 buildCollisionMask) {
     Sprite* sprite = sprites.get(spriteIndex);
     sprite->image = sprites.get(atlasIndex)->image;
-
+/*
+    u32 width = (u32)((u2 - u1) * sprite->image->width * sprite->uSpan);
+    u32 height = (u32)((v2 - v1) * sprite->image->height * sprite->vSpan);
+*/
     u32 width = (u32)((u2 - u1) * sprite->image->width);
     u32 height = (u32)((v2 - v1) * sprite->image->height);
-
+    LOG_EXP(width);
+    LOG_EXP(height);
+    
     u32 atlasWidth = sprites.get(atlasIndex)->width;
     u32 atlasHeight = sprites.get(atlasIndex)->height;
+    LOG_EXP(atlasWidth);
+    LOG_EXP(atlasHeight);
 
     sprite->width = width;
     sprite->height = height;

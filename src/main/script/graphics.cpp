@@ -243,10 +243,10 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
     }
 
     Sprite *atlas = sprites.get(atlasIndex);
-    f32 u1 = x / (f32)atlas->width;
-    f32 v1 = y / (f32)atlas->height;
-    f32 u2 = (x + width) / (f32)atlas->width;
-    f32 v2 = (y + height)  / (f32)atlas->height;
+    f32 u1 = x / (f32)(atlas->width);
+    f32 v1 = y / (f32)(atlas->height);
+    f32 u2 = (x + width) / (f32)(atlas->width);
+    f32 v2 = (y + height)  / (f32)(atlas->height);
 
     sprites.mapResource(index, ".");
     defineSpriteFromAtlas(atlasIndex, u1, v1, u2, v2, index, createMask);
