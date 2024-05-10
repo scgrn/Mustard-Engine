@@ -50,7 +50,7 @@ namespace AB {
 class Texture {
     public:
         Texture();
-        Texture(int width, int height);
+        Texture(u32 width, u32 height);
         Texture(Image *image);
         Texture(std::string const& filename);
 
@@ -62,8 +62,8 @@ class Texture {
         static void setMinFilter(GLenum filter) { Texture::minFilter = filter; }
         static void setMagFilter(GLenum filter) { Texture::magFilter = filter; }
 
-        int width, height;        //  size padded to nearest 2^
-        float u2, v2;
+        u32 width, height;        //  size padded to nearest 2^
+        f32 u2, v2;
 
         static GLenum minFilter, magFilter;
 

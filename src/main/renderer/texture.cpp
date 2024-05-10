@@ -56,7 +56,7 @@ Texture::Texture() {
     glHandle = 0;
 }
 
-Texture::Texture(int width, int height) {
+Texture::Texture(u32 width, u32 height) {
     CALL_GL(glGenTextures(1, &glHandle));
     if (!glHandle) {
         ERR("Couldn't create texture!", 0);
@@ -80,22 +80,22 @@ Texture::Texture(Image *image) {
 }
 
 void Texture::init(Image *image) {
-    int rWidth = image->width;
-    int rHeight = image->height;
+    u32 rWidth = image->width;
+    u32 rHeight = image->height;
     width = nextPowerOfTwo(rWidth);
     height = nextPowerOfTwo(rHeight);
 
-    u2 = (float)rWidth / (float)width;
-    v2 = (float)rHeight / (float)height;
+    u2 = (f32)rWidth / (f32)width;
+    v2 = (f32)rHeight / (f32)height;
 
     //  create new image padded to ^2
-    unsigned char *data = NULL;
-    data = new unsigned char[width * height * 4];
+    u8 *data = NULL;
+    data = new u8[width * height * 4];
     memset(data, 0, width * height * 4);
-    unsigned char *imageData = NULL;
+    u8 *imageData = NULL;
     imageData = image->data;
 
-    for (int y = 0; y < rHeight; y++) {
+    for (u32 y = 0; y < rHeight; y++) {
         memcpy(&data[(rHeight - y - 1) * width * 4], &imageData[y * rWidth * 4], rWidth * 4);
     }
 
