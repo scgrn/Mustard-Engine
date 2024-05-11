@@ -221,6 +221,7 @@ b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
         //  rotate and scale bounding rectangles
         Vec2 v1[4], v2[4];
 
+
         //  first sprite
         v1[0] = Vec2(-s1->halfX, -s1->halfY);
         v1[1] = Vec2( s1->halfX, -s1->halfY);
@@ -281,14 +282,16 @@ b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
         f32 yMin = max(yMin1, yMin2);
         f32 yMax = min(yMax1, yMax2);
 
+        f32 diff = yMax - yMin;
+        
         //  scan convert bounding boxes
-        i32 range = (i32)(yMax - yMin);     // height of vertical overlap
+        u32 range = (u32)(max(yMax - yMin, 0.0f));     // height of vertical overlap
 
-        //  adding yMin to array indices will yield actual screen space y value
+        //  adding yMin to array indices will yield actual screenspace y value
         Scan scan1[range], scan2[range];
 
         //  again, initialize to preposterous values
-        for (i32 i = 0; i < range; i++) {
+        for (u32 i = 0; i < range; i++) {
             scan1[i].x1 = FLT_MAX;
             scan1[i].x2 = -FLT_MAX;
             scan2[i].x1 = FLT_MAX;
@@ -340,7 +343,7 @@ b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
         scanEdge(v2[3], s2u1, s2v2, v2[0], s2u1, s2v1, &scan2[0], range, yMin);
 
         //  u/v coords were scanned at [0..1], scale them to actual size
-        for (i32 i = 0; i < range; i++) {
+        for (u32 i = 0; i < range; i++) {
             scan1[i].u1 *= s1->width;
             scan1[i].v1 *= s1->height;
             scan1[i].u2 *= s1->width;
@@ -352,7 +355,7 @@ b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
             scan2[i].v2 *= s2->height;
         }
 
-        for (i32 i = 0; i < range; i++) {
+        for (u32 i = 0; i < range; i++) {
             if (scan1[i].x1 <= scan2[i].x2 && scan2[i].x1 <= scan1[i].x2) {
                 if ((scan1[i].x2 - scan1[i].x1 < 1.0f) || (scan2[i].x2 - scan2[i].x1 < 1.0f)) {
                     //  not a scan! beat it!

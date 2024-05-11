@@ -183,6 +183,7 @@ unsigned char* FileSystem::readFile(std::string const& path, size_t *size) {
     FILE *file = fopen(path.c_str(), "rb");
     if (!file) {
         LOG("ERROR LOADING FILE! %s", path.c_str());
+        *size = 0;
         return 0;
     }
 

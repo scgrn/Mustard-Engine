@@ -66,7 +66,7 @@ class Sprite : public Resource {
         f32 radius;            //  radius of bounding circle
 
         f32 uSpan, vSpan;        //    percentage of actual size/padded size
-        u32 halfX, halfY;        //  width and height / 2
+        i32 halfX, halfY;        //  width and height / 2
 
         b8 *collisionMask;
         Image *image;
