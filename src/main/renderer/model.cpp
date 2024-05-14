@@ -49,7 +49,7 @@ bool Model::loadOBJ(std::string const& filename,
     std::vector<Vec3> tempNormals;
     std::vector<Vec2> tempUVs;
 
-    std::vector<u64> vertexIndices, uvIndices, normalIndices;
+    std::vector<u32> vertexIndices, uvIndices, normalIndices;
 
     LOG("Loading OBJ file %s", filename.c_str());
 
@@ -139,13 +139,13 @@ bool Model::loadOBJ(std::string const& filename,
 
     
     if (textured) {
-        for (u64 i = 0; i < vertexIndices.size(); i++) {
+        for (u32 i = 0; i < vertexIndices.size(); i++) {
             outVertices.push_back(tempVertices[vertexIndices[i]]);
             outUVs.push_back(tempUVs[uvIndices[i]]);
             outNormals.push_back(tempNormals[normalIndices[i]]);
         }
     } else {
-        for (u64 i = 0; i < vertexIndices.size(); i++) {
+        for (u32 i = 0; i < vertexIndices.size(); i++) {
             outVertices.push_back(tempVertices[vertexIndices[i]]);
             outNormals.push_back(tempNormals[normalIndices[i]]);
         }
@@ -183,7 +183,7 @@ void Model::indexVBO(std::vector<Vec3> &inVertices,
     LOG_EXP(inVertices.size());
     
     PackedVertex packed;
-    for (u64 i = 0; i < inVertices.size(); i++) {
+    for (u32 i = 0; i < inVertices.size(); i++) {
         if (textured) {
             packed = {inVertices[i], inUVs[i], inNormals[i]};
         } else {
@@ -235,7 +235,7 @@ void Model::load(std::string const& filename) {
     CALL_GL(glGenVertexArrays(1, &vertexArrayID));
     CALL_GL(glBindVertexArray(vertexArrayID));
 
-    // Load it i32o a VBO
+    // Load it into a VBO
     CALL_GL(glGenBuffers(1, &vertexBuffer));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
     CALL_GL(glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(Vec3), &indexedVertices[0], GL_STATIC_DRAW));
