@@ -81,6 +81,15 @@ Run `build` or `./build.sh` (depending on your development platform) without arg
 
 <!-- TODO (link to APIs, etc -->
 
+File format support:
+-------
+Images:
+- 24 or 32 bit TGA with or without RLE compression
+	
+Audio:
+- wav
+- ogg
+  
 Steamworks Integration
 -------
 
