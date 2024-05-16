@@ -282,8 +282,6 @@ b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
         f32 yMin = max(yMin1, yMin2);
         f32 yMax = min(yMax1, yMax2);
 
-        f32 diff = yMax - yMin;
-        
         //  scan convert bounding boxes
         u32 range = (u32)(max(yMax - yMin, 0.0f));     // height of vertical overlap
 
