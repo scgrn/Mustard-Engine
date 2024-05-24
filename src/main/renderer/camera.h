@@ -50,7 +50,7 @@ class OrthographicCamera : public Camera {
 class PerspectiveCamera : public Camera {
     public:
         PerspectiveCamera();
-        void setProjection(f32 fov, f32 near = 1.0f, f32 far = 1000.0f);
+        void setProjection(f32 fov, f32 near = 0.1f, f32 far = 1000.0f);
         void setView(Mat4 view);
         virtual void recalculateViewMatrix();
         Vec2 project(Vec3 point, Mat4 modelMatrix = Mat4());
