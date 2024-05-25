@@ -239,7 +239,7 @@ void Input::update() {
     }
     
     for (std::vector<SDL_Event>::iterator event = eventQueue.begin(); event != eventQueue.end(); event++) {
-        if (event->type == SDL_KEYDOWN) {
+        if (event->type == SDL_KEYDOWN && event->key.repeat == 0) {
             showGamepadControls = false;
 
             //  check fullscreen toggle
