@@ -251,6 +251,8 @@ void Input::update() {
                     //  pass to lua
                     script.execute("AB.onKeyPressed(" + toString(event->key.keysym.scancode) + ")");
                 }
+#else
+                script.execute("AB.onKeyPressed(" + toString(event->key.keysym.scancode) + ")");
 #endif
             }
             
