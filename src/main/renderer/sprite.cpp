@@ -79,7 +79,7 @@ void Sprite::buildCollisionMask(u32 offsetX, u32 offsetY) {
     }
 
     if (offsetX + width > image->width || offsetY + height > image->height) {
-        ERR("Offset and dimensions exceed image boundaries!", 0);
+        //ERR("Offset and dimensions exceed image boundaries!", 0);
     }
 
     collisionMask = new b8[width * height];

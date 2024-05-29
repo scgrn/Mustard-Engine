@@ -230,21 +230,33 @@ void defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 s
     u32 width = (u32)((u2 - u1) * sprite->image->width * sprite->uSpan);
     u32 height = (u32)((v2 - v1) * sprite->image->height * sprite->vSpan);
 */
-    u32 width = (u32)((u2 - u1) * sprite->image->width);
-    u32 height = (u32)((v2 - v1) * sprite->image->height);
+    LOG_EXP(u1);
+    LOG_EXP(u2);
+    
+    u32 width = (u32)((u2 - u1) * sprite->image->width + 0.5f);
+    u32 height = (u32)((v2 - v1) * sprite->image->height + 0.5f);
     LOG_EXP(width);
     LOG_EXP(height);
     
-    u32 atlasWidth = sprites.get(atlasIndex)->width;
-    u32 atlasHeight = sprites.get(atlasIndex)->height;
+    u32 atlasWidth = sprites.get(atlasIndex)->image->width;
+    u32 atlasHeight = sprites.get(atlasIndex)->image->height;
+    u32 paddedAtlasWidth = sprites.get(atlasIndex)->texture->width;
+    u32 paddedAtlasHeight = sprites.get(atlasIndex)->texture->height;
     LOG_EXP(atlasWidth);
     LOG_EXP(atlasHeight);
+    LOG_EXP(paddedAtlasWidth);
+    LOG_EXP(paddedAtlasHeight);
 
     sprite->width = width;
     sprite->height = height;
     sprite->halfX = width / 2;
     sprite->halfY = height / 2;
     sprite->radius = sqrt((f32)((sprite->halfX * sprite->halfX) + (sprite->halfY * sprite->halfY)));
+
+    u1 *= ((f32)atlasWidth / (f32)paddedAtlasWidth);
+    v1 *= ((f32)atlasHeight / (f32)paddedAtlasHeight);
+    u2 *= ((f32)atlasWidth / (f32)paddedAtlasWidth);
+    v2 *= ((f32)atlasHeight / (f32)paddedAtlasHeight);
 
     if (buildCollisionMask) {
         sprite->buildCollisionMask((u32)(u1 * atlasWidth), (u32)(v1 * atlasHeight));
@@ -262,12 +274,17 @@ u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height
     u32 columns = atlasWidth / width;
     u32 rows = atlasHeight / height;
     u32 numSprites = rows * columns;
-    
+/*
     f32 uIncrease = ((f32)width / (f32)atlasWidth) *
         ((f32)atlasWidth / (f32)sprites.get(firstIndex)->texture->width);
     f32 vIncrease = ((f32)height / (f32)atlasHeight) *
         ((f32)atlasHeight / (f32)sprites.get(firstIndex)->texture->height);
-    
+*/
+    f32 uIncrease = (f32)width / (f32)(columns * width);
+    f32 vIncrease = (f32)height / (f32)(rows * height);
+    LOG_EXP(uIncrease);
+    LOG_EXP(vIncrease);
+
     u32 spriteIndex = firstIndex;
     f32 v = 0.0f;
     for (u32 y = 0; y < rows; y++) {
