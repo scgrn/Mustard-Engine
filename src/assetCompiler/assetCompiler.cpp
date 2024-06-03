@@ -60,8 +60,6 @@ inline std::string toString(T val, bool groupDigits = true) {
 }
 
 void crypt(uint8_t *data, uint32_t size, std::string const& key) {
-    return; //  TODO: remove after testing
-
     if (key.empty()) return;
 
     uint32_t keyIndex = 0;
@@ -126,7 +124,7 @@ struct Resource {
     uint32_t offset;
 
 protected:
-        Resource();
+    Resource();
 };
 
 std::vector<Resource*> resourceFiles;
@@ -136,12 +134,12 @@ void buildArchive(std::string archivePath) {
     int fileCount = 0;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(".")) {
         if (!std::filesystem::is_directory(entry.status())) {
-                std::string filename = entry.path().relative_path().string();
-                filename.erase(0, 2);
+            std::string filename = entry.path().relative_path().string();
+            filename.erase(0, 2);
 
-                resourceFiles.push_back(new Resource(filename));
+            resourceFiles.push_back(new Resource(filename));
 
-                fileCount++;
+            fileCount++;
         }
     }
 
@@ -164,8 +162,7 @@ void buildArchive(std::string archivePath) {
     for (auto resource :resourceFiles) {
         resource->offset = offset;
 
-        //  TODO: set to compressed
-        offset += resource->sizeDataOriginal;
+        offset += resource->sizeDataCompressed;
 
         TiXmlElement *resourceElement = new TiXmlElement("resource");
 
@@ -198,19 +195,18 @@ void buildArchive(std::string archivePath) {
     // encrypt compressed data
     crypt(dataCompressed, sizeDataCompressed, key);
 
-
     FILE *file = fopen(archivePath.c_str(), "wb");
 
     fwrite("AB1 ",1, 4, file);
     fwrite(&sizeDataCompressed, 1, 4, file);      // header size compressed
     fwrite(&size, 1, 4, file);      // header size decompressed
-    //fwrite(dataCompressed, 1, sizeDataCompressed, file);
-    fwrite(data, 1, size, file);
+    fwrite(dataCompressed, 1, sizeDataCompressed, file);
+    //fwrite(data, 1, size, file);
 
     //  write all loaded resources
     for (auto resource :resourceFiles) {
-        //fwrite(resource->dataCompressed, 1, resource->sizeDataCompressed, file);
-        fwrite(resource->dataOriginal, 1, resource->sizeDataOriginal, file);
+        fwrite(resource->dataCompressed, 1, resource->sizeDataCompressed, file);
+        //fwrite(resource->dataOriginal, 1, resource->sizeDataOriginal, file);
     }
     /*
     for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {

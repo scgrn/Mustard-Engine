@@ -54,9 +54,6 @@ struct Archive {
 std::vector<Archive> archives;
 
 void crypt(uint8_t *data, uint32_t size, std::string const& key) {
-
-    return; //  TODO: remove after testing
-
     if (key.empty()) return;
 
     uint32_t keyIndex = 0;
@@ -128,7 +125,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     //  read and parse header
     fread(&archive.headerSizeCompressed, 1, 4, file);
     fread(&archive.headerSizeDecompressed, 1, 4, file);
-/*
+
     uint8_t *dataCompressed = new uint8_t[archive.headerSizeCompressed];
     fread(dataCompressed, 1, archive.headerSizeCompressed, file);
     crypt(dataCompressed, archive.headerSizeCompressed, key);
@@ -138,11 +135,11 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     uint8_t *data = new uint8_t[archive.headerSizeDecompressed];
     int result = uncompress(data, &archive.headerSizeDecompressed, dataCompressed, archive.headerSizeCompressed);
     //  TODO: check result
-*/
+/*
     uint8_t *data = new uint8_t[archive.headerSizeDecompressed];
     fread(data, 1, archive.headerSizeDecompressed, file);
     fclose(file);
-
+*/
     TiXmlDocument *DOM = new TiXmlDocument();
     DOM->Parse((char*)data);
     if (DOM->Error()) {
