@@ -54,16 +54,21 @@ enum {
 // switches for warn...trace
 
 namespace AB {
-
 #ifdef ANDROID
 #include <android/log.h>
-#define LOG(msg, arg...) __android_log_print(ANDROID_LOG_DEBUG, "JNI", msg, arg);
-#define LOG_EXP(name)__android_log_print(ANDROID_LOG_DEBUG, "JNI", "%s = $s", #name, name);
-#define ERR(msg, arg...)__android_log_print(ANDROID_LOG_ERROR, "JNI", msg, arg);
+#define LOG(msg, ...) __android_log_print(ANDROID_LOG_DEBUG, "JNI", msg, __VA_ARGS__)
+#define LOG_EXP(name) __android_log_print(ANDROID_LOG_DEBUG, "JNI", "%s = %s", #name, name)
+#define ERR(msg, ...) __android_log_print(ANDROID_LOG_ERROR, "JNI", msg, __VA_ARGS__)
 #else
-#define LOG(msg, arg...) AB::log(__LINE__, __FILE__, msg, arg);
-#define LOG_EXP(name) AB::logExp(__LINE__, __FILE__, #name, name);
-#define ERR(msg, arg...) AB::error(__LINE__, __FILE__, msg, arg);
+#ifdef DEBUG
+#define LOG(msg, ...) AB::log(__LINE__, __FILE__, msg, __VA_ARGS__)
+#define LOG_EXP(name) AB::logExp(__LINE__, __FILE__, #name, name)
+#define ERR(msg, ...) AB::error(__LINE__, __FILE__, msg, __VA_ARGS__)
+#else
+#define LOG(msg, ...) 
+#define LOG_EXP(name) 
+#define ERR(msg, ...) 
+#endif
 
 void log(int line, const char* file, const char* msg, ...);
 void error(int line, const char* file, const char* msg, ...);
