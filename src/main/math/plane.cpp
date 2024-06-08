@@ -28,7 +28,14 @@ namespace AB {
 
 Plane::Plane(Vec3 point, Vec3 normal) {
     this->normal = normalize(normal);
-    d = dotProduct(this->normal, point);
+    d = -dotProduct(this->normal, point);
+}
+
+Plane::Plane(const Vec3& p1, const Vec3& p2, const Vec3& p3) {
+    Vec3 v1 = p2 - p1;
+    Vec3 v2 = p3 - p1;
+    this->normal = normalize(crossProduct(v1, v2));
+    d = -dotProduct(this->normal, p1);
 }
 
 void Plane::setNormalAndPoint(Vec3& point, Vec3& normal) {
@@ -41,9 +48,10 @@ void Plane::setCoefficients(f32 a, f32 b, f32 c, f32 d) {
 
     //  not calling the normalize function to avoid calculating the magnitude twice
     f32 length = magnitude(normal);
-    normal = Vec3(a / length, b / length, c / length);
-
-    this->d = d / length;
+    if (length != 0) {    
+        normal = Vec3(a / length, b / length, c / length);
+        this->d = d / length;
+    }
 }
 
 f32 Plane::getSignedDistanceToPoint(Vec3& point) {
