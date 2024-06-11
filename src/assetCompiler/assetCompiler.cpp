@@ -34,6 +34,8 @@ freely, subject to the following restrictions:
 #include "../vendor/zlib-1.2.11/zlib.h"
 #include "../vendor/tinyxml/tinyxml.h"
 
+#define COMPRESS
+
 std::string key;
 
 template<class T>
@@ -60,6 +62,10 @@ inline std::string toString(T val, bool groupDigits = true) {
 }
 
 void crypt(uint8_t *data, uint32_t size, std::string const& key) {
+#ifndef COMPRESS
+    return;
+#endif
+
     if (key.empty()) return;
 
     uint32_t keyIndex = 0;
@@ -162,7 +168,11 @@ void buildArchive(std::string archivePath) {
     for (auto resource :resourceFiles) {
         resource->offset = offset;
 
+#ifdef COMPRESS
         offset += resource->sizeDataCompressed;
+#else
+        offset += resource->sizeDataOriginal;
+#endif
 
         TiXmlElement *resourceElement = new TiXmlElement("resource");
 
@@ -200,13 +210,19 @@ void buildArchive(std::string archivePath) {
     fwrite("AB1 ",1, 4, file);
     fwrite(&sizeDataCompressed, 1, 4, file);      // header size compressed
     fwrite(&size, 1, 4, file);      // header size decompressed
+#ifdef COMPRESS
     fwrite(dataCompressed, 1, sizeDataCompressed, file);
-    //fwrite(data, 1, size, file);
+#else
+    fwrite(data, 1, size, file);
+#endif
 
     //  write all loaded resources
     for (auto resource :resourceFiles) {
+#ifdef COMPRESS
         fwrite(resource->dataCompressed, 1, resource->sizeDataCompressed, file);
-        //fwrite(resource->dataOriginal, 1, resource->sizeDataOriginal, file);
+#else
+        fwrite(resource->dataOriginal, 1, resource->sizeDataOriginal, file);
+#endif
     }
     /*
     for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
