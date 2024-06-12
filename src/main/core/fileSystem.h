@@ -37,7 +37,9 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <vector>
 
-#include "../core/subsystem.h"
+#include "../types.h"
+
+#include "subsystem.h"
 
 namespace AB {
 
@@ -50,7 +52,7 @@ class FileSystem : public SubSystem {
         void addArchive(std::string const& path, std::string const& key = "");
 
         //  caller is responsible to delete() returned pointer
-        unsigned char* readFile(std::string const& path, size_t *size);
+        u8* readFile(std::string const& path, u64 *size);
     
         std::string loadData(std::string key);
         void saveData(std::string key, std::string value);
@@ -67,17 +69,17 @@ class FileSystem : public SubSystem {
 
 class DataObject {
     public:
-        DataObject(const char* path, bool forceLocal = false);
+        DataObject(const char* path, b8 forceLocal = false);
         ~DataObject();
 
-        unsigned char* getData() { return data; } 
-        size_t getSize() { return size; }
+        u8* getData() { return data; } 
+        u64 getSize() { return size; }
 
     protected:
         DataObject() {}
 
-        unsigned char *data;
-        size_t size;
+        u8* data;
+        u64 size;
 
 };
 

@@ -35,6 +35,7 @@ freely, subject to the following restrictions:
 #include "zlib.h"
 
 #define COMPRESS
+#define DECRYPT
 
 namespace AB {
 
@@ -44,26 +45,26 @@ extern FileSystem fileSystem;
 //            maybe just have it read from the global filesystem instance?
 struct FileResource {
     std::string path;
-    uint32_t offset, sizeCompressed, sizeDecompressed;
+    u64 offset, sizeCompressed, sizeDecompressed;
 };
 
 struct Archive {
     std::string path, key;
     std::vector<FileResource> resources;
-    uint32_t headerSizeCompressed, headerSizeDecompressed;
+    u64 headerSizeCompressed, headerSizeDecompressed;
 };
 
 std::vector<Archive> archives;
 
-void crypt(uint8_t *data, uint32_t size, std::string const& key) {
-#ifndef COMPRESS
+void crypt(u8* data, u64 size, std::string const& key) {
+#ifndef DECRYPT
     return;
 #endif
 
     if (key.empty()) return;
 
-    uint32_t keyIndex = 0;
-    for (uint32_t i = 0; i < size; i++) {
+    u32 keyIndex = 0;
+    for (u64 i = 0; i < size; i++) {
         data[i] ^= (key.c_str()[keyIndex] ^ 0xAA);
         keyIndex++;
         if (keyIndex > key.length()) {
@@ -116,14 +117,14 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     archive.key = key;
 
     //  fourth byte of header is reserved ... for ...
-    Uint8 tag[4];
+    u8 tag[4];
     fread(&tag, 1, 4, file);
     if (tag[0] != 'A' || tag[1] != 'B') {
         ERR("INVALID ARCHIVE: %s", path.c_str());
     }
 
     //  check version code. only handle version 1 now. branch for backwards compatibility if extended.
-    Uint8 versionCode = tag[2];
+    u8 versionCode = tag[2];
     if (versionCode != 1) {
         //ERR("INVALID ARCHIVE: %s", path.c_str());
     }
@@ -132,17 +133,17 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     fread(&archive.headerSizeCompressed, 1, 4, file);
     fread(&archive.headerSizeDecompressed, 1, 4, file);
 #ifdef COMPRESS
-    uint8_t *dataCompressed = new uint8_t[archive.headerSizeCompressed];
+    u8* dataCompressed = new u8[archive.headerSizeCompressed];
     fread(dataCompressed, 1, archive.headerSizeCompressed, file);
     crypt(dataCompressed, archive.headerSizeCompressed, key);
     fclose(file);
 
     //  decompress header data
-    uint8_t *data = new uint8_t[archive.headerSizeDecompressed];
-    int result = uncompress(data, &archive.headerSizeDecompressed, dataCompressed, archive.headerSizeCompressed);
+    u8* data = new u8[archive.headerSizeDecompressed];
+    i32 result = uncompress(data, &archive.headerSizeDecompressed, dataCompressed, archive.headerSizeCompressed);
     //  TODO: check result
 #else
-    uint8_t *data = new uint8_t[archive.headerSizeDecompressed];
+    u8* data = new u8[archive.headerSizeDecompressed];
     fread(data, 1, archive.headerSizeDecompressed, file);
     fclose(file);
 #endif
@@ -182,7 +183,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     archives.push_back(archive);
 }
 
-unsigned char* FileSystem::readFile(std::string const& path, size_t *size) {
+u8* FileSystem::readFile(std::string const& path, u64 *size) {
     FILE *file = fopen(path.c_str(), "rb");
     if (!file) {
         LOG("ERROR LOADING FILE! %s", path.c_str());
@@ -194,14 +195,14 @@ unsigned char* FileSystem::readFile(std::string const& path, size_t *size) {
     *size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    unsigned char *data = new unsigned char[*size];
+    u8* data = new u8[*size];
     fread(data, 1, *size, file);
     fclose(file);
 
     return data;
 }
 
-DataObject::DataObject(const char* path, bool forceLocal) {
+DataObject::DataObject(const char* path, b8 forceLocal) {
     if (forceLocal) {
         LOG("Loading %s from local filesystem...", path);
         data = fileSystem.readFile(path, &size);
@@ -228,7 +229,7 @@ DataObject::DataObject(const char* path, bool forceLocal) {
                 // crypt(dataCompressed, resource->sizeCompressed, archive->key);
 
                 size = resource->sizeDecompressed;
-                data = new unsigned char[size];
+                data = new u8[size];
                 fread(data, 1, size, file);
 
                 //int result = uncompress(data, size, dataCompressed, resource->sizeCompressed);
