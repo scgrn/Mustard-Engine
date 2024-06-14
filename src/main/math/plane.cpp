@@ -31,16 +31,12 @@ Plane::Plane(Vec3 point, Vec3 normal) {
     d = -dotProduct(this->normal, point);
 }
 
-Plane::Plane(const Vec3& p1, const Vec3& p2, const Vec3& p3) {
+Plane::Plane(Vec3 p1, Vec3 p2, Vec3 p3) {
     Vec3 v1 = p2 - p1;
     Vec3 v2 = p3 - p1;
-    this->normal = normalize(crossProduct(v1, v2));
+    Vec3 cross = crossProduct(v1, v2);
+    this->normal = normalize(cross);
     d = -dotProduct(this->normal, p1);
-}
-
-void Plane::setNormalAndPoint(Vec3& point, Vec3& normal) {
-    this->normal = normalize(normal);
-    d = -(dotProduct(this->normal, point));
 }
 
 void Plane::setCoefficients(f32 a, f32 b, f32 c, f32 d) {

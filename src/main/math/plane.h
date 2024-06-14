@@ -31,14 +31,13 @@ namespace AB {
 
 class Plane {
     public:
-        Plane(const Vec3& point, const Vec3& normal);
-        Plane(const Vec3& p1, const Vec3& p2, const Vec3& p3);
+        Plane(Vec3 point, Vec3 normal);
+        Plane(Vec3 p1, Vec3 p2, Vec3 p3);
         Plane(void) : d(0) {}
         ~Plane() {}
 
-        void setNormalAndPoint(const Vec3& point, const Vec3& normal);
         void setCoefficients(f32 a, f32 b, f32 c, f32 d);
-        f32 getSignedDistanceToPoint(const Vec3& point) const;
+        f32 getSignedDistanceToPoint(Vec3 &point);
 
         Vec3 normal;
 
