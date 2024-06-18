@@ -51,7 +51,7 @@ struct FileResource {
 struct Archive {
     std::string path, key;
     std::vector<FileResource> resources;
-    u64 headerSizeCompressed, headerSizeDecompressed;
+    uLongf headerSizeCompressed, headerSizeDecompressed;
 };
 
 std::vector<Archive> archives;

@@ -87,6 +87,7 @@ aux_source_directory("${VENDOR_DIR}/soloud20200207/src/core" SOLOUD_CORE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource/wav" SOLOUD_AUDIOSOURCE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/filter" SOLOUD_FILTER_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/backend/miniaudio" SOLOUD_BACKEND_SOURCE)
+aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 
 # Remove unused source files
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/lua.c")
@@ -111,7 +112,7 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
     PUBLIC "${VENDOR_DIR}/soloud20200207/include"
     PUBLIC "${VENDOR_DIR}/tinyxml"
-    PUBLIC "${VENDOR_DIR}/zlib-1.2.11"
+    PUBLIC "${VENDOR_DIR}/zlib-1.3.1"
     PUBLIC "${PLATFORM_DIR}/win64"
     PUBLIC "${PLATFORM_DIR}/win64/glad"
     PUBLIC ${SDL2_INCLUDE_DIRS}
