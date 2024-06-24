@@ -23,7 +23,6 @@ Dependencies
 | [lua](https://www.lua.org/) | Scripting |
 | [SDL2](https://www.libsdl.org/) | Window / input management (desktop / web only) |
 | [soloud](https://sol.gfxile.net/soloud/) | Audio mixing and playback |
-| [tinyxml](http://www.grinninglizard.com/tinyxml/) | XML parsing |
 | [zlib](https://zlib.net/) | Compression |
 
 Features

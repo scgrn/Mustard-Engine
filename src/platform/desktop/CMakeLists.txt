@@ -95,7 +95,6 @@ endif()
 # Collect third-party sources
 aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
-aux_source_directory("${VENDOR_DIR}/tinyxml" TINYXML_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/core" SOLOUD_CORE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource/wav" SOLOUD_AUDIOSOURCE_SOURCE)
 aux_source_directory("${VENDOR_DIR}/soloud20200207/src/filter" SOLOUD_FILTER_SOURCE)
@@ -110,7 +109,6 @@ list(REMOVE_ITEM TINYXML_SOURCE "${VENDOR_DIR}/tinyxml/xmltest.cpp")
 add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
     ${LUA_SOURCE}
-    ${TINYXML_SOURCE}
     ${ZLIB_SOURCE}
     ${SOLOUD_CORE_SOURCE}
     ${SOLOUD_AUDIOSOURCE_SOURCE}
@@ -124,7 +122,6 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC "${VENDOR_DIR}"
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
     PUBLIC "${VENDOR_DIR}/soloud20200207/include"
-    PUBLIC "${VENDOR_DIR}/tinyxml"
     PUBLIC "${VENDOR_DIR}/zlib-1.3.1"
     PUBLIC "${SDL2_INCLUDE_DIRS}"
 )
