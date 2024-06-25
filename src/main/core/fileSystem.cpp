@@ -190,41 +190,19 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
         data = fileSystem.readFile(path, &size);
         return;
     }
-/*
-    for (std::vector<Archive>::iterator archive = archives.begin(); archive != archives.end(); archive++) {
-        for (std::vector<FileResource>::iterator resource = archive->resources.begin(); resource != archive->resources.end(); resource++) {
+
+    for (ArchiveFile archiveFile : archives) {
+        for (AssetFile assetFile : archiveFile.assets) {
             if (resource->path == path) {
                 LOG("Loading resource %s from archive %s", resource->path.c_str(), archive->path.c_str());
 
-                FILE *file = fopen(archive->path.c_str(), "rb");
-                //fseek(file, resource->offset + archive->headerSizeCompressed, SEEK_SET);
-                fseek(file, resource->offset + archive->headerSizeDecompressed + 12, SEEK_SET);
-                
-                // *size = resource->sizeCompressed;
-                // data = new unsigned char[*size];
-                // fread(data, 1, *size, file);
-                // crypt(data, *size, archive->key);
-
-                // uint8_t *dataCompressed = new uint8_t[resource->sizeCompressed];
-                // fread(dataCompressed, 1, resource->sizeCompressed, file);
-                // crypt(dataCompressed, resource->sizeCompressed, archive->key);
-
-                size = resource->sizeDecompressed;
-                data = new u8[size];
-                fread(data, 1, size, file);
-
-                //int result = uncompress(data, size, dataCompressed, resource->sizeCompressed);
-                //  TODO: check result
-
-                //delete [] dataCompressed;
-
-                fclose(file);
+                //  return pointer to archive's DataObject + file offset
 
                 return;
             }
         }
     }
-*/
+
     LOG("File <%s> not found in archive, loading from local filesystem", path);
 // #ifdef DEBUG
     data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
