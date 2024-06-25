@@ -27,8 +27,8 @@ freely, subject to the following restrictions:
     @file font.h
     @date 07.14.10
 
-    Font rendering! Based on BMFont http://www.angelcode.com/products/bmfont/
-    Depends on TinyXML http://www.grinninglizard.com    inyxml/
+    Font rendering based on BMFont http://www.angelcode.com/products/bmfont/
+
 
 */
 

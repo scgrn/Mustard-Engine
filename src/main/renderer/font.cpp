@@ -26,8 +26,6 @@ freely, subject to the following restrictions:
 
 #include <iostream>
 
-#include "tinyxml/tinyxml.h"
-
 #include "font.h"
 #include "../core/log.h"
 
@@ -50,7 +48,7 @@ Font::Character::Character(std::shared_ptr<Texture> texture, int x, int y, int w
 
     this->xOffset = xOffset;
     this->yOffset = -yOffset;
-     this->xAdvance = xAdvance;
+    this->xAdvance = xAdvance;
 }
 
 Font::Character::~Character() {}
@@ -68,100 +66,80 @@ void Font::load(std::string const& filename) {
     } else {
         LOG("Loading font <%s>", filename.c_str());
 
-        TiXmlDocument *DOM;
         DataObject dataObject(filename.c_str());
-        char *buffer = (char*)dataObject.getData();
-        if (buffer == 0) {
-            ERR("Couldn't open <%s>", filename.c_str());
-        }
-
-        DOM = new TiXmlDocument();
-        const char *xmlData = buffer;
-        LOG("Parsing XML data from <%s>", filename.c_str());
-        DOM->Parse(xmlData);
-
-        //  error!?!
-        if (DOM->Error()) {
-            ERR("%s from <%s>", DOM->ErrorDesc(), filename.c_str());
-        }
-
-        //    parse the DOM
-        TiXmlElement *fontElement = DOM->FirstChildElement("font");
-        TiXmlElement *pagesElement = fontElement->FirstChildElement("pages");
-
-        //  get texture dimensions
-        int tempW, tempH;
-        TiXmlElement *commonElement = fontElement->FirstChildElement("common");
-        commonElement->Attribute("lineHeight", &lineHeight);
-        commonElement->Attribute("base", &base);
-        commonElement->Attribute("scaleW", &tempW);
-        commonElement->Attribute("scaleH", &tempH);
-        scaleW = tempW;
-        scaleH = tempH;
-
-        //  get texture filename
-        TiXmlElement *pageData = pagesElement->FirstChildElement("page");
-        std::string textureFile(pageData->Attribute("file"));
-        textureFile = filename.substr(0, filename.find_last_of("\\/") + 1) + textureFile;
-        texture = std::make_shared<Texture>(textureFile);
-
+        std::string input(reinterpret_cast<char*>(dataObject.getData()), dataObject.getSize()  - 1); // crop null terminator
+        
         //    init chars array
         for (int i = 0; i < 256; i++) {
             chars[i] = 0;
         }
-
-        TiXmlElement *charsElement = fontElement->FirstChildElement("chars");
-        TiXmlElement *charElement = charsElement->FirstChildElement("char");
         height = 0;
 
-        while (charElement) {
-            int id, x, y, w, h, xo, yo, xa;
+        std::istringstream stream(input);
+        std::string line;
+        while (std::getline(stream, line)) {
+            std::istringstream lineStream(line);
+            std::string tag;
+            lineStream >> tag;
 
-            charElement->Attribute("id", &id);
-            charElement->Attribute("x", &x);
-            charElement->Attribute("y", &y);
-            charElement->Attribute("width", &w);
-            charElement->Attribute("height", &h);
-            charElement->Attribute("xoffset", &xo);
-            charElement->Attribute("yoffset", &yo);
-            charElement->Attribute("xadvance", &xa);
+            std::string pair, key, value;
+            std::map<std::string, std::string> pairs;
+            
+            while (lineStream >> pair) {
+                int i = pair.find('=');
+                key = pair.substr(0, i);
+                value = pair.substr(i + 1);
 
-            if (id < 0 || id > 255) {
-                LOG("WARNING: Character index <%d> out of range!", id);
-            } else {
-                if (chars[id] != 0) {
-                    ERR("Duplicate character ID <%d>", id);
-                }
-
-                if (h > height) {
-                    height = h;
-                }
-
-                chars[id] = new Character(texture, x, y, w, h, xo, yo, xa, scaleW, scaleH);
+                pairs[key] = value;
             }
-            charElement = charElement->NextSiblingElement("char");
-        }
 
-        // read kernings
-        TiXmlElement *kerningsElement = fontElement->FirstChildElement("kernings");
-        if (kerningsElement) {
-            TiXmlElement *kerningElement = kerningsElement->FirstChildElement("kerning");
-            while (kerningElement) {
-                int first, second, amount;
+            if (tag == "common") {
+                lineHeight = stoi(pairs.at("lineHeight"));
+                base = stoi(pairs.at("base"));
+                scaleW = stoi(pairs.at("scaleW"));
+                scaleH = stoi(pairs.at("scaleH"));
+            }
+            
+            if (tag == "page") {
+                std::string textureFile = pairs.at("file");
+                textureFile = textureFile.substr(1, textureFile.size() - 2);  // strip quotes
+                textureFile = filename.substr(0, filename.find_last_of("\\/") + 1) + textureFile;
+                texture = std::make_shared<Texture>(textureFile);
+            }
 
-                kerningElement->Attribute("first", &first);
-                kerningElement->Attribute("second", &second);
-                kerningElement->Attribute("amount", &amount);
+            if (tag == "char") {
+                int id = stoi(pairs.at("id"));
+                int x = stoi(pairs.at("x"));
+                int y = stoi(pairs.at("y"));
+                int w = stoi(pairs.at("width"));
+                int h =  stoi(pairs.at("height"));
+                int xo = stoi(pairs.at("xoffset"));
+                int yo = stoi(pairs.at("yoffset"));
+                int xa = stoi(pairs.at("xadvance"));
+
+                if (id < 0 || id > 255) {
+                    LOG("WARNING: Character index <%d> out of range!", id);
+                } else {
+                    if (chars[id] != 0) {
+                        ERR("Duplicate character ID <%d>", id);
+                    }
+
+                    if (h > height) {
+                        height = h;
+                    }
+
+                    chars[id] = new Character(texture, x, y, w, h, xo, yo, xa, scaleW, scaleH);
+                }
+            }
+            
+            if (tag == "kerning") {
+                int first = stoi(pairs.at("first"));
+                int second = stoi(pairs.at("second"));
+                int amount = stoi(pairs.at("amount"));
 
                 kernings[first][second] = amount;
-
-                kerningElement = kerningElement->NextSiblingElement("kerning");
             }
         }
-
-        DOM->Clear();
-        delete DOM;
-        DOM = NULL;
     }
 
     color = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -306,7 +284,7 @@ void Font::build8x8Default(bool stretch) {
 
 void Font::build3x5Default() {
 #ifdef ANDROID
-    // https://docs.oracle.com/javase/7/docs    echnotes/guides/jni/spec    ypes.html
+    // https://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html
     typedef jchar Uint16;
     typedef jboolean Uint8;
 #endif
