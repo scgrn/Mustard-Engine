@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-Vec3 crossProduct(Vec3 &a, Vec3 &b) {
+Vec3 crossProduct(Vec3 const& a, Vec3 const& b) {
     Vec3 c;
 
     c.x = (a.y * b.z) - (a.z * b.y);
