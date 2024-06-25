@@ -30,8 +30,6 @@ freely, subject to the following restrictions:
 #include "fileSystem.h"
 #include "log.h"
 
-#include "tinyxml/tinyxml.h"
-
 #include "zlib.h"
 
 #define COMPRESS
@@ -41,22 +39,7 @@ namespace AB {
 
 extern FileSystem fileSystem;
 
-//    TODO: i'd like to move these as members of filesystem but then dataobject can't see them
-//            maybe just have it read from the global filesystem instance?
-struct FileResource {
-    std::string path;
-    u64 offset, sizeCompressed, sizeDecompressed;
-};
-
-struct Archive {
-    std::string path, key;
-    std::vector<FileResource> resources;
-    uLongf headerSizeCompressed, headerSizeDecompressed;
-};
-
-std::vector<Archive> archives;
-
-void crypt(u8* data, u64 size, std::string const& key) {
+static void crypt(u8* data, u64 size, std::string const& key) {
 #ifndef DECRYPT
     return;
 #endif
@@ -73,13 +56,12 @@ void crypt(u8* data, u64 size, std::string const& key) {
     }
 }
 
-
 bool FileSystem::startup() {
     LOG("FileSystem subsystem startup", 0);
 
     //    load all queued archives
-    for (std::vector<ArchiveFile>::iterator archiveFile = archiveFiles.begin(); archiveFile != archiveFiles.end(); archiveFile++) {
-        loadArchive(archiveFile->path, archiveFile->key);
+    for (ArchiveFile archiveFile : archiveFiles) {
+        loadArchive(archiveFile.path, archiveFile.key);
     }
     
     initialized = true;
@@ -104,7 +86,6 @@ void FileSystem::addArchive(std::string const& path, std::string const& key) {
     }
 }
 
-// TODO: read entire file and keep it in memory?
 void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     FILE *file = fopen(path.c_str(), "rb");
     if (!file) {
@@ -112,7 +93,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
         return;
     }
 
-    Archive archive;
+    ArchiveFile archive;
     archive.path = path;
     archive.key = key;
 
@@ -128,7 +109,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     if (versionCode != 1) {
         //ERR("INVALID ARCHIVE: %s", path.c_str());
     }
-
+/*
     //  read and parse header
     fread(&archive.headerSizeCompressed, 1, 4, file);
     fread(&archive.headerSizeDecompressed, 1, 4, file);
@@ -181,6 +162,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
 
     archive.headerSizeCompressed += 12;
     archives.push_back(archive);
+*/
 }
 
 u8* FileSystem::readFile(std::string const& path, u64 *size) {
@@ -208,7 +190,7 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
         data = fileSystem.readFile(path, &size);
         return;
     }
-
+/*
     for (std::vector<Archive>::iterator archive = archives.begin(); archive != archives.end(); archive++) {
         for (std::vector<FileResource>::iterator resource = archive->resources.begin(); resource != archive->resources.end(); resource++) {
             if (resource->path == path) {
@@ -217,12 +199,11 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
                 FILE *file = fopen(archive->path.c_str(), "rb");
                 //fseek(file, resource->offset + archive->headerSizeCompressed, SEEK_SET);
                 fseek(file, resource->offset + archive->headerSizeDecompressed + 12, SEEK_SET);
-                /*
-                *size = resource->sizeCompressed;
-                data = new unsigned char[*size];
-                fread(data, 1, *size, file);
-                crypt(data, *size, archive->key);
-                */
+                
+                // *size = resource->sizeCompressed;
+                // data = new unsigned char[*size];
+                // fread(data, 1, *size, file);
+                // crypt(data, *size, archive->key);
 
                 // uint8_t *dataCompressed = new uint8_t[resource->sizeCompressed];
                 // fread(dataCompressed, 1, resource->sizeCompressed, file);
@@ -243,6 +224,7 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
             }
         }
     }
+*/
     LOG("File <%s> not found in archive, loading from local filesystem", path);
 // #ifdef DEBUG
     data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);

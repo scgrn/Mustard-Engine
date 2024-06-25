@@ -43,30 +43,6 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-class FileSystem : public SubSystem {
-    public:
-        bool startup() override;
-        void shutdown() override;
-        
-        //    this is the only function that should be called before engine startup
-        void addArchive(std::string const& path, std::string const& key = "");
-
-        //  caller is responsible to delete() returned pointer
-        u8* readFile(std::string const& path, u64 *size);
-    
-        std::string loadData(std::string key);
-        void saveData(std::string key, std::string value);
-
-    private:
-        void loadArchive(std::string const& path, std::string const& key = "");
-        
-        struct ArchiveFile {
-            std::string path;
-            std::string key;
-        };
-        std::vector<ArchiveFile> archiveFiles;
-};
-
 class DataObject {
     public:
         DataObject(const char* path, b8 forceLocal = false);
@@ -81,6 +57,40 @@ class DataObject {
         u8* data;
         u64 size;
 
+};
+
+class FileSystem : public SubSystem {
+    public:
+        bool startup() override;
+        void shutdown() override;
+        
+        //    this is the only function that should be called before engine startup
+        void addArchive(std::string const& path, std::string const& key = "");
+
+        //  caller is responsible to delete() returned pointer
+        u8* readFile(std::string const& path, u64 *size);
+    
+        std::string loadData(std::string key);
+        void saveData(std::string key, std::string value);
+    
+    private:
+        void loadArchive(std::string const& path, std::string const& key = "");
+        
+        struct AssetFile {
+            std::string path;
+            u64 offset;
+            u64 size;
+        };
+
+        struct ArchiveFile {
+            std::string path;
+            std::string key;
+            DataObject *data;
+
+            std::vector<AssetFile> assets;
+        };
+
+        std::vector<ArchiveFile> archiveFiles;
 };
 
 }   //  namespace
