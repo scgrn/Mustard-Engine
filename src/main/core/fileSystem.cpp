@@ -184,6 +184,22 @@ u8* FileSystem::readFile(std::string const& path, u64 *size) {
     return data;
 }
 
+u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
+    for (ArchiveFile archiveFile : archiveFiles) {
+        for (AssetFile assetFile : archiveFile.assets) {
+            if (assetFile.path == path) {
+                LOG("Loading resource %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
+
+                //  return pointer to archive's DataObject + file offset
+                u8* data = NULL;
+                return data;
+            }
+        }
+    }
+    size = 0;
+    return 0;
+}
+
 DataObject::DataObject(const char* path, b8 forceLocal) {
     if (forceLocal) {
         LOG("Loading %s from local filesystem...", path);
@@ -191,25 +207,16 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
         return;
     }
 
-    for (ArchiveFile archiveFile : archives) {
-        for (AssetFile assetFile : archiveFile.assets) {
-            if (resource->path == path) {
-                LOG("Loading resource %s from archive %s", resource->path.c_str(), archive->path.c_str());
-
-                //  return pointer to archive's DataObject + file offset
-
-                return;
-            }
-        }
-    }
-
-    LOG("File <%s> not found in archive, loading from local filesystem", path);
+    data = fileSystem.readFromArchive(path, &size);
+    if (data == 0) {
 // #ifdef DEBUG
-    data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
-    return;
+        LOG("File <%s> not found in archive, loading from local filesystem", path);
+        data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
+        return;
 // #endif
-    std::string filename = path;
-    ERR("File not found: %s", filename.c_str());
+        std::string filename = path;
+        ERR("File not found: %s", filename.c_str());
+    }
 }
 
 DataObject::~DataObject() {

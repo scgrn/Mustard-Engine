@@ -69,7 +69,10 @@ class FileSystem : public SubSystem {
 
         //  caller is responsible to delete() returned pointer
         u8* readFile(std::string const& path, u64 *size);
-    
+
+        //  returned pointer should not be deleted
+        u8* readFromArchive(std::string const& path, u64 *size);
+
         std::string loadData(std::string key);
         void saveData(std::string key, std::string value);
     
