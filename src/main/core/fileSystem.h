@@ -36,6 +36,7 @@ freely, subject to the following restrictions:
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "../types.h"
 
@@ -48,14 +49,17 @@ class DataObject {
         DataObject(const char* path, b8 forceLocal = false);
         ~DataObject();
 
-        u8* getData() { return data; } 
+        u8* getData() { return data.get(); } 
         u64 getSize() { return size; }
 
     protected:
         DataObject() {}
 
-        u8* data;
+        std::shared_ptr<u8> data;
         u64 size;
+
+    private:
+        static void noOpDeleter(u8* p) {}
 
 };
 

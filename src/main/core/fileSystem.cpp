@@ -191,7 +191,7 @@ u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
                 LOG("Loading resource %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
 
                 //  return pointer to archive's DataObject + file offset
-                u8* data = NULL;
+                u8* data = nullptr;
                 return data;
             }
         }
@@ -203,24 +203,28 @@ u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
 DataObject::DataObject(const char* path, b8 forceLocal) {
     if (forceLocal) {
         LOG("Loading %s from local filesystem...", path);
-        data = fileSystem.readFile(path, &size);
+        u8* rawData = fileSystem.readFile(path, &size);
+        data = std::shared_ptr<u8>(rawData);
         return;
     }
 
-    data = fileSystem.readFromArchive(path, &size);
-    if (data == 0) {
+    u8* archiveData = fileSystem.readFromArchive(path, &size);
+    if (archiveData == nullptr) {
 // #ifdef DEBUG
         LOG("File <%s> not found in archive, loading from local filesystem", path);
-        data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
+        u8* fileData = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
+        data = std::shared_ptr<u8>(fileData, std::default_delete<u8[]>());
         return;
 // #endif
         std::string filename = path;
         ERR("File not found: %s", filename.c_str());
+    } else {
+        data = std::shared_ptr<u8>(archiveData, noOpDeleter);
     }
 }
 
 DataObject::~DataObject() {
-    delete [] data;
+    // delete [] data;
 }
 
 std::string FileSystem::loadData(std::string key) {
