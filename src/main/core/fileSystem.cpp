@@ -39,6 +39,12 @@ namespace AB {
 
 extern FileSystem fileSystem;
 
+struct ArrayDeleter {
+    void operator()(u8* ptr) const {
+        delete[] ptr;
+    }
+};
+
 static void crypt(u8* data, u64 size, std::string const& key) {
 #ifndef DECRYPT
     return;
@@ -213,7 +219,7 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
 // #ifdef DEBUG
         LOG("File <%s> not found in archive, loading from local filesystem", path);
         u8* fileData = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
-        data = std::shared_ptr<u8>(fileData, std::default_delete<u8[]>());
+        data = std::shared_ptr<u8>(fileData, ArrayDeleter());
         return;
 // #endif
         std::string filename = path;
