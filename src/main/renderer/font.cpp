@@ -81,7 +81,10 @@ void Font::load(std::string const& filename) {
             std::istringstream lineStream(line);
             std::string tag;
             lineStream >> tag;
-
+            if (tag == "<?xml") {
+                ERR("XML font files are no longer supported!", 0);
+            }
+            
             std::string pair, key, value;
             std::map<std::string, std::string> pairs;
             
