@@ -1,6 +1,3 @@
-// verbinion
-// 182, 24, 64
-
 in vec2 textureCoords;
 out vec4 color;
 
