@@ -25,13 +25,13 @@ freely, subject to the following restrictions:
 #ifndef AB_PALETTE_H
 #define AB_PALETTE_H
 
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 
 #include "texture.h"
 
 namespace AB {
 
-class Palette : public Resource {
+class Palette : public Asset {
     public:
         struct Color {
             uint8_t r, g, b;

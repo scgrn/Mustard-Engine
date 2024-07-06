@@ -35,7 +35,7 @@ Font loading and rendering. Currently only supports <a href="http://www.angelcod
 namespace AB {
 
 extern Script script;
-extern ResourceManager<Font> fonts;
+extern AssetManager<Font> fonts;
 extern Renderer renderer;
 
 static int fontHandle = 1;
@@ -61,7 +61,7 @@ static int luaLoadFont(lua_State* luaVM) {
         fontHandle++;
     }
 
-    fonts.mapResource(index, filename);
+    fonts.mapAsset(index, filename);
 
     //  return handle
     lua_pushnumber(luaVM, index);

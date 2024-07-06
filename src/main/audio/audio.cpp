@@ -29,9 +29,7 @@ freely, subject to the following restrictions:
 #include "soloud_wavstream.h"
 
 #include "audio.h"
-
 #include "../core/log.h"
-#include "../core/resourceManager.h"
 
 namespace AB {
 
@@ -160,8 +158,8 @@ bool Audio::startup() {
 void Audio::shutdown() {
     LOG("Audio subsystem shutdown", 0);
 
-    extern ResourceManager<Sound> sounds;
-    extern ResourceManager<Music> music;
+    extern AssetManager<Sound> sounds;
+    extern AssetManager<Music> music;
 
     sounds.clear();
     music.clear();

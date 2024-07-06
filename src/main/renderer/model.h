@@ -25,12 +25,12 @@ freely, subject to the following restrictions:
 #ifndef AB_MODEL_H
 #define AB_MODEL_H
 
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 #include "../math/math.h"
 
 namespace AB {
 
-class Model : public Resource {
+class Model : public Asset {
     public:
         static void setLoadTransform(Mat4 transform);
         static void resetLoadTransform();

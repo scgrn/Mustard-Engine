@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 
 #include "../core/subsystem.h"
 #include "../core/fileSystem.h"
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 
 namespace SoLoud {
     class Soloud;
@@ -37,7 +37,7 @@ namespace SoLoud {
 
 namespace AB {
 
-class Sound : public Resource {
+class Sound : public Asset {
     public:
         Sound() {};
         virtual ~Sound() {};
@@ -55,7 +55,7 @@ class Sound : public Resource {
 
 };
 
-class Music : public Resource {
+class Music : public Asset {
     public:
         void load(std::string const& filename);
         void release();

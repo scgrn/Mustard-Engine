@@ -38,12 +38,12 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <unordered_map>
 
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 #include "sprite.h"
 
 namespace AB {
 
-class Font : public Resource {
+class Font : public Asset {
     public:
         enum Align {LEFT, RIGHT, CENTER};
 

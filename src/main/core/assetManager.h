@@ -24,17 +24,15 @@ freely, subject to the following restrictions:
 
 /**
 
-    @file resourceManager.h
+    @file AssetManager.h
     @author Andrew Krause - contact@alienbug.net
     @date 08.11.11
 
-    Provides a template and management for resources.
-
-    @todo So much
+    Provides a template and management for Assets.
 */
 
-#ifndef AB_RESOURCE_MANAGER_H
-#define AB_RESOURCE_MANAGER_H
+#ifndef AB_ASSET_MANAGER_H
+#define AB_ASSET_MANAGER_H
 
 #include <iostream>
 #include <map>
@@ -44,43 +42,43 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-class Resource {
+class Asset {
     public:
-        //  represents resource's eligibility for garbage collection.
+        //  represents Asset's eligibility for garbage collection.
         enum {PERMANENT, TEMPORARY, MOMENTARY} lifeSpan;
 
-        virtual ~Resource() {};
+        virtual ~Asset() {};
         virtual void load(std::string const& id) = 0;
         virtual void release() = 0;
 };
 
 template<class T>
-class ResourceManager {
+class AssetManager {
     public:
         typedef int Handle;
 
-        ResourceManager();
-        ~ResourceManager();
+        AssetManager();
+        ~AssetManager();
 
         /**
-            returns a pointer to a resource based on it's handle.
-            the resource's load function will be called if it's not loaded.
+            returns a pointer to a Asset based on it's handle.
+            the Asset's load function will be called if it's not loaded.
         */
         T* get(Handle handle);
 
-        //  returns whether a resource exists without loading it if it doesn't
+        //  returns whether a Asset exists without loading it if it doesn't
         bool find(Handle handle);
 
         //  clears it.
         void clear(bool clearInfoMap = false);
 
-        //  not yet implemented. will iterate through all resources
+        //  not yet implemented. will iterate through all Assets
         //  and release those whose ref-count is 0
         void collect();
 
-        //  sets an entry in a resource handle/id table
+        //  sets an entry in a Asset handle/id table
         //  (id will typically represent a filename)
-        void mapResource(Handle handle, std::string const& id, bool preCache = false);
+        void mapAsset(Handle handle, std::string const& id, bool preCache = false);
 
         //  returns whether an id string is mapped to a handle
         //  its Handle will be returned in handle if it is
@@ -90,86 +88,86 @@ class ResourceManager {
         void precacheAll();
 
 //    private:
-        //  this is a list of the pointers to the actual resource data
-        std::map<Handle, T*> resourceData;
+        //  this is a list of the pointers to the actual asset data
+        std::map<Handle, T*> assetData;
 
-        //  this maps resource handles to ids (typically filenames)
-        std::map<Handle, std::string> resourceInfo;
+        //  this maps asset handles to ids (typically filenames)
+        std::map<Handle, std::string> assetInfo;
 };
 
 template<class T>
-ResourceManager<T>::ResourceManager() {};
+AssetManager<T>::AssetManager() {};
 
 template<class T>
-ResourceManager<T>::~ResourceManager() {
+AssetManager<T>::~AssetManager() {
     clear(true);
 };
 
 template<class T>
-bool ResourceManager<T>::find(Handle handle) {
-    return resourceData.find(handle) != resourceData.end();
+bool AssetManager<T>::find(Handle handle) {
+    return assetData.find(handle) != assetData.end();
 };
 
 template<class T>
-T* ResourceManager<T>::get(Handle handle) {
-    //  load the resource if it doesn't exist
+T* AssetManager<T>::get(Handle handle) {
+    //  load the asset if it doesn't exist
     if (!find(handle)) {
-        if (resourceInfo[handle].empty()) {
-            ERR("Resource %d not mapped!", handle);
+        if (assetInfo[handle].empty()) {
+            ERR("Asset %d not mapped!", handle);
         }
 
-        resourceData[handle] = new T();
-        resourceData[handle]->load(resourceInfo[handle]);
+        assetData[handle] = new T();
+        assetData[handle]->load(assetInfo[handle]);
     }
 
-    return resourceData[handle];
+    return assetData[handle];
 };
 
 template<class T>
-void ResourceManager<T>::precacheAll() {
+void AssetManager<T>::precacheAll() {
     typename std::map<int, std::string>::iterator i;
 
-    for (i = resourceInfo.begin(); i != resourceInfo.end(); i++) {
+    for (i = assetInfo.begin(); i != assetInfo.end(); i++) {
         get(i->first);
     }
 }
 
 template<class T>
-void ResourceManager<T>::collect() {
+void AssetManager<T>::collect() {
 }
 
 //  TODO: check if already cleared to avoid SEGFAULT
 template<class T>
-void ResourceManager<T>::clear(bool clearInfoMap) {
-    //  call release() on all resources.
-    for (typename std::map<Handle, T*>::iterator i = resourceData.begin();
-        i != resourceData.end(); i++) {
+void AssetManager<T>::clear(bool clearInfoMap) {
+    //  call release() on all Assets.
+    for (typename std::map<Handle, T*>::iterator i = assetData.begin();
+        i != assetData.end(); i++) {
 
         i->second->release();
         delete i->second;
     }
-    resourceData.clear();
+    assetData.clear();
 
     if (clearInfoMap) {
-        resourceInfo.clear();
+        assetInfo.clear();
     }
 }
 
 template<class T>
-void ResourceManager<T>::mapResource(Handle handle, std::string const& id, bool preCache) {
-    resourceInfo[handle] = id;
+void AssetManager<T>::mapAsset(Handle handle, std::string const& id, bool preCache) {
+    assetInfo[handle] = id;
 
     if (preCache && !find(handle)) {
-        resourceData[handle] = new T();
-        resourceData[handle]->load(id);
+        assetData[handle] = new T();
+        assetData[handle]->load(id);
     }
 }
 
 template<class T>
-bool ResourceManager<T>::isMapped(std::string id, Handle *handle) {
+bool AssetManager<T>::isMapped(std::string id, Handle *handle) {
     typename std::map<int, std::string>::iterator i;
 
-    for (i = resourceInfo.begin(); i != resourceInfo.end(); i++) {
+    for (i = assetInfo.begin(); i != assetInfo.end(); i++) {
         if (i->second == id) {
             if (handle)
                 *handle = i->first;
@@ -181,4 +179,5 @@ bool ResourceManager<T>::isMapped(std::string id, Handle *handle) {
 
 }   //  namespace
 
-#endif  //  RESOURCE_MANAGER_H
+#endif  //  ASSET_MANAGER_H
+

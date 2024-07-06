@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 
 #include "sprite.h"
 #include "../misc/misc.h"
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 #include "tga.h"
 
 namespace AB {
@@ -48,7 +48,7 @@ class Node {
 static std::vector<Sprite*> atlasSprites;
 static Node *root;
 
-extern ResourceManager<Sprite> sprites;
+extern AssetManager<Sprite> sprites;
 
 void addToAtlas(Sprite *sprite) {
     atlasSprites.push_back(sprite);
@@ -253,7 +253,7 @@ void defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 s
 }
 
 u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height, b8 buildCollisionMasks) {
-    sprites.mapResource(firstIndex, filename);
+    sprites.mapAsset(firstIndex, filename);
     sprites.get(firstIndex)->uploadToGPU(true);
 
     u32 atlasWidth = sprites.get(firstIndex)->width;
@@ -272,7 +272,7 @@ u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height
         f32 u = 0.0f;
         for (u32 x = 0; x < columns; x++) {
             if (spriteIndex > firstIndex) {
-                sprites.mapResource(spriteIndex, ".");
+                sprites.mapAsset(spriteIndex, ".");
             }
 
             defineSpriteFromAtlas(firstIndex, u, v, u + uIncrease, v + vIncrease, spriteIndex, buildCollisionMasks);

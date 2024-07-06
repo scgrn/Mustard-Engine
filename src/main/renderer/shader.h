@@ -27,12 +27,12 @@ freely, subject to the following restrictions:
 
 #include <unordered_map>
 
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 #include "../math/math.h"
 
 namespace AB {
 
-class Shader : public Resource {
+class Shader : public Asset {
     public:
         Shader();
         virtual ~Shader();

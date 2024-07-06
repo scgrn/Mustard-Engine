@@ -36,8 +36,8 @@ namespace AB {
 extern Script script;
 extern Audio audio;
 
-extern ResourceManager<Sound> sounds;
-extern ResourceManager<Music> music;
+extern AssetManager<Sound> sounds;
+extern AssetManager<Music> music;
 
 static int sfxHandle = 1;
 static int musicHandle = 1;
@@ -60,7 +60,7 @@ static int luaLoadSound(lua_State* luaVM) {
         sfxHandle++;
     }
     
-    sounds.mapResource(index, filename, true);
+    sounds.mapAsset(index, filename, true);
 
     //  return handle
     lua_pushnumber(luaVM, index);
@@ -145,7 +145,7 @@ static int luaLoadMusic(lua_State* luaVM) {
         musicHandle++;
     }
     
-    music.mapResource(index, filename, true);
+    music.mapAsset(index, filename, true);
     if (loopPoint > 0) {
         music.get(index)->setLoopPoint(loopPoint);
     }
@@ -169,7 +169,7 @@ static int luaPlayMusic(lua_State* luaVM) {
     }
     
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -186,7 +186,7 @@ static int luaPauseMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -203,7 +203,7 @@ static int luaResumeMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -222,7 +222,7 @@ static int luaFadeMusicIn(lua_State* luaVM) {
     float duration = (float)lua_tonumber(luaVM, 2);
     
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -241,7 +241,7 @@ static int luaFadeMusicOut(lua_State* luaVM) {
     float duration = (float)lua_tonumber(luaVM, 2);
 
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -258,7 +258,7 @@ static int luaStopMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -276,7 +276,7 @@ static int luaIsMusicPlaying(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
 
     if (!music.find(index)) {
-        if (music.resourceInfo[index].empty()) {
+        if (music.assetInfo[index].empty()) {
             LOG("Unknown music loop: %d", index);
             return 0;
         }
@@ -303,7 +303,7 @@ static int luaSetMusicVolume(lua_State* luaVM) {
     float volume = (float)lua_tonumber(luaVM, 1);
     audio.musicVolume = volume;
     
-    for (auto const& loop : music.resourceData) {
+    for (auto const& loop : music.assetData) {
         loop.second->setVolume(audio.musicVolume);
     }
 

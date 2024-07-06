@@ -34,7 +34,7 @@ Collision detection functions
 namespace AB {
 
 extern Script script;
-extern ResourceManager<Sprite> sprites;
+extern AssetManager<Sprite> sprites;
 
 /// Pixel-precise collision detection with rotation and scaling
 // @function AB.collision.collides

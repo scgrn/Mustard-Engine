@@ -67,12 +67,12 @@ namespace AB {
     void startup(Application *app);
     void shutdown();
     
-    extern ResourceManager<Sprite> sprites;
-    extern ResourceManager<Shader> shaders;
-    extern ResourceManager<Font> fonts;
+    extern AssetManager<Sprite> sprites;
+    extern AssetManager<Shader> shaders;
+    extern AssetManager<Font> fonts;
 
-    extern ResourceManager<Sound> sounds;
-    extern ResourceManager<Music> music;
+    extern AssetManager<Sound> sounds;
+    extern AssetManager<Music> music;
     
     extern OrthographicCamera camera2d;
 }

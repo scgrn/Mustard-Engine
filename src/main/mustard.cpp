@@ -38,11 +38,11 @@ Window window;
 Console console;
 #endif
 
-ResourceManager<Sprite> sprites;
-ResourceManager<Shader> shaders;
-ResourceManager<Font> fonts;
-ResourceManager<Sound> sounds;
-ResourceManager<Music> music;
+AssetManager<Sprite> sprites;
+AssetManager<Shader> shaders;
+AssetManager<Font> fonts;
+AssetManager<Sound> sounds;
+AssetManager<Music> music;
 
 std::map<int, RenderLayer*> batchRenderers;
 std::map<int, RenderTarget*> canvases;

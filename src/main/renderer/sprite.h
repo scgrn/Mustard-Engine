@@ -27,14 +27,14 @@ freely, subject to the following restrictions:
 
 #include <memory>
 
-#include "../core/resourceManager.h"
+#include "../core/assetManager.h"
 #include "texture.h"
 #include "image.h"
 #include "renderLayer.h"
 
 namespace AB {
 
-class Sprite : public Resource {
+class Sprite : public Asset {
     public:
         Sprite();
         /*

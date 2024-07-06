@@ -39,8 +39,8 @@ namespace AB {
 extern Script script;
 extern Window window;
 
-extern ResourceManager<Sprite> sprites;
-extern ResourceManager<Shader> shaders;
+extern AssetManager<Sprite> sprites;
+extern AssetManager<Shader> shaders;
 
 extern Renderer renderer;
 extern Window window;
@@ -144,7 +144,7 @@ static int luaLoadSprite(lua_State* luaVM) {
         spriteHandle++;
     }
 
-    sprites.mapResource(index, filename);
+    sprites.mapAsset(index, filename);
     if (createMask) {
         sprites.get(index)->buildCollisionMask();
     }
@@ -248,7 +248,7 @@ static int luaDefineSpriteFromAtlas(lua_State* luaVM) {
     f32 u2 = (x + width) / (f32)(atlas->width);
     f32 v2 = (y + height)  / (f32)(atlas->height);
 
-    sprites.mapResource(index, ".");
+    sprites.mapAsset(index, ".");
     defineSpriteFromAtlas(atlasIndex, u1, v1, u2, v2, index, createMask);
 
     lua_pushnumber(luaVM, index);
@@ -775,7 +775,7 @@ static int luaLoadShader(lua_State* luaVM) {
     std::string filename = std::string(lua_tostring(luaVM, 1));
     int index = (int)lua_tonumber(luaVM, 2);
 
-    AB::shaders.mapResource(index, filename);
+    AB::shaders.mapAsset(index, filename);
     
     return 0;
 }
