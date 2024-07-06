@@ -22,8 +22,9 @@ freely, subject to the following restrictions:
 
 **/
 
-//  can't use c++17 std::filesystem because of this bullshit:
-//      https://sourceforge.net/p/mingw-w64/bugs/737/
+//  can't use c++17 std::filesystem because of
+//  https://sourceforge.net/p/mingw-w64/bugs/737/
+//  which is hogwash of the highest order.
 
 #include <filesystem>
 #include <iostream>
@@ -31,8 +32,7 @@ freely, subject to the following restrictions:
 #include <vector>
 #include <sstream>
 
-#include "../vendor/zlib-1.2.11/zlib.h"
-#include "../vendor/tinyxml/tinyxml.h"
+#include "../vendor/zlib-1.3.1/zlib.h"
 
 #define COMPRESS
 
@@ -78,8 +78,8 @@ void crypt(uint8_t *data, uint32_t size, std::string const& key) {
     }
 }
 
-struct Resource {
-    Resource(std::string filename) {
+struct Asset {
+    Asset(std::string filename) {
         this->filename = filename;
 
         FILE *file = fopen(filename.c_str(), "rb");
@@ -102,7 +102,7 @@ struct Resource {
         dataCompressed = new unsigned char[sizeDataCompressed];
         // std::cout << "Allocated " << sizeDataCompressed << " bytes for compressed data" << std::endl;
 
-        int result = compress(dataCompressed, &sizeDataCompressed, dataOriginal, sizeDataOriginal);
+        // int result = compress(dataCompressed, &sizeDataCompressed, dataOriginal, sizeDataOriginal);
         // TODO: check result
 
         // encrypt compressed data
@@ -113,7 +113,7 @@ struct Resource {
         //std::cout << "[" << sizeDataOriginal << "]\n";
     }
 
-    ~Resource() {
+    ~Asset() {
         // std::cout << "Cleaning up " << filename << std::endl;
         delete [] dataOriginal;
         delete [] dataCompressed;
@@ -130,27 +130,27 @@ struct Resource {
     uint32_t offset;
 
 protected:
-    Resource();
+    Asset();
 };
 
-std::vector<Resource*> resourceFiles;
+std::vector<Asset*> assets;
 
 void buildArchive(std::string archivePath) {
-    //  read all resource files
+    //  read all asset files
     int fileCount = 0;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(".")) {
         if (!std::filesystem::is_directory(entry.status())) {
             std::string filename = entry.path().relative_path().string();
             filename.erase(0, 2);
 
-            resourceFiles.push_back(new Resource(filename));
+            assets.push_back(new Asset(filename));
 
             fileCount++;
         }
     }
 
     uint32_t offset = 0;
-
+/*
     //  build XML header
     TiXmlDocument doc;
     TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "iso-8859-1", "");
@@ -160,11 +160,10 @@ void buildArchive(std::string archivePath) {
     doc.LinkEndChild(rootElement);
 
     //  for every loaded resource, add its size and offset into the header
-    /*
-    for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
-        (*i)->setOffset(offset);
-        offset += (*i)->getSize();
-    */
+//    for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
+//        (*i)->setOffset(offset);
+//        offset += (*i)->getSize();
+//
     for (auto resource :resourceFiles) {
         resource->offset = offset;
 
@@ -224,11 +223,10 @@ void buildArchive(std::string archivePath) {
         fwrite(resource->dataOriginal, 1, resource->sizeDataOriginal, file);
 #endif
     }
-    /*
-    for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
-        (*i)->writeData(file, key);
-    }
-    */
+
+//    for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
+//        (*i)->writeData(file, key);
+//    }
     fclose(file);
 
     delete [] data;
@@ -249,6 +247,7 @@ void buildArchive(std::string archivePath) {
 
     std::cout << "Total size original: " << toString(total) << std::endl;
     std::cout << "Total size compresed: " << toString(totalCompressed) << std::endl;
+*/
 }
 
 int main(int argc, char* argv[]) {
@@ -266,3 +265,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
