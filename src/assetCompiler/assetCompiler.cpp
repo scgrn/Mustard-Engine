@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 #include <algorithm>
 #include <vector>
 #include <sstream>
+#include <cstring>
 
 #include "../vendor/zlib-1.3.1/zlib.h"
 
@@ -87,167 +88,75 @@ struct Asset {
             std::cout << "Unable to open file: " << filename << std::endl;
         }
 
-        std::cout << filename;
-
         fseek(file, 0, SEEK_END);
-        sizeDataOriginal = ftell(file);
+        size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
-        dataOriginal = new unsigned char[sizeDataOriginal];
-        fread(dataOriginal, 1, sizeDataOriginal, file);
+        data = new unsigned char[size];
+        int bytesRead = fread(data, 1, size, file);
+        if (bytesRead != size) {
+            std::cout << "Size mismatch!" << std::endl;
+        }
         fclose(file);
-
-
-        sizeDataCompressed  = (sizeDataOriginal * 1.1) + 12;
-        dataCompressed = new unsigned char[sizeDataCompressed];
-        // std::cout << "Allocated " << sizeDataCompressed << " bytes for compressed data" << std::endl;
-
-        // int result = compress(dataCompressed, &sizeDataCompressed, dataOriginal, sizeDataOriginal);
-        // TODO: check result
-
-        // encrypt compressed data
-        crypt(dataCompressed, sizeDataCompressed, key);
-
-        std::cout << std::string(std::max(0, 50 - (int)filename.length()), ' ');
-        std::cout << "[" << (int)((float)sizeDataCompressed / (float)sizeDataOriginal  * 100.0f) << "%]\n";
-        //std::cout << "[" << sizeDataOriginal << "]\n";
     }
 
     ~Asset() {
-        // std::cout << "Cleaning up " << filename << std::endl;
-        delete [] dataOriginal;
-        delete [] dataCompressed;
+        delete [] data;
     }
 
     std::string filename;
 
-    unsigned char* dataOriginal;
-    unsigned long sizeDataOriginal;
+    unsigned char* data;
+    unsigned long size;
 
-    unsigned char* dataCompressed;
-    unsigned long sizeDataCompressed;
-
-    uint32_t offset;
-
-protected:
-    Asset();
+    protected:
+        Asset();
 };
 
 std::vector<Asset*> assets;
 
 void buildArchive(std::string archivePath) {
     //  read all asset files
-    int fileCount = 0;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(".")) {
         if (!std::filesystem::is_directory(entry.status())) {
             std::string filename = entry.path().relative_path().string();
             filename.erase(0, 2);
 
             assets.push_back(new Asset(filename));
-
-            fileCount++;
         }
     }
 
-    uint32_t offset = 0;
-/*
-    //  build XML header
-    TiXmlDocument doc;
-    TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "iso-8859-1", "");
-    doc.LinkEndChild(decl);
+    uint64_t offset = 0;
 
-    TiXmlElement *rootElement = new TiXmlElement("root");
-    doc.LinkEndChild(rootElement);
-
-    //  for every loaded resource, add its size and offset into the header
-//    for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
-//        (*i)->setOffset(offset);
-//        offset += (*i)->getSize();
-//
-    for (auto resource :resourceFiles) {
-        resource->offset = offset;
-
-#ifdef COMPRESS
-        offset += resource->sizeDataCompressed;
-#else
-        offset += resource->sizeDataOriginal;
-#endif
-
-        TiXmlElement *resourceElement = new TiXmlElement("resource");
-
-        std::replace(resource->filename.begin(), resource->filename.end(), '\\', '/');
-
-        resourceElement->SetAttribute("path", resource->filename.c_str());
-        resourceElement->SetAttribute("offset", toString(resource->offset, false).c_str());
-        resourceElement->SetAttribute("sizeCompressed", toString(resource->sizeDataCompressed, false).c_str());
-        resourceElement->SetAttribute("sizeDecompressed", toString(resource->sizeDataOriginal, false).c_str());
-        rootElement->LinkEndChild(resourceElement);
+    std::stringstream ss;
+    
+    ss << assets.size() << "\n";
+    for (auto asset :assets) {
+        ss << asset->filename << " ";
+        ss << asset->size << " ";
+        ss << offset << "\n";
+        
+        offset += asset->size;
     }
-    std::cout << "Total resource data size " << toString(offset) << " bytes.\n\n";
+    
+    std::string manifest = ss.str();
+    uint64_t sizeDataOriginal = offset + manifest.size();
+    std::cout << sizeDataOriginal << std::endl;
+    
+    unsigned char* buffer = new unsigned char[sizeDataOriginal];
 
-    TiXmlPrinter printer;
-    printer.SetIndent("    ");
-
-    doc.Accept(&printer);
-    std::string xmlText = printer.CStr();
-    uint32_t size = xmlText.size();
-    uint8_t *data = new uint8_t[size + 1];
-    std::copy(xmlText.begin(), xmlText.end(), data);
-    data[size] = '\0';
-
-    //  compress and encrypt header
-    unsigned long sizeDataCompressed  = (size * 1.1) + 12;
-    unsigned char* dataCompressed = new unsigned char[sizeDataCompressed];
-    int result = compress(dataCompressed, &sizeDataCompressed, data, size);
-    // TODO: check result
-
-    // encrypt compressed data
-    crypt(dataCompressed, sizeDataCompressed, key);
-
-    FILE *file = fopen(archivePath.c_str(), "wb");
-
-    fwrite("AB1 ",1, 4, file);
-    fwrite(&sizeDataCompressed, 1, 4, file);      // header size compressed
-    fwrite(&size, 1, 4, file);      // header size decompressed
-#ifdef COMPRESS
-    fwrite(dataCompressed, 1, sizeDataCompressed, file);
-#else
-    fwrite(data, 1, size, file);
-#endif
-
-    //  write all loaded resources
-    for (auto resource :resourceFiles) {
-#ifdef COMPRESS
-        fwrite(resource->dataCompressed, 1, resource->sizeDataCompressed, file);
-#else
-        fwrite(resource->dataOriginal, 1, resource->sizeDataOriginal, file);
-#endif
+    // copy manifest and each asset's data into the buffer
+    std::memcpy(buffer, manifest.c_str(), manifest.size());
+    offset = manifest.size();
+    for (const auto asset : assets) {
+        std::memcpy(buffer + offset, asset->data, asset->size);
+        offset += asset->size;
+        delete asset;
     }
 
-//    for (std::vector<Resource*>::iterator i = resources.begin(); i != resources.end(); i++) {
-//        (*i)->writeData(file, key);
-//    }
-    fclose(file);
-
-    delete [] data;
-    delete [] dataCompressed;
-
-    std::cout << "\nProcessed " << fileCount << " files\n";
-
-    unsigned long total = 0L;
-    unsigned long totalCompressed = 0L;
-
-    //  clean up files
-    for (auto resource :resourceFiles) {
-        total += resource->sizeDataOriginal;
-        totalCompressed += resource->sizeDataCompressed;
-
-        delete resource;
-    }
-
-    std::cout << "Total size original: " << toString(total) << std::endl;
-    std::cout << "Total size compresed: " << toString(totalCompressed) << std::endl;
-*/
+    //  ...
+    
+    delete [] buffer;
 }
 
 int main(int argc, char* argv[]) {
