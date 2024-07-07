@@ -27,7 +27,7 @@ function buildAssets() {
     echo "Building asset archive..."
 
     cd assets
-    ../$MUSTARD_PATH/bin/Mustard-AssetCompiler ../$PROJECT_NAME.dat $ENCYPTION_KEY
+    ../$MUSTARD_PATH/bin/Mustard-AssetCompiler ../$PROJECT_NAME.dat "$ENCYPTION_KEY"
     cd ..
 }
 
