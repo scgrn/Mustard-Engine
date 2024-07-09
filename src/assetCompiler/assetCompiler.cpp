@@ -28,11 +28,13 @@ freely, subject to the following restrictions:
 
 #include <filesystem>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <vector>
 #include <sstream>
 #include <cstring>
 #include <cassert>
+
 
 #include "../vendor/zlib-1.3.1/zlib.h"
 
@@ -121,7 +123,7 @@ std::vector<Asset*> assets;
 class DataObject {
 public:
     DataObject() : data(nullptr), size(0) {}
-    ~DataObject() {}
+    ~DataObject();
 
     uint8_t* getData() { return data; } 
     uint64_t getSize() { return size; }
@@ -150,6 +152,21 @@ protected:
     uint8_t* data;
     uint64_t size;
 };
+
+DataObject::~DataObject() {
+    delete[] data;
+    size = 0;
+}
+
+void DataObject::writeData(const std::string& filename) const {
+    std::ofstream file(filename, std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file");
+    }
+
+    file.write(reinterpret_cast<const char*>(data), size);
+    file.close();
+}
 
 void zerr(int ret) {
     switch (ret) {
@@ -211,7 +228,7 @@ int compress(DataObject& source, DataObject& dest, int level) {
 
     deflateEnd(&strm);
 
-    dest.setData(outputBuffer.data(), outputBuffer.size());
+    dest.copyData(outputBuffer.data(), outputBuffer.size());
     return Z_OK;
 }
 
@@ -257,11 +274,13 @@ void buildArchive(std::string archivePath) {
 
     DataObject source;
     source.setData(buffer, offset);
-    
+
     DataObject dest;
     compress(source, dest, Z_DEFAULT_COMPRESSION);
-    
-    delete [] buffer;
+
+    dest.writeData("TestArchive.dat");
+
+    // delete [] buffer;
 }
 
 int main(int argc, char* argv[]) {
