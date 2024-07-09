@@ -194,7 +194,7 @@ u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
     for (ArchiveFile archiveFile : archiveFiles) {
         for (AssetFile assetFile : archiveFile.assets) {
             if (assetFile.path == path) {
-                LOG("Loading resource %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
+                LOG("Loading asset %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
 
                 //  return pointer to archive's DataObject + file offset
                 u8* data = nullptr;

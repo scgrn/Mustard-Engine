@@ -32,10 +32,13 @@ freely, subject to the following restrictions:
 #include <vector>
 #include <sstream>
 #include <cstring>
+#include <cassert>
 
 #include "../vendor/zlib-1.3.1/zlib.h"
 
 #define COMPRESS
+
+#define CHUNK_SIZE 16384
 
 std::string key;
 
@@ -115,6 +118,103 @@ struct Asset {
 
 std::vector<Asset*> assets;
 
+class DataObject {
+public:
+    DataObject() : data(nullptr), size(0) {}
+    ~DataObject() {}
+
+    uint8_t* getData() { return data; } 
+    uint64_t getSize() { return size; }
+
+    void copyData(uint8_t* newData, uint64_t newSize) {
+        if (data) {
+            delete[] data;
+        }
+        data = new uint8_t[newSize];
+        std::memcpy(data, newData, newSize);
+        size = newSize;
+    }
+
+    void setData(uint8_t* newData, uint64_t newSize) {
+        if (data) {
+            delete[] data;
+        }
+        data = newData;
+        size = newSize;
+    }
+    
+    void writeData(const std::string& filename) const;
+
+protected:
+
+    uint8_t* data;
+    uint64_t size;
+};
+
+void zerr(int ret) {
+    switch (ret) {
+    case Z_ERRNO:
+        std::cerr << "I/O error\n";
+        break;
+    case Z_STREAM_ERROR:
+        std::cerr << "invalid compression level\n";
+        break;
+    case Z_DATA_ERROR:
+        std::cerr << "invalid or incomplete deflate data\n";
+        break;
+    case Z_MEM_ERROR:
+        std::cerr << "out of memory\n";
+        break;
+    case Z_VERSION_ERROR:
+        std::cerr << "zlib version mismatch!\n";
+    }
+}
+
+int compress(DataObject& source, DataObject& dest, int level) {
+    int ret, flush;
+    unsigned have;
+    z_stream strm;
+    unsigned char in[CHUNK_SIZE];
+    unsigned char out[CHUNK_SIZE];
+
+    strm.zalloc = Z_NULL;
+    strm.zfree = Z_NULL;
+    strm.opaque = Z_NULL;
+    ret = deflateInit(&strm, level);
+    if (ret != Z_OK)
+        return ret;
+
+    std::vector<uint8_t> outputBuffer;
+    uint64_t totalSize = source.getSize();
+    const uint8_t* inputData = source.getData();
+    uint64_t offset = 0;
+
+    do {
+        strm.avail_in = (offset + CHUNK_SIZE > totalSize) ? totalSize - offset : CHUNK_SIZE;
+        std::memcpy(in, inputData + offset, strm.avail_in);
+        offset += strm.avail_in;
+
+        flush = (offset >= totalSize) ? Z_FINISH : Z_NO_FLUSH;
+        strm.next_in = in;
+
+        do {
+            strm.avail_out = CHUNK_SIZE;
+            strm.next_out = out;
+            ret = deflate(&strm, flush);
+            assert(ret != Z_STREAM_ERROR);
+            have = CHUNK_SIZE - strm.avail_out;
+            outputBuffer.insert(outputBuffer.end(), out, out + have);
+        } while (strm.avail_out == 0);
+        assert(strm.avail_in == 0);
+    } while (flush != Z_FINISH);
+    assert(ret == Z_STREAM_END);
+
+    deflateEnd(&strm);
+
+    dest.setData(outputBuffer.data(), outputBuffer.size());
+    return Z_OK;
+}
+
 void buildArchive(std::string archivePath) {
     //  read all asset files
     for (const auto& entry : std::filesystem::recursive_directory_iterator(".")) {
@@ -129,6 +229,7 @@ void buildArchive(std::string archivePath) {
     uint64_t offset = 0;
 
     std::stringstream ss;
+    ss << "AB02\n";
     
     ss << assets.size() << "\n";
     for (auto asset :assets) {
@@ -154,7 +255,11 @@ void buildArchive(std::string archivePath) {
         delete asset;
     }
 
-    //  ...
+    DataObject source;
+    source.setData(buffer, offset);
+    
+    DataObject dest;
+    compress(source, dest, Z_DEFAULT_COMPRESSION);
     
     delete [] buffer;
 }

@@ -27,8 +27,6 @@ freely, subject to the following restrictions:
     @file fileSystem.h
     @date 08.11.10
 
-    Uhhhrm... handles file operations.
-
 */
 
 #ifndef AB_FILE_SYSTEM_H

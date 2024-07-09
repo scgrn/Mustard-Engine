@@ -8,7 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../../bin)
 
 set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/../vendor")
 
-aux_source_directory("${VENDOR_DIR}/zlib-1.2.11" ZLIB_SOURCE)
+aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 
 
 add_executable(${PROJECT_NAME}
