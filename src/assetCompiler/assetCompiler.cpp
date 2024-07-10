@@ -120,54 +120,6 @@ struct Asset {
 
 std::vector<Asset*> assets;
 
-class DataObject {
-public:
-    DataObject() : data(nullptr), size(0) {}
-    ~DataObject();
-
-    uint8_t* getData() { return data; } 
-    uint64_t getSize() { return size; }
-
-    void copyData(uint8_t* newData, uint64_t newSize) {
-        if (data) {
-            delete[] data;
-        }
-        data = new uint8_t[newSize];
-        std::memcpy(data, newData, newSize);
-        size = newSize;
-    }
-
-    void setData(uint8_t* newData, uint64_t newSize) {
-        if (data) {
-            delete[] data;
-        }
-        data = newData;
-        size = newSize;
-    }
-    
-    void writeData(const std::string& filename) const;
-
-protected:
-
-    uint8_t* data;
-    uint64_t size;
-};
-
-DataObject::~DataObject() {
-    delete[] data;
-    size = 0;
-}
-
-void DataObject::writeData(const std::string& filename) const {
-    std::ofstream file(filename, std::ios::binary);
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file");
-    }
-
-    file.write(reinterpret_cast<const char*>(data), size);
-    file.close();
-}
-
 void zerr(int ret) {
     switch (ret) {
     case Z_ERRNO:
@@ -187,7 +139,8 @@ void zerr(int ret) {
     }
 }
 
-int compress(DataObject& source, DataObject& dest, int level) {
+// int compress(DataObject& source, DataObject& dest, int level) {
+int compress(const uint8_t* inputData, uint64_t totalSize, uint8_t** outputData, int &outputSize, int level) {
     int ret, flush;
     unsigned have;
     z_stream strm;
@@ -202,8 +155,6 @@ int compress(DataObject& source, DataObject& dest, int level) {
         return ret;
 
     std::vector<uint8_t> outputBuffer;
-    uint64_t totalSize = source.getSize();
-    const uint8_t* inputData = source.getData();
     uint64_t offset = 0;
 
     do {
@@ -228,7 +179,13 @@ int compress(DataObject& source, DataObject& dest, int level) {
 
     deflateEnd(&strm);
 
-    dest.copyData(outputBuffer.data(), outputBuffer.size());
+    *outputData = new uint8_t[outputBuffer.size()];
+    std::copy(reinterpret_cast<const uint8_t*>(outputBuffer.data()), 
+        reinterpret_cast<const uint8_t*>(outputBuffer.data() + outputBuffer.size()),
+        *outputData);
+
+    outputSize = outputBuffer.size();
+
     return Z_OK;
 }
 
@@ -246,8 +203,6 @@ void buildArchive(std::string archivePath) {
     uint64_t offset = 0;
 
     std::stringstream ss;
-    ss << "AB02\n";
-    
     ss << assets.size() << "\n";
     for (auto asset :assets) {
         ss << asset->filename << " ";
@@ -259,7 +214,6 @@ void buildArchive(std::string archivePath) {
     
     std::string manifest = ss.str();
     uint64_t sizeDataOriginal = offset + manifest.size();
-    std::cout << sizeDataOriginal << std::endl;
     
     unsigned char* buffer = new unsigned char[sizeDataOriginal];
 
@@ -272,15 +226,30 @@ void buildArchive(std::string archivePath) {
         delete asset;
     }
 
-    DataObject source;
-    source.setData(buffer, offset);
+    uint8_t* outputData;
+    int outputSize;
 
-    DataObject dest;
-    compress(source, dest, Z_DEFAULT_COMPRESSION);
+    compress(buffer, offset, &outputData, outputSize, Z_DEFAULT_COMPRESSION);
 
-    dest.writeData("TestArchive.dat");
+    crypt(outputData, outputSize, key);
 
-    // delete [] buffer;
+    //  write archive file
+    std::ofstream file(archivePath, std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file");
+    }
+    file.write("AB2", 3);
+    file.write(reinterpret_cast<const char*>(outputData), outputSize);
+    file.close();
+
+    delete [] outputData;
+    delete [] buffer;
+
+    std::cout << "Original size: " << toString(sizeDataOriginal) << " bytes" << std::endl;
+    std::cout << "Compressed size: " << toString(outputSize) << " bytes" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Compression ratio: ";
+    std::cout << (int)((float)outputSize / (float)sizeDataOriginal  * 100.0f) << "%" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
