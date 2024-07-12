@@ -51,12 +51,12 @@ inline std::string toString(T val, bool groupDigits = true) {
     std::string s(o.str());
 
     if (groupDigits) {
-        unsigned int offset1 = 3;
-        unsigned int offset2 = 3;
+        uint32_t offset1 = 3;
+        uint32_t offset2 = 3;
         if (val < 0) {
             offset2++;   // account for "-"
         }
-        for (int i = 0; i < 5; i++) {
+        for (uint32_t i = 0; i < 5; i++) {
             if (s.length() > offset2) {
                 s.insert(s.length() - offset1, ",");
                 offset1 += 4;
@@ -97,8 +97,8 @@ struct Asset {
         size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
-        data = new unsigned char[size];
-        int bytesRead = fread(data, 1, size, file);
+        data = new uint8_t[size];
+        uint32_t bytesRead = fread(data, 1, size, file);
         if (bytesRead != size) {
             std::cout << "Size mismatch!" << std::endl;
         }
@@ -111,8 +111,8 @@ struct Asset {
 
     std::string filename;
 
-    unsigned char* data;
-    unsigned long size;
+    uint8_t* data;
+    uint64_t size;
 
     protected:
         Asset();
@@ -120,7 +120,7 @@ struct Asset {
 
 std::vector<Asset*> assets;
 
-void zerr(int ret) {
+void zerr(uint32_t ret) {
     switch (ret) {
     case Z_ERRNO:
         std::cerr << "I/O error\n";
@@ -140,12 +140,12 @@ void zerr(int ret) {
 }
 
 // int compress(DataObject& source, DataObject& dest, int level) {
-int compress(const uint8_t* inputData, uint64_t totalSize, uint8_t** outputData, int &outputSize, int level) {
-    int ret, flush;
-    unsigned have;
+int compress(const uint8_t* inputData, uint64_t totalSize, uint8_t** outputData, uint32_t &outputSize, uint32_t level) {
+    uint32_t ret, flush;
+    uint32_t have;
     z_stream strm;
-    unsigned char in[CHUNK_SIZE];
-    unsigned char out[CHUNK_SIZE];
+    uint8_t in[CHUNK_SIZE];
+    uint8_t out[CHUNK_SIZE];
 
     strm.zalloc = Z_NULL;
     strm.zfree = Z_NULL;
@@ -215,7 +215,7 @@ void buildArchive(std::string archivePath) {
     std::string manifest = ss.str();
     uint64_t sizeDataOriginal = offset + manifest.size();
     
-    unsigned char* buffer = new unsigned char[sizeDataOriginal];
+    uint8_t* buffer = new uint8_t[sizeDataOriginal];
 
     // copy manifest and each asset's data into the buffer
     std::memcpy(buffer, manifest.c_str(), manifest.size());
@@ -227,7 +227,7 @@ void buildArchive(std::string archivePath) {
     }
 
     uint8_t* outputData;
-    int outputSize;
+    uint32_t outputSize;
 
     compress(buffer, offset, &outputData, outputSize, Z_DEFAULT_COMPRESSION);
 
@@ -249,7 +249,7 @@ void buildArchive(std::string archivePath) {
     std::cout << "Compressed size: " << toString(outputSize) << " bytes" << std::endl;
     std::cout << std::endl;
     std::cout << "Compression ratio: ";
-    std::cout << (int)((float)outputSize / (float)sizeDataOriginal  * 100.0f) << "%" << std::endl;
+    std::cout << (uint32_t)((float)outputSize / (float)sizeDataOriginal  * 100.0f) << "%" << std::endl;
 }
 
 int main(int argc, char* argv[]) {
