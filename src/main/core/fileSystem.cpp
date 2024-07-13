@@ -50,7 +50,9 @@ static void crypt(u8* data, u64 size, std::string const& key) {
     return;
 #endif
 
-    if (key.empty()) return;
+    if (key.empty()) {
+         return;
+    }
 
     u32 keyIndex = 0;
     for (u64 i = 0; i < size; i++) {
@@ -98,23 +100,35 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
         LOG("WARNING: Couldn't load archive %s", path.c_str());
         return;
     }
+    fseek(file, 0, SEEK_END);
+    u64 size = ftell(file);
+    fseek(file, 0, SEEK_SET);
 
     ArchiveFile archive;
     archive.path = path;
     archive.key = key;
 
-    //  fourth byte of header is reserved ... for ...
-    u8 tag[4];
-    fread(&tag, 1, 4, file);
+    u8 tag[3];
+    fread(&tag, 1, 3, file);
     if (tag[0] != 'A' || tag[1] != 'B') {
         ERR("INVALID ARCHIVE: %s", path.c_str());
     }
 
-    //  check version code. only handle version 1 now. branch for backwards compatibility if extended.
+    //  check version code
     u8 versionCode = tag[2];
-    if (versionCode != 1) {
-        //ERR("INVALID ARCHIVE: %s", path.c_str());
+    if (versionCode != 2) {
+        ERR("INVALID ARCHIVE: %s", path.c_str());
     }
+
+    u32 bufferSize = size - 3;
+    u8* buffer = new u8[bufferSize];
+
+    crypt(buffer, bufferSize, key);
+
+    //  decompress buffer into new buffer
+
+    delete [] buffer;
+
 /*
     //  read and parse header
     fread(&archive.headerSizeCompressed, 1, 4, file);
