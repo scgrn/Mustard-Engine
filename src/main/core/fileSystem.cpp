@@ -28,13 +28,10 @@ freely, subject to the following restrictions:
 #include <fstream>
 #include <cstring>
 
-#include "fileSystem.h"
-#include "log.h"
-
 #include "zlib.h"
 
-#define COMPRESS
-#define DECRYPT
+#include "fileSystem.h"
+#include "log.h"
 
 #define CHUNK_SIZE 16384
 
@@ -49,10 +46,6 @@ struct ArrayDeleter {
 };
 
 static void crypt(u8* data, u64 size, std::string const& key) {
-#ifndef DECRYPT
-    return;
-#endif
-
     if (key.empty()) {
          return;
     }
@@ -126,20 +119,20 @@ int decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputS
 
 void zerr(int ret) {
     switch (ret) {
-    case Z_ERRNO:
-        std::cerr << "I/O error\n";
-        break;
-    case Z_STREAM_ERROR:
-        std::cerr << "invalid compression level\n";
-        break;
-    case Z_DATA_ERROR:
-        std::cerr << "invalid or incomplete deflate data\n";
-        break;
-    case Z_MEM_ERROR:
-        std::cerr << "out of memory\n";
-        break;
-    case Z_VERSION_ERROR:
-        std::cerr << "zlib version mismatch!\n";
+        case Z_ERRNO:
+            std::cerr << "I/O error\n";
+            break;
+        case Z_STREAM_ERROR:
+            std::cerr << "invalid compression level\n";
+            break;
+        case Z_DATA_ERROR:
+            std::cerr << "invalid or incomplete deflate data\n";
+            break;
+        case Z_MEM_ERROR:
+            std::cerr << "out of memory\n";
+            break;
+        case Z_VERSION_ERROR:
+            std::cerr << "zlib version mismatch!\n";
     }
 }
 
@@ -155,7 +148,6 @@ bool FileSystem::startup() {
     
     return true;
 }
-
 
 void FileSystem::shutdown() {
     LOG("FileSystem subsystem shutdown", 0);
@@ -204,64 +196,17 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
 
     crypt(buffer, bufferSize, key);
 
-    //  decompress buffer into new buffer
+    u8* decompressedData;
+    u64 decompressedSize;
+    decompress(buffer, bufferSize, &decompressedData, decompressedSize);
+    
+    archive.dataObject = new DataObject();
+    archive.dataObject->setData(decompressedData, decompressedSize);
 
+    delete [] decompressedData;
     delete [] buffer;
-
-/*
-    //  read and parse header
-    fread(&archive.headerSizeCompressed, 1, 4, file);
-    fread(&archive.headerSizeDecompressed, 1, 4, file);
-#ifdef COMPRESS
-    u8* dataCompressed = new u8[archive.headerSizeCompressed];
-    fread(dataCompressed, 1, archive.headerSizeCompressed, file);
-    crypt(dataCompressed, archive.headerSizeCompressed, key);
-    fclose(file);
-
-    //  decompress header data
-    u8* data = new u8[archive.headerSizeDecompressed];
-    i32 result = uncompress(data, &archive.headerSizeDecompressed, dataCompressed, archive.headerSizeCompressed);
-    //  TODO: check result
-#else
-    u8* data = new u8[archive.headerSizeDecompressed];
-    fread(data, 1, archive.headerSizeDecompressed, file);
-    fclose(file);
-#endif
-    TiXmlDocument *DOM = new TiXmlDocument();
-    DOM->Parse((char*)data);
-    if (DOM->Error()) {
-        delete [] data;
-        delete DOM;
-        ERR("WARNING: Error processing header: %s", path.c_str());
-        return;
-    }
-    delete [] data;
-
-    TiXmlElement *rootElement = DOM->FirstChildElement("root");
-    TiXmlElement *element = rootElement->FirstChildElement("resource");
-    while (element) {
-        FileResource resource;
-        int offset, sizeCompressed, sizeDecompressed;
-
-        resource.path = element->Attribute("path");
-        element->Attribute("offset", &offset);
-        element->Attribute("sizeCompressed", &sizeCompressed);
-        element->Attribute("sizeDecompressed", &sizeDecompressed);
-
-        resource.offset = offset;
-        resource.sizeCompressed = sizeCompressed;
-        resource.sizeDecompressed = sizeDecompressed;
-
-        // std::cout << "Path: " << resource.path << "\tSize: " << toString(size) << " bytes \tOffset: " << toString(offset) << "\n";
-
-        archive.resources.push_back(resource);
-        element = element->NextSiblingElement("resource");
-    }
-    delete DOM;
-
-    archive.headerSizeCompressed += 12;
-    archives.push_back(archive);
-*/
+    
+    archiveFiles.push_back(archive);
 }
 
 u8* FileSystem::readFile(std::string const& path, u64 *size) {
@@ -320,6 +265,15 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
     } else {
         data = std::shared_ptr<u8>(archiveData, noOpDeleter);
     }
+}
+
+void DataObject::setData(u8* newData, u64 newSize) {
+    if (data) {
+        // delete[] data;
+    }
+    data = std::shared_ptr<u8>(new u8[newSize], ArrayDeleter());
+    std::memcpy(data.get(), newData, newSize);
+    size = newSize;
 }
 
 DataObject::~DataObject() {

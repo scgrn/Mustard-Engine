@@ -45,14 +45,16 @@ namespace AB {
 class DataObject {
     public:
         DataObject(const char* path, b8 forceLocal = false);
+        DataObject() : data(nullptr), size(0) {}
+
+        void setData(u8* newData, u64 newSize);
+
         ~DataObject();
 
         u8* getData() { return data.get(); } 
         u64 getSize() { return size; }
 
     protected:
-        DataObject() {}
-
         std::shared_ptr<u8> data;
         u64 size;
 
@@ -90,7 +92,7 @@ class FileSystem : public SubSystem {
         struct ArchiveFile {
             std::string path;
             std::string key;
-            DataObject *data;
+            DataObject *dataObject;
 
             std::vector<AssetFile> assets;
         };
