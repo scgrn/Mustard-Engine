@@ -35,10 +35,7 @@ freely, subject to the following restrictions:
 #include <cstring>
 #include <cassert>
 
-
 #include "../vendor/zlib-1.3.1/zlib.h"
-
-#define COMPRESS
 
 #define CHUNK_SIZE 16384
 
@@ -68,11 +65,9 @@ inline std::string toString(T val, bool groupDigits = true) {
 }
 
 void crypt(uint8_t *data, uint32_t size, std::string const& key) {
-#ifndef COMPRESS
-    return;
-#endif
-
-    if (key.empty()) return;
+    if (key.empty()) {
+        return;
+    }
 
     uint32_t keyIndex = 0;
     for (uint32_t i = 0; i < size; i++) {
@@ -122,25 +117,24 @@ std::vector<Asset*> assets;
 
 void zerr(uint32_t ret) {
     switch (ret) {
-    case Z_ERRNO:
-        std::cerr << "I/O error\n";
-        break;
-    case Z_STREAM_ERROR:
-        std::cerr << "invalid compression level\n";
-        break;
-    case Z_DATA_ERROR:
-        std::cerr << "invalid or incomplete deflate data\n";
-        break;
-    case Z_MEM_ERROR:
-        std::cerr << "out of memory\n";
-        break;
-    case Z_VERSION_ERROR:
-        std::cerr << "zlib version mismatch!\n";
+        case Z_ERRNO:
+            std::cerr << "I/O error\n";
+            break;
+        case Z_STREAM_ERROR:
+            std::cerr << "invalid compression level\n";
+            break;
+        case Z_DATA_ERROR:
+            std::cerr << "invalid or incomplete deflate data\n";
+            break;
+        case Z_MEM_ERROR:
+            std::cerr << "out of memory\n";
+            break;
+        case Z_VERSION_ERROR:
+            std::cerr << "zlib version mismatch!\n";
     }
 }
 
-// int compress(DataObject& source, DataObject& dest, int level) {
-int compress(const uint8_t* inputData, uint64_t totalSize, uint8_t** outputData, uint32_t &outputSize, uint32_t level) {
+int compress(const uint8_t* inputData, uint64_t inputSize, uint8_t** outputData, uint32_t &outputSize, uint32_t level) {
     uint32_t ret, flush;
     uint32_t have;
     z_stream strm;
@@ -151,18 +145,19 @@ int compress(const uint8_t* inputData, uint64_t totalSize, uint8_t** outputData,
     strm.zfree = Z_NULL;
     strm.opaque = Z_NULL;
     ret = deflateInit(&strm, level);
-    if (ret != Z_OK)
+    if (ret != Z_OK) {
         return ret;
+    }
 
     std::vector<uint8_t> outputBuffer;
     uint64_t offset = 0;
 
     do {
-        strm.avail_in = (offset + CHUNK_SIZE > totalSize) ? totalSize - offset : CHUNK_SIZE;
+        strm.avail_in = (offset + CHUNK_SIZE > inputSize) ? inputSize - offset : CHUNK_SIZE;
         std::memcpy(in, inputData + offset, strm.avail_in);
         offset += strm.avail_in;
 
-        flush = (offset >= totalSize) ? Z_FINISH : Z_NO_FLUSH;
+        flush = (offset >= inputSize) ? Z_FINISH : Z_NO_FLUSH;
         strm.next_in = in;
 
         do {

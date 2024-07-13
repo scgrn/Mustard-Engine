@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 
 #include <cstdio>
 #include <fstream>
+#include <cstring>
 
 #include "fileSystem.h"
 #include "log.h"
@@ -34,6 +35,8 @@ freely, subject to the following restrictions:
 
 #define COMPRESS
 #define DECRYPT
+
+#define CHUNK_SIZE 16384
 
 namespace AB {
 
@@ -61,6 +64,82 @@ static void crypt(u8* data, u64 size, std::string const& key) {
         if (keyIndex > key.length()) {
             keyIndex = 0;
         }
+    }
+}
+
+int decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputSize) {
+    i32 ret;
+    u32 have;
+    z_stream strm;
+    u8 in[CHUNK_SIZE];
+    u8 out[CHUNK_SIZE];
+
+    strm.zalloc = Z_NULL;
+    strm.zfree = Z_NULL;
+    strm.opaque = Z_NULL;
+    strm.avail_in = 0;
+    strm.next_in = Z_NULL;
+    ret = inflateInit(&strm);
+    if (ret != Z_OK) {
+        return ret;
+    }
+
+    std::vector<u8> outputBuffer;
+    u64 offset = 0;
+
+    do {
+        strm.avail_in = (offset + CHUNK_SIZE > inputSize) ? inputSize - offset : CHUNK_SIZE;
+        std::memcpy(in, inputData + offset, strm.avail_in);
+        offset += strm.avail_in;
+
+        strm.next_in = in;
+
+        do {
+            strm.avail_out = CHUNK_SIZE;
+            strm.next_out = out;
+            ret = inflate(&strm, Z_NO_FLUSH);
+            assert(ret != Z_STREAM_ERROR);
+            switch (ret) {
+                case Z_NEED_DICT:
+                    ret = Z_DATA_ERROR;
+                case Z_DATA_ERROR:
+                case Z_MEM_ERROR:
+                    inflateEnd(&strm);
+                    return ret;
+            }
+            have = CHUNK_SIZE - strm.avail_out;
+            outputBuffer.insert(outputBuffer.end(), out, out + have);
+        } while (strm.avail_out == 0);
+    } while (ret != Z_STREAM_END);
+
+    inflateEnd(&strm);
+
+    *outputData = new u8[outputBuffer.size()];
+    std::copy(reinterpret_cast<const u8*>(outputBuffer.data()), 
+        reinterpret_cast<const u8*>(outputBuffer.data() + outputBuffer.size()),
+        *outputData);
+
+    outputSize = outputBuffer.size();
+
+    return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
+}
+
+void zerr(int ret) {
+    switch (ret) {
+    case Z_ERRNO:
+        std::cerr << "I/O error\n";
+        break;
+    case Z_STREAM_ERROR:
+        std::cerr << "invalid compression level\n";
+        break;
+    case Z_DATA_ERROR:
+        std::cerr << "invalid or incomplete deflate data\n";
+        break;
+    case Z_MEM_ERROR:
+        std::cerr << "out of memory\n";
+        break;
+    case Z_VERSION_ERROR:
+        std::cerr << "zlib version mismatch!\n";
     }
 }
 
