@@ -27,7 +27,11 @@ function buildAssets() {
     echo "Building asset archive..."
 
     cd assets
-    ../$MUSTARD_PATH/bin/Mustard-AssetCompiler ../$PROJECT_NAME.dat "$ENCYPTION_KEY"
+
+    KEY_LENGTH=64
+    ENCYPTION_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $KEY_LENGTH | head -n 1)
+
+    ../$MUSTARD_PATH/bin/Mustard-AssetCompiler ../$PROJECT_NAME.dat $ENCYPTION_KEY
     cd ..
 }
 
