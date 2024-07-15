@@ -20,6 +20,11 @@ class App : public AB::Application {
 };
 
 AB::Application* AB::createApplication() {
+
+#ifndef DEBUG
+#include "addArchive.cpp"
+#endif
+
     return new App();
 }
 
