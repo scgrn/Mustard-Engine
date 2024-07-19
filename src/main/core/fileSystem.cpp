@@ -187,7 +187,7 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
 
     //  check version code
     u8 versionCode = tag[2];
-    if (versionCode != 2) {
+    if (versionCode != '2') {
         ERR("INVALID ARCHIVE: %s", path.c_str());
     }
 

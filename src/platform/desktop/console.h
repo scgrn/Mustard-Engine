@@ -52,9 +52,6 @@ class Console : public SubSystem {
         
         RenderLayer *batchRenderer;
         Font font;
-        
-        //    it seems really ridiculous to me that we need to create a camera for the freeking DEBUG CONSOLE.
-        //    maybe we should generally do away wiht cameras and the renderers could just take a projection matrix?
         OrthographicCamera camera;
 
 };
