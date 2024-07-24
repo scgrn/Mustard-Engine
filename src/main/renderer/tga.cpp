@@ -46,7 +46,7 @@ namespace AB {
 
 static void swapRB(u8 *data, u32 width, u32 height, u32 bpp) {
     u8 *current = data;
-    for (long index = 0; index != (width * height); index++) {
+    for (u32 index = 0; index != (width * height); index++) {
         u8 temp = *current;  //  save blue value
         *current = *(current + 2);      //  write red value into first pos
         *(current + 2) = temp;          //  write blue value to last pos

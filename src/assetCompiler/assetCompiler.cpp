@@ -115,7 +115,7 @@ struct Asset {
 
 std::vector<Asset*> assets;
 
-void zerr(uint32_t ret) {
+void zerr(int32_t ret) {
     switch (ret) {
         case Z_ERRNO:
             std::cerr << "I/O error\n";
@@ -135,7 +135,8 @@ void zerr(uint32_t ret) {
 }
 
 int compress(const uint8_t* inputData, uint64_t inputSize, uint8_t** outputData, uint32_t &outputSize, uint32_t level) {
-    uint32_t ret, flush;
+    int32_t ret;
+    uint32_t flush;
     uint32_t have;
     z_stream strm;
     uint8_t in[CHUNK_SIZE];
