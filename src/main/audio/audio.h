@@ -35,6 +35,8 @@ namespace AB {
 
 class Sound : public Asset {
     public:
+        static const u32 INSTANCES = 8;
+        
         Sound() {};
         virtual ~Sound() {};
         
@@ -47,7 +49,9 @@ class Sound : public Asset {
         
     protected:
         DataObject *data;
-
+        ma_sound sound[INSTANCES];
+        u32 currentInstance;
+        ma_decoder decoder;
 };
 
 class Music : public Asset {
@@ -67,6 +71,7 @@ class Music : public Asset {
         
     protected:
         DataObject *data;
+        ma_sound sound;
         int musicHandle;
         
 };
@@ -85,6 +90,7 @@ class Audio : public SubSystem {
         float soundVolume = 1.0f;
         float musicVolume = 1.0f;
 
+        ma_engine engine;
         
     private:
         struct QueuedSound {

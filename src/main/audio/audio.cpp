@@ -49,13 +49,34 @@ float volumeTodB(float volume) {
 void Sound::load(std::string const& filename) {
     data = new DataObject(filename.c_str());
 
-    //wav = new SoLoud::Wav();
-    //wav->loadMem(data->getData(), data->getSize(), false, false);
+     //  initialize the decoder with the memory data
+    ma_result result = ma_decoder_init_memory(data->getData(), data->getSize(), NULL, &decoder);
+    if (result != MA_SUCCESS) {
+        ERR("Failed to initialize decoder from memory: %d", result);
+    }
+
+    //  initialize multiple sound objects using the same data source
+    for (u32 i = 0; i < INSTANCES; i++) {
+        result = ma_sound_init_from_data_source(&audio.engine, &decoder,
+            MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_DECODE, NULL, &sound[i]);
+
+        if (result != MA_SUCCESS) {
+            ma_decoder_uninit(&decoder);
+            ERR("Failed to initialize sound from data source: %d", result);
+        }
+    }
+
+    currentInstance = 0;
 }
 
 void Sound::release() {
+    ma_decoder_uninit(&decoder);
+
+    for (u32 i = 0; i < INSTANCES; i++) {
+        ma_sound_uninit(&sound[i]);
+    }
+    
     delete data;
-    //delete wav;
 }
 
 i32 Sound::play(float volume, float pan, bool loop) {
@@ -69,6 +90,9 @@ i32 Sound::play(float volume, float pan, bool loop) {
         return 0;
     }
     */
+    ma_sound_start(&sound[currentInstance]);
+    currentInstance = (currentInstance + 1) % INSTANCES;
+
     return 0;
 }
 
@@ -77,7 +101,12 @@ void Sound::stop() {
 }
 
 bool Sound::isPlaying() {
-    //return audio.soloud->countAudioSource(*wav) > 0;
+    for (u32 i = 0; i < INSTANCES; i++) {
+        if (ma_sound_is_playing(&sound[i])) {
+            return true;
+        }
+    }
+    
     return false;
 }
 
@@ -143,6 +172,7 @@ void Music::stop() {
 
 bool Music::isPlaying() {
 //    return audio.soloud->countAudioSource(*wavStream) > 0;
+    return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -150,11 +180,14 @@ bool Music::isPlaying() {
 bool Audio::startup() {
     LOG("Audio subsystem startup", 0);
 
-    //    check for error
+    ma_result result = ma_engine_init(NULL, &engine);
+    if (result != MA_SUCCESS) {
+        printf("Failed to initialize audio engine.");
+        return false;
+    }
     
-    //    print device info
-    
-    
+    //    TODO: print device info
+
     initialized = true;
     
     return true;
@@ -168,6 +201,8 @@ void Audio::shutdown() {
 
     sounds.clear();
     music.clear();
+
+    ma_engine_uninit(&engine);
 }
 
 void Audio::update() {
