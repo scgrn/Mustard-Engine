@@ -49,9 +49,9 @@ class Sound : public Asset {
         
     protected:
         DataObject *data;
-        ma_sound sound[INSTANCES];
+        ma_sound sounds[INSTANCES];
+        ma_decoder decoders[INSTANCES];
         u32 currentInstance;
-        ma_decoder decoder;
 };
 
 class Music : public Asset {

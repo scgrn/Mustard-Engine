@@ -49,19 +49,18 @@ float volumeTodB(float volume) {
 void Sound::load(std::string const& filename) {
     data = new DataObject(filename.c_str());
 
-     //  initialize the decoder with the memory data
-    ma_result result = ma_decoder_init_memory(data->getData(), data->getSize(), NULL, &decoder);
-    if (result != MA_SUCCESS) {
-        ERR("Failed to initialize decoder from memory: %d", result);
-    }
-
-    //  initialize multiple sound objects using the same data source
     for (u32 i = 0; i < INSTANCES; i++) {
-        result = ma_sound_init_from_data_source(&audio.engine, &decoder,
-            MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_DECODE, NULL, &sound[i]);
+         //  initialize the decoder with the memory data
+        ma_result result = ma_decoder_init_memory(data->getData(), data->getSize(), NULL, &decoders[i]);
+        if (result != MA_SUCCESS) {
+            ERR("Failed to initialize decoder from memory: %d", result);
+        }
+
+        //  initialize multiple sound objects using the same data source
+        result = ma_sound_init_from_data_source(&audio.engine, &decoders[i],
+            MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_DECODE, NULL, &sounds[i]);
 
         if (result != MA_SUCCESS) {
-            ma_decoder_uninit(&decoder);
             ERR("Failed to initialize sound from data source: %d", result);
         }
     }
@@ -70,10 +69,9 @@ void Sound::load(std::string const& filename) {
 }
 
 void Sound::release() {
-    ma_decoder_uninit(&decoder);
-
     for (u32 i = 0; i < INSTANCES; i++) {
-        ma_sound_uninit(&sound[i]);
+        ma_sound_uninit(&sounds[i]);
+        ma_decoder_uninit(&decoders[i]);
     }
     
     delete data;
@@ -90,7 +88,7 @@ i32 Sound::play(float volume, float pan, bool loop) {
         return 0;
     }
     */
-    ma_sound_start(&sound[currentInstance]);
+    ma_sound_start(&sounds[currentInstance]);
     currentInstance = (currentInstance + 1) % INSTANCES;
 
     return 0;
@@ -102,7 +100,7 @@ void Sound::stop() {
 
 bool Sound::isPlaying() {
     for (u32 i = 0; i < INSTANCES; i++) {
-        if (ma_sound_is_playing(&sound[i])) {
+        if (ma_sound_is_playing(&sounds[i])) {
             return true;
         }
     }
