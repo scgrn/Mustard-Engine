@@ -43,9 +43,9 @@ class Sound : public Asset {
         void load(std::string const& filename);
         void release();
         
-        i32 play(float volume = 1.0f, float pan = 0.0f, bool loop = false);
+        i32 play(f32 volume = 1.0f, f32 pan = 0.0f, b8 loop = false);
         void stop();
-        bool isPlaying();
+        b8 isPlaying();
         
     protected:
         DataObject *data;
@@ -59,45 +59,45 @@ class Music : public Asset {
         void load(std::string const& filename);
         void release();
         
-        void setLoopPoint(float loopPoint);
-        void play(bool loop = true);
+        void setLoopPoint(f32 loopPoint);
+        void play(b8 loop = true);
         void pause();
         void resume();
-        void setVolume(float volume);
-        void fadeIn(float duration);
-        void fadeOut(float duration);
+        void setVolume(f32 volume);
+        void fadeIn(f32 duration);
+        void fadeOut(f32 duration);
         void stop();
-        bool isPlaying();
+        b8 isPlaying();
         
     protected:
         DataObject *data;
         ma_sound sound;
-        int musicHandle;
+        u32 musicHandle;
         
 };
 
 class Audio : public SubSystem {
     public:
-        bool startup() override;
+        b8 startup() override;
         void shutdown() override;
         
         //    plays all queued sound effects
         void update();
         
         //    queues a sound effect if it hasn't already been played this frame
-        void play(Sound *sound, float volume, float pan, bool loop);
+        void play(Sound *sound, f32 volume, f32 pan, b8 loop);
         
-        float soundVolume = 1.0f;
-        float musicVolume = 1.0f;
+        f32 soundVolume = 1.0f;
+        f32 musicVolume = 1.0f;
 
         ma_engine engine;
         
     private:
         struct QueuedSound {
             Sound* sound;
-            float volume;
-            float pan;
-            bool loop;
+            f32 volume;
+            f32 pan;
+            b8 loop;
         };
         
         std::vector<QueuedSound> soundQueue;

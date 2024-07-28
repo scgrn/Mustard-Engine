@@ -34,7 +34,7 @@ namespace AB {
 class Window : public SubSystem {
     public:
         struct VideoMode {
-            int xRes, yRes;
+            u32 xRes, yRes;
             
             //    TODO: use this
             enum Mode {
@@ -45,15 +45,15 @@ class Window : public SubSystem {
             } mode;
             
             // TODO: remove once enumeration is tested
-            bool fullscreen;
+            b8 fullscreen;
 
-            bool vsync;
+            b8 vsync;
         } currentMode;
         
         //    kinda ugly but we need to create a gl context so renderer can start up
-        bool startup() override { return false; };
+        b8 startup() override { return false; };
         
-        bool startup(Application *app);
+        b8 startup(Application *app);
         void shutdown() override;
         
         void setVideoMode(Application *app);

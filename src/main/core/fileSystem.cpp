@@ -136,7 +136,7 @@ void zerr(int ret) {
     }
 }
 
-bool FileSystem::startup() {
+b8 FileSystem::startup() {
     LOG("FileSystem subsystem startup", 0);
 
     //    load all queued archives

@@ -36,11 +36,11 @@ extern Audio audio;
 // TODO: hashmap of looping sounds, killAllLoopingSFX()
 
 //  https://youtu.be/Vjm--AqG04Y
-float dBToVolume(float dB) {
+f32 dBToVolume(f32 dB) {
     return powf(10.0f, 0.05f * dB);
 }
 
-float volumeTodB(float volume) {
+f32 volumeTodB(f32 volume) {
     return 20.0f * log10f(volume);
 }
 
@@ -77,7 +77,7 @@ void Sound::release() {
     delete data;
 }
 
-i32 Sound::play(float volume, float pan, bool loop) {
+i32 Sound::play(f32 volume, f32 pan, b8 loop) {
     /*
     wav->setLooping(loop);
     if (audio.soundVolume > 0.01f) {
@@ -98,7 +98,7 @@ void Sound::stop() {
     //wav->stop();
 }
 
-bool Sound::isPlaying() {
+b8 Sound::isPlaying() {
     for (u32 i = 0; i < INSTANCES; i++) {
         if (ma_sound_is_playing(&sounds[i])) {
             return true;
@@ -125,11 +125,11 @@ void Music::release() {
 //    delete wavStream;
 }
 
-void Music::setLoopPoint(float loopPoint) {
+void Music::setLoopPoint(f32 loopPoint) {
 //    wavStream->setLoopPoint(loopPoint);
 }
 
-void Music::play(bool loop) {
+void Music::play(b8 loop) {
 /*
     wavStream->setLooping(loop);
     musicHandle = audio.soloud->play(*wavStream);
@@ -146,11 +146,11 @@ void Music::resume() {
 //    audio.soloud->setPause(musicHandle, false);
 }
 
-void Music::setVolume(float volume) {
+void Music::setVolume(f32 volume) {
 //    audio.soloud->setVolume(musicHandle, audio.musicVolume);
 }
 
-void Music::fadeIn(float duration) {
+void Music::fadeIn(f32 duration) {
 /*
     musicHandle = audio.soloud->play(*wavStream);
     audio.soloud->seek(musicHandle, 0.0f);
@@ -159,7 +159,7 @@ void Music::fadeIn(float duration) {
 */
 }
 
-void Music::fadeOut(float duration) {
+void Music::fadeOut(f32 duration) {
 //    audio.soloud->fadeVolume(musicHandle, 0, duration);
 //    audio.soloud->scheduleStop(musicHandle, duration);
 }
@@ -168,14 +168,14 @@ void Music::stop() {
 //    audio.soloud->stop(musicHandle);
 }
 
-bool Music::isPlaying() {
+b8 Music::isPlaying() {
 //    return audio.soloud->countAudioSource(*wavStream) > 0;
     return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
-bool Audio::startup() {
+b8 Audio::startup() {
     LOG("Audio subsystem startup", 0);
 
     ma_result result = ma_engine_init(NULL, &engine);
@@ -210,8 +210,8 @@ void Audio::update() {
     soundQueue.clear();
 }
 
-void Audio::play(Sound *sound, float volume = 1.0f, float pan = 0.0f, bool loop = false) {
-    bool found = false;
+void Audio::play(Sound *sound, f32 volume = 1.0f, f32 pan = 0.0f, b8 loop = false) {
+    b8 found = false;
     for (auto& queuedSound : soundQueue) {
         if (queuedSound.sound == sound) {
             found = true;

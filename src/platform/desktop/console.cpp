@@ -36,12 +36,6 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-//static const Vec4 TEXT_COLOR_1(1.0f, 0.85f, 0.35f, 1.0f);
-//static const Vec4 TEXT_COLOR_2(1.0f, 0.75f, 0.0f, 1.0f);
-
-//static const Vec4 TEXT_COLOR_1(0.35f, 1.0f, 0.5f, 1.0f);
-//static const Vec4 TEXT_COLOR_2(0.0f, 0.75f, 0.0f, 1.0f);
-
 static const Vec4 TEXT_COLOR_1(1.0f, 1.0f, 1.0f, 1.0f);
 static const Vec4 TEXT_COLOR_2(0.75f, 0.75f, 0.75f, 1.0f);
 
@@ -51,11 +45,11 @@ extern Script script;
 
 struct ConsoleMessage {
     std::string message;
-    bool entered;
+    b8 entered;
 };
 static std::list<ConsoleMessage> messages;
 
-void addMessage(std::string message, bool entered) {
+void addMessage(std::string message, b8 entered) {
     ConsoleMessage m;
     m.message = message;
     m.entered = entered;
@@ -63,15 +57,15 @@ void addMessage(std::string message, bool entered) {
 }
 
 //  modified from lbaselib.c
-int luaPrint(lua_State *L) {
-    int numArgs = lua_gettop(L);
+u32 luaPrint(lua_State *L) {
+    u32 numArgs = lua_gettop(L);
     lua_getglobal(L, "tostring");
 
     std::string message;
-    for (int i = 1; i <= numArgs; i++) {
+    for (u32 i = 1; i <= numArgs; i++) {
         const char *s;
         lua_pushvalue(L, -1);  /* function to be called */
-        lua_pushvalue(L, i);   /* value to print */
+        lua_pushvalue(L, i);   /* value to pru32 */
         lua_call(L, 1, 1);
 
         s = lua_tostring(L, -1);  /* get result */
@@ -87,7 +81,7 @@ int luaPrint(lua_State *L) {
     return 0;
 }
 
-bool Console::startup() {
+b8 Console::startup() {
     active = false;
     addMessage("", false);
     addMessage("AB Engine Lua Console", true);
@@ -164,7 +158,7 @@ void Console::update() {
                     commandLineHistory.push_back(commandLine);
                     commandLineHistoryPos = commandLineHistory.end();
 
-                    int error = luaL_loadbuffer(luaVM, commandLine.c_str(), commandLine.length(), "line") || lua_pcall(luaVM, 0, 0, 0);
+                    u32 error = luaL_loadbuffer(luaVM, commandLine.c_str(), commandLine.length(), "line") || lua_pcall(luaVM, 0, 0, 0);
                     if (error) {
                         addMessage(lua_tostring(luaVM, -1), false);
                         lua_pop(luaVM, 1);
@@ -187,8 +181,8 @@ void Console::render() {
         
     AB::RenderLayer::Quad quad;
     
-    int width = 780;
-    int height = 420;
+    u32 width = 780;
+    u32 height = 420;
 
     //    TODO: this should call a generic quad renderer in renderer.h
     quad.pos = Vec3(width / 2 + 20, height / 2 + 20, -1.0f);

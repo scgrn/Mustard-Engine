@@ -57,7 +57,7 @@ std::unordered_map<int, std::string> keyNames = {
 };
 #undef X
 
-        static const int BUFFER_SIZE = 16; // 64;
+        static const u32 BUFFER_SIZE = 16; // 64;
         
         //    alias SDL gamepad button constants
         typedef enum {
@@ -105,50 +105,50 @@ std::unordered_map<int, std::string> keyNames = {
             AXIS_MAX
         } GamepadAxis;
 
-        bool startup() override;
+        b8 startup() override;
         void shutdown() override;
         void update(); //  has to be called before events are pumped or after update is called
 
         //    keyboard functions
-        bool wasKeyPressed(int key);
-        bool isKeyPressed(int key);    // 6y77  -Rilo Kitty, 4/19/20
-        bool wasKeyReleased(int key);
+        b8 wasKeyPressed(u32 key);
+        b8 isKeyPressed(u32 key);    // 6y77  -Rilo Kitty, 4/19/20
+        b8 wasKeyReleased(u32 key);
         //int INKEY$();                        //    pops oldest keypress
         //int[BUFFER_SIZE] getKeyBuffer();
         
         //    mouse functions
-        bool wasMousePressed(int button);
-        bool isMousePressed(int button);
-        bool wasMouseReleased(int button);  
-        int getMouseWheelMove();
+        b8 wasMousePressed(u32 button);
+        b8 isMousePressed(u32 button);
+        b8 wasMouseReleased(u32 button);  
+        u32 getMouseWheelMove();
         Vec2 getMousePosition();
         void setMousePosition(Vec2 pos);
-        void showMouseCursor(bool visible);
+        void showMouseCursor(b8 visible);
 
         //    touch functions
         
         //    gamepad functions
-        int getNumGamepads();
-        bool gamepadWasPressed(int gamepadIndex, int button);
-        bool gamepadIsPressed(int gamepadIndex, int button);
-        bool gamepadWasReleased(int gamepadIndex, int button);
-        float gamepadAxis(int gamepadIndex, int axis);
-        void setDeadzone(int gamepadIndex, float deadZone);
-        void vibrate(int gamepadIndex, float strength, int duration);
+        u32 getNumGamepads();
+        b8 gamepadWasPressed(u32 gamepadIndex, u32 button);
+        b8 gamepadIsPressed(u32 gamepadIndex, u32 button);
+        b8 gamepadWasReleased(u32 gamepadIndex, u32 button);
+        float gamepadAxis(u32 gamepadIndex, u32 axis);
+        void setDeadzone(u32 gamepadIndex, f32 deadZone);
+        void vibrate(u32 gamepadIndex, f32 strength, u32 duration);
         
         //  menu helper functions
-        bool menuUp();
-        bool menuDown();
-        bool menuLeft();
-        bool menuRight();
-        bool menuSelect();
-        bool menuBack();
+        b8 menuUp();
+        b8 menuDown();
+        b8 menuLeft();
+        b8 menuRight();
+        b8 menuSelect();
+        b8 menuBack();
         
-        bool showGamepadControls;
+        b8 showGamepadControls;
         
     private:
-        int keyBuffer[BUFFER_SIZE];
-        bool firstMouseMotion;
+        u32 keyBuffer[BUFFER_SIZE];
+        b8 firstMouseMotion;
 };
 
 }   //  namespace

@@ -37,13 +37,13 @@ namespace AB {
 
 class Console : public SubSystem {
     public:
-        bool startup();
+        b8 startup();
         void shutdown();
 
         void update();
         void render();
         
-        bool active = false;
+        b8 active = false;
 
     protected:
         std::list<std::string> commandLineHistory;

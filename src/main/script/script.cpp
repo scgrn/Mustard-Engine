@@ -64,7 +64,7 @@ void Script::registerFuncs(std::string const& parent, std::string const& name, c
     }
 }
 
-bool Script::startup() {
+b8 Script::startup() {
     // init lua VM and load libraries
     LOG("Scripting subsystem startup", 0);
 

@@ -35,7 +35,7 @@ freely, subject to the following restrictions:
 extern "C" 
 {
     __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
-    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+    __declspec(dllexport) u32 AmdPowerXpressRequestHighPerformance = 1;
 }
 #else
     //  TODO: handle this on Linux
@@ -45,7 +45,7 @@ namespace AB {
     
 GLuint whiteTexture;
  
-bool Renderer::startup() {
+b8 Renderer::startup() {
     LOG("Renderer subsystem startup", 0);
     
     // create white texture
@@ -59,7 +59,7 @@ bool Renderer::startup() {
     // TODO: test memset
     // memset(data, 4, 0xFF);
     unsigned char data[4];
-    for (int i = 0; i < 4; i++) {
+    for (u32 i = 0; i < 4; i++) {
         data[i] = 0xFF;
     }
 
@@ -94,10 +94,10 @@ bool Renderer::startup() {
 void Renderer::shutdown() {
     LOG("Renderer subsystem shutdown", 0);
     
-    for (std::map<int, RenderLayer*>::iterator i = layers.begin(); i != layers.end(); i++) {
+    for (std::map<u32, RenderLayer*>::iterator i = layers.begin(); i != layers.end(); i++) {
         delete i->second;
     }
-    for (std::map<int, RenderTarget*>::iterator i = canvases.begin(); i != canvases.end(); i++) {
+    for (std::map<u32, RenderTarget*>::iterator i = canvases.begin(); i != canvases.end(); i++) {
         delete i->second;
     }
 
@@ -109,7 +109,7 @@ void Renderer::shutdown() {
     initialized = false;
 }
 
-void Renderer::clear(float r, float g, float b, float a) {
+void Renderer::clear(f32 r, f32 g, f32 b, f32 a) {
     CALL_GL(glClearColor(r, g, b, a));
     CALL_GL(glClear(GL_COLOR_BUFFER_BIT));
 }
@@ -121,7 +121,7 @@ void Renderer::renderFullscreenQuad() {
 }
 
 void Renderer::render(const Camera& camera) {
-    for (std::map<int, RenderLayer*>::reverse_iterator it = layers.rbegin(); it != layers.rend(); it++) {
+    for (std::map<u32, RenderLayer*>::reverse_iterator it = layers.rbegin(); it != layers.rend(); it++) {
         RenderLayer *renderLayer = it->second;
         renderLayer->render(camera);
     }

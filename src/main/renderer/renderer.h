@@ -61,15 +61,15 @@ extern GLuint whiteTexture;
 
 class Renderer : public SubSystem {
     public:
-        std::map<int, RenderLayer*> layers;
-        std::map<int, RenderTarget*> canvases;
+        std::map<u32, RenderLayer*> layers;
+        std::map<u32, RenderTarget*> canvases;
 
-        bool startup();
+        b8 startup();
         void shutdown();
         
         void render(const Camera& camera);
         
-        void clear(float r, float g, float b, float a);
+        void clear(f32 r, f32 g, f32 b, f32 a);
         void renderFullscreenQuad();
         
     private:
@@ -78,8 +78,8 @@ class Renderer : public SubSystem {
             Mat4 projectionMatrix;
             Mat4 viewMatrix;
             Mat4 colorTransform;
-            int timer;
-            float randomSeed;
+            u32 timer;
+            f32 randomSeed;
         } uniforms;
         
         struct State {

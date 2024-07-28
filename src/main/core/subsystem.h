@@ -32,11 +32,11 @@ class SubSystem {
         SubSystem() {}
         ~SubSystem() {}
         
-        virtual bool startup() = 0;
+        virtual b8 startup() = 0;
         virtual void shutdown() = 0;
         
     protected:
-        bool initialized = false;
+        b8 initialized = false;
         
 };
 

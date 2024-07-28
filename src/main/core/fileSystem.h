@@ -65,7 +65,7 @@ class DataObject {
 
 class FileSystem : public SubSystem {
     public:
-        bool startup() override;
+        b8 startup() override;
         void shutdown() override;
         
         //    this is the only function that should be called before engine startup

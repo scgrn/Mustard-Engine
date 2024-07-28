@@ -39,7 +39,7 @@ namespace AB {
 
 class Script : public SubSystem {
     public:
-        bool startup() override;
+        b8 startup() override;
         void shutdown() override;
         
         void registerFuncs(std::string const& parent, std::string const& name, const luaL_Reg *funcs);
@@ -48,7 +48,7 @@ class Script : public SubSystem {
         
         lua_State* getVM() { return luaVM; }
         
-        bool luaError = false;
+        b8 luaError = false;
         
     protected:
         lua_State* luaVM;

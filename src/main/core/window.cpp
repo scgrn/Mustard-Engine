@@ -34,7 +34,7 @@ namespace AB {
 extern Script script;
 extern OrthographicCamera camera2d;
 
-bool Window::startup(Application *app) {
+b8 Window::startup(Application *app) {
     LOG("Window subsystem startup", 0);
     
     window = NULL;
@@ -55,8 +55,8 @@ void Window::shutdown() {
 void Window::setVideoMode(Application *app) {
     int xRes = 800;
     int yRes = 480;
-    bool fullscreen = false;
-    bool vsync = true;
+    b8 fullscreen = false;
+    b8 vsync = true;
     std::string title = "Application";
 
     //  read settings from lua
@@ -66,7 +66,7 @@ void Window::setVideoMode(Application *app) {
     if (!lua_isnil(luaVM, -1)) {
         lua_pushstring(luaVM, "fullscreen");
         lua_gettable(luaVM, -2);
-        fullscreen = (bool)lua_toboolean(luaVM, -1);
+        fullscreen = (b8)lua_toboolean(luaVM, -1);
         LOG_EXP(fullscreen);
         lua_pop(luaVM, -1);
         lua_pop(luaVM, -1);
@@ -74,7 +74,7 @@ void Window::setVideoMode(Application *app) {
         lua_getglobal(luaVM, "videoConfig");
         lua_pushstring(luaVM, "xRes");
         lua_gettable(luaVM, -2);
-        xRes = (int)lua_tonumber(luaVM, -1);
+        xRes = (u32)lua_tonumber(luaVM, -1);
         LOG_EXP(xRes);
         lua_pop(luaVM, -1);
         lua_pop(luaVM, -1);
@@ -82,7 +82,7 @@ void Window::setVideoMode(Application *app) {
         lua_getglobal(luaVM, "videoConfig");
         lua_pushstring(luaVM, "yRes");
         lua_gettable(luaVM, -2);
-        yRes = (int)lua_tonumber(luaVM, -1);
+        yRes = (u32)lua_tonumber(luaVM, -1);
         LOG_EXP(yRes);
         lua_pop(luaVM, -1);
         lua_pop(luaVM, -1);
@@ -90,7 +90,7 @@ void Window::setVideoMode(Application *app) {
         lua_getglobal(luaVM, "videoConfig");
         lua_pushstring(luaVM, "vsync");
         lua_gettable(luaVM, -2);
-        vsync = (bool)lua_toboolean(luaVM, -1);
+        vsync = (b8)lua_toboolean(luaVM, -1);
         LOG_EXP(vsync);
         lua_pop(luaVM, -1);
         lua_pop(luaVM, -1);
@@ -134,8 +134,8 @@ void Window::setVideoMode(Application *app) {
 
     //  TODO: center window on first run and save window position in settings
 
-    int windowXPos = SDL_WINDOWPOS_CENTERED; // 0;
-    int windowYPos = SDL_WINDOWPOS_CENTERED;
+    u32 windowXPos = SDL_WINDOWPOS_CENTERED; // 0;
+    u32 windowYPos = SDL_WINDOWPOS_CENTERED;
 
     //int windowXPos = SDL_WINDOWPOS_UNDEFINED;
     //int windowYPos = SDL_WINDOWPOS_UNDEFINED;
