@@ -11,7 +11,6 @@ set(CMAKE_CXX_FLAGS
 )
 
 add_compile_definitions(
-    WITH_MINIAUDIO
     LUA_COMPAT_ALL
 )
 
@@ -95,10 +94,6 @@ endif()
 # Collect third-party sources
 aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/core" SOLOUD_CORE_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource/wav" SOLOUD_AUDIOSOURCE_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/filter" SOLOUD_FILTER_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/backend/miniaudio" SOLOUD_BACKEND_SOURCE)
 aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 
 # Remove unused source files
@@ -110,10 +105,6 @@ add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
     ${LUA_SOURCE}
     ${ZLIB_SOURCE}
-    ${SOLOUD_CORE_SOURCE}
-    ${SOLOUD_AUDIOSOURCE_SOURCE}
-    ${SOLOUD_FILTER_SOURCE}
-    ${SOLOUD_BACKEND_SOURCE}
 )
 
 target_include_directories(${PROJECT_NAME}

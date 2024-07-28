@@ -25,15 +25,11 @@ freely, subject to the following restrictions:
 #ifndef AUDIO_H
 #define AUDIO_H
 
+#include "../../vendor/miniaudio/miniaudio.h"
+
 #include "../core/subsystem.h"
 #include "../core/fileSystem.h"
 #include "../core/assetManager.h"
-
-namespace SoLoud {
-    class Soloud;
-    class Wav;
-    class WavStream;
-};
 
 namespace AB {
 
@@ -50,7 +46,6 @@ class Sound : public Asset {
         bool isPlaying();
         
     protected:
-        SoLoud::Wav *wav;
         DataObject *data;
 
 };
@@ -71,7 +66,6 @@ class Music : public Asset {
         bool isPlaying();
         
     protected:
-        SoLoud::WavStream *wavStream;
         DataObject *data;
         int musicHandle;
         
@@ -91,7 +85,6 @@ class Audio : public SubSystem {
         float soundVolume = 1.0f;
         float musicVolume = 1.0f;
 
-        SoLoud::Soloud *soloud;
         
     private:
         struct QueuedSound {

@@ -24,9 +24,7 @@ freely, subject to the following restrictions:
 
 #include "../pch.h"
 
-#include "soloud.h"
-#include "soloud_wav.h"
-#include "soloud_wavstream.h"
+#define MINIAUDIO_IMPLEMENTATION
 
 #include "audio.h"
 #include "../core/log.h"
@@ -51,16 +49,17 @@ float volumeTodB(float volume) {
 void Sound::load(std::string const& filename) {
     data = new DataObject(filename.c_str());
 
-    wav = new SoLoud::Wav();
-    wav->loadMem(data->getData(), data->getSize(), false, false);
+    //wav = new SoLoud::Wav();
+    //wav->loadMem(data->getData(), data->getSize(), false, false);
 }
 
 void Sound::release() {
     delete data;
-    delete wav;
+    //delete wav;
 }
 
 i32 Sound::play(float volume, float pan, bool loop) {
+    /*
     wav->setLooping(loop);
     if (audio.soundVolume > 0.01f) {
         i32 handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
@@ -69,72 +68,81 @@ i32 Sound::play(float volume, float pan, bool loop) {
     } else {
         return 0;
     }
+    */
+    return 0;
 }
 
 void Sound::stop() {
-    wav->stop();
+    //wav->stop();
 }
 
 bool Sound::isPlaying() {
-    return audio.soloud->countAudioSource(*wav) > 0;
+    //return audio.soloud->countAudioSource(*wav) > 0;
+    return false;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
 void Music::load(std::string const& filename) {
     data = new DataObject(filename.c_str());
+/*
     wavStream = new SoLoud::WavStream();
     wavStream->loadMem(data->getData(), data->getSize(), false, false);
     
     wavStream->setLooping(true);
     wavStream->setSingleInstance(true);
+*/
 }
 
 void Music::release() {
-    delete wavStream;
+//    delete wavStream;
 }
 
 void Music::setLoopPoint(float loopPoint) {
-    wavStream->setLoopPoint(loopPoint);
+//    wavStream->setLoopPoint(loopPoint);
 }
 
 void Music::play(bool loop) {
+/*
     wavStream->setLooping(loop);
     musicHandle = audio.soloud->play(*wavStream);
     audio.soloud->seek(musicHandle, 0.0f);
     audio.soloud->setVolume(musicHandle, audio.musicVolume);
+*/
 }
 
 void Music::pause() {
-    audio.soloud->setPause(musicHandle, true);
+//    audio.soloud->setPause(musicHandle, true);
 }
 
 void Music::resume() {
-    audio.soloud->setPause(musicHandle, false);
+//    audio.soloud->setPause(musicHandle, false);
 }
 
 void Music::setVolume(float volume) {
-    audio.soloud->setVolume(musicHandle, audio.musicVolume);
+//    audio.soloud->setVolume(musicHandle, audio.musicVolume);
 }
 
 void Music::fadeIn(float duration) {
+/*
     musicHandle = audio.soloud->play(*wavStream);
     audio.soloud->seek(musicHandle, 0.0f);
     audio.soloud->setVolume(musicHandle, 0.0f);
     audio.soloud->fadeVolume(musicHandle, audio.musicVolume, duration);
+*/
 }
 
 void Music::fadeOut(float duration) {
-    audio.soloud->fadeVolume(musicHandle, 0, duration);
-    audio.soloud->scheduleStop(musicHandle, duration);
+//    audio.soloud->fadeVolume(musicHandle, 0, duration);
+//    audio.soloud->scheduleStop(musicHandle, duration);
 }
 
 void Music::stop() {
-    audio.soloud->stop(musicHandle);
+//    audio.soloud->stop(musicHandle);
 }
 
 bool Music::isPlaying() {
-    return audio.soloud->countAudioSource(*wavStream) > 0;
+//    return audio.soloud->countAudioSource(*wavStream) > 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -142,9 +150,6 @@ bool Music::isPlaying() {
 bool Audio::startup() {
     LOG("Audio subsystem startup", 0);
 
-    soloud = new SoLoud::Soloud();
-    soloud->init(SoLoud::Soloud::CLIP_ROUNDOFF, SoLoud::Soloud::MINIAUDIO, SoLoud::Soloud::AUTO, SoLoud::Soloud::AUTO);
-    
     //    check for error
     
     //    print device info
@@ -163,9 +168,6 @@ void Audio::shutdown() {
 
     sounds.clear();
     music.clear();
-    
-    soloud->deinit(); // Clean up!
-    delete soloud;
 }
 
 void Audio::update() {
@@ -201,3 +203,4 @@ void Audio::play(Sound *sound, float volume = 1.0f, float pan = 0.0f, bool loop 
 }
 
 }   //  namespace
+

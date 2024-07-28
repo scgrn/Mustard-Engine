@@ -22,7 +22,7 @@ Dependencies
 | [glad](https://glad.dav1d.de/) | OpenGL extensions on Windows |
 | [lua](https://www.lua.org/) | Scripting |
 | [SDL2](https://www.libsdl.org/) | Window / input management (desktop / web only) |
-| [soloud](https://sol.gfxile.net/soloud/) | Audio mixing and playback |
+| [miniaudio](https://miniaud.io/) | Audio mixing and playback |
 | [zlib](https://zlib.net/) | Compression |
 
 Features
