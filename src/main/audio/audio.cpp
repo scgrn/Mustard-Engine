@@ -78,9 +78,9 @@ void Sound::release() {
 }
 
 i32 Sound::play(f32 volume, f32 pan, b8 loop) {
-    ma_sound_set_volume(&sound[currentInstance], volume * audio.soundVolume);
-    ma_sound_set_pan(&sound[currentInstance], pan);
-    ma_sound_set_looping(&sound[currentInstance], loop);
+    ma_sound_set_volume(&sounds[currentInstance], volume * audio.soundVolume);
+    ma_sound_set_pan(&sounds[currentInstance], pan);
+    ma_sound_set_looping(&sounds[currentInstance], loop);
     
     ma_sound_start(&sounds[currentInstance]);
     currentInstance = (currentInstance + 1) % INSTANCES;
@@ -89,7 +89,11 @@ i32 Sound::play(f32 volume, f32 pan, b8 loop) {
 }
 
 void Sound::stop() {
-    //wav->stop();
+    for (u32 i = 0; i < INSTANCES; i++) {
+        if (ma_sound_is_playing(&sounds[i])) {
+            ma_sound_stop(&sounds[i]);
+        }
+    }
 }
 
 b8 Sound::isPlaying() {
