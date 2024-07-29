@@ -78,16 +78,10 @@ void Sound::release() {
 }
 
 i32 Sound::play(f32 volume, f32 pan, b8 loop) {
-    /*
-    wav->setLooping(loop);
-    if (audio.soundVolume > 0.01f) {
-        i32 handle = audio.soloud->playClocked(1.0f / 60.0f, *wav, volume * audio.soundVolume, pan);
-        
-        return handle;
-    } else {
-        return 0;
-    }
-    */
+    ma_sound_set_volume(&sound[currentInstance], volume * audio.soundVolume);
+    ma_sound_set_pan(&sound[currentInstance], pan);
+    ma_sound_set_looping(&sound[currentInstance], loop);
+    
     ma_sound_start(&sounds[currentInstance]);
     currentInstance = (currentInstance + 1) % INSTANCES;
 
