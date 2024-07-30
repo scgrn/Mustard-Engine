@@ -110,17 +110,25 @@ b8 Sound::isPlaying() {
 
 void Music::load(std::string const& filename) {
     data = new DataObject(filename.c_str());
-/*
-    wavStream = new SoLoud::WavStream();
-    wavStream->loadMem(data->getData(), data->getSize(), false, false);
-    
-    wavStream->setLooping(true);
-    wavStream->setSingleInstance(true);
-*/
+
+    ma_result result = ma_decoder_init_memory(data->getData(), data->getSize(), NULL, &decoder);
+    if (result != MA_SUCCESS) {
+        ERR("Failed to initialize decoder from memory: %d", result);
+    }
+
+    //  TODO: should this use MA_SOUND_FLAG_DECODE??
+    result = ma_sound_init_from_data_source(&audio.engine, &decoder,
+        MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_DECODE, NULL, &sound);
+
+    if (result != MA_SUCCESS) {
+        ERR("Failed to initialize sound from data source: %d", result);
+    }
 }
 
 void Music::release() {
-//    delete wavStream;
+    ma_decoder_uninit(&decoder);
+    ma_sound_uninit(&sound);
+    delete data;
 }
 
 void Music::setLoopPoint(f32 loopPoint) {
@@ -128,24 +136,22 @@ void Music::setLoopPoint(f32 loopPoint) {
 }
 
 void Music::play(b8 loop) {
-/*
-    wavStream->setLooping(loop);
-    musicHandle = audio.soloud->play(*wavStream);
-    audio.soloud->seek(musicHandle, 0.0f);
-    audio.soloud->setVolume(musicHandle, audio.musicVolume);
-*/
+    // TODO: seek to 0
+    ma_sound_set_volume(&sound, audio.musicVolume);
+    ma_sound_set_looping(&sound, loop);
+    ma_sound_start(&sound);
 }
 
 void Music::pause() {
-//    audio.soloud->setPause(musicHandle, true);
+    ma_sound_stop(&sound);
 }
 
 void Music::resume() {
-//    audio.soloud->setPause(musicHandle, false);
+    ma_sound_start(&sound);
 }
 
 void Music::setVolume(f32 volume) {
-//    audio.soloud->setVolume(musicHandle, audio.musicVolume);
+    ma_sound_set_volume(&sound, volume * audio.musicVolume);
 }
 
 void Music::fadeIn(f32 duration) {
@@ -163,12 +169,11 @@ void Music::fadeOut(f32 duration) {
 }
 
 void Music::stop() {
-//    audio.soloud->stop(musicHandle);
+    ma_sound_stop(&sound);
 }
 
 b8 Music::isPlaying() {
-//    return audio.soloud->countAudioSource(*wavStream) > 0;
-    return false;
+    return ma_sound_is_playing(&sound);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------

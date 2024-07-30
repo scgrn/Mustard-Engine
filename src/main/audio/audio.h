@@ -63,7 +63,7 @@ class Music : public Asset {
         void play(b8 loop = true);
         void pause();
         void resume();
-        void setVolume(f32 volume);
+        void setVolume(f32 volume = 1.0f);
         void fadeIn(f32 duration);
         void fadeOut(f32 duration);
         void stop();
@@ -72,8 +72,7 @@ class Music : public Asset {
     protected:
         DataObject *data;
         ma_sound sound;
-        u32 musicHandle;
-        
+        ma_decoder decoder;
 };
 
 class Audio : public SubSystem {
@@ -101,7 +100,6 @@ class Audio : public SubSystem {
         };
         
         std::vector<QueuedSound> soundQueue;
-
 };
 
 }
