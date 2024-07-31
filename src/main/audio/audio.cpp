@@ -116,9 +116,7 @@ void Music::load(std::string const& filename) {
         ERR("Failed to initialize decoder from memory: %d", result);
     }
 
-    //  TODO: should this use MA_SOUND_FLAG_DECODE??
-    result = ma_sound_init_from_data_source(&audio.engine, &decoder,
-        MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_DECODE, NULL, &sound);
+    result = ma_sound_init_from_data_source(&audio.engine, &decoder, MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, &sound);
 
     if (result != MA_SUCCESS) {
         ERR("Failed to initialize sound from data source: %d", result);
@@ -132,10 +130,13 @@ void Music::release() {
 }
 
 void Music::setLoopPoint(f32 loopPoint) {
-//    wavStream->setLoopPoint(loopPoint);
 }
 
 void Music::play(b8 loop) {
+    //  https://github.com/mackron/miniaudio/issues/714
+    ma_sound_set_stop_time_in_milliseconds(&sound, ~(ma_uint64)0);
+    ma_sound_set_fade_in_milliseconds(&sound, 0.0f, 1.0f, 1);
+
     ma_sound_seek_to_pcm_frame(&sound, 0);
     ma_sound_set_volume(&sound, audio.musicVolume);
     ma_sound_set_looping(&sound, loop);
@@ -155,18 +156,15 @@ void Music::setVolume(f32 volume) {
 }
 
 void Music::fadeIn(f32 duration) {
-/*
-    musicHandle = audio.soloud->play(*wavStream);
-    audio.soloud->seek(musicHandle, 0.0f);
-    audio.soloud->setVolume(musicHandle, 0.0f);
-    audio.soloud->fadeVolume(musicHandle, audio.musicVolume, duration);
-*/
-    ma_sound_seek_to_pcm_frame(&sound, 0);
+    play(true);
+
+    u32 ms = (u32)(duration * 1000.0f);
+    ma_sound_set_fade_in_milliseconds(&sound, 0, audio.musicVolume, ms);
 }
 
 void Music::fadeOut(f32 duration) {
-//    audio.soloud->fadeVolume(musicHandle, 0, duration);
-//    audio.soloud->scheduleStop(musicHandle, duration);
+    u32 ms = (u32)(duration * 1000.0f);
+    ma_sound_stop_with_fade_in_milliseconds(&sound, ms);
 }
 
 void Music::stop() {
