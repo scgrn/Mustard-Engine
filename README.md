@@ -1,6 +1,6 @@
 # Mustard engine
 
-Minimalist C++ game framework with no graphical editor that provides utility functions on top of SDL2 / OpenGL.  
+Minimalist C++ game framework with no graphical editor based on SDL2 and OpenGL.  
 Uses the common subset of OpenGL 3.3 core profile and OpenGL ES 3.0.  
 Tested under Ubuntu and Windows using GCC/Clang/MSVC.
 
@@ -8,7 +8,7 @@ Tested under Ubuntu and Windows using GCC/Clang/MSVC.
 
 [![License](https://img.shields.io/badge/license-zlib%2Flibpng-blue.svg)](LICENSE)
 
-Target platforms:
+Target platforms
 -------
 * Windows
 * Linux
@@ -21,8 +21,8 @@ Dependencies
 |:---|---:|
 | [glad](https://glad.dav1d.de/) | OpenGL extensions on Windows |
 | [lua](https://www.lua.org/) | Scripting |
-| [SDL2](https://www.libsdl.org/) | Window / input management (desktop / web only) |
 | [miniaudio](https://miniaud.io/) | Audio mixing and playback |
+| [SDL2](https://www.libsdl.org/) | Window / input management (desktop / web only) |
 | [zlib](https://zlib.net/) | Compression |
 
 Features
@@ -80,14 +80,14 @@ Run `build` or `./build.sh` (depending on your development platform) without arg
 
 <!-- TODO (link to APIs, etc -->
 
-File format support:
+File format support
 -------
 Images:
 - 24 or 32 bit TGA with or without RLE compression
-	
+
 Audio:
 - wav
-- ogg
+- mp3
   
 Steamworks Integration
 -------
@@ -105,6 +105,10 @@ tool that compiles *every* file in the directory it was launched, and every file
 There is an option to specify a key for a laughably weak encryption scheme.
 
 There are few options and no error checking with this program. It is a loose cannon.
+
+Documentation
+-------
+C++ documentation can be built with [Doxygen](https://www.doxygen.nl/) and the Lua API documentation can be built with [LDoc](https://github.com/lunarmodules/ldoc).
 
 License
 -------
