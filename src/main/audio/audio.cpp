@@ -136,7 +136,7 @@ void Music::setLoopPoint(f32 loopPoint) {
 }
 
 void Music::play(b8 loop) {
-    // TODO: seek to 0
+    ma_sound_seek_to_pcm_frame(&sound, 0);
     ma_sound_set_volume(&sound, audio.musicVolume);
     ma_sound_set_looping(&sound, loop);
     ma_sound_start(&sound);
@@ -161,6 +161,7 @@ void Music::fadeIn(f32 duration) {
     audio.soloud->setVolume(musicHandle, 0.0f);
     audio.soloud->fadeVolume(musicHandle, audio.musicVolume, duration);
 */
+    ma_sound_seek_to_pcm_frame(&sound, 0);
 }
 
 void Music::fadeOut(f32 duration) {
@@ -169,6 +170,7 @@ void Music::fadeOut(f32 duration) {
 }
 
 void Music::stop() {
+    ma_sound_seek_to_pcm_frame(&sound, 0);
     ma_sound_stop(&sound);
 }
 
