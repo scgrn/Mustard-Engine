@@ -35,8 +35,8 @@ namespace AB {
 
 #define VERSION_STRING VERSION_MAJOR "." VERSION_MINOR "." VERSION_PATCH
 
-const char* VERSION = VERSION_STRING;
-const char* BUILD_STAMP = __DATE__ "." __TIME__;
+inline const char* VERSION = VERSION_STRING;
+inline const char* BUILD_STAMP = __DATE__ "." __TIME__;
 
 }   // namespace
 
