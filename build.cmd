@@ -99,7 +99,7 @@ exit /b 0
     echo Building Lua API Documentation...
 
     :: TODO: make this portable
-    \lua51\lua \ldoc\ldoc.lua -o "index" -p "Mustard Engine" -d docs src\main\script\
+    \lua51\lua \ldoc\ldoc.lua -o "index" -p "Mustard Engine" -d docs\luaAPI src\main\script\
 exit /b 0
 
 :buildTests
