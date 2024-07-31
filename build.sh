@@ -65,6 +65,9 @@ function buildDocs() {
     echo "Building Lua API Documentation..."
 
     ldoc -o index -p "Mustard Engine" -d docs/luaAPI ./src/main/script/
+    cd docs
+    doxygen Doxyfile
+    cd ..
 }
 
 function buildTests() {
