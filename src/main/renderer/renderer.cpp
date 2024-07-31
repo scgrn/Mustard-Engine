@@ -35,7 +35,7 @@ freely, subject to the following restrictions:
 extern "C" 
 {
     __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
-    __declspec(dllexport) u32 AmdPowerXpressRequestHighPerformance = 1;
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 #else
     //  TODO: handle this on Linux
