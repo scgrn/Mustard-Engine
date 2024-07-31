@@ -43,7 +43,7 @@ class Sound : public Asset {
         void load(std::string const& filename);
         void release();
         
-        i32 play(f32 volume = 1.0f, f32 pan = 0.0f, b8 loop = false);
+        void play(f32 volume = 1.0f, f32 pan = 0.0f, b8 loop = false);
         void stop();
         b8 isPlaying();
         

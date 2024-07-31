@@ -77,15 +77,13 @@ void Sound::release() {
     delete data;
 }
 
-i32 Sound::play(f32 volume, f32 pan, b8 loop) {
+void Sound::play(f32 volume, f32 pan, b8 loop) {
     ma_sound_set_volume(&sounds[currentInstance], volume * audio.soundVolume);
     ma_sound_set_pan(&sounds[currentInstance], pan);
     ma_sound_set_looping(&sounds[currentInstance], loop);
     
     ma_sound_start(&sounds[currentInstance]);
     currentInstance = (currentInstance + 1) % INSTANCES;
-
-    return 0;
 }
 
 void Sound::stop() {
