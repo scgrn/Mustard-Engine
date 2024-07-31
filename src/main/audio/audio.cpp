@@ -130,6 +130,8 @@ void Music::release() {
 }
 
 void Music::setLoopPoint(f32 loopPoint) {
+    u32 loopPointInFrames = (u32)(loopPoint * decoder.outputSampleRate);
+    ma_data_source_set_loop_point_in_pcm_frames(&decoder, loopPointInFrames, ~(ma_uint64)0);
 }
 
 void Music::play(b8 loop) {
