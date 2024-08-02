@@ -1,32 +1,4 @@
 var searchData=
 [
-  ['i16_214',['i16',['../namespace_a_b.html#a3d27270f5ec9282d23af9c3c320e41b4',1,'AB']]],
-  ['i32_215',['i32',['../namespace_a_b.html#a53a2b46a18580635051e8abf1bdcc6f5',1,'AB']]],
-  ['i64_216',['i64',['../namespace_a_b.html#a7ee186a70db87baba1b0397491f5876a',1,'AB']]],
-  ['i8_217',['i8',['../namespace_a_b.html#a9f32e494c638fdcabc6a4cf6b2d68dd2',1,'AB']]],
-  ['identity_218',['identity',['../namespace_a_b_1_1blend.html#add7684f20cf9ec70484dfe80a5acc7eb',1,'AB::blend']]],
-  ['image_219',['Image',['../class_a_b_1_1_image.html',1,'AB::Image'],['../class_a_b_1_1_image.html#ac5e303e9ac4ea412e72c7af83c1f58d5',1,'AB::Image::Image(const u32 width, const u32 height)'],['../class_a_b_1_1_image.html#ac289f1d9eb795a86bd5fd0f210e458ca',1,'AB::Image::Image(const std::string &amp;tgaFilename)'],['../class_a_b_1_1_image.html#a6c623ee44e698287da3a5328c5509b15',1,'AB::Image::Image()'],['../class_a_b_1_1_sprite.html#a88c7840fe4e09313d155cbd7684b0d7b',1,'AB::Sprite::image()']]],
-  ['image_2ecpp_220',['image.cpp',['../image_8cpp.html',1,'']]],
-  ['image_2eh_221',['image.h',['../image_8h.html',1,'']]],
-  ['imagesize_222',['imageSize',['../class_a_b_1_1_image.html#a0bbced3785441f625818a21c48b4ba52',1,'AB::Image']]],
-  ['indexvbo_223',['indexVBO',['../class_a_b_1_1_model.html#a40b1bd829f2ce41e2ae9fce40b651041',1,'AB::Model']]],
-  ['indicessize_224',['indicesSize',['../class_a_b_1_1_model.html#a81387f807bd044949e841a7eae5578e8',1,'AB::Model']]],
-  ['init_225',['init',['../class_a_b_1_1_perlin_noise.html#afaf19b77640624efbec86f848a32ac48',1,'AB::PerlinNoise::init()'],['../class_a_b_1_1_texture.html#a6483428b08509c2a5965f16331dfe769',1,'AB::Texture::init()']]],
-  ['initialized_226',['initialized',['../class_a_b_1_1_sub_system.html#a3dad26b5032ea924ac5b3b7a243db679',1,'AB::SubSystem']]],
-  ['initlocalization_227',['initLocalization',['../namespace_a_b.html#a0d53661284770b507f58dc445e404a27',1,'AB']]],
-  ['input_228',['Input',['../class_a_b_1_1_input.html',1,'AB::Input'],['../namespace_a_b.html#afaf059782c480d4737ec95aa4057b328',1,'AB::input()']]],
-  ['input_2ecpp_229',['input.cpp',['../input_2input_8cpp.html',1,'(Global Namespace)'],['../script_2input_8cpp.html',1,'(Global Namespace)']]],
-  ['input_2eh_230',['input.h',['../input_8h.html',1,'']]],
-  ['instances_231',['INSTANCES',['../class_a_b_1_1_sound.html#aaa13254dc01a718f61e8bbbbae590478',1,'AB::Sound']]],
-  ['interpolator_232',['Interpolator',['../class_a_b_1_1_interpolator.html',1,'AB::Interpolator&lt; T &gt;'],['../class_a_b_1_1_interpolator.html#afa56215df28b14acb5cf654559c9958c',1,'AB::Interpolator::Interpolator()']]],
-  ['interpolator_2eh_233',['interpolator.h',['../interpolator_8h.html',1,'']]],
-  ['invalidate_234',['invalidate',['../class_a_b_1_1_texture_cache.html#a1525e5afaa8a85769cfd8daffb8b98fb',1,'AB::TextureCache']]],
-  ['inverse_235',['inverse',['../namespace_a_b.html#a38786174608f7926b832451eab58a9ad',1,'AB']]],
-  ['invert_236',['invert',['../namespace_a_b_1_1blend.html#a7c8b4b2b1b605cb7e7f3cccf71de16a5',1,'AB::blend']]],
-  ['isfinished_237',['isFinished',['../class_a_b_1_1_interpolator.html#a9d989394d47ced0fd6fcd5d074fe5fea',1,'AB::Interpolator']]],
-  ['iskeypressed_238',['isKeyPressed',['../class_a_b_1_1_input.html#ac016e048ad12a88e4523fc986291092b',1,'AB::Input']]],
-  ['ismapped_239',['isMapped',['../class_a_b_1_1_asset_manager.html#ac6cfdf77ae0ac11828b1223831e1a7ad',1,'AB::AssetManager']]],
-  ['ismousepressed_240',['isMousePressed',['../class_a_b_1_1_input.html#ae14ed4954ef2e317f0334b53fe7cbb38',1,'AB::Input']]],
-  ['isplaying_241',['isPlaying',['../class_a_b_1_1_sound.html#a979b0baa8dc2f65279756c25cedf8d51',1,'AB::Sound::isPlaying()'],['../class_a_b_1_1_music.html#a6d918b17652026ccf8ffcf229b0fbac4',1,'AB::Music::isPlaying()']]],
-  ['italian_242',['ITALIAN',['../namespace_a_b.html#aff7d78836548959fb8d86bf3a9f70f57a120cdb7ded3c7c6c4f2821fb3ad84f75',1,'AB']]]
+  ['orthographiccamera_35',['OrthographicCamera',['../d3/db3/class_a_b_1_1_orthographic_camera.html',1,'AB']]]
 ];
