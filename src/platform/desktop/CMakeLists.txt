@@ -101,6 +101,9 @@ list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/lua.c")
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
 list(REMOVE_ITEM TINYXML_SOURCE "${VENDOR_DIR}/tinyxml/xmltest.cpp")
 
+# Add compile definition for zlib to include necessary headers
+add_compile_definitions(_GNU_SOURCE)
+
 add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
     ${LUA_SOURCE}
