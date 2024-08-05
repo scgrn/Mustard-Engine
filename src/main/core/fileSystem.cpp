@@ -119,20 +119,13 @@ int decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputS
 
 void zerr(int ret) {
     switch (ret) {
-        case Z_ERRNO:
-            std::cerr << "I/O error\n";
-            break;
-        case Z_STREAM_ERROR:
-            std::cerr << "invalid compression level\n";
-            break;
-        case Z_DATA_ERROR:
-            std::cerr << "invalid or incomplete deflate data\n";
-            break;
-        case Z_MEM_ERROR:
-            std::cerr << "out of memory\n";
-            break;
-        case Z_VERSION_ERROR:
-            std::cerr << "zlib version mismatch!\n";
+        case Z_ERRNO: ERR("I/O error", 0); break;
+        case Z_STREAM_ERROR: ERR("Invalid compression level", 0); break;
+        case Z_DATA_ERROR: ERR("Invalid or incomplete deflate data", 0); break;
+        case Z_MEM_ERROR: ERR("Out of memory", 0); break;
+        case Z_VERSION_ERROR: ERR("zlib version mismatch!", 0); break;
+        
+        default: break;
     }
 }
 
@@ -202,11 +195,11 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     
     archive.dataObject = new DataObject();
     archive.dataObject->setData(decompressedData, decompressedSize);
+    
+    //  read manifest
 
     delete [] decompressedData;
     delete [] buffer;
-    
-    archiveFiles.push_back(archive);
 }
 
 u8* FileSystem::readFile(std::string const& path, u64 *size) {
