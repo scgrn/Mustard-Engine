@@ -9,5 +9,7 @@
 
 /projectTemplate/bin/*
 /projectTemplate/build/*
-/projectTemplate/dev/*
+
+/projectTemplate/SDL2.dll
+/projectTemplate/dist/SDL2.dll
 
