@@ -117,11 +117,11 @@ std::vector<Asset*> assets;
 
 void zerr(int32_t ret) {
     switch (ret) {
-        case Z_ERRNO: ERR("I/O error", 0); break;
-        case Z_STREAM_ERROR: ERR("Invalid compression level", 0); break;
-        case Z_DATA_ERROR: ERR("Invalid or incomplete deflate data", 0); break;
-        case Z_MEM_ERROR: ERR("Out of memory", 0); break;
-        case Z_VERSION_ERROR: ERR("zlib version mismatch!", 0); break;
+        case Z_ERRNO: std::cerr << "I/O error" << std::endl; exit(ret); break;
+        case Z_STREAM_ERROR: std::cerr << "Invalid compression level" << std::endl; exit(ret); break;
+        case Z_DATA_ERROR: std::cerr << "Invalid or incomplete deflate data" << std::endl; exit(ret); break;
+        case Z_MEM_ERROR: std::cerr << "Out of memory" << std::endl; exit(ret); break;
+        case Z_VERSION_ERROR: std::cerr << "zlib version mismatch!" << std::endl; exit(ret); break;
         
         default: break;
     }
@@ -206,9 +206,13 @@ void buildArchive(std::string archivePath) {
     
     uint8_t* buffer = new uint8_t[sizeDataOriginal];
 
+    // copy manifest size into the buffer
+    std::size_t manifestSize = manifest.size();
+    std::memcpy(buffer, &manifestSize, sizeof(size_t));
+
     // copy manifest and each asset's data into the buffer
     std::memcpy(buffer, manifest.c_str(), manifest.size());
-    offset = manifest.size();
+    offset = sizeof(size_t) + manifest.size();
     for (const auto asset : assets) {
         std::memcpy(buffer + offset, asset->data, asset->size);
         offset += asset->size;
