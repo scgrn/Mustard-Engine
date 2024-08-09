@@ -81,8 +81,6 @@ class FileSystem : public SubSystem {
         void saveData(std::string key, std::string value);
     
     private:
-        void loadArchive(std::string const& path, std::string const& key = "");
-        
         struct AssetFile {
             std::string path;
             u64 offset;
@@ -95,8 +93,10 @@ class FileSystem : public SubSystem {
             DataObject *dataObject;
 
             std::vector<AssetFile> assets;
-        };
 
+            void load();
+        };
+        
         std::vector<ArchiveFile> archiveFiles;
 };
 

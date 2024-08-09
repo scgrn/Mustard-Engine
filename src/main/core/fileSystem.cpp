@@ -133,8 +133,8 @@ b8 FileSystem::startup() {
     LOG("FileSystem subsystem startup", 0);
 
     //    load all queued archives
-    for (ArchiveFile archiveFile : archiveFiles) {
-        loadArchive(archiveFile.path, archiveFile.key);
+    for (ArchiveFile archive : archiveFiles) {
+        archive.load();
     }
     
     initialized = true;
@@ -147,18 +147,19 @@ void FileSystem::shutdown() {
 }
 
 void FileSystem::addArchive(std::string const& path, std::string const& key) {
-    ArchiveFile archiveFile;
-    archiveFile.path = path;
-    archiveFile.key = key;
+    ArchiveFile archive;
+    archive.path = path;
+    archive.key = key;
     
-    archiveFiles.push_back(archiveFile);
-
     if (initialized) {
-        loadArchive(path, key);
+        archive.load();
     }
+
+    archiveFiles.push_back(archive);
 }
 
-void FileSystem::loadArchive(std::string const& path, std::string const& key) {
+void FileSystem::ArchiveFile::load() {
+    LOG("Loading archive: %s", path.c_str());
     FILE *file = fopen(path.c_str(), "rb");
     if (!file) {
         LOG("WARNING: Couldn't load archive %s", path.c_str());
@@ -167,10 +168,6 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     fseek(file, 0, SEEK_END);
     u64 size = ftell(file);
     fseek(file, 0, SEEK_SET);
-
-    ArchiveFile archive;
-    archive.path = path;
-    archive.key = key;
 
     u8 tag[3];
     fread(&tag, 1, 3, file);
@@ -183,21 +180,45 @@ void FileSystem::loadArchive(std::string const& path, std::string const& key) {
     if (versionCode != '2') {
         ERR("INVALID ARCHIVE: %s", path.c_str());
     }
-
+    
     u32 bufferSize = size - 3;
     u8* buffer = new u8[bufferSize];
+    u32 bytesRead = fread(buffer, 1, bufferSize, file);
+    if (bytesRead != bufferSize) {
+        delete[] buffer;
+        fclose(file);
+        ERR("Failed to read file: %s", path.c_str());
+    }
 
     crypt(buffer, bufferSize, key);
 
     u8* decompressedData;
     u64 decompressedSize;
     decompress(buffer, bufferSize, &decompressedData, decompressedSize);
-    
-    archive.dataObject = new DataObject();
-    archive.dataObject->setData(decompressedData, decompressedSize);
-    
-    //  read manifest
 
+    dataObject = new DataObject();
+    dataObject->setData(decompressedData, decompressedSize);
+
+    //  read manifest
+    u32 manifestSize;
+    std::memcpy(&manifestSize, dataObject->getData(), sizeof(u32));
+    std::string manifest(reinterpret_cast<char*>(dataObject->getData() + 4), manifestSize);
+    std::stringstream ss(manifest);
+    
+    u32 numAssets;
+    ss >> numAssets;
+    for (u32 i = 0; i < numAssets; i++) {
+        AssetFile asset;
+        
+        ss >> asset.path;
+        ss >> asset.size;
+        ss >> asset.offset;
+
+        LOG("%s %d %d", asset.path, asset.size, asset.offset);
+
+        assets.push_back(asset);
+    }
+    
     delete [] decompressedData;
     delete [] buffer;
 }
