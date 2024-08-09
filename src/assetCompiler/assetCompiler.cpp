@@ -207,12 +207,12 @@ void buildArchive(std::string archivePath) {
     uint8_t* buffer = new uint8_t[sizeDataOriginal];
 
     // copy manifest size into the buffer
-    std::size_t manifestSize = manifest.size();
-    std::memcpy(buffer, &manifestSize, sizeof(size_t));
-
+    uint32_t manifestSize = manifest.size();
+    std::memcpy(buffer, &manifestSize, sizeof(uint32_t));
+    
     // copy manifest and each asset's data into the buffer
-    std::memcpy(buffer, manifest.c_str(), manifest.size());
-    offset = sizeof(size_t) + manifest.size();
+    std::memcpy(buffer + sizeof(uint32_t), manifest.c_str(), manifest.size());
+    offset = sizeof(uint32_t) + manifest.size();
     for (const auto asset : assets) {
         std::memcpy(buffer + offset, asset->data, asset->size);
         offset += asset->size;
