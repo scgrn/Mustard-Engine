@@ -1,6 +1,7 @@
 # Mustard engine
 
-Minimalist C++ game framework with no graphical editor based on SDL2 and OpenGL.  
+Minimalist C++ game framework with no graphical editor based on SDL2 and OpenGL. 
+
 Uses the common subset of OpenGL 3.3 core profile and OpenGL ES 3.0.  
 Tested under Ubuntu and Windows using GCC/Clang/MSVC.
 
@@ -50,6 +51,7 @@ Edit this line of src/platform/desktop/CMakeLists.txt:
 `set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")`  
 
 ...to point to your SDL2 installation's cmake directory.  
+You will likely want to copy `SDL2.dll` into ./projectTemplate and ./projectTemplate/dist.  
 
 From the command line, run `build all`  
 
