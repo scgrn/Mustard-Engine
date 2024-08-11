@@ -20,6 +20,15 @@ else()
     )
 endif()
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG)
+endif ()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "Dist")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+    add_compile_definitions(RELEASE)
+endif()
+
 if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "../library/vendor/SDL2-2.26.5")
 endif()
@@ -30,10 +39,6 @@ add_executable(${PROJECT_NAME}
 
     # add other project sources here
 )
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_definitions(DEBUG)
-endif ()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${MUSTARD_DIR}/src/main

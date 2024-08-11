@@ -10,6 +10,11 @@ set(CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -ldl -lm -lpthread -pthread"
 )
 
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+    add_compile_definitions(RELEASE)
+endif()
+
 add_compile_definitions(
     LUA_COMPAT_ALL
 )
