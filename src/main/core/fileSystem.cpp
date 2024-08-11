@@ -157,8 +157,6 @@ void FileSystem::addArchive(std::string const& path, std::string const& key) {
     }
 
     archiveFiles.push_back(archive);
-
-    loadCompiledScripts = true;
 }
 
 void FileSystem::ArchiveFile::load() {
@@ -224,6 +222,8 @@ void FileSystem::ArchiveFile::load() {
     
     delete [] decompressedData;
     delete [] buffer;
+
+    loadCompiledScripts = true;
 }
 
 u8* FileSystem::readFile(std::string const& path, u64 *size) {

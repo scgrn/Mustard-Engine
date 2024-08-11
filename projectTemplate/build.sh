@@ -65,7 +65,7 @@ elif [ "$config" == "dist" ]; then
 elif [ "$config" == "all" ]; then
     buildDebug
     buildRelease
-    buildAssets
+    buildDist
 else
     echo usage: ./build.sh config
     echo
