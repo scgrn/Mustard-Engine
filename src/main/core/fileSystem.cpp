@@ -136,9 +136,10 @@ b8 FileSystem::startup() {
     for (ArchiveFile archive : archiveFiles) {
         archive.load();
     }
-    
+
     initialized = true;
-    
+    loadCompiledScripts = false;
+
     return true;
 }
 
@@ -156,6 +157,8 @@ void FileSystem::addArchive(std::string const& path, std::string const& key) {
     }
 
     archiveFiles.push_back(archive);
+
+    loadCompiledScripts = true;
 }
 
 void FileSystem::ArchiveFile::load() {

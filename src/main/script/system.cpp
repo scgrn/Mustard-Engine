@@ -67,11 +67,11 @@ static int luaLoadScript(lua_State* luaVM) {
         forceLocal = (bool)lua_toboolean(luaVM, 2);
     }
     if (!forceLocal) {
-#ifdef DEBUG
-        filename = "scripts/" + filename;
-#else
-        filename = "scripts/compiled" + filename + 'c';
-#endif
+        if (fileSystem.loadCompiledScripts) {
+            filename = "scripts/compiled" + filename + 'c';
+        } else {
+            filename = "scripts/" + filename;
+        }
     }
 
     DataObject dataObject(filename.c_str(), forceLocal);

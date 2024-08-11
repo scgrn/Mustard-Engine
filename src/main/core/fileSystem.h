@@ -79,7 +79,9 @@ class FileSystem : public SubSystem {
 
         std::string loadData(std::string key);
         void saveData(std::string key, std::string value);
-    
+
+        bool loadCompiledScripts;
+
     private:
         struct AssetFile {
             std::string path;
