@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 
 **/
 
-//  can't use c++17 std::filesystem because of
+//  can't use c++17 std::filesystem with mingw because of
 //  https://sourceforge.net/p/mingw-w64/bugs/737/
 //  which is hogwash of the highest order.
 
@@ -35,10 +35,17 @@ freely, subject to the following restrictions:
 #include <cstring>
 #include <cassert>
 
+extern "C" {
+#include "../vendor/lua-5.3.5/src/lua.h"
+#include "../vendor/lua-5.3.5/src/lualib.h"
+#include "../vendor/lua-5.3.5/src/lauxlib.h"
+}
+
 #include "../vendor/zlib-1.3.1/zlib.h"
 
 #define CHUNK_SIZE 16384
 
+lua_State* luaVM;
 std::string key;
 
 template<class T>
@@ -178,16 +185,83 @@ int compress(const uint8_t* inputData, uint64_t inputSize, uint8_t** outputData,
     return Z_OK;
 }
 
+//  callback function for lua_dump
+int dumpBytecode(lua_State* luaVM, const void* p, size_t sz, void* ud) {
+    std::ofstream* outFile = static_cast<std::ofstream*>(ud);
+    outFile->write(static_cast<const char*>(p), sz);
+    
+    return 0;
+}
+
+bool compileScript(const std::string& inputFilename, const std::string& outputFilename) {
+    //  load the Lua script
+    if (luaL_loadfile(luaVM, inputFilename.c_str()) != LUA_OK) {
+        std::cerr << "Failed to load script: " << lua_tostring(luaVM, -1) << std::endl;
+        return false;
+    }
+
+    //  extract the directory path from the filename
+    std::filesystem::path filePath(outputFilename);
+    std::filesystem::path directory = filePath.parent_path();
+    
+    //  create all directories if they don't exist
+    if (!std::filesystem::create_directories(directory)) {
+        if (!std::filesystem::exists(directory)) {
+            std::cerr << "Failed to create directories: " << directory << std::endl;
+            return false;
+        }
+    }
+    
+    //  dump the compiled bytecode to a file
+    std::ofstream outputFile(outputFilename, std::ios::binary);
+    if (!outputFile) {
+        std::cerr << "Failed to open output file." << std::endl;
+        return false;
+    }
+    lua_dump(luaVM, dumpBytecode, &outputFile, true);
+
+    outputFile.close();
+
+    return true;
+}
+
 void buildArchive(std::string archivePath) {
     //  read all asset files
     for (const auto& entry : std::filesystem::recursive_directory_iterator(".")) {
         if (!std::filesystem::is_directory(entry.status())) {
-            std::string filename = entry.path().relative_path().string();
-            filename.erase(0, 2);
+            //  exclude empty files (typically .gitkeep files from the project template)
+            if (std::filesystem::file_size(entry) > 0) {
+                std::string filename = entry.path().relative_path().string();
+                filename.erase(0, 2);
 
-            assets.push_back(new Asset(filename));
+                //  exclude any previously compiled lua scripts
+                if (filename.compare(filename.length() - 5, 5, ".luac") != 0) {
+
+                    // compile lua scripts
+                    if (filename.compare(filename.length() - 4, 4, ".lua") == 0) {
+                        const std::string prefix = "scripts/";
+                        
+                        std::string output = filename;
+                        if (output.substr(0, prefix.length()) == prefix) {
+                            output.insert(prefix.length(), "compiled/");
+                        }
+                        output += 'c';
+
+                        std::cout << "Compiling " << filename << std::endl;
+                        if (!compileScript(filename, output)) {
+                            lua_close(luaVM);
+                            exit(1);
+                        }
+                        
+                        filename = output;
+                    }
+
+                    assets.push_back(new Asset(filename));
+                }
+            }
         }
     }
+    std::cout << std::endl;
 
     uint64_t offset = 0;
 
@@ -214,6 +288,7 @@ void buildArchive(std::string archivePath) {
     std::memcpy(buffer + sizeof(uint32_t), manifest.c_str(), manifest.size());
     offset = sizeof(uint32_t) + manifest.size();
     for (const auto asset : assets) {
+        std::cout << "Adding " << asset->filename << std::endl;
         std::memcpy(buffer + offset, asset->data, asset->size);
         offset += asset->size;
         delete asset;
@@ -238,11 +313,15 @@ void buildArchive(std::string archivePath) {
     delete [] outputData;
     delete [] buffer;
 
+    std::cout << std::endl;
+    std::cout << "Total asset files: " << assets.size() << std::endl;
+    std::cout << std::endl;
     std::cout << "Original size: " << toString(sizeDataOriginal) << " bytes" << std::endl;
     std::cout << "Compressed size: " << toString(outputSize) << " bytes" << std::endl;
     std::cout << std::endl;
     std::cout << "Compression ratio: ";
     std::cout << (uint32_t)((float)outputSize / (float)sizeDataOriginal  * 100.0f) << "%" << std::endl;
+    std::cout << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -255,7 +334,13 @@ int main(int argc, char* argv[]) {
         key = argc > 2 ? argv[2] : NULL;
         std::cout << "KEY: " << key << "\n\n";
 
+        luaVM = luaL_newstate();
+        if (!luaVM) {
+           std::cerr << "Error initializing Lua VM";
+        }
+        luaL_openlibs(luaVM);
         buildArchive(argv[1]);
+        lua_close(luaVM);
     }
 
     return 0;
