@@ -38,6 +38,10 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "Dist")
     add_compile_definitions(RELEASE)
 endif()
 
+if (CMAKE_BUILD_TYPE STREQUAL "Dist")
+    add_compile_definitions(DIST)
+endif ()
+
 if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "../library/vendor/SDL2-2.26.5")
 endif()

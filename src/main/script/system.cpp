@@ -68,7 +68,7 @@ static int luaLoadScript(lua_State* luaVM) {
     }
     if (!forceLocal) {
         if (fileSystem.loadCompiledScripts) {
-            filename = "scripts/compiled" + filename + 'c';
+            filename = "scripts/compiled/" + filename + 'c';
         } else {
             filename = "scripts/" + filename;
         }

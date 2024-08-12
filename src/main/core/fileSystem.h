@@ -80,7 +80,7 @@ class FileSystem : public SubSystem {
         std::string loadData(std::string key);
         void saveData(std::string key, std::string value);
 
-        bool loadCompiledScripts;
+        static bool loadCompiledScripts;
 
     private:
         struct AssetFile {
@@ -95,6 +95,7 @@ class FileSystem : public SubSystem {
             DataObject *dataObject;
 
             std::vector<AssetFile> assets;
+            u8* basePtr;
 
             void load();
         };

@@ -21,7 +21,7 @@ class App : public AB::Application {
 
 AB::Application* AB::createApplication() {
 
-#ifndef DEBUG
+#ifdef DIST
 #include "addArchive.cpp"
 #endif
 

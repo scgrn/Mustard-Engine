@@ -39,6 +39,8 @@ namespace AB {
 
 extern FileSystem fileSystem;
 
+bool FileSystem::loadCompiledScripts;
+
 struct ArrayDeleter {
     void operator()(u8* ptr) const {
         delete[] ptr;
@@ -60,7 +62,7 @@ static void crypt(u8* data, u64 size, std::string const& key) {
     }
 }
 
-int decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputSize) {
+i32 decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputSize) {
     i32 ret;
     u32 have;
     z_stream strm;
@@ -113,11 +115,12 @@ int decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputS
         *outputData);
 
     outputSize = outputBuffer.size();
+    LOG("OUPUT SIZE: %d", outputSize);
 
     return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
 
-void zerr(int ret) {
+void zerr(i32 ret) {
     switch (ret) {
         case Z_ERRNO: ERR("I/O error", 0); break;
         case Z_STREAM_ERROR: ERR("Invalid compression level", 0); break;
@@ -169,6 +172,7 @@ void FileSystem::ArchiveFile::load() {
     fseek(file, 0, SEEK_END);
     u64 size = ftell(file);
     fseek(file, 0, SEEK_SET);
+    LOG("File size: %d", size);
 
     u8 tag[3];
     fread(&tag, 1, 3, file);
@@ -195,7 +199,11 @@ void FileSystem::ArchiveFile::load() {
 
     u8* decompressedData;
     u64 decompressedSize;
-    decompress(buffer, bufferSize, &decompressedData, decompressedSize);
+    i32 ret = decompress(buffer, bufferSize, &decompressedData, decompressedSize);
+    if (ret != Z_OK) {
+        zerr(ret);
+    }
+    LOG("Decompressed size: %d", decompressedSize);
 
     dataObject = new DataObject();
     dataObject->setData(decompressedData, decompressedSize);
@@ -203,11 +211,13 @@ void FileSystem::ArchiveFile::load() {
     //  read manifest
     u32 manifestSize;
     std::memcpy(&manifestSize, dataObject->getData(), sizeof(u32));
-    std::string manifest(reinterpret_cast<char*>(dataObject->getData() + 4), manifestSize);
+    std::string manifest(reinterpret_cast<char*>(dataObject->getData() + sizeof(u32)), manifestSize);
     std::stringstream ss(manifest);
-    
+    LOG("Manifest size: %d", manifestSize);
+
     u32 numAssets;
     ss >> numAssets;
+    LOG("Num assets: %d", numAssets);
     for (u32 i = 0; i < numAssets; i++) {
         AssetFile asset;
         
@@ -219,7 +229,9 @@ void FileSystem::ArchiveFile::load() {
 
         assets.push_back(asset);
     }
-    
+
+    basePtr = decompressedData + sizeof(u32) + manifestSize;
+
     delete [] decompressedData;
     delete [] buffer;
 
@@ -252,7 +264,9 @@ u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
                 LOG("Loading asset %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
 
                 //  return pointer to archive's DataObject + file offset
-                u8* data = nullptr;
+                u8* data = archiveFile.basePtr + assetFile.offset;
+                *size = assetFile.size;
+                
                 return data;
             }
         }
