@@ -56,7 +56,7 @@ static void crypt(u8* data, u64 size, std::string const& key) {
     for (u64 i = 0; i < size; i++) {
         data[i] ^= (key.c_str()[keyIndex] ^ 0xAA);
         keyIndex++;
-        if (keyIndex > key.length()) {
+        if (keyIndex >= key.length()) {
             keyIndex = 0;
         }
     }
@@ -135,13 +135,14 @@ void zerr(i32 ret) {
 b8 FileSystem::startup() {
     LOG("FileSystem subsystem startup", 0);
 
+    loadCompiledScripts = false;
+    
     //    load all queued archives
     for (ArchiveFile archive : archiveFiles) {
         archive.load();
     }
 
     initialized = true;
-    loadCompiledScripts = false;
 
     return true;
 }
@@ -195,15 +196,19 @@ void FileSystem::ArchiveFile::load() {
         ERR("Failed to read file: %s", path.c_str());
     }
 
-    crypt(buffer, bufferSize, key);
+    // crypt(buffer, bufferSize, key);
 
     u8* decompressedData;
     u64 decompressedSize;
+/*
     i32 ret = decompress(buffer, bufferSize, &decompressedData, decompressedSize);
     if (ret != Z_OK) {
         zerr(ret);
     }
     LOG("Decompressed size: %d", decompressedSize);
+*/
+    decompressedData = buffer;
+    decompressedSize = bufferSize;
 
     dataObject = new DataObject();
     dataObject->setData(decompressedData, decompressedSize);
@@ -225,7 +230,7 @@ void FileSystem::ArchiveFile::load() {
         ss >> asset.size;
         ss >> asset.offset;
 
-        LOG("%s %d %d", asset.path, asset.size, asset.offset);
+        LOG("%s %d %d", asset.path.c_str(), asset.size, asset.offset);
 
         assets.push_back(asset);
     }
@@ -233,9 +238,9 @@ void FileSystem::ArchiveFile::load() {
     basePtr = decompressedData + sizeof(u32) + manifestSize;
 
     delete [] decompressedData;
-    delete [] buffer;
+    // delete [] buffer;
 
-    loadCompiledScripts = true;
+    FileSystem::loadCompiledScripts = true;
 }
 
 u8* FileSystem::readFile(std::string const& path, u64 *size) {
@@ -259,7 +264,10 @@ u8* FileSystem::readFile(std::string const& path, u64 *size) {
 
 u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
     for (ArchiveFile archiveFile : archiveFiles) {
+        LOG("archiveFile.assets.size(): %d", archiveFile.assets.size());
+        LOG("Searching archive file %s", archiveFile.path.c_str());
         for (AssetFile assetFile : archiveFile.assets) {
+            LOG("Comparing %s to %s", path.c_str(), assetFile.path.c_str());
             if (assetFile.path == path) {
                 LOG("Loading asset %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
 

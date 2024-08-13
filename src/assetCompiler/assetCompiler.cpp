@@ -80,7 +80,7 @@ void crypt(uint8_t *data, uint32_t size, std::string const& key) {
     for (uint32_t i = 0; i < size; i++) {
         data[i] ^= (key.c_str()[keyIndex] ^ 0xAA);
         keyIndex++;
-        if (keyIndex > key.length()) {
+        if (keyIndex >= key.length()) {
             keyIndex = 0;
         }
     }
@@ -297,9 +297,13 @@ void buildArchive(std::string archivePath) {
     uint8_t* outputData;
     uint32_t outputSize;
 
-    compress(buffer, offset, &outputData, outputSize, Z_DEFAULT_COMPRESSION);
+    // compress(buffer, offset, &outputData, outputSize, Z_DEFAULT_COMPRESSION);
+    
+    //  TODO: remove these two lines! test without compression.
+    outputData = buffer;
+    outputSize = offset;
 
-    crypt(outputData, outputSize, key);
+    // crypt(outputData, outputSize, key);
 
     //  write archive file
     std::ofstream file(archivePath, std::ios::binary);
@@ -310,7 +314,11 @@ void buildArchive(std::string archivePath) {
     file.write(reinterpret_cast<const char*>(outputData), outputSize);
     file.close();
 
-    delete [] outputData;
+    std::cout << std::endl;
+    std::cout << "Manifest:" << std::endl << std::endl;
+    std::cout << manifest << std::endl << std::endl;
+    
+    //delete [] outputData;
     delete [] buffer;
 
     std::cout << std::endl;
