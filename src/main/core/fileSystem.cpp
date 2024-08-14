@@ -138,7 +138,7 @@ b8 FileSystem::startup() {
     loadCompiledScripts = false;
     
     //    load all queued archives
-    for (ArchiveFile archive : archiveFiles) {
+    for (auto& archive : archiveFiles) {
         archive.load();
     }
 
@@ -160,7 +160,7 @@ void FileSystem::addArchive(std::string const& path, std::string const& key) {
         archive.load();
     }
 
-    archiveFiles.push_back(archive);
+    archiveFiles.push_back(std::move(archive));
 }
 
 void FileSystem::ArchiveFile::load() {
@@ -263,11 +263,8 @@ u8* FileSystem::readFile(std::string const& path, u64 *size) {
 }
 
 u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
-    for (ArchiveFile archiveFile : archiveFiles) {
-        LOG("archiveFile.assets.size(): %d", archiveFile.assets.size());
-        LOG("Searching archive file %s", archiveFile.path.c_str());
-        for (AssetFile assetFile : archiveFile.assets) {
-            LOG("Comparing %s to %s", path.c_str(), assetFile.path.c_str());
+    for (auto& archiveFile : archiveFiles) {
+        for (auto& assetFile : archiveFile.assets) {
             if (assetFile.path == path) {
                 LOG("Loading asset %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
 

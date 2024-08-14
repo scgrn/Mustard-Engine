@@ -23,7 +23,6 @@ freely, subject to the following restrictions:
 **/
 
 #include "../pch.h"
-
 #include "shader.h"
 
 #include "../core/log.h"
@@ -42,16 +41,20 @@ void Shader::load(std::string const& filename) {
 
     DataObject vertexDataObject((filename + ".vert").c_str());
     std::string vertSource = std::string((const char*)vertexDataObject.getData(), vertexDataObject.getSize());
+    vertSource += '\10';
+    vertSource += '\0';
 
     DataObject fragmentDataObject((filename + ".frag").c_str());
     std::string fragSource = std::string((const char*)fragmentDataObject.getData(), fragmentDataObject.getSize());
+    fragSource += '\10';
+    fragSource += '\0';
 
     //  compile vertex shader
     GLuint vertexShader;
     CALL_GL(vertexShader = glCreateShader(GL_VERTEX_SHADER));
     vertSource = getHeader() + vertSource;
     const char* vertexShaderSource = vertSource.c_str();
-    //LOG("VERTEX SHADER SOURCE: %s", vertexShaderSource);
+    // LOG("VERTEX SHADER SOURCE: %s", vertexShaderSource);
 
     CALL_GL(glShaderSource(vertexShader, 1, &vertexShaderSource, NULL));
     CALL_GL(glCompileShader(vertexShader));
@@ -69,7 +72,7 @@ void Shader::load(std::string const& filename) {
     CALL_GL(fragmentShader = glCreateShader(GL_FRAGMENT_SHADER));
     fragSource = getHeader() + fragSource;
     const char* fragmentShaderSource = fragSource.c_str();
-    //LOG("FRAGMENT SHADER SOURCE: %s", fragmentShaderSource);
+    // LOG("FRAGMENT SHADER SOURCE: %s", fragmentShaderSource);
 
     CALL_GL(glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL));
     CALL_GL(glCompileShader(fragmentShader));
