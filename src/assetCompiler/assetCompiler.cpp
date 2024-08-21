@@ -45,6 +45,9 @@ extern "C" {
 
 #define CHUNK_SIZE 16384
 
+#undef ADD_NULL_TERMINATOR
+#define COMPILE_SCRIPTS
+
 lua_State* luaVM;
 std::string key;
 
@@ -99,11 +102,22 @@ struct Asset {
         size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
+#ifdef ADD_NULL_TERMINATOR
+        data = new uint8_t[size + 1];
+        uint32_t bytesRead = fread(data, 1, size, file);
+        if (bytesRead != size) {
+            std::cout << "Size mismatch!" << std::endl;
+        }
+        data[size] = '\0';
+        size++;
+#else
         data = new uint8_t[size];
         uint32_t bytesRead = fread(data, 1, size, file);
         if (bytesRead != size) {
             std::cout << "Size mismatch!" << std::endl;
         }
+#endif
+
         fclose(file);
     }
 
@@ -236,7 +250,7 @@ void buildArchive(std::string archivePath) {
 
                 //  exclude any previously compiled lua scripts
                 if (filename.compare(filename.length() - 5, 5, ".luac") != 0) {
-
+#ifdef COMPILE_SCRIPTS
                     // compile lua scripts
                     if (filename.compare(filename.length() - 4, 4, ".lua") == 0) {
                         const std::string prefix = "scripts/";
@@ -255,7 +269,7 @@ void buildArchive(std::string archivePath) {
                         
                         filename = output;
                     }
-
+#endif
                     assets.push_back(new Asset(filename));
                 }
             }
