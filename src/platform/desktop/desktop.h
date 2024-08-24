@@ -51,6 +51,11 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+#ifdef WIN32
+    freopen("log.txt", "a+", stdout);
+    freopen("log.txt", "a+", stderr);
+#endif
+
     //    this has to be called before AB::startup() so we have a chance to add archives
     auto app = AB::createApplication();
 
