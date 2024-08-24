@@ -39,25 +39,21 @@ void Shader::load(std::string const& filename) {
 
     LOG("Loading shader <%s>", filename.c_str());
 
-    DataObject vertexDataObject((filename + ".vert").c_str());
-    std::string vertSource = std::string((const char*)vertexDataObject.getData(), vertexDataObject.getSize());
-    vertSource += '\10';
-    vertSource += '\0';
+    DataObject* vertexDataObject = new DataObject((filename + ".vert").c_str());
+    std::string vertexSource = getHeader() + std::string((const char*)vertexDataObject->getData(), vertexDataObject->getSize());
+    LOG("VERTEX SHADER SOURCE: %s", vertexSource.c_str());
 
-    DataObject fragmentDataObject((filename + ".frag").c_str());
-    std::string fragSource = std::string((const char*)fragmentDataObject.getData(), fragmentDataObject.getSize());
-    fragSource += '\10';
-    fragSource += '\0';
+    DataObject* fragmentDataObject = new DataObject((filename + ".frag").c_str());
+    std::string fragmentSource = getHeader() + std::string((const char*)fragmentDataObject->getData(), fragmentDataObject->getSize());
+    LOG("FRAGMENT SHADER SOURCE: %s", fragmentSource.c_str());
 
     //  compile vertex shader
     GLuint vertexShader;
     CALL_GL(vertexShader = glCreateShader(GL_VERTEX_SHADER));
-    vertSource = getHeader() + vertSource;
-    const char* vertexShaderSource = vertSource.c_str();
-    // LOG("VERTEX SHADER SOURCE: %s", vertexShaderSource);
-
-    CALL_GL(glShaderSource(vertexShader, 1, &vertexShaderSource, NULL));
-    CALL_GL(glCompileShader(vertexShader));
+    
+    const char* vertexSourceC = vertexSource.c_str();
+    CALL_GL(glShaderSource(vertexShader, 1, &vertexSourceC, NULL));
+    CALL_GL(glCompileShader(vertexShader)); // here
 
     GLint success;
     GLchar infoLog[INFO_LOG_LENGTH];
@@ -70,11 +66,9 @@ void Shader::load(std::string const& filename) {
     // compile fragment shader
     GLuint fragmentShader;
     CALL_GL(fragmentShader = glCreateShader(GL_FRAGMENT_SHADER));
-    fragSource = getHeader() + fragSource;
-    const char* fragmentShaderSource = fragSource.c_str();
-    // LOG("FRAGMENT SHADER SOURCE: %s", fragmentShaderSource);
 
-    CALL_GL(glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL));
+    const char* fragmentSourceC = fragmentSource.c_str();
+    CALL_GL(glShaderSource(fragmentShader, 1, &fragmentSourceC, NULL));
     CALL_GL(glCompileShader(fragmentShader));
 
     CALL_GL(glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success));
@@ -106,10 +100,12 @@ void Shader::load(std::string const& filename) {
         CALL_GL(glUniform1iv(textureSamplersLoc, 16, textureSamplers));
     }
 
-
     CALL_GL(glDeleteShader(vertexShader));
     CALL_GL(glDeleteShader(fragmentShader));
     
+    delete vertexDataObject;
+    delete fragmentDataObject;
+
     LOG("Shader compilation successful.", 0);
 }
 
@@ -178,7 +174,7 @@ std::string Shader::getHeader() {
         "#version 300 es\n\n"
         "// precision mediump float\n"
         "// precision lowp int\n\n"
-        "#line -1\n";
+        "#line 0\n";
 #else
     header =
         "#version 420 core\n\n"
