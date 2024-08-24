@@ -72,8 +72,12 @@ if(WIN32)
         target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
     endif()
     
-    # library must come before SDL
-    target_link_libraries(${PROJECT_NAME} PRIVATE libMustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}.a SDL2::SDL2)
+    if (CMAKE_BUILD_TYPE STREQUAL "Dist")    
+        target_link_libraries(${PROJECT_NAME} PRIVATE libMustard-${CMAKE_HOST_SYSTEM_NAME}-Release.a SDL2::SDL2)
+    else()
+        # library must come before SDL
+        target_link_libraries(${PROJECT_NAME} PRIVATE libMustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}.a SDL2::SDL2)
+    endif()
 else()
     # tells GCC to link as an executable rather than shared object
     target_link_options(${PROJECT_NAME} PRIVATE -no-pie)
