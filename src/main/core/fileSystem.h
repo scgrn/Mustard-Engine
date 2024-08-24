@@ -51,11 +51,13 @@ class DataObject {
 
         ~DataObject();
 
-        u8* getData() { return data.get(); } 
+        // u8* getData() { return data.get(); }
+        u8* getData() { return data; }
         u64 getSize() { return size; }
 
     protected:
-        std::shared_ptr<u8> data;
+        // std::shared_ptr<u8> data;
+        u8* data;
         u64 size;
 
     private:
@@ -84,6 +86,8 @@ class FileSystem : public SubSystem {
 
     private:
         struct AssetFile {
+            void dump(u8* basePtr);
+
             std::string path;
             u64 offset;
             u64 size;
@@ -98,6 +102,7 @@ class FileSystem : public SubSystem {
             u8* basePtr;
 
             void load();
+            ~ArchiveFile() { delete dataObject; }
         };
         
         std::vector<ArchiveFile> archiveFiles;

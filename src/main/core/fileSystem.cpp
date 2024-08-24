@@ -162,6 +162,14 @@ void FileSystem::addArchive(std::string const& path, std::string const& key) {
 
     archiveFiles.push_back(std::move(archive));
 }
+void FileSystem::AssetFile::dump(u8* basePtr) {
+    std::cout << std::endl << "["<< path << "] (" << size << " bytes):" << std::endl << std::endl;
+    u8* data = basePtr + offset;
+    for (u64 i = 0; i < size; i++) {
+        std::cout << data[i];
+    }
+    std::cout << std::endl << std::endl;
+}
 
 void FileSystem::ArchiveFile::load() {
     LOG("Loading archive: %s", path.c_str());
@@ -241,6 +249,16 @@ void FileSystem::ArchiveFile::load() {
     // delete [] buffer;
 
     FileSystem::loadCompiledScripts = true;
+#ifdef DEBUG
+    for (auto& assetFile : assets) {
+        if (assetFile.path.compare(assetFile.path.size()-5, 5, ".vert") == 0 ||
+            assetFile.path.compare(assetFile.path.size()-5, 5, ".frag") == 0 || 
+            assetFile.path.compare(assetFile.path.size()-4, 4, ".fnt") == 0) {
+
+            assetFile.dump(basePtr);
+        }
+    }
+#endif
 }
 
 u8* FileSystem::readFile(std::string const& path, u64 *size) {
@@ -269,22 +287,43 @@ u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
                 LOG("Loading asset %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
 
                 //  return pointer to archive's DataObject + file offset
-                u8* data = archiveFile.basePtr + assetFile.offset;
+                LOG("Base: %p Offset: %d Size: %d", archiveFile.basePtr, assetFile.offset, assetFile.size);
+
+                //u8* data = archiveFile.basePtr + assetFile.offset;
                 *size = assetFile.size;
                 
+                u8* data = new u8[*size];
+                std::memcpy(data, archiveFile.basePtr + assetFile.offset, *size);
+/*
+                if (path.compare(path.size()-5, 5, ".vert") == 0 ||
+                    path.compare(path.size()-5, 5, ".frag") == 0) {
+
+                    // std::string dataStr = std::string((const char*)data, *size);
+                    // std::cout << dataStr << std::endl;
+
+                    std::cout << std::endl << path << ":" << std::endl << std::endl;
+                    for (u64 i = 0; i < *size; i++) {
+                        std::cout << data[i];
+                    }
+                    std::cout << std::endl << std::endl;
+                }
+*/
                 return data;
             }
         }
     }
-    size = 0;
+
+    //  not found
+    *size = 0;
     return 0;
 }
 
 DataObject::DataObject(const char* path, b8 forceLocal) {
     if (forceLocal) {
         LOG("Loading %s from local filesystem...", path);
-        u8* rawData = fileSystem.readFile(path, &size);
-        data = std::shared_ptr<u8>(rawData);
+        // u8* rawData = fileSystem.readFile(path, &size);
+        // data = std::shared_ptr<u8>(rawData);
+        data = fileSystem.readFile(path, &size);
         return;
     }
 
@@ -292,14 +331,16 @@ DataObject::DataObject(const char* path, b8 forceLocal) {
     if (archiveData == nullptr) {
 // #ifdef DEBUG
         LOG("File <%s> not found in archive, loading from local filesystem", path);
-        u8* fileData = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
-        data = std::shared_ptr<u8>(fileData, ArrayDeleter());
+        // u8* fileData = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
+        // data = std::shared_ptr<u8>(fileData, ArrayDeleter());
+        data = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
         return;
 // #endif
         std::string filename = path;
         ERR("File not found: %s", filename.c_str());
     } else {
-        data = std::shared_ptr<u8>(archiveData, noOpDeleter);
+        // data = std::shared_ptr<u8>(archiveData, noOpDeleter);
+        data = archiveData;
     }
 }
 
@@ -307,13 +348,16 @@ void DataObject::setData(u8* newData, u64 newSize) {
     if (data) {
         // delete[] data;
     }
-    data = std::shared_ptr<u8>(new u8[newSize], ArrayDeleter());
-    std::memcpy(data.get(), newData, newSize);
+    // data = std::shared_ptr<u8>(new u8[newSize], ArrayDeleter());
+    // std::memcpy(data.get(), newData, newSize);
+    data = new u8[newSize];
+    std::memcpy(data, newData, newSize);
     size = newSize;
 }
 
 DataObject::~DataObject() {
-    // delete [] data;
+    //  TODO: need flag for loaded fromarchive
+    delete [] data;
 }
 
 std::string FileSystem::loadData(std::string key) {
