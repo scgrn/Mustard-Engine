@@ -43,7 +43,7 @@ void redirectLog(std::streambuf* dest) { std::clog.rdbuf(dest); }
 void error(int line, const char* file, const char* msg, ...) {
     va_list args;
     va_start(args, msg);
-    char szBuf[1024];
+    char szBuf[4096];
     vsprintf(szBuf, msg, args);
     va_end(args);
 
@@ -57,7 +57,7 @@ void error(int line, const char* file, const char* msg, ...) {
 void log(int line, const char* file, const char* msg, ...) {
     va_list args;
     va_start(args, msg);
-    char szBuf[1024];
+    char szBuf[4096];
     vsprintf(szBuf, msg, args);
     va_end(args);
 
