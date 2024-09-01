@@ -34,11 +34,11 @@ namespace AB {
 class Palette : public Asset {
     public:
         struct Color {
-            uint8_t r, g, b;
+            u8 r, g, b;
         };
         
         struct LABColor {
-            float L, a, b;
+            f32 L, a, b;
         };
         
         virtual void load(std::string const& filename);
@@ -50,7 +50,7 @@ class Palette : public Asset {
         
     private:
         LABColor RGBtoLAB(Color color);
-        void findClosestColors(Color target, uint32_t &closest, uint32_t &secondClosest); 
+        void findClosestColors(Color target, u32 &closest, u32 &secondClosest); 
     
 };
 

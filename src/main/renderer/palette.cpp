@@ -60,18 +60,18 @@ void Palette::load(std::string const& filename) {
         LABpalette.push_back(RGBtoLAB(palette[i]));
     }
     
-    for (uint8_t r = 0; r < 64; r++) {
-        for (uint8_t g = 0; g < 64; g++) {
-            for (uint8_t b = 0; b < 64; b++) {
-                uint32_t closest, secondClosest;
-                findClosestColors(Color{(uint8_t)(r * 4), (uint8_t)(g * 4), (uint8_t)(b * 4)}, closest, secondClosest);
+    for (u8 r = 0; r < 64; r++) {
+        for (u8 g = 0; g < 64; g++) {
+            for (u8 b = 0; b < 64; b++) {
+                u32 closest, secondClosest;
+                findClosestColors(Color{(u8)(r * 4), (u8)(g * 4), (u8)(b * 4)}, closest, secondClosest);
                 
                 // map RGB to UV
-                int i = r + (g * 64) + (b * 64 * 64);
-                int u = i / 512;
-                int v = i % 512;
+                i32 i = r + (g * 64) + (b * 64 * 64);
+                i32 u = i / 512;
+                i32 v = i % 512;
                 
-                int offset = ((v * 512) + u) * 4;
+                i32 offset = ((v * 512) + u) * 4;
                 closestColorImage.data[offset + 0] = palette[closest].r;
                 closestColorImage.data[offset + 1] = palette[closest].g;
                 closestColorImage.data[offset + 2] = palette[closest].b;
@@ -115,9 +115,9 @@ void Palette::release() {
 //    goinked from http://www.easyrgb.com/en/math.php
 Palette::LABColor Palette::RGBtoLAB(Color color) {
     //    convert RGB to XYZ
-    float r = (color.r / 255.0f);
-    float g = (color.g / 255.0f);
-    float b = (color.b / 255.0f);
+    f32 r = (color.r / 255.0f);
+    f32 g = (color.g / 255.0f);
+    f32 b = (color.b / 255.0f);
 
     if (r > 0.04045f) {
         r = pow(((r + 0.055f) / 1.055f), 2.4f);
@@ -140,9 +140,9 @@ Palette::LABColor Palette::RGBtoLAB(Color color) {
     }
     b *= 100.0f;
     
-    float x = r * 0.4124f + g * 0.3576f + b * 0.1805f;
-    float y = r * 0.2126f + g * 0.7152f + b * 0.0722f;
-    float z = r * 0.0193f + g * 0.1192f + b * 0.9505f;
+    f32 x = r * 0.4124f + g * 0.3576f + b * 0.1805f;
+    f32 y = r * 0.2126f + g * 0.7152f + b * 0.0722f;
+    f32 z = r * 0.0193f + g * 0.1192f + b * 0.9505f;
     
     //    convert XYZ to CIE-L*ab
     LABColor lab;
@@ -177,22 +177,22 @@ Palette::LABColor Palette::RGBtoLAB(Color color) {
     return lab;
 }
 
-void Palette::findClosestColors(Color target, uint32_t &closest, uint32_t &secondClosest) {    
+void Palette::findClosestColors(Color target, u32 &closest, u32 &secondClosest) {    
     closest = 0;
     secondClosest = 0;
     
     //    squared distance
-    float closestDistance = FLT_MAX;
-    float secondClosestDistance = FLT_MAX;
+    f32 closestDistance = FLT_MAX;
+    f32 secondClosestDistance = FLT_MAX;
     
     LABColor color = RGBtoLAB(target);
     
     for (u64 i = 0; i < palette.size(); i++) {
-        float L = abs(LABpalette[i].L - color.L);
-        float a = abs(LABpalette[i].a - color.a);
-        float b = abs(LABpalette[i].b - color.b);
+        f32 L = abs(LABpalette[i].L - color.L);
+        f32 a = abs(LABpalette[i].a - color.a);
+        f32 b = abs(LABpalette[i].b - color.b);
         
-        float distance = (L * L + a * a + b * b);
+        f32 distance = (L * L + a * a + b * b);
         
         if (distance < closestDistance) {
             secondClosest = closest;
