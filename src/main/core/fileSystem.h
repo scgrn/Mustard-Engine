@@ -44,22 +44,35 @@ namespace AB {
 
 class DataObject {
     public:
-        DataObject(const char* path, b8 forceLocal = false);
-        DataObject() : data(nullptr), size(0) {}
+        DataObject() : size(0), data(nullptr) {}
+        DataObject(u64 size) : size(size), data(new u8[size]) {}
 
-        void setData(u8* newData, u64 newSize);
+        //  move constructor and assignment
+        DataObject(DataObject&& other) noexcept : size(other.size), data(std::move(other.data)) {
+            other.size = 0;
+        }
+        
+        DataObject& operator=(DataObject&& other) noexcept {
+            if (this != &other) {
+                size = other.size;
+                data = std::move(other.data);
+                other.size = 0;
+            }
+            return *this;
+        }
 
-        ~DataObject();
+        //  deleted copy constructor and copy assignment
+        DataObject(const DataObject&) = delete;
+        DataObject& operator=(const DataObject&) = delete;
+    
 
-        // u8* getData() { return data.get(); }
-        u8* getData() { return data; }
-        u64 getSize() { return size; }
+        u8* getData() const { return data.get(); }
+        u64 getSize() const { return size; }
 
     protected:
-        // std::shared_ptr<u8> data;
-        u8* data;
+        std::unique_ptr<u8[]> data;
         u64 size;
-
+    
     private:
         static void noOpDeleter(u8* p) {}
 
@@ -71,13 +84,9 @@ class FileSystem : public SubSystem {
         void shutdown() override;
         
         //    this is the only function that should be called before engine startup
-        void addArchive(std::string const& path, std::string const& key = "");
+        void addArchive(std::string const& filename, std::string const& key = "");
 
-        //  caller is responsible to delete() returned pointer
-        u8* readFile(std::string const& path, u64 *size);
-
-        //  returned pointer should not be deleted
-        u8* readFromArchive(std::string const& path, u64 *size);
+        DataObject loadAsset(std::string const& filename);
 
         std::string loadData(std::string key);
         void saveData(std::string key, std::string value);
@@ -85,26 +94,22 @@ class FileSystem : public SubSystem {
         static bool loadCompiledScripts;
 
     private:
-        struct AssetFile {
-            void dump(u8* basePtr);
-
-            std::string path;
-            u64 offset;
-            u64 size;
-        };
-
         struct ArchiveFile {
             std::string path;
             std::string key;
-            DataObject *dataObject;
 
-            std::vector<AssetFile> assets;
-            u8* basePtr;
+            // filename -> (offset, size)
+            std::unordered_map<std::string, std::pair<u64, u64>> assets;
+
+            std::unique_ptr<u8[]> data;
+            u64 size;
 
             void load();
-            ~ArchiveFile() { delete dataObject; }
         };
-        
+
+        DataObject loadAssetFromDisk(const std::string& filename);
+        DataObject loadAssetFromArchive(const ArchiveFile& archive, const std::string& filename);
+
         std::vector<ArchiveFile> archiveFiles;
 };
 
