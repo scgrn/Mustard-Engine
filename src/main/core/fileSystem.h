@@ -70,8 +70,8 @@ class DataObject {
         u64 getSize() const { return size; }
 
     protected:
-        std::unique_ptr<u8[]> data;
         u64 size;
+        std::unique_ptr<u8[]> data;
     
     private:
         static void noOpDeleter(u8* p) {}
