@@ -245,11 +245,13 @@ void FileSystem::ArchiveFile::load() {
     FileSystem::loadCompiledScripts = true;
 }
 
-DataObject FileSystem::loadAsset(const std::string& filename) {
-    for (const auto& archive : archiveFiles) {
-        auto asset = archive.assets.find(filename);
-        if (asset != archive.assets.end()) {
-            return loadAssetFromArchive(archive, filename);
+DataObject FileSystem::loadAsset(const std::string& filename, b8 forceLocal) {
+    if (!forceLocal) {
+        for (const auto& archive : archiveFiles) {
+            auto asset = archive.assets.find(filename);
+            if (asset != archive.assets.end()) {
+                return loadAssetFromArchive(archive, filename);
+            }
         }
     }
 
@@ -277,89 +279,6 @@ DataObject FileSystem::loadAssetFromArchive(const ArchiveFile& archive, const st
     std::memcpy(dataObject.getData(), archive.data.get() + offset, size);
     return dataObject;
 }
-
-/*
-u8* FileSystem::readFile(std::string const& path, u64 *size) {
-    FILE *file = fopen(path.c_str(), "rb");
-    if (!file) {
-        LOG("ERROR LOADING FILE! %s", path.c_str());
-        *size = 0;
-        return 0;
-    }
-
-    fseek(file, 0, SEEK_END);
-    *size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    u8* data = new u8[*size];
-    fread(data, 1, *size, file);
-    fclose(file);
-
-    return data;
-}
-
-u8* FileSystem::readFromArchive(std::string const& path, u64 *size) {
-    for (auto& archiveFile : archiveFiles) {
-        for (auto& assetFile : archiveFile.assets) {
-            if (assetFile.path == path) {
-                LOG("Loading asset %s from archive %s", assetFile.path.c_str(), archiveFile.path.c_str());
-
-                //  return pointer to archive's DataObject + file offset
-                LOG("Base: %p Offset: %d Size: %d", archiveFile.basePtr, assetFile.offset, assetFile.size);
-
-                u8* data = archiveFile.basePtr + assetFile.offset;
-                *size = assetFile.size;
-
-                return data;
-            }
-        }
-    }
-
-    //  not found
-    *size = 0;
-    return 0;
-}
-
-DataObject::DataObject(const char* path, b8 forceLocal) {
-    if (forceLocal) {
-        LOG("Loading %s from local filesystem...", path);
-        u8* rawData = fileSystem.readFile(path, &size);
-        data = std::shared_ptr<u8[]>(rawData);
-
-        return;
-    }
-
-    u8* archiveData = fileSystem.readFromArchive(path, &size);
-    if (archiveData == nullptr) {
-// #ifdef DEBUG
-        LOG("File <%s> not found in archive, loading from local filesystem", path);
-        u8* fileData = fileSystem.readFile(("assets/" + std::string(path)).c_str(), &size);
-        data = std::shared_ptr<u8[]>(fileData, ArrayDeleter());
-        return;
-// #endif
-        std::string filename = path;
-        ERR("File not found: %s", filename.c_str());
-    } else {
-        data = std::shared_ptr<u8[]>(archiveData, noOpDeleter);
-    }
-}
-
-void DataObject::setData(u8* newData, u64 newSize) {
-    if (data) {
-        // delete[] data;
-    }
-    data = std::shared_ptr<u8[]>(new u8[newSize], ArrayDeleter());
-    std::memcpy(data.get(), newData, newSize);
-    //data = new u8[newSize];
-    //std::memcpy(data, newData, newSize);
-    size = newSize;
-}
-
-DataObject::~DataObject() {
-    //  TODO: need flag for loaded fromarchive
-    // delete [] data;
-}
-*/
 
 std::string FileSystem::loadData(std::string key) {
     std::string value;

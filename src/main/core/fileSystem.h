@@ -87,7 +87,7 @@ class FileSystem : public SubSystem {
         //    this is the only function that should be called before engine startup
         void addArchive(std::string const& filename, std::string const& key = "");
 
-        DataObject loadAsset(std::string const& filename);
+        DataObject loadAsset(std::string const& filename, b8 forceLocal = false);
 
         std::string loadData(std::string key);
         void saveData(std::string key, std::string value);
