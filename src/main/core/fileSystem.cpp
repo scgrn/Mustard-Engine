@@ -199,18 +199,18 @@ void FileSystem::ArchiveFile::load() {
     }
     
     u32 bufferSize = size - 3;
-    u8* buffer = new u8[bufferSize];
-    u32 bytesRead = fread(buffer, 1, bufferSize, file);
+    data = std::make_unique<u8[]>(bufferSize);
+    u64 bytesRead = fread(data.get(), 1, bufferSize, file);
+    fclose(file);
     if (bytesRead != bufferSize) {
-        delete[] buffer;
-        fclose(file);
+        data.reset();
         ERR("Failed to read file: %s", path.c_str());
     }
 
     // crypt(buffer, bufferSize, key);
 
-    u8* decompressedData;
-    u64 decompressedSize;
+    u8* decompressedData = data.get();
+    u64 decompressedSize = bufferSize;
 /*
     i32 ret = decompress(buffer, bufferSize, &decompressedData, decompressedSize);
     if (ret != Z_OK) {
@@ -218,16 +218,12 @@ void FileSystem::ArchiveFile::load() {
     }
     LOG("Decompressed size: %d", decompressedSize);
 */
-    decompressedData = buffer;
-    decompressedSize = bufferSize;
-
-    dataObject = new DataObject();
-    dataObject->setData(decompressedData, decompressedSize);
 
     //  read manifest
     u32 manifestSize;
-    std::memcpy(&manifestSize, dataObject->getData(), sizeof(u32));
-    std::string manifest(reinterpret_cast<char*>(dataObject->getData() + sizeof(u32)), manifestSize);
+    std::memcpy(&manifestSize, decompressedData, sizeof(u32));
+    
+    std::string manifest(reinterpret_cast<char*>(decompressedData + sizeof(u32)), manifestSize);
     std::stringstream ss(manifest);
     LOG("Manifest size: %d", manifestSize);
 
@@ -235,48 +231,33 @@ void FileSystem::ArchiveFile::load() {
     ss >> numAssets;
     LOG("Num assets: %d", numAssets);
     for (u32 i = 0; i < numAssets; i++) {
-        AssetFile asset;
-        
-        ss >> asset.path;
-        ss >> asset.size;
-        ss >> asset.offset;
+        std::string path;
+        u64 size, offset;
+        ss >> path;
+        ss >> size;
+        ss >> offset;
 
-        LOG("%s %d %d", asset.path.c_str(), asset.size, asset.offset);
+        LOG("%s %d %d", path.c_str(), size, offset);
 
-        assets.push_back(asset);
+        assets[path] = {offset, size};
     }
-
-    basePtr = decompressedData + sizeof(u32) + manifestSize;
-
-    delete [] decompressedData;
-    // delete [] buffer;
 
     FileSystem::loadCompiledScripts = true;
-#ifdef DEBUG
-    for (auto& assetFile : assets) {
-        if (assetFile.path.compare(assetFile.path.size()-5, 5, ".vert") == 0 ||
-            assetFile.path.compare(assetFile.path.size()-5, 5, ".frag") == 0 || 
-            assetFile.path.compare(assetFile.path.size()-4, 4, ".fnt") == 0) {
-
-            assetFile.dump(basePtr);
-        }
-    }
-#endif
 }
 
-DataObject Filesystem::loadAsset(const std::string& filename) {
-    for (const auto& archive : archives) {
-        auto asset = archive.index.find(filename);
-        if (asset != archive.index.end()) {
+DataObject FileSystem::loadAsset(const std::string& filename) {
+    for (const auto& archive : archiveFiles) {
+        auto asset = archive.assets.find(filename);
+        if (asset != archive.assets.end()) {
             return loadAssetFromArchive(archive, filename);
         }
     }
 
-    // If not found in any archives, load from disk
+    //  if not found in any archives, load from disk
     return loadAssetFromDisk(filename);
 }
 
-DataObject Filesystem::loadAssetFromDisk(const std::string& filename) {
+DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
     if (!file) return DataObject();
 
@@ -284,16 +265,16 @@ DataObject Filesystem::loadAssetFromDisk(const std::string& filename) {
     file.seekg(0, std::ios::beg);
 
     DataObject dataObject(fileSize);
-    file.read(dataObject.getData(), fileSize);
+    file.read(reinterpret_cast<char*>(dataObject.getData()), fileSize);
     file.close();
 
     return dataObject;
 }
 
-DataObject Filesystem::loadAssetFromArchive(const ArchiveFile& archive, const std::string& filename) {
-    const auto& [start, size] = archive.index.at(filename);
+DataObject FileSystem::loadAssetFromArchive(const ArchiveFile& archive, const std::string& filename) {
+    const auto& [offset, size] = archive.assets.at(filename);
     DataObject dataObject(size);
-    std::memcpy(dataObject.getData(), archive.data.get() + start, size);
+    std::memcpy(dataObject.getData(), archive.data.get() + offset, size);
     return dataObject;
 }
 

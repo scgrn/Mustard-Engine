@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <memory>
 
 #include "../types.h"
