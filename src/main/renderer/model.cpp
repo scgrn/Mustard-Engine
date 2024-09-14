@@ -28,6 +28,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern FileSystem fileSystem;
+
 Mat4 Model::loadTransform = Mat4();
 
 void Model::setLoadTransform(Mat4 transform) {
@@ -43,7 +45,7 @@ bool Model::loadOBJ(std::string const& filename,
     std::vector<Vec2> &outUVs,
     std::vector<Vec3> &outNormals) {
 
-    DataObject dataObject(filename.c_str());
+    DataObject dataObject = fileSystem.loadAsset(filename);
 
     std::vector<Vec3> tempVertices;
     std::vector<Vec3> tempNormals;

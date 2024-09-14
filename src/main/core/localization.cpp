@@ -32,7 +32,9 @@ freely, subject to the following restrictions:
 #include "../script/script.h"
 
 namespace AB {
-    
+
+extern FileSystem fileSystem;
+
 std::map<std::string, std::string> strings[LAST];
 Language language;
 
@@ -42,7 +44,7 @@ void initLocalization(std::string const& filename) {
     //  read string table
     LOG("Loading string table from <%s>", filename.c_str());
 
-    AB::DataObject stringDataObject(filename.c_str());
+    AB::DataObject stringDataObject = fileSystem.loadAsset(filename);
     std::string stringData = std::string((const char*)stringDataObject.getData(), stringDataObject.getSize());
 
     std::istringstream ss(stringData);

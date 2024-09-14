@@ -32,10 +32,12 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern FileSystem fileSystem;
+
 void Palette::load(std::string const& filename) {
     LOG("Loading palette <%s>", filename.c_str());
 
-    DataObject dataObject(filename.c_str());
+    DataObject dataObject = fileSystem.loadAsset(filename);
     std::string paletteData = std::string((const char*)dataObject.getData(), dataObject.getSize());
     
     std::stringstream ss(paletteData);

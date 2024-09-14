@@ -31,6 +31,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern FileSystem fileSystem;
+
 Font::Character::Character(std::shared_ptr<Texture> texture, int x, int y, int width, int height, int xOffset, int yOffset, int xAdvance, float scaleW, float scaleH) {
     //    init texture coordinates
     float u1 = x / scaleW;
@@ -66,7 +68,7 @@ void Font::load(std::string const& filename) {
     } else {
         LOG("Loading font <%s>", filename.c_str());
 
-        DataObject dataObject(filename.c_str());
+        DataObject dataObject = fileSystem.loadAsset(filename);
         std::string input(reinterpret_cast<char*>(dataObject.getData()), dataObject.getSize()  - 1); // crop null terminator
         
         //    init chars array

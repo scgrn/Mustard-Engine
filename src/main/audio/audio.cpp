@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern FileSystem fileSystem;
 extern Audio audio;
 
 // TODO: hashmap of looping sounds, killAllLoopingSFX()
@@ -47,11 +48,11 @@ f32 volumeTodB(f32 volume) {
 //----------------------------------------------------------------------------------------------------------------------------------
 
 void Sound::load(std::string const& filename) {
-    data = new DataObject(filename.c_str());
+    data = fileSystem.loadAsset(filename);
 
     for (u32 i = 0; i < INSTANCES; i++) {
          //  initialize the decoder with the memory data
-        ma_result result = ma_decoder_init_memory(data->getData(), data->getSize(), NULL, &decoders[i]);
+        ma_result result = ma_decoder_init_memory(data.getData(), data.getSize(), NULL, &decoders[i]);
         if (result != MA_SUCCESS) {
             ERR("Failed to initialize decoder from memory: %d", result);
         }
@@ -73,8 +74,6 @@ void Sound::release() {
         ma_sound_uninit(&sounds[i]);
         ma_decoder_uninit(&decoders[i]);
     }
-    
-    delete data;
 }
 
 void Sound::play(f32 volume, f32 pan, b8 loop) {
@@ -107,9 +106,9 @@ b8 Sound::isPlaying() {
 //----------------------------------------------------------------------------------------------------------------------------------
 
 void Music::load(std::string const& filename) {
-    data = new DataObject(filename.c_str());
+    data = fileSystem.loadAsset(filename);
 
-    ma_result result = ma_decoder_init_memory(data->getData(), data->getSize(), NULL, &decoder);
+    ma_result result = ma_decoder_init_memory(data.getData(), data.getSize(), NULL, &decoder);
     if (result != MA_SUCCESS) {
         ERR("Failed to initialize decoder from memory: %d", result);
     }
@@ -124,7 +123,6 @@ void Music::load(std::string const& filename) {
 void Music::release() {
     ma_decoder_uninit(&decoder);
     ma_sound_uninit(&sound);
-    delete data;
 }
 
 void Music::setLoopPoint(f32 loopPoint) {

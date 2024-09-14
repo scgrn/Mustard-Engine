@@ -44,10 +44,12 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern FileSystem fileSystem;
+
 static void swapRB(u8 *data, u32 width, u32 height, u32 bpp) {
     u8 *current = data;
     for (u32 index = 0; index != (width * height); index++) {
-        u8 temp = *current;  //  save blue value
+        u8 temp = *current;             //  save blue value
         *current = *(current + 2);      //  write red value into first pos
         *(current + 2) = temp;          //  write blue value to last pos
         current += (bpp / 8);
@@ -92,7 +94,7 @@ static void premultiplyAlpha(u8 *data, u32 width, u32 height, u32 bpp) {
 }
 
 u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
-    DataObject dataObject(filename.c_str());
+    DataObject dataObject = fileSystem.loadAsset(filename);
 
     //  read header
     u8* data = dataObject.getData();
@@ -224,3 +226,4 @@ void saveTGA(u8* data, const u32 width, const u32 height, const std::string& fil
 }
 
 }   //  namespace
+

@@ -43,6 +43,7 @@ static const float DEFAULT_DEADZONE = 0.1f;
 #ifdef DEBUG
 extern Console console;
 #endif
+extern FileSystem fileSystem;
 extern Script script;
 extern std::vector<SDL_Event> eventQueue;
 
@@ -142,7 +143,7 @@ b8 Input::startup() {
     
     //  try to read gamepad mappings
     //  TODO: check local file first, fall back to archive
-    DataObject dataObject = DataObject("gamecontrollerdb.txt");
+    DataObject dataObject = fileSystem.loadAsset("gamecontrollerdb.txt");
     ret = SDL_GameControllerAddMappingsFromRW(SDL_RWFromMem(dataObject.getData(), dataObject.getSize()), 0);
     LOG("Added gamepad mappings: %d", ret);
 

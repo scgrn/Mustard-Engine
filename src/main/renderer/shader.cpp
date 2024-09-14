@@ -30,6 +30,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern FileSystem fileSystem;
+
 Shader::Shader() {}
 
 Shader::~Shader() {}
@@ -39,12 +41,12 @@ void Shader::load(std::string const& filename) {
 
     LOG("Loading shader <%s>", filename.c_str());
 
-    DataObject* vertexDataObject = new DataObject((filename + ".vert").c_str());
-    std::string vertexSource = getHeader() + std::string((const char*)vertexDataObject->getData(), vertexDataObject->getSize());
+    DataObject vertexDataObject = fileSystem.loadAsset(filename + ".vert");
+    std::string vertexSource = getHeader() + std::string((const char*)vertexDataObject.getData(), vertexDataObject.getSize());
     LOG("VERTEX SHADER SOURCE: %s", vertexSource.c_str());
 
-    DataObject* fragmentDataObject = new DataObject((filename + ".frag").c_str());
-    std::string fragmentSource = getHeader() + std::string((const char*)fragmentDataObject->getData(), fragmentDataObject->getSize());
+    DataObject fragmentDataObject = fileSystem.loadAsset(filename + ".frag");
+    std::string fragmentSource = getHeader() + std::string((const char*)fragmentDataObject.getData(), fragmentDataObject.getSize());
     LOG("FRAGMENT SHADER SOURCE: %s", fragmentSource.c_str());
 
     //  compile vertex shader
@@ -102,9 +104,6 @@ void Shader::load(std::string const& filename) {
 
     CALL_GL(glDeleteShader(vertexShader));
     CALL_GL(glDeleteShader(fragmentShader));
-    
-    delete vertexDataObject;
-    delete fragmentDataObject;
 
     LOG("Shader compilation successful.", 0);
 }

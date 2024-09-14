@@ -36,7 +36,8 @@ System functions
 #include "script.h"
 
 namespace AB {
-    
+
+extern FileSystem fileSystem;
 extern Script script;
 extern Window window;
 extern FileSystem fileSystem;
@@ -74,7 +75,7 @@ static int luaLoadScript(lua_State* luaVM) {
         }
     }
 
-    DataObject dataObject(filename.c_str(), forceLocal);
+    DataObject dataObject = fileSystem.loadAsset(filename, forceLocal);
 
     int error = luaL_loadbuffer(luaVM, (const char*)dataObject.getData(), dataObject.getSize(), filename.c_str());
     if (error) {

@@ -48,7 +48,7 @@ class Sound : public Asset {
         b8 isPlaying();
         
     protected:
-        DataObject *data;
+        DataObject data;
         ma_sound sounds[INSTANCES];
         ma_decoder decoders[INSTANCES];
         u32 currentInstance;
@@ -70,7 +70,7 @@ class Music : public Asset {
         b8 isPlaying();
         
     protected:
-        DataObject *data;
+        DataObject data;
         ma_sound sound;
         ma_decoder decoder;
 };
