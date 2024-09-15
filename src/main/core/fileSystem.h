@@ -99,7 +99,7 @@ class FileSystem : public SubSystem {
             std::string path;
             std::string key;
 
-            // filename -> (offset, size)
+            // filename -> (size, offset)
             std::unordered_map<std::string, std::pair<u64, u64>> assets;
 
             std::unique_ptr<u8[]> data;

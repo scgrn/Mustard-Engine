@@ -163,16 +163,13 @@ void FileSystem::addArchive(std::string const& path, std::string const& key) {
     archiveFiles.push_back(std::move(archive));
 }
 
-/*
-void FileSystem::AssetFile::dump(u8* basePtr) {
-    std::cout << std::endl << "["<< path << "] (" << size << " bytes):" << std::endl << std::endl;
-    u8* data = basePtr + offset;
+const void dump(std::string filename, u64 size, u8* data) {
+    std::cout << std::endl << "["<< filename << "] (" << size << " bytes):" << std::endl << std::endl;
     for (u64 i = 0; i < size; i++) {
         std::cout << data[i];
     }
     std::cout << std::endl << std::endl;
 }
-*/
 
 void FileSystem::ArchiveFile::load() {
     LOG("Loading archive: %s", path.c_str());
@@ -239,24 +236,48 @@ void FileSystem::ArchiveFile::load() {
 
         LOG("%s %d %d", path.c_str(), size, offset);
 
-        assets[path] = {offset, size};
+        assets[path] = {size, offset + manifestSize + sizeof(u32)};
     }
 
+#ifdef DEBUG
+    FileSystem::loadCompiledScripts = false;
+#else
     FileSystem::loadCompiledScripts = true;
+#endif
+
+/*
+#ifdef DEBUG
+    for (const auto& [path, assetFile] : assets) {
+        // LOG("%s: size: %db, offset: %d", path.c_str(), assetFile.first, assetFile.second);
+        if (path.compare(path.size()-5, 5, ".vert") == 0 ||
+            path.compare(path.size()-5, 5, ".frag") == 0 || 
+            path.compare(path.size()-4, 4, ".fnt") == 0) {
+
+            dump(path, assetFile.first, data.get() + assetFile.second);
+        }
+    }
+#endif
+*/
 }
 
 DataObject FileSystem::loadAsset(const std::string& filename, b8 forceLocal) {
-    if (!forceLocal) {
-        for (const auto& archive : archiveFiles) {
-            auto asset = archive.assets.find(filename);
-            if (asset != archive.assets.end()) {
-                return loadAssetFromArchive(archive, filename);
-            }
+    if (forceLocal) {
+        return loadAssetFromDisk(filename);
+    }
+
+    for (const auto& archive : archiveFiles) {
+        auto asset = archive.assets.find(filename);
+        if (asset != archive.assets.end()) {
+            return loadAssetFromArchive(archive, filename);
         }
     }
 
+#ifdef DEBUG
     //  if not found in any archives, load from disk
     return loadAssetFromDisk("assets/" + filename);
+#else
+    return DataObject(0);
+#endif
 }
 
 DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
@@ -278,7 +299,7 @@ DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
 DataObject FileSystem::loadAssetFromArchive(const ArchiveFile& archive, const std::string& filename) {
     LOG("Loading <%s> from archive...", filename.c_str());
 
-    const auto& [offset, size] = archive.assets.at(filename);
+    const auto& [size, offset] = archive.assets.at(filename);
     DataObject dataObject(size);
     std::memcpy(dataObject.getData(), archive.data.get() + offset, size);
     return dataObject;
