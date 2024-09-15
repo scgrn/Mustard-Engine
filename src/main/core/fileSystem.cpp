@@ -256,10 +256,12 @@ DataObject FileSystem::loadAsset(const std::string& filename, b8 forceLocal) {
     }
 
     //  if not found in any archives, load from disk
-    return loadAssetFromDisk(filename);
+    return loadAssetFromDisk("assets/" + filename);
 }
 
 DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
+    LOG("Loading <%s> from disk...", filename.c_str());
+
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
     if (!file) return DataObject();
 
@@ -274,6 +276,8 @@ DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
 }
 
 DataObject FileSystem::loadAssetFromArchive(const ArchiveFile& archive, const std::string& filename) {
+    LOG("Loading <%s> from archive...", filename.c_str());
+
     const auto& [offset, size] = archive.assets.at(filename);
     DataObject dataObject(size);
     std::memcpy(dataObject.getData(), archive.data.get() + offset, size);
