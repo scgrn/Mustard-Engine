@@ -317,7 +317,7 @@ void buildArchive(std::string archivePath) {
     outputData = buffer;
     outputSize = offset;
 
-    // crypt(outputData, outputSize, key);
+    crypt(outputData, outputSize, key);
 
     //  write archive file
     std::ofstream file(archivePath, std::ios::binary);

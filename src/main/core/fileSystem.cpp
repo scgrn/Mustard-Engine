@@ -208,6 +208,8 @@ void FileSystem::ArchiveFile::load() {
 
     u8* decompressedData = data.get();
     u64 decompressedSize = bufferSize;
+    
+    crypt(decompressedData, decompressedSize, key);
 /*
     i32 ret = decompress(buffer, bufferSize, &decompressedData, decompressedSize);
     if (ret != Z_OK) {
