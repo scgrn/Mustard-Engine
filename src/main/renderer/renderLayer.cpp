@@ -154,7 +154,7 @@ void RenderLayer::setLineWidth(f32 width) {
 }
 
 void RenderLayer::renderQuad(const Quad& quad) {
-    quadBatch.push_back(quad);
+    quadBatch.emplace_back(quad);
 }
 
 void RenderLayer::flush(i32 begin, i32 end) {
@@ -278,55 +278,55 @@ void RenderLayer::begin(GLenum mode, GLuint texture) {
 }
 
 void RenderLayer::addVertex(f32 x, f32 y, f32 z) {
-    currentRenderItem.vertices.push_back(x);
-    currentRenderItem.vertices.push_back(y);
-    currentRenderItem.vertices.push_back(z);
-    currentRenderItem.vertices.push_back(0.0f); // u
-    currentRenderItem.vertices.push_back(0.0f); // v
-    currentRenderItem.vertices.push_back(currentColor.r);
-    currentRenderItem.vertices.push_back(currentColor.g);
-    currentRenderItem.vertices.push_back(currentColor.b);
-    currentRenderItem.vertices.push_back(currentColor.a);
+    currentRenderItem.vertices.emplace_back(x);
+    currentRenderItem.vertices.emplace_back(y);
+    currentRenderItem.vertices.emplace_back(z);
+    currentRenderItem.vertices.emplace_back(0.0f); // u
+    currentRenderItem.vertices.emplace_back(0.0f); // v
+    currentRenderItem.vertices.emplace_back(currentColor.r);
+    currentRenderItem.vertices.emplace_back(currentColor.g);
+    currentRenderItem.vertices.emplace_back(currentColor.b);
+    currentRenderItem.vertices.emplace_back(currentColor.a);
 }
 
 void RenderLayer::addVertex(f32 x, f32 y, f32 u, f32 v) {
-    currentRenderItem.vertices.push_back(x);
-    currentRenderItem.vertices.push_back(y);
-    currentRenderItem.vertices.push_back(-1);
-    currentRenderItem.vertices.push_back(u);
-    currentRenderItem.vertices.push_back(v);
-    currentRenderItem.vertices.push_back(currentColor.r);
-    currentRenderItem.vertices.push_back(currentColor.g);
-    currentRenderItem.vertices.push_back(currentColor.b);
-    currentRenderItem.vertices.push_back(currentColor.a);
+    currentRenderItem.vertices.emplace_back(x);
+    currentRenderItem.vertices.emplace_back(y);
+    currentRenderItem.vertices.emplace_back(-1);
+    currentRenderItem.vertices.emplace_back(u);
+    currentRenderItem.vertices.emplace_back(v);
+    currentRenderItem.vertices.emplace_back(currentColor.r);
+    currentRenderItem.vertices.emplace_back(currentColor.g);
+    currentRenderItem.vertices.emplace_back(currentColor.b);
+    currentRenderItem.vertices.emplace_back(currentColor.a);
 }
 
 void RenderLayer::addVertex(f32 x, f32 y, f32 r, f32 g, f32 b, f32 a) {
-    currentRenderItem.vertices.push_back(x);
-    currentRenderItem.vertices.push_back(y);
-    currentRenderItem.vertices.push_back(-1);
-    currentRenderItem.vertices.push_back(0.0f); // u
-    currentRenderItem.vertices.push_back(0.0f); // v
-    currentRenderItem.vertices.push_back(r);
-    currentRenderItem.vertices.push_back(g);
-    currentRenderItem.vertices.push_back(b);
-    currentRenderItem.vertices.push_back(a);
+    currentRenderItem.vertices.emplace_back(x);
+    currentRenderItem.vertices.emplace_back(y);
+    currentRenderItem.vertices.emplace_back(-1);
+    currentRenderItem.vertices.emplace_back(0.0f); // u
+    currentRenderItem.vertices.emplace_back(0.0f); // v
+    currentRenderItem.vertices.emplace_back(r);
+    currentRenderItem.vertices.emplace_back(g);
+    currentRenderItem.vertices.emplace_back(b);
+    currentRenderItem.vertices.emplace_back(a);
 }
 
 void RenderLayer::addVertex(f32 x, f32 y, f32 u, f32 v, f32 r, f32 g, f32 b, f32 a) {
-    currentRenderItem.vertices.push_back(x);
-    currentRenderItem.vertices.push_back(y);
-    currentRenderItem.vertices.push_back(-1);
-    currentRenderItem.vertices.push_back(u);
-    currentRenderItem.vertices.push_back(v);
-    currentRenderItem.vertices.push_back(r);
-    currentRenderItem.vertices.push_back(g);
-    currentRenderItem.vertices.push_back(b);
-    currentRenderItem.vertices.push_back(a);
+    currentRenderItem.vertices.emplace_back(x);
+    currentRenderItem.vertices.emplace_back(y);
+    currentRenderItem.vertices.emplace_back(-1);
+    currentRenderItem.vertices.emplace_back(u);
+    currentRenderItem.vertices.emplace_back(v);
+    currentRenderItem.vertices.emplace_back(r);
+    currentRenderItem.vertices.emplace_back(g);
+    currentRenderItem.vertices.emplace_back(b);
+    currentRenderItem.vertices.emplace_back(a);
 }
 
 void RenderLayer::end() {
-    renderItems.push_back(currentRenderItem);
+    renderItems.emplace_back(currentRenderItem);
 }
 
 void RenderLayer::renderTri(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, bool full) {
