@@ -29,6 +29,7 @@ Pseudo-random number generation and Perlin noise functions
 #include "../pch.h"
 
 #include "script.h"
+#include "../math/math.h"
 #include "../math/random.h"
 #include "../math/perlin.h"
 
@@ -54,8 +55,8 @@ static int luaRandomSeed(lua_State* luaVM) {
     return 0;
 }
 
-/// Generates a random floating point number
-// @return A random floating point number [0..1]
+/// Generates a random f32 ing point number
+// @return A random f32 ing point number [0..1]
 // @function AB.math.random
 
 /// Generates a random integer
@@ -102,16 +103,83 @@ static int luaNoiseSeed(lua_State *luaVM) {
 // @return noise
 // @function AB.math.noise
 static int luaNoise(lua_State* luaVM) {
-    float x = (float)lua_tonumber(luaVM, 1);
-    float y = (float)lua_tonumber(luaVM, 2);
-    float z = (float)lua_tonumber(luaVM, 3);
-    int octaves = (int)lua_tonumber(luaVM, 4);
-    float persistence = (float)lua_tonumber(luaVM, 5);
+    f32  x = (f32 )lua_tonumber(luaVM, 1);
+    f32  y = (f32 )lua_tonumber(luaVM, 2);
+    f32  z = (f32 )lua_tonumber(luaVM, 3);
+    i32 octaves = (i32)lua_tonumber(luaVM, 4);
+    f32  persistence = (f32 )lua_tonumber(luaVM, 5);
 
     lua_pushnumber(luaVM, perlinNoise.noise(x, y, z, octaves, persistence));
 
     return 1;
 }
+
+/// Calculates the distance between two points in 2D space
+// @param x1 X-coordinate of first point
+// @param y1 Y-coordinate of first point
+// @param x2 X-coordinate of second point
+// @param y2 Y-coordinate of second point
+// @return distance
+// @function AB.math.distance
+static int luaDistance(lua_State* luaVM) {
+    f32  x1 = (f32 )lua_tonumber(luaVM, 1);
+    f32  y1 = (f32 )lua_tonumber(luaVM, 2);
+    f32  x2 = (f32 )lua_tonumber(luaVM, 3);
+    f32  y2 = (f32 )lua_tonumber(luaVM, 4);
+
+    lua_pushnumber(luaVM, distance(Vec2(x1, y1), Vec2(x2, y2)));
+
+    return 1;
+}
+
+/// Calculates the distance from a point to a line segment in 2D space
+// @param x1 X-coordinate of line segment first endpoint
+// @param y1 Y-coordinate of line segment first endpoint
+// @param x2 X-coordinate of line segment second endpoint
+// @param y2 Y-coordinate of line segment second endpoint
+// @param x3 X-coordinate of point
+// @param y3 Y-coordinate of point
+// @return distance
+// @function AB.math.distPointToLine
+static int luaDistPointToLine(lua_State* luaVM) {
+    f32  x1 = (f32 )lua_tonumber(luaVM, 1);
+    f32  y1 = (f32 )lua_tonumber(luaVM, 2);
+    f32  x2 = (f32 )lua_tonumber(luaVM, 3);
+    f32  y2 = (f32 )lua_tonumber(luaVM, 4);
+    f32  x3 = (f32 )lua_tonumber(luaVM, 5);
+    f32  y3 = (f32 )lua_tonumber(luaVM, 6);
+
+    lua_pushnumber(luaVM, distPointToLine(Vec2(x1, y1), Vec2(x2, y2), Vec2(x3, y3)));
+
+    return 1;
+}
+
+/// Determines if two line segments intersect in 2D space
+// @param x1 X-coordinate of first line segment first endpoint
+// @param y1 Y-coordinate of first line segment first endpoint
+// @param x2 X-coordinate of first line segment second endpoint
+// @param y2 Y-coordinate of first line segment second endpoint
+// @param x3 X-coordinate of second line segment first endpoint
+// @param y3 Y-coordinate of second line segment first endpoint
+// @param x4 X-coordinate of second line segment second endpoint
+// @param y4 Y-coordinate of second line segment second endpoint
+// @return intersects
+// @function AB.math.lineSegmentIntersection
+static int luaLineSegmentIntersection(lua_State* luaVM) {
+    f32  x1 = (f32 )lua_tonumber(luaVM, 1);
+    f32  y1 = (f32 )lua_tonumber(luaVM, 2);
+    f32  x2 = (f32 )lua_tonumber(luaVM, 3);
+    f32  y2 = (f32 )lua_tonumber(luaVM, 4);
+    f32  x3 = (f32 )lua_tonumber(luaVM, 5);
+    f32  y3 = (f32 )lua_tonumber(luaVM, 6);
+    f32  x4 = (f32 )lua_tonumber(luaVM, 7);
+    f32  y4 = (f32 )lua_tonumber(luaVM, 8);
+
+    lua_pushnumber(luaVM, lineSegmentIntersection(Vec2(x1, y1), Vec2(x2, y2), Vec2(x3, y3), Vec2(x4, y4)));
+
+    return 1;
+}
+
 
 void registerMathFunctions() {
     static const luaL_Reg mathFuncs[] = {
@@ -119,7 +187,10 @@ void registerMathFunctions() {
         { "random", luaRandom},
         { "noiseSeed", luaNoiseSeed},
         { "noise", luaNoise},
-
+        { "distance", luaDistance},
+        { "distPointToLine", luaDistPointToLine},
+        { "lineSegmentIntersection", luaLineSegmentIntersection},
+        
         { NULL, NULL }
     };
     script.registerFuncs("AB", "math", mathFuncs);
