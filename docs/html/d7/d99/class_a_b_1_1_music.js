@@ -11,7 +11,7 @@ var class_a_b_1_1_music =
     [ "setLoopPoint", "d7/d99/class_a_b_1_1_music.html#a156a798bdb2659f5dc4a35ec99c4662d", null ],
     [ "setVolume", "d7/d99/class_a_b_1_1_music.html#a57e0bff36a84852973d848a68bbb2d65", null ],
     [ "stop", "d7/d99/class_a_b_1_1_music.html#ae51db5d40ad006e48253fa05a5db733e", null ],
-    [ "data", "d7/d99/class_a_b_1_1_music.html#ad1bc5bbc0c2a0ed46fecf8b01319fc28", null ],
+    [ "data", "d7/d99/class_a_b_1_1_music.html#a720061d92c5f1ed392f99bbd69481771", null ],
     [ "decoder", "d7/d99/class_a_b_1_1_music.html#a3466f9f776aefee9af5d5e7358d1325c", null ],
     [ "sound", "d7/d99/class_a_b_1_1_music.html#a40c7f87af060f8311d895616d5c5a943", null ]
 ];

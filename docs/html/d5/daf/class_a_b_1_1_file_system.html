@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('d5/daf/class_a_b_1_1_file_system.html'
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../dc/dce/class_a_b_1_1_file_system-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">AB::FileSystem Class Reference</div>  </div>
@@ -117,21 +118,24 @@ b8&#160;</td><td class="memItemRight" valign="bottom"><b>startup</b> () override
 <tr class="memitem:ab3c778393fd21d028fbe2c8363463e73"><td class="memItemLeft" align="right" valign="top"><a id="ab3c778393fd21d028fbe2c8363463e73"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shutdown</b> () override</td></tr>
 <tr class="separator:ab3c778393fd21d028fbe2c8363463e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc9949bbd822be3249a622c6e2e68a2d"><td class="memItemLeft" align="right" valign="top"><a id="adc9949bbd822be3249a622c6e2e68a2d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addArchive</b> (std::string const &amp;path, std::string const &amp;key=&quot;&quot;)</td></tr>
-<tr class="separator:adc9949bbd822be3249a622c6e2e68a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ca952fdd543fc202325987357d37f1b"><td class="memItemLeft" align="right" valign="top"><a id="a3ca952fdd543fc202325987357d37f1b"></a>
-u8 *&#160;</td><td class="memItemRight" valign="bottom"><b>readFile</b> (std::string const &amp;path, u64 *size)</td></tr>
-<tr class="separator:a3ca952fdd543fc202325987357d37f1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a343594bb47d42cd34ffba0e6602dec21"><td class="memItemLeft" align="right" valign="top"><a id="a343594bb47d42cd34ffba0e6602dec21"></a>
-u8 *&#160;</td><td class="memItemRight" valign="bottom"><b>readFromArchive</b> (std::string const &amp;path, u64 *size)</td></tr>
-<tr class="separator:a343594bb47d42cd34ffba0e6602dec21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b9f17294f5dfc18a8eb22175efae57e"><td class="memItemLeft" align="right" valign="top"><a id="a8b9f17294f5dfc18a8eb22175efae57e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addArchive</b> (std::string const &amp;filename, std::string const &amp;key=&quot;&quot;)</td></tr>
+<tr class="separator:a8b9f17294f5dfc18a8eb22175efae57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d042ed4a7c939ac6b172f4742582500"><td class="memItemLeft" align="right" valign="top"><a id="a7d042ed4a7c939ac6b172f4742582500"></a>
+<a class="el" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&#160;</td><td class="memItemRight" valign="bottom"><b>loadAsset</b> (std::string const &amp;filename, b8 forceLocal=false)</td></tr>
+<tr class="separator:a7d042ed4a7c939ac6b172f4742582500"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3db8b7cec4688ab50b24510074fedd53"><td class="memItemLeft" align="right" valign="top"><a id="a3db8b7cec4688ab50b24510074fedd53"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>loadData</b> (std::string key)</td></tr>
 <tr class="separator:a3db8b7cec4688ab50b24510074fedd53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a121da053095abbe11e1561411395afda"><td class="memItemLeft" align="right" valign="top"><a id="a121da053095abbe11e1561411395afda"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>saveData</b> (std::string key, std::string value)</td></tr>
 <tr class="separator:a121da053095abbe11e1561411395afda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ac3896ca0593b4eadaaf0f3bcdbb84f6a"><td class="memItemLeft" align="right" valign="top"><a id="ac3896ca0593b4eadaaf0f3bcdbb84f6a"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadCompiledScripts</b></td></tr>
+<tr class="separator:ac3896ca0593b4eadaaf0f3bcdbb84f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
