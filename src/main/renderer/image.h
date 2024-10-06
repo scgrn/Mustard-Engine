@@ -39,6 +39,8 @@ class Image {
         Image(const std::string& tgaFilename);
         ~Image();
         
+        void clear();
+        
         inline void pset(u32 x, u32 y, u8 r, u8 g, u8 b, u8 a = 255) {
             //  TODO: implement alpha blending?
 

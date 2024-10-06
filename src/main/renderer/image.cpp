@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
+#include <cstring>
+
 #include "image.h"
 #include "tga.h"
 
@@ -53,6 +55,10 @@ Image::~Image() {
         delete [] data;
         data = NULL;
     }
+}
+
+void Image::clear() {
+    memset(data, 0, imageSize);
 }
 
 }
