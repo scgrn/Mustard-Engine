@@ -88,8 +88,9 @@ Images:
 - 24 or 32 bit TGA with or without RLE compression
 
 Audio:
-- wav
-- mp3
+- WAV
+- MP3
+- FLAC
   
 Steamworks Integration
 -------
