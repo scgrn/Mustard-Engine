@@ -186,12 +186,14 @@ void FileSystem::ArchiveFile::load() {
     u8 tag[3];
     fread(&tag, 1, 3, file);
     if (tag[0] != 'A' || tag[1] != 'B') {
+        fclose(file);
         ERR("INVALID ARCHIVE: %s", path.c_str());
     }
 
     //  check version code
     u8 versionCode = tag[2];
     if (versionCode != '2') {
+        fclose(file);
         ERR("INVALID ARCHIVE: %s", path.c_str());
     }
     
@@ -204,19 +206,21 @@ void FileSystem::ArchiveFile::load() {
         ERR("Failed to read file: %s", path.c_str());
     }
 
-    // crypt(buffer, bufferSize, key);
+    crypt(data.get(), bufferSize, key);
 
-    u8* decompressedData = data.get();
-    u64 decompressedSize = bufferSize;
-    
-    crypt(decompressedData, decompressedSize, key);
-/*
-    i32 ret = decompress(buffer, bufferSize, &decompressedData, decompressedSize);
-    if (ret != Z_OK) {
-        zerr(ret);
+    //  decompression
+    u8* decompressedData = nullptr;
+    u64 decompressedSize = 0;
+    i32 result = decompress(data.get(), bufferSize, &decompressedData, decompressedSize);
+    if (result != Z_OK) {
+        zerr(result);
+        return;
     }
     LOG("Decompressed size: %d", decompressedSize);
-*/
+
+    //  replace old data with decompressed data
+    data.reset(decompressedData);
+    size = decompressedSize;
 
     //  read manifest
     u32 manifestSize;

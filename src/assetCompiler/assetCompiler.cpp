@@ -300,12 +300,7 @@ void buildArchive(std::string archivePath) {
     uint8_t* outputData;
     uint32_t outputSize;
 
-    // compress(buffer, offset, &outputData, outputSize, Z_DEFAULT_COMPRESSION);
-    
-    //  TODO: remove these two lines! test without compression.
-    outputData = buffer;
-    outputSize = offset;
-
+    compress(buffer, offset, &outputData, outputSize, Z_DEFAULT_COMPRESSION);
     crypt(outputData, outputSize, key);
 
     //  write archive file
