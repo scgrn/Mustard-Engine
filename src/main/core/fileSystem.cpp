@@ -306,9 +306,8 @@ DataObject FileSystem::loadAssetFromArchive(const ArchiveFile& archive, const st
     LOG("Loading <%s> from archive...", filename.c_str());
 
     const auto& [size, offset] = archive.assets.at(filename);
-    DataObject dataObject(size);
-    std::memcpy(dataObject.getData(), archive.data.get() + offset, size);
-    return dataObject;
+
+    return DataObject(archive.data.get() + offset, size);
 }
 
 std::string FileSystem::loadData(std::string key) {

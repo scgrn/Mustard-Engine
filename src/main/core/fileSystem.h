@@ -48,16 +48,21 @@ class DataObject {
         DataObject() : size(0), data(nullptr) {}
         DataObject(u64 size) : size(size), data(new u8[size]) {}
 
+        DataObject(u8* externalData, u64 size) : size(size), data(nullptr), externalData(externalData) {}
+    
         //  move constructor and assignment
-        DataObject(DataObject&& other) noexcept : size(other.size), data(std::move(other.data)) {
+        DataObject(DataObject&& other) noexcept : size(other.size), data(std::move(other.data)), externalData(other.externalData) {
             other.size = 0;
+            other.externalData = nullptr;
         }
         
         DataObject& operator=(DataObject&& other) noexcept {
             if (this != &other) {
                 size = other.size;
                 data = std::move(other.data);
+                externalData = other.externalData;
                 other.size = 0;
+                other.externalData = nullptr;
             }
             return *this;
         }
@@ -65,14 +70,14 @@ class DataObject {
         //  deleted copy constructor and copy assignment
         DataObject(const DataObject&) = delete;
         DataObject& operator=(const DataObject&) = delete;
-    
 
-        u8* getData() const { return data.get(); }
+        u8* getData() const { return data ? data.get() : externalData; }
         u64 getSize() const { return size; }
 
     protected:
         u64 size;
         std::unique_ptr<u8[]> data;
+        u8* externalData = nullptr;
     
     private:
         static void noOpDeleter(u8* p) {}
