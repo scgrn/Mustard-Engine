@@ -245,11 +245,7 @@ void FileSystem::ArchiveFile::load() {
         assets[path] = {size, offset + manifestSize + sizeof(u32)};
     }
 
-#ifdef DEBUG
-    FileSystem::loadCompiledScripts = false;
-#else
     FileSystem::loadCompiledScripts = true;
-#endif
 
 /*
 #ifdef DEBUG
@@ -278,12 +274,12 @@ DataObject FileSystem::loadAsset(const std::string& filename, b8 forceLocal) {
         }
     }
 
-#ifdef DEBUG
+// #ifdef DEBUG
     //  if not found in any archives, load from disk
     return loadAssetFromDisk("assets/" + filename);
-#else
-    return DataObject(0);
-#endif
+//#else
+    //return DataObject(0);
+//#endif
 }
 
 DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
