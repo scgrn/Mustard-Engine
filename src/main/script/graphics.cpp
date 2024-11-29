@@ -272,6 +272,9 @@ static i32 luaRenderSprite(lua_State* luaVM) {
     f32 x = (f32)lua_tonumber(luaVM, 3);
     f32 y = (f32)lua_tonumber(luaVM, 4);
 
+    x = floor(x + 0.5f);
+    y = floor(y + 0.5f);
+
     f32 z = -1.0f;
     f32 angle = 0.0f;
     f32 scaleX = 1.0f;
