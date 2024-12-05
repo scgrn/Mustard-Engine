@@ -106,80 +106,85 @@ $(document).ready(function(){initNavTree('d4/d23/file_system_8h_source.html','..
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>() : size(0), data(<span class="keyword">nullptr</span>) {}</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>(u64 size) : size(size), data(<span class="keyword">new</span> u8[size]) {}</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="comment">//  move constructor and assignment</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>(<a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;&amp; other) noexcept : size(other.size), data(std::move(other.data)) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            other.size = 0;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp; operator=(<a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;&amp; other) noexcept {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                size = other.size;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                data = std::move(other.data);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                other.size = 0;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">//  deleted copy constructor and copy assignment</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>(<span class="keyword">const</span> <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>(u8* externalData, u64 size) : size(size), data(<span class="keyword">nullptr</span>), externalData(externalData) {}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="comment">//  move constructor and assignment</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>(<a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;&amp; other) noexcept : size(other.size), data(std::move(other.data)), externalData(other.externalData) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            other.size = 0;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            other.externalData = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp; operator=(<a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;&amp; other) noexcept {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                size = other.size;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                data = std::move(other.data);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                externalData = other.externalData;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                other.size = 0;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                other.externalData = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        u8* getData()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data.get(); }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        u64 getSize()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> size; }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        u64 size;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        std::unique_ptr&lt;u8[]&gt; data;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> noOpDeleter(u8* p) {}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;};</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="../../d5/daf/class_a_b_1_1_file_system.html">   82</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d5/daf/class_a_b_1_1_file_system.html">FileSystem</a> : <span class="keyword">public</span> <a class="code" href="../../d1/db7/class_a_b_1_1_sub_system.html">SubSystem</a> {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        b8 startup() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordtype">void</span> shutdown() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">//    this is the only function that should be called before engine startup</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">void</span> addArchive(std::string <span class="keyword">const</span>&amp; filename, std::string <span class="keyword">const</span>&amp; key = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a> loadAsset(std::string <span class="keyword">const</span>&amp; filename, b8 forceLocal = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        std::string loadData(std::string key);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordtype">void</span> saveData(std::string key, std::string value);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">//  deleted copy constructor and copy assignment</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>(<span class="keyword">const</span> <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        u8* getData()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> data ? data.get() : externalData; }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        u64 getSize()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> size; }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        u64 size;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        std::unique_ptr&lt;u8[]&gt; data;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        u8* externalData = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">void</span> noOpDeleter(u8* p) {}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="../../d5/daf/class_a_b_1_1_file_system.html">   87</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d5/daf/class_a_b_1_1_file_system.html">FileSystem</a> : <span class="keyword">public</span> <a class="code" href="../../d1/db7/class_a_b_1_1_sub_system.html">SubSystem</a> {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        b8 startup() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordtype">void</span> shutdown() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">//    this is the only function that should be called before engine startup</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordtype">void</span> addArchive(std::string <span class="keyword">const</span>&amp; filename, std::string <span class="keyword">const</span>&amp; key = <span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">bool</span> loadCompiledScripts;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a> loadAsset(std::string <span class="keyword">const</span>&amp; filename, b8 forceLocal = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">struct </span>ArchiveFile {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            std::string path;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            std::string key;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        std::string loadData(std::string key);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordtype">void</span> saveData(std::string key, std::string value);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">static</span> <span class="keywordtype">bool</span> loadCompiledScripts;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="comment">// filename -&gt; (size, offset)</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            std::unordered_map&lt;std::string, std::pair&lt;u64, u64&gt;&gt; assets;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            std::unique_ptr&lt;u8[]&gt; data;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            u64 size;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keywordtype">void</span> load();</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        };</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a> loadAssetFromDisk(<span class="keyword">const</span> std::string&amp; filename);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a> loadAssetFromArchive(<span class="keyword">const</span> ArchiveFile&amp; archive, <span class="keyword">const</span> std::string&amp; filename);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        std::vector&lt;ArchiveFile&gt; archiveFiles;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;};</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}   <span class="comment">//  namespace</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keyword">struct </span>ArchiveFile {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            std::string path;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            std::string key;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            <span class="comment">// filename -&gt; (size, offset)</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            std::unordered_map&lt;std::string, std::pair&lt;u64, u64&gt;&gt; assets;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            std::unique_ptr&lt;u8[]&gt; data;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            u64 size;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keywordtype">void</span> load();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        };</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a> loadAssetFromDisk(<span class="keyword">const</span> std::string&amp; filename);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <a class="code" href="../../dd/d37/class_a_b_1_1_data_object.html">DataObject</a> loadAssetFromArchive(<span class="keyword">const</span> ArchiveFile&amp; archive, <span class="keyword">const</span> std::string&amp; filename);</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        std::vector&lt;ArchiveFile&gt; archiveFiles;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}   <span class="comment">//  namespace</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_a_b_1_1_sub_system_html"><div class="ttname"><a href="../../d1/db7/class_a_b_1_1_sub_system.html">AB::SubSystem</a></div><div class="ttdef"><b>Definition:</b> subsystem.h:30</div></div>
-<div class="ttc" id="aclass_a_b_1_1_file_system_html"><div class="ttname"><a href="../../d5/daf/class_a_b_1_1_file_system.html">AB::FileSystem</a></div><div class="ttdef"><b>Definition:</b> fileSystem.h:82</div></div>
+<div class="ttc" id="aclass_a_b_1_1_file_system_html"><div class="ttname"><a href="../../d5/daf/class_a_b_1_1_file_system.html">AB::FileSystem</a></div><div class="ttdef"><b>Definition:</b> fileSystem.h:87</div></div>
 <div class="ttc" id="anamespace_a_b_html"><div class="ttname"><a href="../../db/d41/namespace_a_b.html">AB</a></div><div class="ttdef"><b>Definition:</b> audio.cpp:32</div></div>
 <div class="ttc" id="aclass_a_b_1_1_data_object_html"><div class="ttname"><a href="../../dd/d37/class_a_b_1_1_data_object.html">AB::DataObject</a></div><div class="ttdef"><b>Definition:</b> fileSystem.h:46</div></div>
 <!-- start footer part -->
