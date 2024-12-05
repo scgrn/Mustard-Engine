@@ -158,8 +158,8 @@ static int luaLoadMusic(lua_State* luaVM) {
 
 /// Plays a music loop
 // @function AB.audio.playMusic
-// @param loop (true) If music should repeat
 // @param index Music loop handle
+// @param loop (true) If music should repeat
 static int luaPlayMusic(lua_State* luaVM) {
     int index = (int)lua_tonumber(luaVM, 1);
     
