@@ -1,9 +1,9 @@
---  define globals for luacheck
-std = {
-  globals = {
-    "AB",
-  }
+local globals = {
+    "font",
 }
+for _, v in pairs(globals) do
+    declare(v)
+end
 
 function AB.loadConfig()
     videoConfig = {

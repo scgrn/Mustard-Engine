@@ -60,7 +60,7 @@ inline std::string toString(T val, bool groupDigits = true) {
         uint32_t offset1 = 3;
         uint32_t offset2 = 3;
         if (val < 0) {
-            offset2++;   // account for "-"
+            offset2++;   // account for '-'
         }
         for (uint32_t i = 0; i < 5; i++) {
             if (s.length() > offset2) {
@@ -266,12 +266,17 @@ void buildArchive(std::string archivePath) {
     }
     std::cout << std::endl;
 
+    //  build manifest
     uint64_t offset = 0;
 
     std::stringstream ss;
     ss << assets.size() << "\n";
     for (auto asset :assets) {
-        ss << asset->filename << " ";
+        std::string filename = asset->filename;
+        std::replace(filename.begin(), filename.end(), ' ', '*'); 
+        ss << filename << " ";
+
+        // ss << asset->filename << " ";
         ss << asset->size << " ";
         ss << offset << "\n";
         
@@ -283,11 +288,11 @@ void buildArchive(std::string archivePath) {
     
     uint8_t* buffer = new uint8_t[sizeDataOriginal];
 
-    // copy manifest size into the buffer
+    //  copy manifest size into the buffer
     uint32_t manifestSize = manifest.size();
     std::memcpy(buffer, &manifestSize, sizeof(uint32_t));
     
-    // copy manifest and each asset's data into the buffer
+    //  copy manifest and each asset's data into the buffer
     std::memcpy(buffer + sizeof(uint32_t), manifest.c_str(), manifest.size());
     offset = sizeof(uint32_t) + manifest.size();
     for (const auto asset : assets) {
@@ -316,9 +321,9 @@ void buildArchive(std::string archivePath) {
     std::cout << "Manifest:" << std::endl << std::endl;
     std::cout << manifest << std::endl << std::endl;
     
-    //delete [] outputData;
     delete [] buffer;
 
+    //  TODO: break out into report()
     std::cout << std::endl;
     std::cout << "Total asset files: " << assets.size() << std::endl;
     std::cout << std::endl;

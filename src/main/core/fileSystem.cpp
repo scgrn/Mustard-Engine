@@ -301,7 +301,11 @@ DataObject FileSystem::loadAssetFromDisk(const std::string& filename) {
 DataObject FileSystem::loadAssetFromArchive(const ArchiveFile& archive, const std::string& filename) {
     LOG("Loading <%s> from archive...", filename.c_str());
 
-    const auto& [size, offset] = archive.assets.at(filename);
+    std::string fn = filename;
+    std::replace(fn.begin(), fn.end(), ' ', '*'); 
+    const auto& [size, offset] = archive.assets.at(fn);
+
+    // const auto& [size, offset] = archive.assets.at(filename);
 
     return DataObject(archive.data.get() + offset, size);
 }
