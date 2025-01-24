@@ -1,14 +1,14 @@
-GameState = {}
+declare("GameState", {})
 GameState.__index = GameState
 
-function setGameState(newState)
+declare("setGameState", function(newState)
     if (newState ~= nil) then
         newState:start()
         currentState = newState
     else
         error("INVALID STATE!")
     end
-end
+end)
 
 function GameState:new()
     local this = {
@@ -23,5 +23,5 @@ function GameState:new()
     return this
 end
 
-currentState = GameState:new()
+declare("currentState", GameState:new())
 
