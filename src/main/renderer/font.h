@@ -114,6 +114,7 @@ class Font : public Asset {
     private:
         void build8x8Default(bool stretch);
         void build3x5Default();
+        std::unordered_map<unsigned char, bool> unknownCharWarnings;
 };
 
 }   //  namespace

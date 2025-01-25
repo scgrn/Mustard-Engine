@@ -406,7 +406,10 @@ void Font::printString(RenderLayer *renderer, GLfloat x, GLfloat y, GLfloat scal
             tx += chars[ascii]->xAdvance * scale;
         } else {
             if (ascii != 13) {
-                ERR("UNKNOWN CHARACTER: %d", ascii);
+                if (unknownCharWarnings.find(ascii) == unknownCharWarnings.end()) {
+                    LOG("WARNING: UNKNOWN CHARACTER: %d IN STRING: %s", ascii, string.c_str());
+                    unknownCharWarnings.emplace(ascii, true);
+                }
             }
         }
 
