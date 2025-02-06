@@ -129,6 +129,8 @@ std::unordered_map<int, std::string> keyNames = {
         
         //    gamepad functions
         u32 getNumGamepads();
+        std::string getGamepadName(u32 gamepadIndex);
+        
         b8 gamepadWasPressed(u32 gamepadIndex, u32 button);
         b8 gamepadIsPressed(u32 gamepadIndex, u32 button);
         b8 gamepadWasReleased(u32 gamepadIndex, u32 button);

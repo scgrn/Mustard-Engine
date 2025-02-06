@@ -70,7 +70,8 @@ struct Gamepad {
     SDL_Haptic *haptic;
     SDL_JoystickID joystick;
 
-    float deadZone;
+    float deadZone;     // TODO: per axis, duh
+    std::string name;
 };
 
 std::vector<Gamepad> connectedGamepads;
@@ -159,14 +160,17 @@ b8 Input::startup() {
     }
     LOG("Num gamepads: %i", numGamepads);
     
-    // If we have some controllers attached
+    //  if controllers attached
     if (numGamepads > 0) {
         showGamepadControls = true;
         for (u32 i = 0; i < numGamepads; i++) {
-            // Open the controller and add it to our list
+            //  open the controller and add to list
             Gamepad gamepad;
             gamepad.gamepad = SDL_GameControllerOpen(i);
+
             if (SDL_GameControllerGetAttached(gamepad.gamepad) == 1) {
+                gamepad.name = SDL_GameControllerName(gamepad.gamepad);
+                LOG("Gamepad: %s", gamepad.name.c_str());
                 SDL_Joystick *j = SDL_GameControllerGetJoystick(gamepad.gamepad);
                 if (SDL_JoystickIsHaptic(j)) {
                     gamepad.haptic = SDL_HapticOpenFromJoystick(j);
@@ -212,7 +216,7 @@ b8 Input::startup() {
             connectedGamepads[i].prevAxis[j] = 0.0f;
         }
         
-        connectedGamepads[i].deadZone = DEFAULT_DEADZONE;
+        connectedGamepads[i].deadZone = DEFAULT_DEADZONE;   // TODO: per axis!
     }
 
     //  init keyboard
@@ -489,6 +493,14 @@ void Input::showMouseCursor(b8 visible) {
 
 u32 Input::getNumGamepads() {
     return numGamepads;
+}
+
+std::string Input::getGamepadName(u32 gamepadIndex) {
+    if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
+        ERR("INVALID GAMEPAD INDEX: %d", gamepadIndex);
+        return "Unknown";
+    }
+    return connectedGamepads[gamepadIndex].name;
 }
 
 b8 Input::gamepadWasPressed(u32 gamepadIndex, u32 button) {
