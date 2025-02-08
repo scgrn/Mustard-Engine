@@ -640,6 +640,16 @@ static int luaNumGamepads(lua_State* luaVM) {
     return 1;
 }
 
+/// Gets name of gamepad
+// @function AB.input.getGamepadName
+// @return gamepad name
+static int luaGetGamepadName(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    lua_pushstring(luaVM, input.getGamepadName(index).c_str());
+
+    return 1;
+}
+
 /// Tracks which input was used last (gamepad or keyboard/mouse) for UI hints
 // @function AB.input.showGamepadControls
 // @return showGamepadControls
@@ -740,6 +750,7 @@ void registerInputFunctions() {
         { "gamepadWasReleased", luaGamepadWasReleased},
         { "gamepadGetAxis", luaGamepadGetAxis},
         { "numGamepads", luaNumGamepads},
+        { "getGamepadName", luaGetGamepadName},
         { "showGamepadControls", luaShowGamepadControls},
 
         { "vibrate", luaVibrate},
