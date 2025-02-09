@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"da/d4a/class_a_b_1_1_sprite.html#a4325019992c892a11a404c54c48fe570":[1,0,0,37,23],
 "da/d4a/class_a_b_1_1_sprite.html#a581165039e377b2f659b48590c757523":[1,0,0,37,14],
 "da/d4a/class_a_b_1_1_sprite.html#a7453600c28f2e0bb8c9c65c0b9bc58db":[1,0,0,37,3],
 "da/d4a/class_a_b_1_1_sprite.html#a74e1383645677513bc5648bb5019e485":[1,0,0,37,7],
@@ -131,12 +132,13 @@ var NAVTREEINDEX2 =
 "de/d3b/class_a_b_1_1_audio.html#ae6fa1f2de4e042d15b89827d80667eec":[1,0,0,5,3],
 "de/d7f/script_8h_source.html":[2,0,0,0,6,1],
 "de/d84/struct_a_b_1_1_gamepad.html":[1,0,0,11],
-"de/d84/struct_a_b_1_1_gamepad.html#a4185fbdaa95d2c613fe5666596d2b505":[1,0,0,11,6],
+"de/d84/struct_a_b_1_1_gamepad.html#a4185fbdaa95d2c613fe5666596d2b505":[1,0,0,11,7],
 "de/d84/struct_a_b_1_1_gamepad.html#a530403c1c4ac75230e6dd660cad4793c":[1,0,0,11,5],
-"de/d84/struct_a_b_1_1_gamepad.html#a67a9fca2f7da97de9fc9eb0a2abf08e9":[1,0,0,11,7],
+"de/d84/struct_a_b_1_1_gamepad.html#a67a9fca2f7da97de9fc9eb0a2abf08e9":[1,0,0,11,8],
 "de/d84/struct_a_b_1_1_gamepad.html#a74ea0f9f053e753a723f84e4f25ec3b0":[1,0,0,11,1],
-"de/d84/struct_a_b_1_1_gamepad.html#a844b527205ca37ec2a2651a5e20bb048":[1,0,0,11,8],
+"de/d84/struct_a_b_1_1_gamepad.html#a844b527205ca37ec2a2651a5e20bb048":[1,0,0,11,9],
 "de/d84/struct_a_b_1_1_gamepad.html#a85a1e0e4f718ef77f1e0630219cc955b":[1,0,0,11,0],
+"de/d84/struct_a_b_1_1_gamepad.html#a94745d68920e65cd20ce997bb4d1d1be":[1,0,0,11,6],
 "de/d84/struct_a_b_1_1_gamepad.html#ac204eeaf1d11edfa91f783f2ca2df711":[1,0,0,11,4],
 "de/d84/struct_a_b_1_1_gamepad.html#ae20d41c4988c4edf9461ec21703a11b6":[1,0,0,11,3],
 "de/d84/struct_a_b_1_1_gamepad.html#afad12577ab9f93dbd43743234ccd7247":[1,0,0,11,2],

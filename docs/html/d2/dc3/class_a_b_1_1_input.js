@@ -45,6 +45,7 @@ var class_a_b_1_1_input =
     [ "gamepadIsPressed", "d2/dc3/class_a_b_1_1_input.html#ad5bbed75dec8b5c599857d1fce0fc22b", null ],
     [ "gamepadWasPressed", "d2/dc3/class_a_b_1_1_input.html#a99ec978bb41d3e5657d5a679a99e629a", null ],
     [ "gamepadWasReleased", "d2/dc3/class_a_b_1_1_input.html#a48e00313e1996308a9a131c253dbd79b", null ],
+    [ "getGamepadName", "d2/dc3/class_a_b_1_1_input.html#a4005c31465a87442b05aba687bdbac92", null ],
     [ "getMousePosition", "d2/dc3/class_a_b_1_1_input.html#a06b2d43024339c52694ab2c9f2f1a4a8", null ],
     [ "getMouseWheelMove", "d2/dc3/class_a_b_1_1_input.html#ace542584ae74399ce0ef95e6e88c4157", null ],
     [ "getNumGamepads", "d2/dc3/class_a_b_1_1_input.html#a169e810cf1cc4ec5d42990862fad5851", null ],

@@ -6,6 +6,7 @@ var struct_a_b_1_1_gamepad =
     [ "gamepad", "de/d84/struct_a_b_1_1_gamepad.html#ae20d41c4988c4edf9461ec21703a11b6", null ],
     [ "haptic", "de/d84/struct_a_b_1_1_gamepad.html#ac204eeaf1d11edfa91f783f2ca2df711", null ],
     [ "joystick", "de/d84/struct_a_b_1_1_gamepad.html#a530403c1c4ac75230e6dd660cad4793c", null ],
+    [ "name", "de/d84/struct_a_b_1_1_gamepad.html#a94745d68920e65cd20ce997bb4d1d1be", null ],
     [ "prevAxis", "de/d84/struct_a_b_1_1_gamepad.html#a4185fbdaa95d2c613fe5666596d2b505", null ],
     [ "prevButtons", "de/d84/struct_a_b_1_1_gamepad.html#a67a9fca2f7da97de9fc9eb0a2abf08e9", null ],
     [ "rawAxis", "de/d84/struct_a_b_1_1_gamepad.html#a844b527205ca37ec2a2651a5e20bb048", null ]

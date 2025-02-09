@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"d5/d89/class_a_b_1_1_camera.html#aecce9a099be99e8e85c248f780568e66":[1,0,0,6,3],
 "d5/daf/class_a_b_1_1_file_system.html":[1,0,0,8],
 "d5/daf/class_a_b_1_1_file_system.html#a121da053095abbe11e1561411395afda":[1,0,0,8,3],
 "d5/daf/class_a_b_1_1_file_system.html#a3db8b7cec4688ab50b24510074fedd53":[1,0,0,8,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "da/d4a/class_a_b_1_1_sprite.html#a26c16cbb76e255d73a6c6b24e9e09b66":[1,0,0,37,13],
 "da/d4a/class_a_b_1_1_sprite.html#a26ed23d0697d88866518bea633300f49":[1,0,0,37,11],
 "da/d4a/class_a_b_1_1_sprite.html#a2952be1ecd8199f18a1034a9b49b19dd":[1,0,0,37,4],
-"da/d4a/class_a_b_1_1_sprite.html#a4119f1c0dc4611bbd0b3408e0712fa53":[1,0,0,37,19],
-"da/d4a/class_a_b_1_1_sprite.html#a4325019992c892a11a404c54c48fe570":[1,0,0,37,23]
+"da/d4a/class_a_b_1_1_sprite.html#a4119f1c0dc4611bbd0b3408e0712fa53":[1,0,0,37,19]
 };
