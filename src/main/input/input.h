@@ -135,7 +135,7 @@ std::unordered_map<int, std::string> keyNames = {
         b8 gamepadIsPressed(u32 gamepadIndex, u32 button);
         b8 gamepadWasReleased(u32 gamepadIndex, u32 button);
         float gamepadAxis(u32 gamepadIndex, u32 axis);
-        void setDeadzone(u32 gamepadIndex, f32 deadZone);
+        void setDeadzone(u32 gamepadIndex, GamepadAxis axis, f32 deadZone);
         void vibrate(u32 gamepadIndex, f32 strength, u32 duration);
         
         //  menu helper functions

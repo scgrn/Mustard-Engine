@@ -62,15 +62,15 @@ struct Gamepad {
     b8 buttons[Input::BUTTON_MAX];
     b8 prevButtons[Input::BUTTON_MAX];
 
-    float axis[Input::AXIS_MAX];
-    float prevAxis[Input::AXIS_MAX];
+    f32 axis[Input::AXIS_MAX];
+    f32 prevAxis[Input::AXIS_MAX];
     u32 rawAxis[Input::AXIS_MAX];
     
     SDL_GameController *gamepad;
     SDL_Haptic *haptic;
     SDL_JoystickID joystick;
 
-    float deadZone;     // TODO: per axis, duh
+    std::unordered_map<u32, f32> deadZones;
     std::string name;
 };
 
@@ -214,9 +214,8 @@ b8 Input::startup() {
             connectedGamepads[i].rawAxis[j] = 0;
             connectedGamepads[i].axis[j] = 0.0f;
             connectedGamepads[i].prevAxis[j] = 0.0f;
+            connectedGamepads[i].deadZones[j] = DEFAULT_DEADZONE;
         }
-        
-        connectedGamepads[i].deadZone = DEFAULT_DEADZONE;   // TODO: per axis!
     }
 
     //  init keyboard
@@ -361,10 +360,10 @@ void Input::update() {
             GamepadAxis vertAxis = axis == 0 ? AXIS_LEFT_Y : AXIS_RIGHT_Y;
 
             AB::Vec2 stickInput = AB::Vec2(connectedGamepads[i].rawAxis[horizAxis] / 32768.0f, connectedGamepads[i].rawAxis[vertAxis] / 32768.0f);
-            if (AB::magnitude(stickInput) < connectedGamepads[i].deadZone) {
+            if (AB::magnitude(stickInput) < connectedGamepads[i].deadZones[axis]) {
                 stickInput = AB::Vec2(0, 0);
             } else {
-                stickInput = AB::normalize(stickInput) * ((AB::magnitude(stickInput) - connectedGamepads[i].deadZone) / (1.0f - connectedGamepads[i].deadZone));
+                stickInput = AB::normalize(stickInput) * ((AB::magnitude(stickInput) - connectedGamepads[i].deadZones[axis]) / (1.0f - connectedGamepads[i].deadZones[axis]));
             }
             
             //connectedGamepads[i].prevAxis[horizAxis] = connectedGamepads[i].axis[horizAxis];
@@ -393,7 +392,7 @@ void Input::update() {
             float triggerInput = connectedGamepads[i].rawAxis[trigger] / 32767.0f;
             
             //connectedGamepads[i].prevAxis[trigger] = connectedGamepads[i].axis[trigger];
-            connectedGamepads[i].axis[trigger] = max(triggerInput - connectedGamepads[i].deadZone, 0.0f) / (1.0f - connectedGamepads[i].deadZone);
+            connectedGamepads[i].axis[trigger] = max(triggerInput - connectedGamepads[i].deadZones[axis], 0.0f) / (1.0f - connectedGamepads[i].deadZones[axis]);
         }
         connectedGamepads[i].buttons[BUTTON_LTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_LEFT] > 0.15f;
         connectedGamepads[i].buttons[BUTTON_RTRIGGER] = connectedGamepads[i].axis[AXIS_TRIGGER_RIGHT] > 0.15f;
@@ -531,9 +530,9 @@ float Input::gamepadAxis(u32 gamepadIndex, u32 axis) {
     return connectedGamepads[gamepadIndex].axis[axis];
 }
 
-void Input::setDeadzone(u32 gamepadIndex, float deadZone) {
+void Input::setDeadzone(u32 gamepadIndex, GamepadAxis axis, f32 deadZone) {
     if (gamepadIndex >= 0 && gamepadIndex <= numGamepads) {
-        connectedGamepads[gamepadIndex].deadZone = deadZone;
+        connectedGamepads[gamepadIndex].deadZones[axis] = deadZone;
     } else {
         //  TODO: log warning level
         LOG("WARNING: gamepad index out of range: %d", gamepadIndex);
