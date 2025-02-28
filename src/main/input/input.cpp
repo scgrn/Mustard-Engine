@@ -530,7 +530,7 @@ float Input::gamepadAxis(u32 gamepadIndex, u32 axis) {
     return connectedGamepads[gamepadIndex].axis[axis];
 }
 
-void Input::setDeadzone(u32 gamepadIndex, GamepadAxis axis, f32 deadZone) {
+void Input::setDeadzone(u32 gamepadIndex, u32 axis, f32 deadZone) {
     if (gamepadIndex >= 0 && gamepadIndex <= numGamepads) {
         connectedGamepads[gamepadIndex].deadZones[axis] = deadZone;
     } else {

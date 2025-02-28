@@ -631,6 +631,21 @@ static int luaGamepadGetAxis(lua_State* luaVM) {
     return 1;
 }
 
+/// Sets gamepad axis deadzone
+// @function AB.input.setDeadzone
+// @param index Gamepad index
+// @param axis Gamepad axis
+// @param deadzone Deadzone
+static int luaSetDeadzone(lua_State* luaVM) {
+    int index = (int)lua_tonumber(luaVM, 1);
+    int axis = (int)lua_tonumber(luaVM, 2);
+    float deadzone = (float)lua_tonumber(luaVM, 3);
+
+    input.setDeadzone(index, axis, deadzone);
+
+    return 1;
+}
+
 /// Gets current number of gamepads attached to the system
 // @function AB.input.numGamepads
 // @return numGamepads
@@ -749,6 +764,7 @@ void registerInputFunctions() {
         { "gamepadPressed", luaGamepadPressed},
         { "gamepadWasReleased", luaGamepadWasReleased},
         { "gamepadGetAxis", luaGamepadGetAxis},
+        { "setDeadzone", luaSetDeadzone},
         { "numGamepads", luaNumGamepads},
         { "getGamepadName", luaGetGamepadName},
         { "showGamepadControls", luaShowGamepadControls},
