@@ -60,7 +60,7 @@ bool Model::loadOBJ(std::string const& filename,
         ERR("COULDN'T LOAD %s", filename.c_str());
         return false;
     }
-    std::stringstream input((std::string(data)));     // most vexing parse
+    std::stringstream input((std::string(data, dataObject.getSize())));     // most vexing parse
 
 
     textured = false;
