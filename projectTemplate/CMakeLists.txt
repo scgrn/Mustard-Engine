@@ -31,8 +31,10 @@ endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-endif ()
+    if (NOT MINGW)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+    endif ()
+endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "Dist")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
@@ -41,11 +43,8 @@ endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Dist")
     add_compile_definitions(DIST)
-endif ()
-
-if(WIN32)
-    list(APPEND CMAKE_PREFIX_PATH "../library/vendor/SDL2-2.26.5")
 endif()
+
 find_package(SDL2 REQUIRED)
 
 add_executable(${PROJECT_NAME}
@@ -64,11 +63,10 @@ target_link_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/bin)
 
 # https://sam.hooke.me/note/2022/04/porting-a-simple-sdl2-game-to-emscripten/
 #if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-#   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file=../BORKULA.dat")
+#   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file=../${PROJECT_NAME}.dat")
 #endif()
 
-
-if(WIN32)
+if (WIN32)
     if (TARGET SDL2::SDL2main)
         target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
     endif()
@@ -93,4 +91,3 @@ else()
         endif()
     endif()
 endif()
-

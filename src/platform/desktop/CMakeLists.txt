@@ -21,18 +21,20 @@ add_compile_definitions(
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-endif ()
+    if (NOT MINGW)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+    endif ()
+endif()
 
 # Find SDL2 package
-set(SDL2_DIR "/libs/SDL2-2.26.5/cmake")
+set(SDL2_DIR "/libs/SDL2-2.30.3/cmake")
 find_package(SDL2 REQUIRED)
 
 set(VENDOR_DIR "../../vendor")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../../bin)
 
-# Define your project sources
+# Define project sources
 set(MAIN_SOURCE
     #../../main/core/memory.cpp
 
@@ -105,7 +107,6 @@ aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 # Remove unused source files
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/lua.c")
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
-list(REMOVE_ITEM TINYXML_SOURCE "${VENDOR_DIR}/tinyxml/xmltest.cpp")
 
 # Add compile definition for zlib to include necessary headers
 add_compile_definitions(_GNU_SOURCE)
@@ -121,7 +122,6 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC "."
     PUBLIC "${VENDOR_DIR}"
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
-    PUBLIC "${VENDOR_DIR}/soloud20200207/include"
     PUBLIC "${VENDOR_DIR}/zlib-1.3.1"
     PUBLIC "${SDL2_INCLUDE_DIRS}"
 )
@@ -129,7 +129,7 @@ target_include_directories(${PROJECT_NAME}
 # Link libraries and options
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
 
-if(WIN32)
+if (WIN32)
     add_compile_definitions(
         WIN32
     )
@@ -142,4 +142,3 @@ if(WIN32)
 else()
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 endif()
-
