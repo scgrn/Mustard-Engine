@@ -57,7 +57,7 @@ var class_a_b_1_1_input =
     [ "menuRight", "d2/dc3/class_a_b_1_1_input.html#acb053144aaa9ac725fde4141f7a3ed4b", null ],
     [ "menuSelect", "d2/dc3/class_a_b_1_1_input.html#a52dfc57c7e57f1be3e7454899fcd4a6a", null ],
     [ "menuUp", "d2/dc3/class_a_b_1_1_input.html#ad1ed7e4f130e407e0d50d439bf444787", null ],
-    [ "setDeadzone", "d2/dc3/class_a_b_1_1_input.html#a01c7d05b57c386cbfd7ee6ff8f5e20af", null ],
+    [ "setDeadzone", "d2/dc3/class_a_b_1_1_input.html#aba2a68f2b9936f1599860dcc7919d0fc", null ],
     [ "setMousePosition", "d2/dc3/class_a_b_1_1_input.html#a5150e54a84c0618fc4e377b6ffdb789c", null ],
     [ "showMouseCursor", "d2/dc3/class_a_b_1_1_input.html#a67b6c5c36f0575ece3181455e888b30f", null ],
     [ "shutdown", "d2/dc3/class_a_b_1_1_input.html#a35510883b34c3a0f5ab3e705ed612014", null ],
