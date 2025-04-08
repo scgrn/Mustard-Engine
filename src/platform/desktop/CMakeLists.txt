@@ -100,7 +100,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 # Collect third-party sources
-aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
+aux_source_directory("${VENDOR_DIR}/glad" GLAD_SOURCE)
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 
@@ -113,6 +113,7 @@ add_compile_definitions(_GNU_SOURCE)
 
 add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
+    ${GLAD_SOURCE}
     ${LUA_SOURCE}
     ${ZLIB_SOURCE}
 )
