@@ -7,12 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set compile flags
 set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1"
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -ldl -lm -sUSE_SDL=2 -sUSE_ZLIB=1"
 )
 
 add_compile_definitions(
-    WITH_MINIAUDIO
-
     # for emscripten
     # https://uncovergame.com/2015/01/21/porting-a-complete-c-game-engine-to-html5-through-emscripten/
     LUA_COMPAT_ALL
@@ -23,7 +21,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif ()
 
 set(VENDOR_DIR "../../vendor")
-set(PLATFORM_DIR "../../platform/desktop")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../../bin)
 
@@ -51,6 +48,8 @@ set(MAIN_SOURCE
     ../../main/math/plane.cpp
     ../../main/math/aabb.cpp
     ../../main/math/frustum.cpp
+
+    ../../main/misc/poissonDiscSampling.cpp
 
     ../../main/renderer/camera.cpp
     ../../main/renderer/font.cpp
@@ -80,45 +79,26 @@ set(MAIN_SOURCE
 )
 
 # Collect third-party sources
-aux_source_directory("${VENDOR_DIR}/glad" LUA_SOURCE)
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
-aux_source_directory("${VENDOR_DIR}/tinyxml" TINYXML_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/core" SOLOUD_CORE_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/audiosource/wav" SOLOUD_AUDIOSOURCE_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/filter" SOLOUD_FILTER_SOURCE)
-aux_source_directory("${VENDOR_DIR}/soloud20200207/src/backend/miniaudio" SOLOUD_BACKEND_SOURCE)
 aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 
 # Remove unused source files
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/lua.c")
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
-list(REMOVE_ITEM TINYXML_SOURCE "${VENDOR_DIR}/tinyxml/xmltest.cpp")
 
 add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
-    ${PLATFORM_SOURCE}
     ${LUA_SOURCE}
-    ${TINYXML_SOURCE}
     ${ZLIB_SOURCE}
-    ${SOLOUD_CORE_SOURCE}
-    ${SOLOUD_AUDIOSOURCE_SOURCE}
-    ${SOLOUD_FILTER_SOURCE}
-    ${SOLOUD_BACKEND_SOURCE}
 )
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC "../../main"
     PUBLIC "${VENDOR_DIR}"
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
-    PUBLIC "${VENDOR_DIR}/soloud20200207/include"
-    PUBLIC "${VENDOR_DIR}/tinyxml"
     PUBLIC "${VENDOR_DIR}/zlib-1.3.1"
-    PUBLIC "${PLATFORM_DIR}/win64"
-    PUBLIC "${PLATFORM_DIR}/win64/glad"
-    PUBLIC ${SDL2_INCLUDE_DIRS}
 )
 
 # Link libraries and options
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 
