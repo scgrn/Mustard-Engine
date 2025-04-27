@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set compile flags
 set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -ldl -lm -sUSE_SDL=2 -sUSE_ZLIB=1"
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1"
 )
 
 add_compile_definitions(
@@ -80,7 +80,6 @@ set(MAIN_SOURCE
 
 # Collect third-party sources
 aux_source_directory("${VENDOR_DIR}/lua-5.3.5/src" LUA_SOURCE)
-aux_source_directory("${VENDOR_DIR}/zlib-1.3.1" ZLIB_SOURCE)
 
 # Remove unused source files
 list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/lua.c")
@@ -89,14 +88,12 @@ list(REMOVE_ITEM LUA_SOURCE "${VENDOR_DIR}/lua-5.3.5/src/luac.c")
 add_library(${PROJECT_NAME} STATIC
     ${MAIN_SOURCE}
     ${LUA_SOURCE}
-    ${ZLIB_SOURCE}
 )
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC "../../main"
     PUBLIC "${VENDOR_DIR}"
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
-    PUBLIC "${VENDOR_DIR}/zlib-1.3.1"
 )
 
 # Link libraries and options
