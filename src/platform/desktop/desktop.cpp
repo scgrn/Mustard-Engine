@@ -144,7 +144,15 @@ void mainLoop(Application *app) {
             done = true;
         }
 
-        // TODO: call onPause / onResume on focus events
+        //  call onPause / onResume on focus events
+        if (event.type == SDL_WINDOWEVENT) {
+            if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+                app->onResume();
+            }
+            if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+                app->onPause();
+            }
+        }
 
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
@@ -237,7 +245,7 @@ void mainLoop(Application *app) {
             }
         }
 
-        //d elta time averaging
+        //  delta time averaging
         for (i32 i = 0; i < timeHistoryCount-1; i++) {
             timeAverager[i] = timeAverager[i+1];
         }
@@ -248,15 +256,15 @@ void mainLoop(Application *app) {
         }
         deltaTime /= timeHistoryCount;
 
-        //add to the accumulator
+        //  add to the accumulator
         frameAccumulator += deltaTime;
 
-        //spiral of death protection
+        //  spiral of death protection
         if (frameAccumulator > desiredFrametime * 8) {
             resync = true;
         }
 
-        //timer resync if requested
+        //  timer resync if requested
         if (resync) {
             frameAccumulator = 0;
             deltaTime = desiredFrametime;

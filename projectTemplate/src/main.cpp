@@ -7,9 +7,17 @@ class App : public AB::Application {
 
         void shutdown() {
         };
-        
+
         void update() {
             AB::script.execute("AB.update()");
+        }
+
+        void onPause() {
+            AB::script.execute("AB.onFocusLost()");
+        }
+
+        void onResume() {
+            AB::script.execute("AB.onFocusGained()");
         }
 
         void render() {
