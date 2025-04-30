@@ -9,14 +9,18 @@ class App : public AB::Application {
         };
 
         void update() {
-            AB::script.execute("AB.update()");
+            if (focused) {
+                AB::script.execute("AB.update()");
+            }
         }
 
         void onPause() {
+            focused = false;
             AB::script.execute("AB.onFocusLost()");
         }
 
         void onResume() {
+            focused = true;
             AB::script.execute("AB.onFocusGained()");
         }
 
@@ -25,6 +29,8 @@ class App : public AB::Application {
             AB::script.execute("AB.render()");
             AB::renderer.render(AB::camera2d);
         }
+
+        bool focused = true;
 };
 
 AB::Application* AB::createApplication() {

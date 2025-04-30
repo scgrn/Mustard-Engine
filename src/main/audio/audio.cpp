@@ -36,6 +36,8 @@ extern Audio audio;
 
 // TODO: hashmap of looping sounds, killAllLoopingSFX()
 
+std::vector<ma_sound*> pausedSounds;
+
 //  https://youtu.be/Vjm--AqG04Y
 f32 dBToVolume(f32 dB) {
     return powf(10.0f, 0.05f * dB);
@@ -234,6 +236,35 @@ void Audio::play(Sound *sound, f32 volume = 1.0f, f32 pan = 0.0f, b8 loop = fals
         
         soundQueue.push_back(queuedSound);
     }
+}
+
+void Audio::pauseAll() {
+    pausedSounds.clear();
+
+    extern AssetManager<Music> music;
+    for (const auto& pair : music.assetData) {
+        if (pair.second->isPlaying()) {
+            pair.second->pause();
+            pausedSounds.push_back(&pair.second->sound);
+        }
+    }
+
+    extern AssetManager<Sound> sounds;
+    for (const auto& pair : sounds.assetData) {
+        for (u32 i = 0; i < Sound::INSTANCES; i++) {
+            if (ma_sound_is_playing(&pair.second->sounds[i])) {
+                ma_sound_stop(&pair.second->sounds[i]);
+                pausedSounds.push_back(&pair.second->sounds[i]);
+            }
+        }
+    }
+}
+
+void Audio::resumeAll() {
+    for (ma_sound* sound : pausedSounds) {
+        ma_sound_start(sound);
+    }
+    pausedSounds.clear();
 }
 
 }   //  namespace

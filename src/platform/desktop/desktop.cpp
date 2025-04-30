@@ -147,9 +147,11 @@ void mainLoop(Application *app) {
         //  call onPause / onResume on focus events
         if (event.type == SDL_WINDOWEVENT) {
             if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+                audio.resumeAll();
                 app->onResume();
             }
             if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+                audio.pauseAll();
                 app->onPause();
             }
         }

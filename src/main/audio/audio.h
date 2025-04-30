@@ -47,9 +47,10 @@ class Sound : public Asset {
         void stop();
         b8 isPlaying();
         
-    protected:
-        DataObject data;
         ma_sound sounds[INSTANCES];
+
+protected:
+        DataObject data;
         ma_decoder decoders[INSTANCES];
         u32 currentInstance;
 };
@@ -69,9 +70,10 @@ class Music : public Asset {
         void stop();
         b8 isPlaying();
         
+        ma_sound sound;
+    
     protected:
         DataObject data;
-        ma_sound sound;
         ma_decoder decoder;
 };
 
@@ -86,6 +88,9 @@ class Audio : public SubSystem {
         //    queues a sound effect if it hasn't already been played this frame
         void play(Sound *sound, f32 volume, f32 pan, b8 loop);
         
+        void pauseAll();
+        void resumeAll();
+
         f32 soundVolume = 1.0f;
         f32 musicVolume = 1.0f;
 
