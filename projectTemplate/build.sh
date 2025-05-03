@@ -23,6 +23,34 @@ function buildRelease() {
     cmake --build build/release
 }
 
+function buildWebDebug() {
+    if [[ -z "${EMCMAKE}" ]]; then
+        source ~/emsdk/emsdk_env.sh
+    fi
+
+    echo "Building $PROJECT_NAME for web in debug mode...";
+
+    mkdir -p build/web-debug
+    cd build/web-debug
+    emcmake cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
+    cd ../..
+    cmake --build build/web-debug
+}
+
+function buildWebRelease() {
+    if [[ -z "${EMCMAKE}" ]]; then
+        source ~/emsdk/emsdk_env.sh
+    fi
+
+    echo "Building $PROJECT_NAME for web in release mode...";
+
+    mkdir -p build/web-release
+    cd build/web-release
+    emcmake cmake ../.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
+    cd ../..
+    cmake --build build/web-release
+}
+
 function buildAssets() {
     echo "Building asset archive..."
 
@@ -58,6 +86,10 @@ if [ "$config" == "debug" ]; then
     buildDebug
 elif [ "$config" == "release" ]; then
     buildRelease
+elif [ "$config" == "web-debug" ]; then
+    buildWebDebug
+elif [ "$config" == "web-release" ]; then
+    buildWebRelease
 elif [ "$config" == "assets" ]; then
     buildAssets
 elif [ "$config" == "dist" ]; then
@@ -73,6 +105,8 @@ else
     echo
     echo debug
     echo release
+    echo web-debug
+    echo web-release
     echo assets
     echo dist
     echo all

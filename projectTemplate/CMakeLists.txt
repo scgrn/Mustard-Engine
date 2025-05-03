@@ -22,6 +22,7 @@ if (DEFINED EMSCRIPTEN)
     set(CMAKE_CXX_FLAGS
         "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1"
     )
+    # set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "index")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
 else()
     set(CMAKE_CXX_FLAGS
