@@ -36,7 +36,6 @@ freely, subject to the following restrictions:
 #include <algorithm>
 #include <cstdarg>
 #include <sstream>
-#include <stdexcept>
 #include <cstdio>
 #include <cassert>
 
@@ -67,11 +66,15 @@ extern "C" {
 }
 
 #ifdef DEBUG
+#ifdef __EMSCRIPTEN__
+#define CALL_GL(stmt) stmt
+#else
 extern void checkOpenGLError(const char* stmt, const char* fname, int line);
 #define CALL_GL(stmt) do { \
         stmt; \
         checkOpenGLError(#stmt, __FILE__, __LINE__); \
     } while (false)
+#endif // __EMSCRIPTEN__
 #else
 #define CALL_GL(stmt) stmt
 #endif // DEBUG
