@@ -2,7 +2,7 @@
 
 zlib License
 
-(C) 2020 Andrew Krause
+(C) 2025 Andrew Krause
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -26,8 +26,8 @@ freely, subject to the following restrictions:
 #error This module should not be compiled with the NDK!
 #endif
 
-#ifndef AB_DESKTOP_H
-#define AB_DESKTOP_H
+#ifndef AB_ENTRY_POINT_H
+#define AB_ENTRY_POINT_H
 
 #include <iostream>
 
@@ -51,22 +51,17 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-#ifdef WIN32
-    freopen("log.txt", "a+", stdout);
-    freopen("log.txt", "a+", stderr);
-#endif
-
     //    this has to be called before AB::startup() so we have a chance to add archives
     auto app = AB::createApplication();
 
     AB::startup(app);
-    
+
     int exitCode = AB::run(app);
     delete app;
 
     AB::shutdown();
-    
+
     return exitCode;
 }
 
-#endif // AB_DESKTOP_H
+#endif // AB_ENTRY_POINT

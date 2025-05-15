@@ -37,7 +37,7 @@ freely, subject to the following restrictions:
 
 #include <SDL2/SDL.h>
 
-#include "desktop.h"
+#include "../entryPoint.h"
 #include "../../main/core/application.h"
 #include "../../main/core/log.h"
 #include "../../main/script/script.h"
