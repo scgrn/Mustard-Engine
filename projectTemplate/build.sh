@@ -98,6 +98,8 @@ elif [ "$config" == "all" ]; then
     buildDebug
     buildRelease
     buildDist
+    buildWebDebug
+    buildWebRelease
 else
     echo usage: ./build.sh config
     echo
