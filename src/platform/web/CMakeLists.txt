@@ -99,5 +99,5 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Link libraries and options
-target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -sFULL_ES3)
+target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -sFULL_ES3 sALLOW_MEMORY_GROWTH)
 

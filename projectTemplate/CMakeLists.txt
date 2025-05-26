@@ -48,11 +48,9 @@ endif()
 
 find_package(SDL2 REQUIRED)
 
-add_executable(${PROJECT_NAME}
-    src/main.cpp
-
-    # add other project sources here
-)
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
+list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/addArchive.cpp")
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${MUSTARD_DIR}/src/main

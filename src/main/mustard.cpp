@@ -56,11 +56,11 @@ void startup(Application *app) {
     if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
         ERR("Unable to initialize SDL: %s", SDL_GetError());
     }
-    
+
     LOG("\tPlatform: %s", SDL_GetPlatform());
     LOG("\tCPU count: %d", SDL_GetCPUCount());
     LOG("\tSystem RAM: %dMB", SDL_GetSystemRAM());
-    
+
     fileSystem.startup();
     script.startup();
     input.startup();
