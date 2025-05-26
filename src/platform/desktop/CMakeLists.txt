@@ -40,7 +40,7 @@ set(MAIN_SOURCE
 
     ../../main/mustard.cpp
     ../../main/pch.cpp
-    
+
     ../../main/audio/audio.cpp
 
     ../../main/core/fileSystem.cpp

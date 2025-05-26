@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "core/version.h"
 
 namespace AB {
-    
+
 // each subsystem has a single global instance
 FileSystem fileSystem;
 Renderer renderer;
@@ -34,7 +34,7 @@ Audio audio;
 Script script;
 Input input;
 Window window;
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(__EMSCRIPTEN__)
 Console console;
 #endif
 
@@ -67,7 +67,7 @@ void startup(Application *app) {
     audio.startup();
     window.startup(app);
     renderer.startup();
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(__EMSCRIPTEN__)
     console.startup();
 #endif
 }
@@ -78,10 +78,10 @@ void shutdown() {
     fonts.clear(true);
     sounds.clear(true);
     music.clear(true);
-    
+
     LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
-    
-#ifdef DEBUG
+
+#if defined(DEBUG) && !defined(__EMSCRIPTEN__)
     console.shutdown();
 #endif
     renderer.shutdown();
@@ -92,7 +92,7 @@ void shutdown() {
     fileSystem.shutdown();
 
     SDL_Quit();
-    
+
     LOG("Goodbye.", 0);
 }
 

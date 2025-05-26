@@ -109,7 +109,7 @@ b8 Script::startup() {
         { NULL, NULL }
     };
     registerFuncs("", "AB", callbackFuncs);
-    
+
     registerSystemFunctions();
     registerMathFunctions();
     registerGraphicsFunctions();
@@ -118,8 +118,8 @@ b8 Script::startup() {
     registerInputFunctions();
     registerAudioFunctions();
     registerLocalizationFunctions();
-    
-#ifdef DEBUG
+
+#if defined(DEBUG) && !defined(__EMSCRIPTEN__)
     extern int luaPrint (lua_State *L);
     lua_register(luaVM, "print", luaPrint);
 #endif

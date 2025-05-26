@@ -84,6 +84,7 @@ else()
 
     if (DEFINED EMSCRIPTEN)
         target_link_libraries(${PROJECT_NAME} libMustard-Web-${CMAKE_BUILD_TYPE}.a)
+        target_link_options(${PROJECT_NAME} PRIVATE -sFULL_ES3)
     else()
         if (CMAKE_BUILD_TYPE STREQUAL "Dist")    
             target_link_libraries(${PROJECT_NAME} libMustard-${CMAKE_HOST_SYSTEM_NAME}-Release.a ${SDL2_LIBRARIES} dl)

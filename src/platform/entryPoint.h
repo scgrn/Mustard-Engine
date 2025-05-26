@@ -31,8 +31,8 @@ freely, subject to the following restrictions:
 
 #include <iostream>
 
-#include "../../main/core/application.h"
-#include "../../main/mustard.h"
+#include "../main/core/application.h"
+#include "../main/mustard.h"
 
 namespace AB {
 

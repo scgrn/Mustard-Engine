@@ -30,7 +30,7 @@ set(MAIN_SOURCE
 
     ../../main/mustard.cpp
     ../../main/pch.cpp
-    
+
     ../../main/audio/audio.cpp
 
     ../../main/core/fileSystem.cpp
@@ -76,6 +76,8 @@ set(MAIN_SOURCE
     ../../main/script/math.cpp
     ../../main/script/script.cpp
     ../../main/script/system.cpp
+
+    web.cpp
 )
 
 # Collect third-party sources
@@ -97,5 +99,5 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Link libraries and options
-target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
+target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -sFULL_ES3)
 
