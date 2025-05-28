@@ -11,12 +11,12 @@ elif [ "$CONFIG" == "web-debug" ]; then
     if [[ -z "${EMCMAKE}" ]]; then
         source ~/emsdk/emsdk_env.sh
     fi
-    emrun bin/$PROJECT_NAME-Debug.html
+    emrun bin/$PROJECT_NAME-Web-Debug.html
 elif [ "$CONFIG" == "web-release" ]; then
     if [[ -z "${EMCMAKE}" ]]; then
         source ~/emsdk/emsdk_env.sh
     fi
-    emrun bin/$PROJECT_NAME-Release.html
+    emrun bin/$PROJECT_NAME-Web-Release.html
 else
     echo usage: ./run.sh config
     echo
