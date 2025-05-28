@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
+set(BASE_PROJECT_NAME ${PROJECT_NAME})
+
 if (DEFINED EMSCRIPTEN)
     project("${PROJECT_NAME}-Web-${CMAKE_BUILD_TYPE}")
 else()
@@ -61,9 +63,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/bin)
 
 # https://sam.hooke.me/note/2022/04/porting-a-simple-sdl2-game-to-emscripten/
-#if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-#   set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file=../${PROJECT_NAME}.dat")
-#endif()
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file=../../dist/${BASE_PROJECT_NAME}.dat@./${BASE_PROJECT_NAME}.dat")
+endif()
 
 if (WIN32)
     if (TARGET SDL2::SDL2main)

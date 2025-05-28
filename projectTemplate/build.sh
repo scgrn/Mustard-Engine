@@ -32,7 +32,7 @@ function buildWebDebug() {
 
     mkdir -p build/web-debug
     cd build/web-debug
-    emcmake cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
+    emcmake cmake ../.. -DCMAKE_BUILD_TYPE=Debug -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH -DEMSCRIPTEN=ON
     cd ../..
     cmake --build build/web-debug
 }
@@ -46,7 +46,7 @@ function buildWebRelease() {
 
     mkdir -p build/web-release
     cd build/web-release
-    emcmake cmake ../.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH
+    emcmake cmake ../.. -DCMAKE_BUILD_TYPE=Release -DPROJECT_NAME=$PROJECT_NAME -DMUSTARD_DIR=$MUSTARD_PATH -DSDL2_DIR=$SDL2_PATH -DEMSCRIPTEN=ON
     cd ../..
     cmake --build build/web-release
 }
