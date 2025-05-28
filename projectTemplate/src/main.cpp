@@ -35,7 +35,7 @@ class App : public AB::Application {
 
 AB::Application* AB::createApplication() {
 
-#ifdef DIST
+#if defined(DIST) || defined(__EMSCRIPTEN__)
 #include "addArchive.cpp"
 #endif
 
