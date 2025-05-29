@@ -45,7 +45,9 @@ extern "C" {
 
 #define CHUNK_SIZE 16384
 
-#define COMPILE_SCRIPTS
+//  likely don't want this because it breaks cross-platform compatibility
+//  TODO: benchmark archive size and load speed
+#undef COMPILE_SCRIPTS
 
 lua_State* luaVM;
 std::string key;
@@ -192,7 +194,7 @@ int compress(const uint8_t* inputData, uint64_t inputSize, uint8_t** outputData,
 int dumpBytecode(lua_State* luaVM, const void* p, size_t sz, void* ud) {
     std::ofstream* outFile = static_cast<std::ofstream*>(ud);
     outFile->write(static_cast<const char*>(p), sz);
-    
+
     return 0;
 }
 
@@ -206,7 +208,7 @@ bool compileScript(const std::string& inputFilename, const std::string& outputFi
     //  extract the directory path from the filename
     std::filesystem::path filePath(outputFilename);
     std::filesystem::path directory = filePath.parent_path();
-    
+
     //  create all directories if they don't exist
     if (!std::filesystem::create_directories(directory)) {
         if (!std::filesystem::exists(directory)) {
@@ -214,7 +216,7 @@ bool compileScript(const std::string& inputFilename, const std::string& outputFi
             return false;
         }
     }
-    
+
     //  dump the compiled bytecode to a file
     std::ofstream outputFile(outputFilename, std::ios::binary);
     if (!outputFile) {
@@ -226,6 +228,18 @@ bool compileScript(const std::string& inputFilename, const std::string& outputFi
     outputFile.close();
 
     return true;
+}
+
+void report(uint64_t sizeDataOriginal, uint32_t outputSize) {
+    std::cout << std::endl;
+    std::cout << "Total asset files: " << assets.size() << std::endl;
+    std::cout << std::endl;
+    std::cout << "Original size: " << toString(sizeDataOriginal) << " bytes" << std::endl;
+    std::cout << "Compressed size: " << toString(outputSize) << " bytes" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Compression ratio: ";
+    std::cout << (uint32_t)((float)outputSize / (float)sizeDataOriginal  * 100.0f) << "%" << std::endl;
+    std::cout << std::endl;
 }
 
 void buildArchive(std::string archivePath) {
@@ -243,7 +257,7 @@ void buildArchive(std::string archivePath) {
                     // compile lua scripts
                     if (filename.compare(filename.length() - 4, 4, ".lua") == 0) {
                         const std::string prefix = "scripts/";
-                        
+
                         std::string output = filename;
                         if (output.substr(0, prefix.length()) == prefix) {
                             output.insert(prefix.length(), "compiled/");
@@ -255,7 +269,7 @@ void buildArchive(std::string archivePath) {
                             lua_close(luaVM);
                             exit(1);
                         }
-                        
+
                         filename = output;
                     }
 #endif
@@ -279,19 +293,19 @@ void buildArchive(std::string archivePath) {
         // ss << asset->filename << " ";
         ss << asset->size << " ";
         ss << offset << "\n";
-        
+
         offset += asset->size;
     }
-    
+
     std::string manifest = ss.str();
     uint64_t sizeDataOriginal = offset + manifest.size();
-    
+
     uint8_t* buffer = new uint8_t[sizeDataOriginal];
 
     //  copy manifest size into the buffer
     uint32_t manifestSize = manifest.size();
     std::memcpy(buffer, &manifestSize, sizeof(uint32_t));
-    
+
     //  copy manifest and each asset's data into the buffer
     std::memcpy(buffer + sizeof(uint32_t), manifest.c_str(), manifest.size());
     offset = sizeof(uint32_t) + manifest.size();
@@ -320,19 +334,10 @@ void buildArchive(std::string archivePath) {
     std::cout << std::endl;
     std::cout << "Manifest:" << std::endl << std::endl;
     std::cout << manifest << std::endl << std::endl;
-    
+
     delete [] buffer;
 
-    //  TODO: break out into report()
-    std::cout << std::endl;
-    std::cout << "Total asset files: " << assets.size() << std::endl;
-    std::cout << std::endl;
-    std::cout << "Original size: " << toString(sizeDataOriginal) << " bytes" << std::endl;
-    std::cout << "Compressed size: " << toString(outputSize) << " bytes" << std::endl;
-    std::cout << std::endl;
-    std::cout << "Compression ratio: ";
-    std::cout << (uint32_t)((float)outputSize / (float)sizeDataOriginal  * 100.0f) << "%" << std::endl;
-    std::cout << std::endl;
+    report(sizeDataOriginal, outputSize);
 }
 
 int main(int argc, char* argv[]) {

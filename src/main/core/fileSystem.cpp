@@ -245,7 +245,8 @@ void FileSystem::ArchiveFile::load() {
         assets[path] = {size, offset + manifestSize + sizeof(u32)};
     }
 
-    FileSystem::loadCompiledScripts = true;
+    //  this is currently disabled as it breaks cross-platform compatibility
+    // FileSystem::loadCompiledScripts = true;
 
 /*
 #ifdef DEBUG
