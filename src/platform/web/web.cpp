@@ -35,6 +35,7 @@ freely, subject to the following restrictions:
 #include <iostream>
 #include <vector>
 
+#include <emscripten/emscripten.h>
 #include <SDL2/SDL.h>
 
 #include "../entryPoint.h"
@@ -55,6 +56,7 @@ void launchURL(std::string URL) {}
 
 extern Window window;
 std::vector<SDL_Event> eventQueue;
+Application *app;
 
 b8 done = false;
 b8 resync = true;
@@ -63,7 +65,7 @@ void quit() {
     done = true;
 }
 
-void mainLoop(Application *app) {
+void mainLoop() {
     // process events
     SDL_Event event;
 
@@ -113,13 +115,14 @@ void mainLoop(Application *app) {
     SDL_Delay(1);
 }
 
-i32 run(Application *app) {
+i32 run(Application *application) {
     i32 exitCode = EXIT_SUCCESS;
 
+    app = application;
     try {
         if (app == NULL) {
             //app = new AB::Application();
-            
+
             //    NO GAME
             return -1;
         }
@@ -130,10 +133,8 @@ i32 run(Application *app) {
         LOG("Entering main loop", 0);
         LOG(std::string(79, '-').c_str(), 0);
 
-        while (!AB::done) {
-            mainLoop(app);
-        }
-        
+        emscripten_set_main_loop(mainLoop, 60, false);
+
         LOG("Shutting down engine", 0);
         LOG(std::string(79, '-').c_str(), 0);
 
