@@ -20,14 +20,14 @@ class TestSuite {
             testsRun++;
             if (!condition) {
                 testsFailed++;
-                std::cout << 
+                std::cout << "Assert failed: " << message << std::endl;
             }
         }
 
     private:
         int testsRun;
         int testsFailed;
-}
+};
 
 void startTests() {
     std::cout << "============= Running tests =============" << std::endl;
