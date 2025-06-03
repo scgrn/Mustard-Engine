@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#include "types.h"
+#include "../types.h"
 
 namespace AB {
 
