@@ -39,6 +39,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+constexpr f32 EPSILON = 1e-5f;
+
 /*
 //  Generic matrix
 template <typename T, i32 rows, i32 cols>
@@ -58,13 +60,19 @@ struct Mat3 {
     Mat3() {
         loadIdentity();
     }
-    
+
     Mat3(f32 data2d[]) {
-        // TODO: populate!
+        i32 index = 0;
+        for (i32 y = 0; y < 3; y++) {
+            for (i32 x = 0; x < 3; x++) {
+                this->data2d[y][x] = data2d[index];
+                index++;
+            }
+        }
     }
 
     Mat3(Mat4 &mat4);
-    
+
     void loadIdentity() {
         for (i32 y = 0; y < 3; y++) {
             for (i32 x = 0; x < 3; x++) {
@@ -98,16 +106,31 @@ struct Mat3 {
     }
 };
 
+inline b8 operator==(const Mat3& a, const Mat3& b) {
+    for (i32 y = 0; y < 3; ++y) {
+        for (i32 x = 0; x < 3; ++x) {
+            if (fabsf(a.data2d[y][x] - b.data2d[y][x]) > EPSILON) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+inline b8 operator!=(const Mat3& a, const Mat3& b) {
+    return !(a == b);
+}
+
 struct Mat4 {
     union {
         f32 data2d[4][4];
         f32 data1d[16];
     };
-    
+
     Mat4() {
         loadIdentity();
     }
-    
+
     Mat4(f32 data2d[]) {
         i32 index = 0;
         for (i32 y = 0; y < 4; y++) {
@@ -120,7 +143,7 @@ struct Mat4 {
 
     Mat4(Mat3 m) {
         loadIdentity();
-        
+
         for (i32 y = 0; y < 3; y++) {
             for (i32 x = 0; x < 3; x++) {
                 data2d[y][x] = m.data2d[y][x];
@@ -173,6 +196,21 @@ struct Mat4 {
     }
 };
 
+inline b8 operator==(const Mat4& a, const Mat4& b) {
+    for (i32 y = 0; y < 4; ++y) {
+        for (i32 x = 0; x < 4; ++x) {
+            if (fabsf(a.data2d[y][x] - b.data2d[y][x]) > EPSILON) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+inline b8 operator!=(const Mat4& a, const Mat4& b) {
+    return !(a == b);
+}
+
 extern Mat4 ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
 extern Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far);
 extern Mat4 rotate(Mat4 source, f32 theta, Vec3 axis);
@@ -194,7 +232,7 @@ extern Vec3 down(Mat4 const& matrix);
 extern Vec3 left(Mat4 const& matrix);
 extern Vec3 right(Mat4 const& matrix);
 
-}   // namspace
+}   // namespace
 
 #endif
 
