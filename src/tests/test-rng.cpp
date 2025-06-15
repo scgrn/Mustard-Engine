@@ -1,5 +1,3 @@
-#include "test.cpp"
-
 /*
 class XorshiftPRNGTest {
 public:
@@ -41,22 +39,16 @@ static void testSeeding() {
     suite.assert(true, "testSeed(seed)");
 }
 
-int main(int argc, char* argv[]) {
-    startTests();
-    {
-        testSeeding();
-/*
-        testGeneration();
-        testDistribution();
-        testCorrelation();
-        testEntropy();
-        testRange();
-        testPerformance();
-        testErrorHandling();
-*/
-    }
-    endTests();
-
-    return 0;
+void testRng() {
+    testSeeding();
+    /*
+    testGeneration();
+    testDistribution();
+    testCorrelation();
+    testEntropy();
+    testRange();
+    testPerformance();
+    testErrorHandling();
+    */
 }
 

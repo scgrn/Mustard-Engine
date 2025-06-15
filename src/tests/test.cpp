@@ -29,19 +29,25 @@ class TestSuite {
         int testsFailed;
 };
 
-void startTests() {
-    std::cout << "============= Running tests =============" << std::endl;
-}
+#include "test-rng.cpp"
+#include "test-vector.cpp"
+#include "test-matrix.cpp" 
 
-void endTests() {
+int main(int argc, char* argv[]) {
+    std::cout << "============= Running tests =============" << std::endl;
+
+    testRng();
+    testVector();
+    testMatrix();
+
     std::cout << "============= Tests complete ============" << std::endl;
     std::cout << "Total tests run: " << totalTestsRun << std::endl;
     if (totalTestsFailed > 0) {
         std::cout << totalTestsFailed << " tests failed!" << std::endl;
-        std::exit(1);
+        return 1;
     }
-
     std::cout << "All tests passed!" << std::endl;
-    std::exit(0);
+
+    return 0;
 }
 

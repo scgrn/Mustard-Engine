@@ -1,8 +1,6 @@
-#include "test.cpp"
-
 #include "../main/math/vector.h"
 
-static void testEquality() {
+static void testVectorEquality() {
     TestSuite suite("Equality");
 
     AB::Vec3 a = AB::Vec3(1, 1, 1);
@@ -14,14 +12,7 @@ static void testEquality() {
     suite.assert(a != b, "operator!=");
 }
 
-int main(int argc, char* argv[]) {
-    startTests();
-    {
-        testEquality();
-    }
-    endTests();
-
-    return 0;
+void testVector() {
+    testVectorEquality();
 }
-
 
