@@ -113,11 +113,17 @@ void Window::setVideoMode(Application *app) {
         fullscreen = false;
     }
 
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-    Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_INPUT_GRABBED | SDL_WINDOW_HIDDEN | SDL_WINDOW_INPUT_FOCUS;
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);    // needed? GODDAMMIT
+    //  commenting this out because for now because it prevents the
+    //  webgl context from being created
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+
+    Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_INPUT_GRABBED | SDL_WINDOW_HIDDEN | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_SHOWN;
+    
+    //  commenting this out because for now because it prevents the
+    //  webgl context from being created
+    // SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);    // needed? GODDAMMIT
 
     // windowFlags |= SDL_WINDOW_BORDERLESS;
     if (fullscreen) {
@@ -145,13 +151,22 @@ void Window::setVideoMode(Application *app) {
 #endif // DEBUG
 
     if (window == NULL) {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+#ifdef __EMSCRIPTEN__
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#else
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+#endif
 
         window = SDL_CreateWindow(title.c_str(), windowXPos, windowYPos, xRes, yRes, windowFlags);
 
         glContext = SDL_GL_CreateContext(window);
+        if (!glContext) {
+            LOG("Failed to create GL context: %s", SDL_GetError());
+        }
 
         // set vsync
         if (vsync) {

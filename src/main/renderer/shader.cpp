@@ -171,8 +171,8 @@ std::string Shader::getHeader() {
 #if defined(__EMSCRIPTEN__) || defined(ANDROID)
     header =
         "#version 300 es\n\n"
-        "// precision mediump float\n"
-        "// precision lowp int\n\n"
+        "precision mediump float;\n"
+        "precision lowp int;\n\n"
         "#line 0\n";
 #else
     header =
