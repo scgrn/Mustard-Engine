@@ -133,7 +133,7 @@ i32 run(Application *application) {
         LOG("Entering main loop", 0);
         LOG(std::string(79, '-').c_str(), 0);
 
-        emscripten_set_main_loop(mainLoop, 60, false);
+        emscripten_set_main_loop(mainLoop, 60, true);
 
         LOG("Shutting down engine", 0);
         LOG(std::string(79, '-').c_str(), 0);

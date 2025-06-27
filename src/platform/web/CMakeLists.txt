@@ -99,5 +99,18 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Link libraries and options
-target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -s USE_SDL=2 -s USE_WEBGL2=1 -s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -sALLOW_MEMORY_GROWTH -sOFFSCREEN_FRAMEBUFFER=1 -sNO_DISABLE_EXCEPTION_CATCHING)
+target_link_options(${PROJECT_NAME} PRIVATE
+    -static-libgcc
+    -static-libstdc++
+    -s USE_SDL=2
+    -s USE_WEBGL2=1
+    -s FULL_ES3=1
+    -s MIN_WEBGL_VERSION=2
+    -s MAX_WEBGL_VERSION=2
+    -s ALLOW_MEMORY_GROWTH=1
+    -s OFFSCREEN_FRAMEBUFFER=1
+    -s NO_DISABLE_EXCEPTION_CATCHING=1
+    "-sEXPORTED_RUNTIME_METHODS=['HEAPF32','ccall','cwrap']"
+    -sSTACK_SIZE=1024KB
+)
 

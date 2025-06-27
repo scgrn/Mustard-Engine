@@ -22,7 +22,7 @@ endif()
 
 if (DEFINED EMSCRIPTEN)
     set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1"
+        "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1 -sNO_DISABLE_EXCEPTION_CATCHING"
     )
     # set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "index")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
@@ -84,7 +84,22 @@ else()
 
     if (DEFINED EMSCRIPTEN)
         target_link_libraries(${PROJECT_NAME} libMustard-Web-${CMAKE_BUILD_TYPE}.a)
-        target_link_options(${PROJECT_NAME} PRIVATE -sFULL_ES3 -sALLOW_MEMORY_GROWTH)
+        #target_link_options(${PROJECT_NAME} PRIVATE -sFULL_ES3 -sALLOW_MEMORY_GROWTH)
+        target_link_options(${PROJECT_NAME} PRIVATE
+            -static-libgcc
+            -static-libstdc++
+            -sUSE_SDL=2
+            -sUSE_WEBGL2=1
+            -sFULL_ES3=1
+            -sMIN_WEBGL_VERSION=2
+            -sMAX_WEBGL_VERSION=2
+            -sALLOW_MEMORY_GROWTH=1
+            -sOFFSCREEN_FRAMEBUFFER=1
+            -sNO_DISABLE_EXCEPTION_CATCHING=1
+            "-sEXPORTED_RUNTIME_METHODS=['HEAPF32','ccall','cwrap']"
+            "-sSTACK_SIZE=1024KB"
+        )
+
     else()
         if (CMAKE_BUILD_TYPE STREQUAL "Dist")    
             target_link_libraries(${PROJECT_NAME} libMustard-${CMAKE_HOST_SYSTEM_NAME}-Release.a ${SDL2_LIBRARIES} dl)
