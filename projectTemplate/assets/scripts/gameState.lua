@@ -15,6 +15,7 @@ function GameState:new()
         start = function() end,
         cancel = function() end,
         click = function(x,y) end,
+        keyPressed = function(key) end,
         backPressed = function() end,
         update = function() end,
         render = function() end
