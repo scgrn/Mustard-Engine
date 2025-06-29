@@ -112,5 +112,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -s NO_DISABLE_EXCEPTION_CATCHING=1
     "-sEXPORTED_RUNTIME_METHODS=['HEAPF32','ccall','cwrap']"
     -sSTACK_SIZE=1024KB
+    -sINITIAL_RUN=0
+    --no-entry
 )
 
