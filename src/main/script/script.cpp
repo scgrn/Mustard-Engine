@@ -102,6 +102,7 @@ b8 Script::startup() {
         { "onGamepadReleased", luaDummyFunc},
         { "onGamepadAxisMoved", luaDummyFunc},
 
+        { "loadConfig", luaDummyFunc},
         { "init", luaDummyFunc},
         { "update", luaDummyFunc},
         { "render", luaDummyFunc},
