@@ -79,7 +79,7 @@ void checkOpenGLError(const char* stmt, const char* fname, int line) {
 
 namespace AB {
 
-//  android-specific method stubs (what?)
+//  android-specific method stub
 void vibrate(int ms) {}
 void launchEmail() {}
 void requestRating() {}
@@ -293,6 +293,7 @@ void mainLoop(Application *app) {
         }
     }
 
+    // RenderLayer::textureCache.invalidate();
     app->render();
 #ifdef DEBUG
     console.render();

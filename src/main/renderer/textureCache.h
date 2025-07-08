@@ -35,15 +35,19 @@ class TextureCache {
         //    returns texture unit or -1 if no slot available
         //    will not evict textures bound after the last call to advanceFrame
         //    reserve is not currently used
-        i32 bindTexture(unsigned int textureID, bool reserve = false);
-
+        i32 bindTexture(u32 textureID, bool reserve = false);
+        
         //  resets all slots to fair game
         void advanceFrame();
         
+        //    remove a texture from the cache while unbinding it
+        //    mostly for unbinding renderTargets
+        //    this will not complain if the texture isn't in the cache
+        void evictTexture(u32 textureID);
         void invalidate();
         
     private:
-        unsigned int frameID;
+        u32 frameID;
         
         //    meh, maybe query for max. for now the spec min is fine.
         static const u32 MAX_TEXTURE_UNITS = 16;

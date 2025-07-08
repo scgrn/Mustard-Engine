@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "../pch.h"
 
 #include "renderTarget.h"
+#include "renderLayer.h"
 #include "../core/log.h"
 #include "../core/window.h"
 
@@ -87,7 +88,7 @@ RenderTarget::RenderTarget(int width, int height, bool depthStencil) {
     }
 
     CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-    CALL_GL(glBindTexture(GL_TEXTURE_2D, texture));
+    CALL_GL(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 RenderTarget::~RenderTarget() {
@@ -109,12 +110,14 @@ void RenderTarget::clear() {
 }
 
 void RenderTarget::begin() {
+    RenderLayer::textureCache.evictTexture(texture);
     CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
     CALL_GL(glViewport(0, 0, width, height));
 }
 
 void RenderTarget::end() {
     CALL_GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+
     //    TODO: need to reset viewport here but we don't know the dimensions.
     //          maybe the renderer or window class should
     //          be responsible for setting / resetting render targets?

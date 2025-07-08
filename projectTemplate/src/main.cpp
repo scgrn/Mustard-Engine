@@ -25,7 +25,6 @@ class App : public AB::Application {
         }
 
         void render() {
-            AB::RenderLayer::textureCache.invalidate();
             AB::script.execute("AB.render()");
             AB::renderer.render(AB::camera2d);
         }

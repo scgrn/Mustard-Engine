@@ -42,12 +42,12 @@ extern "C"
 #endif
 
 namespace AB {
-    
+
 GLuint whiteTexture;
- 
+
 b8 Renderer::startup() {
     LOG("Renderer subsystem startup", 0);
-    
+
     // create white texture
     CALL_GL(glGenTextures(1, &whiteTexture));
     if (!whiteTexture) {
@@ -75,19 +75,18 @@ b8 Renderer::startup() {
     CALL_GL(glBufferData(GL_UNIFORM_BUFFER, sizeof(uniforms), NULL, GL_STATIC_DRAW)); // allocate 152 bytes of memory (?)
     CALL_GL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
     LOG_EXP(sizeof(uniforms));
-    
+
     CALL_GL(glEnable(GL_BLEND));
     CALL_GL(glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
-    
+
     layers.clear();
-    //layers[0] = new RenderLayer();
     layers[0] = new RenderLayer(nullptr, nullptr, blend::identity(), true);
-    //batchRenderers.insert(std::pair<int, RenderLayer>(0, new RenderLayer()));
-    
+
     CALL_GL(glGenVertexArrays(1, &fullscreenQuadVAO));
 
+    RenderLayer::textureCache.invalidate();
     initialized = true;
-    
+
     return true;
 }
 

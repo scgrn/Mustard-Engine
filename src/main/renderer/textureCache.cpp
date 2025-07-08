@@ -49,12 +49,11 @@ freely, subject to the following restrictions:
 
 
 namespace AB {
-    
+
 TextureCache::TextureCache() {
     frameID = 1;
-    invalidate();
 }
-        
+
 i32 TextureCache::bindTexture(GLuint textureID, bool reserve) {
     i32 oldestIndex = 0;
     u32 oldestFrame = frameID;
@@ -81,9 +80,6 @@ i32 TextureCache::bindTexture(GLuint textureID, bool reserve) {
     i32 unit = oldestIndex;
     assert(unit != -1);
 
-    //    TODO: LOG_V
-    // LOG("Loading texture into unit %d", unit);
-
     textureBindings[unit].textureID = textureID;
     textureBindings[unit].lastFrame = frameID;
 
@@ -97,10 +93,25 @@ void TextureCache::advanceFrame() {
     frameID++;
 }
 
+void TextureCache::evictTexture(u32 textureID) {
+    for (u32 i = 0; i < MAX_TEXTURE_UNITS; i++) {
+        if (textureBindings[i].textureID == textureID) {
+            textureBindings[i].textureID = 0;
+            textureBindings[i].lastFrame = 0;
+
+            CALL_GL(glActiveTexture(GL_TEXTURE0 + i));
+            CALL_GL(glBindTexture(GL_TEXTURE_2D, 0));
+        }
+    }
+}
+
 void TextureCache::invalidate() {
     for (u32 i = 0; i < MAX_TEXTURE_UNITS; i++) {
         textureBindings[i].textureID = 0;
         textureBindings[i].lastFrame = 0;
+
+        CALL_GL(glActiveTexture(GL_TEXTURE0 + i));
+        CALL_GL(glBindTexture(GL_TEXTURE_2D, 0));
     }
 }
 
