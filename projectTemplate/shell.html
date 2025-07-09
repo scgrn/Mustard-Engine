@@ -1,114 +1,118 @@
 <!doctype html>
 <html lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <title>MUSTARD ENGINE GAME</title>
-  <style>
-    html, body {
-      background-color: black;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    <meta charset="utf-8">
+    <title>Mustard project</title>
+    <style>
+        :root {
+            --canvas-bg: rgb(0, 0, 0);
+        }
 
-    #canvas {
-      background-color: black;
-      display: block;
-      border: none;
-      /*
-      width: 800px;
-      height: 600px;
-      */
-    }
+        html, body {
+            background-color: var(--canvas-bg);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    #spinner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border: 8px solid white;
-      border-top: 8px solid transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      z-index: 10;
-    }
+        #canvas {
+            background-color: var(--canvas-bg);
+            display: block;
+            border: none;
+            max-width: 95dvw;
+            max-height: 95dvh;
+            width: auto;
+            height: auto;
+        }
 
-    #playButton {
-      width: 0;
-      height: 0;
-      position: absolute;
-      align-items: center;
-      justify-content: center;
-      border-left: 40px solid white;
-      border-top: 30px solid transparent;
-      border-bottom: 30px solid transparent;
-      pointer-events: none;
-      display: none;
-    }
+        #spinner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 8px solid white;
+            border-top: 8px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 10;
+        }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-  </style>
+        #playButton {
+            width: 0;
+            height: 0;
+            position: absolute;
+            align-items: center;
+            justify-content: center;
+            border-left: 40px solid white;
+            border-top: 30px solid transparent;
+            border-bottom: 30px solid transparent;
+            pointer-events: none;
+            display: none;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <div id="spinner"></div>
-  <div id="playButton"></div>
-  <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    <div id="spinner"></div>
+    <div id="playButton"></div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 
-  <script>
-    const spinner = document.getElementById('spinner');
-    const canvas = document.getElementById('canvas');
-    const playButton = document.getElementById('playButton');
+    <script>
+        const spinner = document.getElementById('spinner');
+        const canvas = document.getElementById('canvas');
+        const playButton = document.getElementById('playButton');
 
-    let startGame = null;
+        let startGame = null;
 
-    var Module = {
-      canvas: canvas,
+        var Module = {
+            canvas: canvas,
 
-      monitorRunDependencies: (left) => {
-        Module.totalDependencies = Math.max(Module.totalDependencies || 0, left);
-        if (left === 0) {
-          spinner.style.display = 'none';
-          playButton.style.display = 'flex';
-        }
-      },
+            monitorRunDependencies: (left) => {
+                Module.totalDependencies = Math.max(Module.totalDependencies || 0, left);
+                if (left === 0) {
+                    spinner.style.display = 'none';
+                    playButton.style.display = 'flex';
+                }
+            },
 
-      preRun: [],
-      onRuntimeInitialized: () => {
-        startGame = () => {
-          window.removeEventListener('keydown', onKeyDown);
-          canvas.removeEventListener('click', onCanvasClick);
-          playButton.style.display = 'none';
-          Module.callMain([]);
+            preRun: [],
+            onRuntimeInitialized: () => {
+                startGame = () => {
+                    window.removeEventListener('keydown', onKeyDown);
+                    canvas.removeEventListener('click', onCanvasClick);
+                    playButton.style.display = 'none';
+                    Module.callMain([]);
+                };
+            }
         };
-      }
-    };
 
-    window.onerror = () => {
-      spinner.style.display = 'none';
-      console.error("Runtime error occurred.");
-    };
+        window.onerror = () => {
+            spinner.style.display = 'none';
+            console.error("Runtime error occurred.");
+        };
 
-    function onKeyDown() {
-      window.removeEventListener('keydown', onKeyDown);
-      if (startGame) startGame();
-    }
-    window.addEventListener('keydown', onKeyDown);
+        function onKeyDown() {
+            window.removeEventListener('keydown', onKeyDown);
+            if (startGame) startGame();
+        }
+        window.addEventListener('keydown', onKeyDown);
 
-    function onCanvasClick() {
-      canvas.removeEventListener('click', onCanvasClick);
-      if (startGame) startGame();
-    }
-    canvas.addEventListener('click', onCanvasClick);
-    </script>
+        function onCanvasClick() {
+            canvas.removeEventListener('click', onCanvasClick);
+            if (startGame) startGame();
+        }
+        canvas.addEventListener('click', onCanvasClick);
+        </script>
 
-  {{{ SCRIPT }}}
+    {{{ SCRIPT }}}
 </body>
 </html>
 
