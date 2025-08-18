@@ -48,7 +48,8 @@ void error(int line, const char* file, const char* msg, ...) {
     va_end(args);
 
     std::ostringstream o;
-    o << file << " [" << line << "] \t" << szBuf << std::endl;
+    // o << file << " [" << line << "] \t" << szBuf << std::endl;
+    o << "[ERR] \t" << szBuf << std::endl;
     std::string s(o.str());
 
     throw (std::runtime_error(s));
@@ -61,15 +62,9 @@ void log(int line, const char* file, const char* msg, ...) {
     vsprintf(szBuf, msg, args);
     va_end(args);
 
-    std::stringstream  meta;
-    meta << file << " [" << line << "]";
-    if (meta.str().length() < 40) {
-        meta << std::string(40 - meta.str().length(), ' ');
-    } else {
-        meta << std::string(3, ' ');
-    }
-    
-    std::clog << meta.str() << szBuf << std::endl;
+    // prefix << file << " [" << line << "]";
+
+    std::clog << "[INFO] \t" << szBuf << std::endl;
 }
 
 }   //  namespace
