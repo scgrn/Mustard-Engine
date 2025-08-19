@@ -41,17 +41,10 @@ freely, subject to the following restrictions:
 #include <sstream>
 
 enum {
-    LOG_FATAL,
     LOG_ERROR,
-    LOG_WARN,
     LOG_INFO,
-
-    // (V debug builds V)
     LOG_DEBUG,
-    LOG_TRACE
 };
-
-// switches for warn...trace
 
 namespace AB {
 #ifdef ANDROID
@@ -61,7 +54,7 @@ namespace AB {
 #define ERR(msg, ...) __android_log_print(ANDROID_LOG_ERROR, "JNI", msg, __VA_ARGS__)
 #else
 #ifdef DEBUG
-#define LOG(msg, ...) AB::log(__LINE__, __FILE__, msg, __VA_ARGS__)
+#define LOG(msg, ...) AB::log(LOG_DEBUG, __LINE__, __FILE__, msg, __VA_ARGS__)
 #define LOG_EXP(name) AB::logExp(__LINE__, __FILE__, #name, name)
 #define ERR(msg, ...) AB::error(__LINE__, __FILE__, msg, __VA_ARGS__)
 #else
@@ -70,16 +63,18 @@ namespace AB {
 #define ERR(msg, ...) 
 #endif
 
-void log(int line, const char* file, const char* msg, ...);
+void log(int level, int line, const char* file, const char* msg, ...);
 void error(int line, const char* file, const char* msg, ...);
 extern void redirectLog(std::streambuf* dest);
+
+extern int logLevel;
 
 template <class T>
 void logExp(int line, const char* file, const char* name, T value) {
     std::stringstream out;
     out << name << " == " << value;
     if (out) {
-        log(line, file, out.str().c_str());
+        log(LOG_DEBUG, line, file, out.str().c_str());
     } else {
         LOG("Couldn't convert value to string", 0);
     }

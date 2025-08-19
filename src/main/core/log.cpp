@@ -36,6 +36,8 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+int logLevel = LOG_DEBUG;
+
 void redirectLog(std::streambuf* dest) { std::clog.rdbuf(dest); }
 
 //    oh wow variadic functions
@@ -49,13 +51,17 @@ void error(int line, const char* file, const char* msg, ...) {
 
     std::ostringstream o;
     // o << file << " [" << line << "] \t" << szBuf << std::endl;
-    o << "[ERR] \t" << szBuf << std::endl;
+    o << "[ERROR] \t" << szBuf << std::endl;
     std::string s(o.str());
 
     throw (std::runtime_error(s));
 }
 
-void log(int line, const char* file, const char* msg, ...) {
+void log(int level, int line, const char* file, const char* msg, ...) {
+    if (level > logLevel) {
+        return;
+    }
+
     va_list args;
     va_start(args, msg);
     char szBuf[4096];
@@ -64,7 +70,14 @@ void log(int line, const char* file, const char* msg, ...) {
 
     // prefix << file << " [" << line << "]";
 
-    std::clog << "[INFO] \t" << szBuf << std::endl;
+    std::string prefix;
+    switch (level) {
+        case LOG_ERROR: prefix = "[ERROR]"; break;
+        case LOG_INFO: prefix = "[INFO]"; break;
+        case LOG_DEBUG: default: prefix = "[DEBUG]"; break;
+    }
+
+    std::clog << prefix << "\t" << szBuf << std::endl;
 }
 
 }   //  namespace
