@@ -56,6 +56,8 @@ void Script::registerFuncs(std::string const& parent, std::string const& name, c
 
         lua_remove(luaVM, -1); // module
     } else {
+        execute("declare(\"" + name + "\", {})");
+
         lua_newtable(luaVM);
         luaL_setfuncs(luaVM, funcs, 0);
         lua_pushvalue(luaVM, -1);
@@ -75,6 +77,38 @@ b8 Script::startup() {
     luaL_openlibs(luaVM);
 
     luaError = false;
+
+    //  control global variable access
+    //  from https://www.lua.org/pil/14.2.html
+    std::string script = 
+    "local declaredNames = {} "
+
+    "function declare (name, initval) "
+    "    rawset(_G, name, initval) "
+    "    declaredNames[name] = true "
+    "end "
+
+    "setmetatable(_G, { "
+    "    __newindex = function (t, n, v) "
+    "        if not declaredNames[n] then "
+    "            error(\"Attempt to write to undeclared var: \"..n, 2) "
+    "        else "
+    "            rawset(t, n, v) "
+    "        end "
+    "    end, "
+
+    "    __index = function (_, n) "
+    "        if not declaredNames[n] then "
+    "            error(\"Attempt to read undeclared var: \"..n, 2) "
+    "        else "
+    "            return nil "
+    "        end "
+    "    end, "
+    "}) "
+    
+    "declare(\"videoConfig\", {}) "
+    "declare(\"_\") ";
+    execute(script);
 
     //  register callbacks
     static const luaL_Reg callbackFuncs[] = {
@@ -124,38 +158,6 @@ b8 Script::startup() {
     extern int luaPrint (lua_State *L);
     lua_register(luaVM, "print", luaPrint);
 #endif
-
-    //  control global variable access
-    //  from https://www.lua.org/pil/14.2.html
-    std::string script = 
-    "local declaredNames = {} "
-
-    "function declare (name, initval) "
-    "    rawset(_G, name, initval) "
-    "    declaredNames[name] = true "
-    "end "
-
-    "setmetatable(_G, { "
-    "    __newindex = function (t, n, v) "
-    "        if not declaredNames[n] then "
-    "            error(\"Attempt to write to undeclared var: \"..n, 2) "
-    "        else "
-    "            rawset(t, n, v) "
-    "        end "
-    "    end, "
-
-    "    __index = function (_, n) "
-    "        if not declaredNames[n] then "
-    "            error(\"Attempt to read undeclared var: \"..n, 2) "
-    "        else "
-    "            return nil "
-    "        end "
-    "    end, "
-    "}) "
-    
-    "declare(\"videoConfig\", {}) "
-    "declare(\"_\") ";
-    execute(script);
 
     // run startup scripts
     execute("AB.system.loadScript('main.lua')");
