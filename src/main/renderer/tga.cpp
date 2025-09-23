@@ -98,8 +98,11 @@ u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
 
     //  read header
     u8* data = dataObject.getData();
+    if (data == nullptr) {
+        ERR("Unable to read file: %s", filename.c_str());
+    }
     if (data[1] > 1) {
-        ERR("Unsupported file type", 0);
+        ERR("Unsupported file type %s", filename.c_str());
     }
 
     // Encoding flag  1 = Raw indexed image
