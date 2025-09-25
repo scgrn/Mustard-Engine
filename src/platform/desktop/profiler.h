@@ -25,7 +25,40 @@ freely, subject to the following restrictions:
 #ifndef AB_PROFILER_H
 #define AB_PROFILER_H
 
+#include <chrono>
+
+#ifdef DEBUG
+#define PROFILE(name) AB::ScopedTimer scopedTimer(#name);
+#else
+#define PROFILE(name) 
+#endif
+
 namespace AB {
+
+class Timer {
+    public:
+        Timer() { reset(); }
+        void reset() { start = std::chrono::high_resolution_clock::now(); }
+        float elapsed() const { return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() * 0.001f * 0.001f; }
+        float elapsedMillis() const { return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() * 0.001f; }
+
+    private:
+        std::chrono::time_point<std::chrono::high_resolution_clock> start;
+};
+
+class ScopedTimer {
+    public:
+        ScopedTimer(std::string name) : name(name) {}
+        ~ScopedTimer() {
+            float time = timer.elapsedMillis();
+            std::cout << name << " - " << time << "ms\n";
+        }
+
+    private:
+        Timer timer;
+        std::string name;
+};
+
 }
 
 #endif

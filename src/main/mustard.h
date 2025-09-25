@@ -36,6 +36,7 @@ freely, subject to the following restrictions:
 #include "core/window.h"
 #include "core/log.h"
 #ifdef DEBUG
+#include "../platform/desktop/profiler.h"
 #include "../platform/desktop/console.h"
 #endif
 
