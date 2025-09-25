@@ -93,6 +93,10 @@ void shutdown() {
 
     SDL_Quit();
 
+#ifdef DEBUG
+    reportProfiling();
+#endif
+
     LOG("Goodbye.", 0);
 }
 

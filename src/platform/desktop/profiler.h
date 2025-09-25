@@ -39,8 +39,8 @@ class Timer {
     public:
         Timer() { reset(); }
         void reset() { start = std::chrono::high_resolution_clock::now(); }
-        float elapsed() const { return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() * 0.001f * 0.001f; }
-        float elapsedMillis() const { return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() * 0.001f; }
+        f32 elapsed() const { return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() * 0.001f * 0.001f; }
+        f32 elapsedMillis() const { return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() * 0.001f; }
 
     private:
         std::chrono::time_point<std::chrono::high_resolution_clock> start;
@@ -49,15 +49,14 @@ class Timer {
 class ScopedTimer {
     public:
         ScopedTimer(std::string name) : name(name) {}
-        ~ScopedTimer() {
-            float time = timer.elapsedMillis();
-            std::cout << name << " - " << time << "ms\n";
-        }
+        ~ScopedTimer();
 
     private:
         Timer timer;
         std::string name;
 };
+
+void reportProfiling();
 
 }
 
