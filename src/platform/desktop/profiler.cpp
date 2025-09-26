@@ -56,66 +56,58 @@ struct Stats {
     u32 count;
     f32 mean;
     f32 median;
-    f32 stddev;
+    f32 standardDeviation;
     f32 min;
     f32 max;
-    f32 p95;
 };
 
 Stats computeStats(const std::vector<float>& v) {
-    Stats s{};
+    Stats stats{};
     if (v.empty()) {
-        return s;
+        return stats;
     }
 
-    s.count = v.size();
+    stats.count = v.size();
 
     //  mean
     f32 sum = 0.0;
     for (f32 x : v) {
         sum += x;
     }
-    s.mean = sum / v.size();
+    stats.mean = sum / v.size();
 
-    //  median + percentiles require sorting
+    //  sort to find median
     std::vector<float> sorted = v;
     std::sort(sorted.begin(), sorted.end());
-
-    auto getPercentile = [&](float pct) {
-        size_t idx = static_cast<size_t>(pct * (sorted.size() - 1));
-        return sorted[idx];
-    };
-
-    s.median = getPercentile(0.5f);
-    s.p95 = getPercentile(0.95f);
+    stats.median = sorted[(int)stats.count / 2];
 
     //  min/max
-    s.min = sorted.front();
-    s.max = sorted.back();
+    stats.min = sorted.front();
+    stats.max = sorted.back();
 
     //  standard deviation
     f32 variance = 0.0f;
     for (f32 x : v) {
-        variance += (x - s.mean) * (x - s.mean);
+        variance += (x - stats.mean) * (x - stats.mean);
     }
-    s.stddev = std::sqrt(variance / v.size());
+    stats.standardDeviation = std::sqrt(variance / v.size());
 
-    return s;
+    return stats;
 }
 
 void reportProfiling() {
     LOG("\n===== Profiling Report =====\n", 0);
 
     for (const auto& [name, vec] : samples) {
-        Stats s = computeStats(vec);
+        Stats stats = computeStats(vec);
 
-        std::cout << name << " (" << s.count << " samples)\n"
-            << "\tMean: " << s.mean << " ms\n"
-            << "\tMedian: " << s.median << " ms\n"
-            << "\tStandard deviation: " << s.stddev << " ms\n"
-            << "\tMin: " << s.min << " ms\n"
-            << "\tMax: " << s.max  << " ms\n"
-            << "\tP95: " << s.p95  << " ms\n\n";
+        std::cout << name << " (" << stats.count << " sample"
+            << (stats.count > 1 ? "s" : "") << ")\n"
+            << "\tMean: " << stats.mean << " ms\n"
+            << "\tMedian: " << stats.median << " ms\n"
+            << "\tStandard deviation: " << stats.standardDeviation << " ms\n"
+            << "\tMin: " << stats.min << " ms\n"
+            << "\tMax: " << stats.max  << " ms\n\n";
     }
 }
 
