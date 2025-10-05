@@ -93,7 +93,7 @@ void shutdown() {
 
     SDL_Quit();
 
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(__EMSCRIPTEN__)
     reportProfiling();
 #endif
 
