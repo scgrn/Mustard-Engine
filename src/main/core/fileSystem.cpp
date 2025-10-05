@@ -229,7 +229,7 @@ void FileSystem::ArchiveFile::load() {
     std::string manifest(reinterpret_cast<char*>(decompressedData + sizeof(u32)), manifestSize);
     std::stringstream ss(manifest);
     LOG("Manifest size: %d", manifestSize);
-    std::cout << "Manifest string:\n" << manifest << std::endl;
+    // std::cout << "Manifest string:\n" << manifest << std::endl;
 
     u32 numAssets;
     ss >> numAssets;
@@ -241,7 +241,7 @@ void FileSystem::ArchiveFile::load() {
         ss >> size;
         ss >> offset;
 
-        LOG("%s %llu %llu", path.c_str(), size, offset);
+        // LOG("%s %llu %llu", path.c_str(), size, offset);
 
         assets[path] = {size, offset + manifestSize + sizeof(u32)};
     }
