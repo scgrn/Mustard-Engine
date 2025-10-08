@@ -15,6 +15,19 @@ EOF
 files=(
     "bin/TestProject-Debug"
     "bin/TestProject-Release"
+
+    "bin/web-debug/index.html"
+    "bin/web-debug/TestProject-Web-Debug.data"
+    "bin/web-debug/TestProject-Web-Debug.js"
+    "bin/web-debug/TestProject-Web-Debug.wasm"
+
+    "bin/web-release/index.html"
+    "bin/web-release/TestProject-Web-Release.data"
+    "bin/web-release/TestProject-Web-Release.js"
+    "bin/web-release/TestProject-Web-Release.wasm"
+
+    "dist/TestProject"
+    "dist/TestProject.dat"
 )
 
 missing=false
