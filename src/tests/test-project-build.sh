@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cp -r ../../projectTemplate test-project
-cd test-project
+cp -r ../../projectTemplate testProject
+cd testProject
 cat > project.cfg <<EOF
 PROJECT_NAME=TestProject
 
@@ -45,5 +45,5 @@ fi
 # ./run.sh release
 
 cd ..
-rm -r test-project
+rm -r testProject
 

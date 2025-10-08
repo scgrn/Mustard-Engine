@@ -5,7 +5,7 @@
 /src/platform/desktop/redistributable_bin/*
 /src/platform/desktop/steam/*
 
-/src/tests/test-project
+/src/tests/testProject
 /projectTemplate/bin/*
 /projectTemplate/build/*
 !/projectTemplate/dev/
