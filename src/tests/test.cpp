@@ -32,6 +32,7 @@ class TestSuite {
 #include "test-rng.cpp"
 #include "test-vector.cpp"
 #include "test-matrix.cpp" 
+#include "test-project-build.cpp"
 
 int main(int argc, char* argv[]) {
     std::cout << "============= Running tests =============" << std::endl;
@@ -39,6 +40,7 @@ int main(int argc, char* argv[]) {
     testRng();
     testVector();
     testMatrix();
+    testProjectBuild();
 
     std::cout << "============= Tests complete ============" << std::endl;
     std::cout << "Total tests run: " << totalTestsRun << std::endl;
