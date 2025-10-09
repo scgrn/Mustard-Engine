@@ -73,7 +73,11 @@ function buildDocs() {
 function buildTests() {
     echo "Building tests..."
 
-    # TODO: implement
+    cd src/tests
+    g++ test.cpp -o test
+    ./test
+    rm test
+    cd ../..
 }
 
 if [ "$config" == "debug" ]; then
