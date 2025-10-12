@@ -24,6 +24,9 @@ freely, subject to the following restrictions:
 
 #include "pch.h"
 
+#include <unordered_map>
+#include <cmath>
+
 #include "profiler.h"
 #include "../../main/core/log.h"
 
