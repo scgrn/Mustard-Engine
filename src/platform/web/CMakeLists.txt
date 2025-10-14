@@ -56,6 +56,7 @@ set(MAIN_SOURCE
     ../../main/renderer/image.cpp
     ../../main/renderer/model.cpp
     ../../main/renderer/palette.cpp
+    ../../main/renderer/quadRenderer.cpp
     ../../main/renderer/renderer.cpp
     ../../main/renderer/renderLayer.cpp
     ../../main/renderer/renderTarget.cpp

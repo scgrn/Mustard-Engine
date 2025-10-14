@@ -94,7 +94,7 @@ class RenderLayer {
         static GLfloat quadVertices[];
         static GLuint quadElements[];
 
-    private:
+    protected:
         //    for std::sort
         static inline bool cmp(const Quad& a, const Quad& b) {
             return a.textureID < b.textureID;
