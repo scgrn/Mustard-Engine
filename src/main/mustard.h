@@ -47,6 +47,7 @@ freely, subject to the following restrictions:
 #include "renderer/renderTarget.h"
 #include "renderer/colorTransform.h"
 #include "renderer/renderLayer.h"
+#include "renderer/quadRenderer.h"
 #include "renderer/skybox.h"
 #include "renderer/model.h"
 
