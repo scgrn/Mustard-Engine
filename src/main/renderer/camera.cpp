@@ -48,7 +48,7 @@ void PerspectiveCamera::setProjection(f32 fov, f32 near, f32 far) {
     this->far = far;
     this->fov = toRadians(fov);
     aspect = (f32)window.currentMode.xRes / (f32)window.currentMode.yRes;
-    projectionMatrix = perspective(fov, aspect, near, far);
+    projectionMatrix = perspective(this->fov, aspect, near, far);
 }
 
 void PerspectiveCamera::setView(Mat4 view) {
