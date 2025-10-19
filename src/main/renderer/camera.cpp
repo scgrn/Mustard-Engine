@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 #include "../misc/misc.h"
 
 namespace AB {
-    
+
 extern Window window;
 
 OrthographicCamera::OrthographicCamera() {}
@@ -57,32 +57,32 @@ void PerspectiveCamera::setView(Mat4 view) {
 }
 
 void PerspectiveCamera::recalculateViewMatrix() {
-    viewMatrix = Mat4();
-    
-    viewMatrix = viewMatrix * rotateX(rotation.x);
-    viewMatrix = viewMatrix * rotateY(rotation.y);
-    viewMatrix = viewMatrix * rotateZ(rotation.z);
-    
-    viewMatrix = viewMatrix * translate(position);
+    Mat4 rotationMatrix =
+        rotateZ(-rotation.z) *
+        rotateY(-rotation.y) *
+        rotateX(-rotation.x);
 
-    viewProjectionMatrix = viewMatrix * projectionMatrix;
+    Mat4 translationMatrix = translate(-position);
+
+    viewMatrix = translationMatrix * rotationMatrix;
+    viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
 
 Vec2 PerspectiveCamera::project(Vec3 point, Mat4 modelMatrix) {
     AB::Mat4 transform = projectionMatrix * viewMatrix * modelMatrix;
-    
+
     AB::Vec4 p = AB::Vec4(point.x, point.y, point.z, 1.0f);
     AB::Vec4 result = transform * p;
 
     if (fabs(result.w) >= std::numeric_limits<f32>::epsilon()) {
         result *= (1.0f / result.w);
     }
-    
+
     result.x = (result.x + 1.0f) * 0.5f;
     result.y = (-result.y + 1.0f) * 0.5f;
-    
+
     AB::Vec2 ret = AB::Vec2(result.x * window.currentMode.xRes, result.y * window.currentMode.yRes);
-    
+
     return ret;
 }
 
