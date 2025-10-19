@@ -64,7 +64,7 @@ void PerspectiveCamera::recalculateViewMatrix() {
 
     Mat4 translationMatrix = translate(-position);
 
-    viewMatrix = translationMatrix * rotationMatrix;
+    viewMatrix = rotationMatrix * translationMatrix;
     viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
 
