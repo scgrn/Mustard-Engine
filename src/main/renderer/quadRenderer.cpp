@@ -41,13 +41,17 @@ QuadRenderer::QuadRenderer() {
     CALL_GL(glEnableVertexAttribArray(0));
     CALL_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, px)));
 
-    //  UV (location 1)
+    //  normal (location 1)
     CALL_GL(glEnableVertexAttribArray(1));
-    CALL_GL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, u)));
+    CALL_GL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, nx)));
 
-    //  color (location 2)
+    //  UV (location 2)
     CALL_GL(glEnableVertexAttribArray(2));
-    CALL_GL(glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, r)));
+    CALL_GL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, u)));
+
+    //  color (location 3)
+    CALL_GL(glEnableVertexAttribArray(3));
+    CALL_GL(glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, r)));
 
     CALL_GL(glBindVertexArray(0));
 }
@@ -57,10 +61,16 @@ QuadRenderer::~QuadRenderer() {
     CALL_GL(glDeleteBuffers(1, &batchVBO));
 }
 
-void QuadRenderer::addQuad(const Quad3d& quad, GLuint textureID) {
+void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
     static const int indices[6] = { 0, 1, 2, 2, 3, 0};
 
     batches[textureID].reserve(batches[textureID].size() + 6);
+
+    //  computer surface normal
+    AB::Vec3 edge1 = quad.v[1] - quad.v[0];
+    AB::Vec3 edge2 = quad.v[2] - quad.v[0];
+    AB::Vec3 cross = crossProduct(edge1, edge2);
+    AB::Vec3 normal = normalize(cross);
 
     for (u32 i = 0; i < 6; i++) {
         Vertex v;
@@ -68,6 +78,9 @@ void QuadRenderer::addQuad(const Quad3d& quad, GLuint textureID) {
         v.px = quad.v[index].x;
         v.py = quad.v[index].y;
         v.pz = quad.v[index].z;
+        v.nx = normal.x;
+        v.ny = normal.y;
+        v.nz = normal.z;
         v.u = quad.uv[index].u;
         v.v = quad.uv[index].v;
         v.r = quad.color.r;
@@ -91,9 +104,9 @@ void QuadRenderer::render(PerspectiveCamera &camera) {
 
         CALL_GL(glBindTexture(GL_TEXTURE_2D, textureID));
 
-        u32 vertexCount = min((u32)verts.size(), (u32)MAX_VERTICES);
+        u32 vertexCount = min((u32)verts.size(), MAX_VERTICES);
         CALL_GL(glBufferSubData(GL_ARRAY_BUFFER, 0, vertexCount * sizeof(Vertex), verts.data()));
-        CALL_GL(glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertexCount)); 
+        CALL_GL(glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertexCount));
     }
     CALL_GL(glBindVertexArray(0));
     batches.clear();

@@ -42,12 +42,13 @@ class QuadRenderer : public RenderLayer {
         QuadRenderer();
         ~QuadRenderer();
 
-        void addQuad(const Quad3d& quad, GLuint textureID);
+        void addQuad(Quad3d& quad, GLuint textureID);
         void render(PerspectiveCamera &camera);
 
     private:
         struct Vertex {
             f32 px, py, pz;
+            f32 nx, ny, nz;
             f32 u, v;
             f32 r, g, b, a;
         };
