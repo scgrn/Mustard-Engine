@@ -39,6 +39,7 @@ Mat3::Mat3(Mat4 const &mat4) {
 
 Mat4 ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
     Mat4 ret;
+    ret.loadIdentity();
 
     f32 lr = 1.0f / (left - right);
     f32 bt = 1.0f / (bottom - top);
@@ -57,6 +58,7 @@ Mat4 ortho(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
 
 Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
     Mat4 ret;
+    ret.loadIdentity();
 
     for (i32 y = 0; y < 4; y++) {
         for (i32 x = 0; x < 4; x++) {
@@ -76,6 +78,7 @@ Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
 
 Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
     Mat4 ret;
+    ret.loadIdentity();
 
     axis = normalize(axis);
 
@@ -100,6 +103,7 @@ Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
 
 Mat4 translate(Vec3 offset) {
     Mat4 ret;
+    ret.loadIdentity();
 
     ret.data2d[3][0] = offset.x;
     ret.data2d[3][1] = offset.y;
@@ -110,6 +114,7 @@ Mat4 translate(Vec3 offset) {
 
 Mat4 scale(Vec3 scale) {
     Mat4 ret;
+    ret.loadIdentity();
 
     ret.data2d[0][0] = scale.x;
     ret.data2d[1][1] = scale.y;
@@ -226,6 +231,8 @@ Mat4 inverse(Mat4 matrix) {
 
 Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     Mat4 ret;
+    ret.loadIdentity();
+
     Vec3 zAxis;
 
     zAxis.x = target.x - position.x;
