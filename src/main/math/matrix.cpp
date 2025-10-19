@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-Mat3::Mat3(Mat4 &mat4) {
+Mat3::Mat3(Mat4 const &mat4) {
     for (i32 y = 0; y < 3; y++) {
         for (i32 x = 0; x < 3; x++) {
             data2d[y][x] = mat4.data2d[y][x];
@@ -63,7 +63,7 @@ Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
             ret.data2d[y][x] = 0.0f;
         }
     }
-        
+
     f32 halfTanFOV = tan(fov * 0.5f);
     ret.data2d[0][0] = 1.0f / (aspect * halfTanFOV);
     ret.data2d[1][1] = 1.0f / halfTanFOV;
@@ -76,23 +76,23 @@ Mat4 perspective(f32 fov, f32 aspect, f32 near, f32 far) {
 
 Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
     Mat4 ret;
-    
+
     axis = normalize(axis);
 
-    f32 si32heta = sin(toRadians(theta));
-    f32 cosTheta = cos(toRadians(theta));
+    f32 sinTheta = sinf(theta);
+    f32 cosTheta = cosf(theta);
     f32 cosValue = 1.0f - cosTheta;
 
     ret.data2d[0][0] = (axis.x * axis.x * cosValue) + cosTheta;
-    ret.data2d[0][1] = (axis.x * axis.y * cosValue) + (axis.z * si32heta);
-    ret.data2d[0][2] = (axis.x * axis.z * cosValue) - (axis.y * si32heta);
+    ret.data2d[0][1] = (axis.x * axis.y * cosValue) + (axis.z * sinTheta);
+    ret.data2d[0][2] = (axis.x * axis.z * cosValue) - (axis.y * sinTheta);
 
-    ret.data2d[1][0] = (axis.y * axis.x * cosValue) - (axis.z * si32heta);
+    ret.data2d[1][0] = (axis.y * axis.x * cosValue) - (axis.z * sinTheta);
     ret.data2d[1][1] = (axis.y * axis.y * cosValue) + cosTheta;
-    ret.data2d[1][2] = (axis.y * axis.z * cosValue) + (axis.x * si32heta);
+    ret.data2d[1][2] = (axis.y * axis.z * cosValue) + (axis.x * sinTheta);
 
-    ret.data2d[2][0] = (axis.z * axis.x * cosValue) + (axis.y * si32heta);
-    ret.data2d[2][1] = (axis.z * axis.y * cosValue) - (axis.x * si32heta);
+    ret.data2d[2][0] = (axis.z * axis.x * cosValue) + (axis.y * sinTheta);
+    ret.data2d[2][1] = (axis.z * axis.y * cosValue) - (axis.x * sinTheta);
     ret.data2d[2][2] = (axis.z * axis.z * cosValue) + cosTheta;
 
     return (ret);
@@ -100,53 +100,56 @@ Mat4 rotate(Mat4 source, f32 theta, Vec3 axis) {
 
 Mat4 translate(Vec3 offset) {
     Mat4 ret;
-    
+
     ret.data2d[3][0] = offset.x;
     ret.data2d[3][1] = offset.y;
     ret.data2d[3][2] = offset.z;
-    
+
     return ret;
 }
 
 Mat4 scale(Vec3 scale) {
     Mat4 ret;
-    
+
     ret.data2d[0][0] = scale.x;
     ret.data2d[1][1] = scale.y;
     ret.data2d[2][2] = scale.z;
-    
+
     return ret;
 }
 
 Mat4 rotateX(f32 theta) {
     Mat4 rot;
+    rot.loadIdentity();
 
-    rot.data2d[1][1] = cos(theta);
-    rot.data2d[2][1] = -sin(theta);
-    rot.data2d[1][2] = sin(theta);
-    rot.data2d[2][2] = cos(theta);
+    rot.data2d[1][1] = cosf(theta);
+    rot.data2d[2][1] = -sinf(theta);
+    rot.data2d[1][2] = sinf(theta);
+    rot.data2d[2][2] = cosf(theta);
 
     return rot;
 }
 
 Mat4 rotateY(f32 theta) {
     Mat4 rot;
+    rot.loadIdentity();
 
-    rot.data2d[0][0] = cos(theta);
-    rot.data2d[2][0] = sin(theta);
-    rot.data2d[0][2] = -sin(theta);
-    rot.data2d[2][2] = cos(theta);
+    rot.data2d[0][0] = cosf(theta);
+    rot.data2d[2][0] = sinf(theta);
+    rot.data2d[0][2] = -sinf(theta);
+    rot.data2d[2][2] = cosf(theta);
 
     return rot;
 }
 
 Mat4 rotateZ(f32 theta) {
     Mat4 rot;
+    rot.loadIdentity();
 
-    rot.data2d[0][0] = cos(theta);
-    rot.data2d[1][0] = -sin(theta);
-    rot.data2d[0][1] = sin(theta);
-    rot.data2d[1][1] = cos(theta);
+    rot.data2d[0][0] = cosf(theta);
+    rot.data2d[1][0] = -sinf(theta);
+    rot.data2d[0][1] = sinf(theta);
+    rot.data2d[1][1] = cosf(theta);
 
     return rot;
 }
@@ -156,7 +159,7 @@ Mat4 transpose(Mat4 matrix) {
 
     for (i32 y = 0; y < 3; y++) {
         for (i32 x = 0; x < 3; x++) {
-            ret.data2d[x][y] = matrix.data2d[2 - x][2 - y];
+            ret.data2d[x][y] = matrix.data2d[y][x];
         }
     }
 
@@ -224,7 +227,7 @@ Mat4 inverse(Mat4 matrix) {
 Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     Mat4 ret;
     Vec3 zAxis;
-    
+
     zAxis.x = target.x - position.x;
     zAxis.y = target.y - position.y;
     zAxis.z = target.z - position.z;
@@ -252,7 +255,7 @@ Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
     ret.data1d[15] = 1.0f;
 
     //ret = translate(Vec3(-position.x, -position.y, -position.z)) * ret;
-    
+
     return ret;
 }
 
@@ -262,7 +265,7 @@ Vec3 forward(Mat4 const& matrix) {
     forward.y = -matrix.data1d[6];
     forward.z = -matrix.data1d[10];
 
-    return normalize(forward);    
+    return normalize(forward);
 }
 
 Vec3 backward(Mat4 const& matrix) {
@@ -280,7 +283,7 @@ Vec3 up(Mat4 const& matrix) {
     up.y = matrix.data1d[5];
     up.z = matrix.data1d[9];
 
-    return normalize(up);    
+    return normalize(up);
 }
 
 Vec3 down(Mat4 const& matrix) {

@@ -61,7 +61,7 @@ struct Mat3 {
         loadIdentity();
     }
 
-    Mat3(f32 data2d[]) {
+    Mat3(const f32 data2d[]) {
         i32 index = 0;
         for (i32 y = 0; y < 3; y++) {
             for (i32 x = 0; x < 3; x++) {
@@ -71,7 +71,7 @@ struct Mat3 {
         }
     }
 
-    Mat3(Mat4 &mat4);
+    Mat3(Mat4 const &mat4);
 
     void loadIdentity() {
         for (i32 y = 0; y < 3; y++) {
@@ -96,9 +96,10 @@ struct Mat3 {
 
         for (i32 c = 0; c < 3; c++) {
             for (i32 r = 0; r < 3; r++) {
-                ret.data2d[c][r] = data2d[0][r] * m.data2d[c][0] +
-                            data2d[1][r] * m.data2d[c][1] +
-                            data2d[2][r] * m.data2d[c][2];
+                ret.data2d[c][r] =
+                    data2d[0][r] * m.data2d[c][0] +
+                    data2d[1][r] * m.data2d[c][1] +
+                    data2d[2][r] * m.data2d[c][2];
             }
         }
 
@@ -131,7 +132,7 @@ struct Mat4 {
         loadIdentity();
     }
 
-    Mat4(f32 data2d[]) {
+    Mat4(const f32 data2d[]) {
         i32 index = 0;
         for (i32 y = 0; y < 4; y++) {
             for (i32 x = 0; x < 4; x++) {
@@ -141,7 +142,7 @@ struct Mat4 {
         }
     }
 
-    Mat4(Mat3 m) {
+    Mat4(Mat3 const m) {
         loadIdentity();
 
         for (i32 y = 0; y < 3; y++) {
@@ -162,9 +163,9 @@ struct Mat4 {
     Vec3 operator* (Vec3 const& v) {
         Vec3 ret;
 
-        ret.x = data2d[0][0] * v.x + data2d[1][0] * v.y + data2d[2][0] * v.z + data2d[3][0];
-        ret.y = data2d[0][1] * v.x + data2d[1][1] * v.y + data2d[2][1] * v.z + data2d[3][1];
-        ret.z = data2d[0][2] * v.x + data2d[1][2] * v.y + data2d[2][2] * v.z + data2d[3][2];
+        ret.x = data2d[0][0] * v.x + data2d[1][0] * v.y + data2d[2][0] * v.z;
+        ret.y = data2d[0][1] * v.x + data2d[1][1] * v.y + data2d[2][1] * v.z;
+        ret.z = data2d[0][2] * v.x + data2d[1][2] * v.y + data2d[2][2] * v.z;
 
         return ret;
     }
@@ -185,10 +186,11 @@ struct Mat4 {
 
         for (i32 c = 0; c < 4; c++) {
             for (i32 r = 0; r < 4; r++) {
-                ret.data2d[c][r] = data2d[0][r] * m.data2d[c][0] +
-                            data2d[1][r] * m.data2d[c][1] +
-                            data2d[2][r] * m.data2d[c][2] +
-                            data2d[3][r] * m.data2d[c][3];
+                ret.data2d[c][r] =
+                    data2d[0][r] * m.data2d[c][0] +
+                    data2d[1][r] * m.data2d[c][1] +
+                    data2d[2][r] * m.data2d[c][2] +
+                    data2d[3][r] * m.data2d[c][3];
             }
         }
 
