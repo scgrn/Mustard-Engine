@@ -58,9 +58,9 @@ void PerspectiveCamera::setView(Mat4 view) {
 
 void PerspectiveCamera::recalculateViewMatrix() {
     Mat4 rotationMatrix =
-        rotateZ(-rotation.z) *
+        rotateX(-rotation.x) *
         rotateY(-rotation.y) *
-        rotateX(-rotation.x);
+        rotateZ(-rotation.z);
 
     Mat4 translationMatrix = translate(-position);
 
