@@ -29,7 +29,17 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+Shader QuadRenderer::quadShader;
+
+static bool initialized = false;
+
 QuadRenderer::QuadRenderer() {
+    if (!initialized) {
+        quadShader.load("shaders/quadRenderer");
+
+        initialized = true;
+    }
+
     CALL_GL(glGenVertexArrays(1, &batchVAO));
     CALL_GL(glBindVertexArray(batchVAO));
 
@@ -57,6 +67,8 @@ QuadRenderer::QuadRenderer() {
 }
 
 QuadRenderer::~QuadRenderer() {
+    quadShader.release();
+
     CALL_GL(glDeleteBuffers(1, &batchVAO));
     CALL_GL(glDeleteBuffers(1, &batchVBO));
 }
@@ -92,11 +104,12 @@ void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
 }
 
 void QuadRenderer::render(PerspectiveCamera &camera) {
+    quadShader.bind();
+    quadShader.setMat4("uProjView", camera.viewProjectionMatrix);
+
     CALL_GL(glBindVertexArray(batchVAO));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchVBO));
 
-    //  TODO: bind shader?
-    //  set projectionView matrix uniform
     for (auto& [textureID, verts] : batches) {
         if (verts.empty()) {
             continue;

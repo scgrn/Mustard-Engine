@@ -54,7 +54,7 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
     if (!initialized) {
         defaultBatchShader.load("shaders/instanced2d");
         defaultShader.load("shaders/default2d");
-        
+
         initialized = true;
     }
     this->batchShader = batchShader == nullptr ? &defaultBatchShader : batchShader;
@@ -63,7 +63,7 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
     // create VAO
     CALL_GL(glGenVertexArrays(1, &batchVAO));
     CALL_GL(glBindVertexArray(batchVAO));
-    
+
     // create vertex VBO
     CALL_GL(glGenBuffers(1, &batchVBO));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchVBO));
@@ -72,61 +72,61 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
     // set vertex attribute pointer
     CALL_GL(glEnableVertexAttribArray(0));
     CALL_GL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0));
-    CALL_GL(glVertexAttribDivisor(0, 0));    // default buy hey clarity      
+    CALL_GL(glVertexAttribDivisor(0, 0));    // default buy hey clarity
 
     // create EBO
     CALL_GL(glGenBuffers(1, &batchEBO));
     CALL_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batchEBO));
     CALL_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6, &quadElements[0], GL_STATIC_DRAW));
-    
+
     // create IBO
     CALL_GL(glGenBuffers(1, &batchIBO));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchIBO));
     CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(Quad) * MAX_QUADS_PER_BATCH, NULL, GL_DYNAMIC_DRAW));
-    
+
     // set instance attribute pointers
-    
+
     //        position
     CALL_GL(glEnableVertexAttribArray(1));
     CALL_GL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)0));
-    CALL_GL(glVertexAttribDivisor(1, 1));  
+    CALL_GL(glVertexAttribDivisor(1, 1));
 
     //        size
     CALL_GL(glEnableVertexAttribArray(2));
     CALL_GL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 3)));
-    CALL_GL(glVertexAttribDivisor(2, 1));  
-    
+    CALL_GL(glVertexAttribDivisor(2, 1));
+
     //        scale
     CALL_GL(glEnableVertexAttribArray(3));
     CALL_GL(glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 5)));
-    CALL_GL(glVertexAttribDivisor(3, 1));  
+    CALL_GL(glVertexAttribDivisor(3, 1));
 
     //        rotation
     CALL_GL(glEnableVertexAttribArray(4));
     CALL_GL(glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 7)));
-    CALL_GL(glVertexAttribDivisor(4, 1));  
+    CALL_GL(glVertexAttribDivisor(4, 1));
 
     //        uv
     CALL_GL(glEnableVertexAttribArray(5));
     CALL_GL(glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 8)));
-    CALL_GL(glVertexAttribDivisor(5, 1));  
+    CALL_GL(glVertexAttribDivisor(5, 1));
 
     //        texture unit
     CALL_GL(glEnableVertexAttribArray(6));
     CALL_GL(glVertexAttribIPointer(6, 1, GL_INT, sizeof(Quad), (void*)(sizeof(GLfloat) * 12)));
-    CALL_GL(glVertexAttribDivisor(6, 1));  
+    CALL_GL(glVertexAttribDivisor(6, 1));
 
     //        color
     CALL_GL(glEnableVertexAttribArray(7));
     CALL_GL(glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Quad), (void*)(sizeof(GLfloat) * 12 + sizeof(GLint))));
     CALL_GL(glVertexAttribDivisor(7, 1));
-    
+
     quadBatch.reserve(MAX_QUADS_PER_BATCH);
     quadBatch.clear();
-    
+
     this->colorTransform = colorTransform;
     this->depthSorting = depthSorting;
-    
+
     //    ------------ non-batch
 
     // allocate resources for immediate-mode emulation
@@ -139,6 +139,9 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
 }
 
 RenderLayer::~RenderLayer() {
+    defaultBatchShader.release();
+    defaultShader.release();
+
     glDeleteBuffers(1, &batchVAO);
     glDeleteBuffers(1, &batchEBO);
     glDeleteBuffers(1, &batchVBO);
@@ -170,21 +173,21 @@ void RenderLayer::renderBatch(const Camera& camera) {
     batchShader->setMat4("projection", camera.projectionMatrix);
 
     //    it renders
-    
+
     // enable VAO
     CALL_GL(glBindVertexArray(batchVAO));
-    
+
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchIBO));
-    
+
     //    TODO: don't bind shaders redundantly!
     batchShader->bind();
-    
+
     // set colorTransform uniform
     batchShader->setMat4("colorTransform", colorTransform);
-    
+
     // sort quadBatch
     std::stable_sort(quadBatch.begin(), quadBatch.end(), depthSorting ? cmpDepth : cmp);
-    
+
     //    iterate renderbatch, set textureID to texture unit for each Quad before populating batchIBO
     i32 begin = 0;
     i32 end = -1;
@@ -192,12 +195,12 @@ void RenderLayer::renderBatch(const Camera& camera) {
     for (u64 i = 0; i < quadBatch.size();) {
         //    need pointer
         Quad &quad = quadBatch[i];
-        
+
         if (quad.textureID == 0) {
             quad.textureID = whiteTexture;
         }
         i32 ret = textureCache.bindTexture(quad.textureID);
-        
+
         if (ret == -1) {
             //    no texture slots available. render and loop again without advancing index.
             //  TODO: test this
@@ -216,11 +219,11 @@ void RenderLayer::renderBatch(const Camera& camera) {
             i++;
         }
     }
-    
+
     if (end >= begin) {
         flush(begin, end);
     }
-    
+
     //  this here open ballet is for errrone
     quadBatch.clear();
 
@@ -231,7 +234,7 @@ void RenderLayer::renderBatch(const Camera& camera) {
 
 void RenderLayer::render(const Camera& camera) {
     renderBatch(camera);
-    
+
     //    set transformation uniforms
     shader->bind();
     shader->setMat4("projection", camera.projectionMatrix);
@@ -245,7 +248,7 @@ void RenderLayer::render(const Camera& camera) {
         // bind texture
         u32 slot = textureCache.bindTexture(renderItem.texture);
         shader->setInt("Texture", slot);
-        
+
         CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, VBO));
         CALL_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * renderItem.vertices.size(), &renderItem.vertices[0], GL_DYNAMIC_DRAW));
 
@@ -266,7 +269,7 @@ void RenderLayer::render(const Camera& camera) {
     }
 
     CALL_GL(glBindVertexArray(0));
-    
+
     renderItems.clear();
     textureCache.advanceFrame();
 }
@@ -361,7 +364,7 @@ void RenderLayer::renderCircle(f32 x, f32 y, f32 radius, bool full, i32 segments
         if (full) {
             addVertex(x,y);
         }
-        
+
         for (i32 i = 0; i <= segments; i++) {
             f32 theta = (M_PI * 2 / segments) * i;
             addVertex(cos(theta) * radius + x, sin(theta) * radius + y);

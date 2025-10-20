@@ -45,6 +45,8 @@ class QuadRenderer : public RenderLayer {
         void addQuad(Quad3d& quad, GLuint textureID);
         void render(PerspectiveCamera &camera);
 
+        static AB::Shader quadShader;
+
     private:
         struct Vertex {
             f32 px, py, pz;
