@@ -139,8 +139,12 @@ RenderLayer::RenderLayer(Shader *batchShader, Shader *shader, Mat4 colorTransfor
 }
 
 RenderLayer::~RenderLayer() {
-    defaultBatchShader.release();
-    defaultShader.release();
+    if (initialized) {
+        defaultBatchShader.release();
+        defaultShader.release();
+
+        initialized = false;
+    }
 
     glDeleteBuffers(1, &batchVAO);
     glDeleteBuffers(1, &batchEBO);
