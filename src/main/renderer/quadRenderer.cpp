@@ -81,7 +81,7 @@ void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
     //  computer surface normal
     AB::Vec3 edge1 = quad.v[1] - quad.v[0];
     AB::Vec3 edge2 = quad.v[2] - quad.v[0];
-    AB::Vec3 cross = crossProduct(edge1, edge2);
+    AB::Vec3 cross = crossProduct(edge2, edge1);
     AB::Vec3 normal = normalize(cross);
 
     for (u32 i = 0; i < 6; i++) {
