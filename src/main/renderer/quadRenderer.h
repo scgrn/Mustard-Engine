@@ -27,6 +27,9 @@ freely, subject to the following restrictions:
 
 #include "renderLayer.h"
 
+//  Intended to serve as a base for rendering static level geometry in
+//  conjunction with some higher-level VSD algorithm
+
 namespace AB {
 
 struct Quad3d {

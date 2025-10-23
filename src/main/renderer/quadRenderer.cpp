@@ -106,6 +106,7 @@ void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
 void QuadRenderer::render(PerspectiveCamera &camera) {
     quadShader.bind();
     quadShader.setMat4("uProjView", camera.viewProjectionMatrix);
+    quadShader.setMat4("uView", camera.viewMatrix);
 
     CALL_GL(glBindVertexArray(batchVAO));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchVBO));
