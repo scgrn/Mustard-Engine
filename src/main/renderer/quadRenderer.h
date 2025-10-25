@@ -42,13 +42,14 @@ class QuadRenderer : public RenderLayer {
     public:
         static constexpr u32 MAX_VERTICES = 65536;
 
-        QuadRenderer();
+        QuadRenderer(Shader *quadShader = &defaultQuadShader);
         ~QuadRenderer();
 
         void addQuad(Quad3d& quad, GLuint textureID);
         void render(PerspectiveCamera &camera);
 
-        static AB::Shader quadShader;
+        Shader *quadShader;
+        static AB::Shader defaultQuadShader;
 
     private:
         struct Vertex {

@@ -29,16 +29,17 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-Shader QuadRenderer::quadShader;
+Shader QuadRenderer::defaultQuadShader;
 
 static bool initialized = false;
 
-QuadRenderer::QuadRenderer() {
+QuadRenderer::QuadRenderer(Shader *quadShader) {
     if (!initialized) {
-        quadShader.load("shaders/quadRenderer");
+        defaultQuadShader.load("shaders/quadRenderer");
 
         initialized = true;
     }
+    this->quadShader = quadShader == nullptr ? &defaultQuadShader : quadShader;
 
     CALL_GL(glGenVertexArrays(1, &batchVAO));
     CALL_GL(glBindVertexArray(batchVAO));
@@ -67,7 +68,11 @@ QuadRenderer::QuadRenderer() {
 }
 
 QuadRenderer::~QuadRenderer() {
-    quadShader.release();
+    if (initialized) {
+        defaultQuadShader.release();
+
+        initialized = false;
+    }
 
     CALL_GL(glDeleteBuffers(1, &batchVAO));
     CALL_GL(glDeleteBuffers(1, &batchVBO));
@@ -104,9 +109,9 @@ void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
 }
 
 void QuadRenderer::render(PerspectiveCamera &camera) {
-    quadShader.bind();
-    quadShader.setMat4("uProjView", camera.viewProjectionMatrix);
-    quadShader.setMat4("uView", camera.viewMatrix);
+    quadShader->bind();
+    quadShader->setMat4("uProjView", camera.viewProjectionMatrix);
+    quadShader->setMat4("uView", camera.viewMatrix);
 
     CALL_GL(glBindVertexArray(batchVAO));
     CALL_GL(glBindBuffer(GL_ARRAY_BUFFER, batchVBO));
