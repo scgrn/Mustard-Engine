@@ -32,24 +32,23 @@ namespace AB {
 
 class Frustum {
     public:
+        enum {
+            NEAR = 0,
+            FAR,
+            RIGHT,
+            LEFT,
+            TOP,
+            BOTTOM
+        };
+
         Frustum() {}
         ~Frustum() {}
-        
+
         b8 pointInFrustum(Vec3 &p);
         b8 sphereInFrustum(Vec3 &p, f32 radius);
         b8 boxInFrustum(AABB &box);
 
         Plane plane[6];
-
-    private:
-        enum {
-            TOP = 0,
-            BOTTOM,
-            LEFT,
-            RIGHT,
-            NEAR,
-            FAR
-        };
 
 };
 
