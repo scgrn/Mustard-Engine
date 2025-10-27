@@ -35,7 +35,7 @@ AABB::AABB(Vec3 centerPosition, Vec3 size) {
 AABB::AABB(void) {
     centerPosition = Vec3(0.0f, 0.0f, 0.0f);
     size = Vec3(1.0f, 1.0f, 1.0f);
-    
+
     min = Vec3(-0.5f, -0.5f, -0.5f);
     max = Vec3( 0.5f,  0.5f,  0.5f);
 }
@@ -43,6 +43,16 @@ AABB::AABB(void) {
 void AABB::calculateExtents(void) {
     min = centerPosition - (size / 2.0f);
     max = centerPosition + (size / 2.0f);
+}
+
+b8 AABB::collides(const AABB &other) {
+    return(
+        max.x > other.min.x &&
+        min.x < other.max.x &&
+        max.y > other.min.y &&
+        min.y < other.max.y &&
+        max.z > other.min.z &&
+        min.z < other.max.z);
 }
 
 }   //  namespace
