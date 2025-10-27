@@ -46,22 +46,25 @@ b8 Frustum::sphereInFrustum(Vec3 &p, f32 radius) {
 }
 
 b8 Frustum::boxInFrustum(AABB &box) {
-/*
-    i32 result = INSIDE;
-    for(i32 i = 0; i < 6; i++) {
-        Vec3 vertexP = box.getVertexP(pl[i].normal); 
-        if (pl[i].distance(vertexP) < 0.0f) {
-            return OUTSIDE;
-        } else {
-            Vec3 vertexN = box.getVertexN(pl[i].normal);
-            if (pl[i].distance(vertexN) < 0.0f) {
-                result =  INTERSECT;
-            }
+    for (int i = 0; i < 6; i++) {
+        Vec3 positive = box.min;
+
+        if (plane[i].normal.x >= 0) {
+            positive.x = box.max.x;
+        }
+        if (plane[i].normal.y >= 0) {
+            positive.y = box.max.y;
+        }
+        if (plane[i].normal.z >= 0) {
+            positive.z = box.max.z;
+        }
+
+        if (plane[i].getSignedDistanceToPoint(positive) < 0) {
+            return false;
         }
     }
-    return(result);
-*/
-    return false;
+
+    return true;
 }
 
 }   //  namespace
