@@ -32,10 +32,10 @@ static const i32 MAX_QUADS_PER_BATCH = 4096;
 
 // common quad mesh
 GLfloat RenderLayer::quadVertices[] = {
-    0.5f,  0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,
+    0.5f, 0.5f, 0.0f,
+    -0.5f, 0.5f, 0.0f,
     -0.5f, -0.5f, 0.0f,
-    -0.5f,  0.5f, 0.0f,
 };
 GLuint RenderLayer::quadElements[] = {
     0, 1, 2,
