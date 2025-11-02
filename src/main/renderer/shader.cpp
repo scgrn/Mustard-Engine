@@ -52,7 +52,7 @@ void Shader::load(std::string const& filename) {
     //  compile vertex shader
     GLuint vertexShader;
     CALL_GL(vertexShader = glCreateShader(GL_VERTEX_SHADER));
-    
+
     const char* vertexSourceC = vertexSource.c_str();
     CALL_GL(glShaderSource(vertexShader, 1, &vertexSourceC, NULL));
     CALL_GL(glCompileShader(vertexShader)); // here
@@ -114,6 +114,11 @@ void Shader::release() {
 
 void Shader::bind() {
     CALL_GL(glUseProgram(shaderProgram));
+}
+
+void Shader::setBool(const std::string& name, bool value) {
+    GLint location = getUniformLocation(name);
+    CALL_GL(glUniform1i(location, value ? 1 : 0));
 }
 
 void Shader::setInt(const std::string& name, int value) {

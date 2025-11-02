@@ -39,9 +39,10 @@ class Shader : public Asset {
 
         virtual void load(std::string const& filename);
         virtual void release();
-        
+
         void bind();
 
+        void setBool(const std::string& name, bool value);
         void setInt(const std::string& name, int value);
         void setIntArray(const std::string& name, int* values, uint32_t count);
         void setFloat(const std::string& name, float value);
@@ -50,9 +51,9 @@ class Shader : public Asset {
         void setVec4(const std::string& name, const Vec4& value);
         void setMat3(const std::string& name, const Mat3& matrix);
         void setMat4(const std::string& name, const Mat4& matrix);
-        
+
         GLuint getProgram() { return shaderProgram; }
-        
+
     protected:
         static std::string getHeader();
 
