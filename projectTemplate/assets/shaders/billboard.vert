@@ -15,24 +15,30 @@ flat out int TextureUnit;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 perspectiveProjection;
+uniform int spherical; // true = spherical, false = cylindrical
 
 void main() {
     mat3 camMat = mat3(inverse(view));
-    vec3 camRight = camMat[0];
-    vec3 camUp    = camMat[1];
+
+    vec3 sphericalRight = camMat[0];
+    vec3 sphericalUp    = camMat[1];
+
+    vec3 cylindricalRight = normalize(vec3(camMat[0].x, 0.0, camMat[0].z));
+    vec3 cylindricalUp    = vec3(0.0, 1.0, 0.0);
+
+    vec3 camRight = normalize(mix(cylindricalRight, sphericalRight, float(spherical)));
+    vec3 camUp = normalize(mix(cylindricalUp, sphericalUp, float(spherical)));
 
     vec2 halfSize = size * scale;
 
-    float s = sin(rotation);
-    float c = cos(rotation);
     vec2 rotated = vec2(
-        vertexPosition.x * c - vertexPosition.y * s,
-        vertexPosition.x * s + vertexPosition.y * c
+        vertexPosition.x * cos(rotation) - vertexPosition.y * sin(rotation),
+        vertexPosition.x * sin(rotation) + vertexPosition.y * cos(rotation)
     );
 
     vec3 worldPos = position +
-                    camRight * rotated.x * halfSize.x +
-                    camUp    * rotated.y * halfSize.y;
+        camRight * rotated.x * halfSize.x +
+        camUp * rotated.y * halfSize.y;
 
     gl_Position = perspectiveProjection * view * vec4(worldPos, 1.0);
 
