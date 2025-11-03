@@ -36,6 +36,7 @@ struct Quad3d {
     AB::Vec3 v[4];
     AB::Vec2 uv[4];
     AB::Vec4 color;
+    GLuint textureID;
 };
 
 class QuadRenderer : public RenderLayer {
@@ -45,7 +46,7 @@ class QuadRenderer : public RenderLayer {
         QuadRenderer(Shader *quadShader = &defaultQuadShader);
         ~QuadRenderer();
 
-        void addQuad(Quad3d& quad, GLuint textureID);
+        void addQuad(Quad3d& quad);
         void render(PerspectiveCamera &camera);
 
         Shader *quadShader;

@@ -78,10 +78,10 @@ QuadRenderer::~QuadRenderer() {
     CALL_GL(glDeleteBuffers(1, &batchVBO));
 }
 
-void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
+void QuadRenderer::addQuad(Quad3d& quad) {
     static const int indices[6] = { 0, 1, 2, 2, 3, 0};
 
-    batches[textureID].reserve(batches[textureID].size() + 6);
+    batches[quad.textureID].reserve(batches[quad.textureID].size() + 6);
 
     //  computer surface normal
     AB::Vec3 edge1 = quad.v[1] - quad.v[0];
@@ -104,7 +104,7 @@ void QuadRenderer::addQuad(Quad3d& quad, GLuint textureID) {
         v.g = quad.color.g;
         v.b = quad.color.b;
         v.a = quad.color.a;
-        batches[textureID].push_back(v);
+        batches[quad.textureID].push_back(v);
     }
 }
 
