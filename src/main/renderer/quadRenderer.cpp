@@ -83,7 +83,7 @@ void QuadRenderer::addQuad(Quad3d& quad) {
 
     batches[quad.textureID].reserve(batches[quad.textureID].size() + 6);
 
-    //  computer surface normal
+    //  compute surface normal
     AB::Vec3 edge1 = quad.v[1] - quad.v[0];
     AB::Vec3 edge2 = quad.v[2] - quad.v[0];
     AB::Vec3 cross = crossProduct(edge2, edge1);
