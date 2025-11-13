@@ -1,6 +1,8 @@
 var class_a_b_1_1_audio =
 [
+    [ "pauseAll", "de/d3b/class_a_b_1_1_audio.html#a8e6738c545f021c534ac98fa26cb4e61", null ],
     [ "play", "de/d3b/class_a_b_1_1_audio.html#aca2b8ca8247295072cfb8e62ab4bcace", null ],
+    [ "resumeAll", "de/d3b/class_a_b_1_1_audio.html#ad75254eac4307eedb4ad5d3657435e0c", null ],
     [ "shutdown", "de/d3b/class_a_b_1_1_audio.html#abb7ca02b64cc84b4c3bd4eb5d0c0b29c", null ],
     [ "startup", "de/d3b/class_a_b_1_1_audio.html#a6cd31d87f303acb6e4a474c6971dfd5a", null ],
     [ "update", "de/d3b/class_a_b_1_1_audio.html#ae6fa1f2de4e042d15b89827d80667eec", null ],

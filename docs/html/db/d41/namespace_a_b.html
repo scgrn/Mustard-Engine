@@ -147,6 +147,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9c/class_a_b_1_1_plane.html">Plane</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d98/struct_a_b_1_1_quad3d.html">Quad3d</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/df7/class_a_b_1_1_quad_renderer.html">QuadRenderer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d32/class_a_b_1_1_quaternion.html">Quaternion</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d97/struct_a_b_1_1_random_state.html">RandomState</a></td></tr>
@@ -294,9 +298,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>redirectLog</b> (std:
 <tr class="memitem:a8f77fe03fbbf2364d89f517c089b6d41"><td class="memItemLeft" align="right" valign="top"><a id="a8f77fe03fbbf2364d89f517c089b6d41"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> (int line, const char *file, const char *msg,...)</td></tr>
 <tr class="separator:a8f77fe03fbbf2364d89f517c089b6d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cafa55cfda1884370d288e65949f34d"><td class="memItemLeft" align="right" valign="top"><a id="a7cafa55cfda1884370d288e65949f34d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>log</b> (int line, const char *file, const char *msg,...)</td></tr>
-<tr class="separator:a7cafa55cfda1884370d288e65949f34d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a818a52fd5cd14673e9fde158813c26f6"><td class="memItemLeft" align="right" valign="top"><a id="a818a52fd5cd14673e9fde158813c26f6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>log</b> (int level, int line, const char *file, const char *msg,...)</td></tr>
+<tr class="separator:a818a52fd5cd14673e9fde158813c26f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a320dbc425415b32aa8155ee9d5e36c9a"><td class="memTemplParams" colspan="2"><a id="a320dbc425415b32aa8155ee9d5e36c9a"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a320dbc425415b32aa8155ee9d5e36c9a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>logExp</b> (int line, const char *file, const char *name, T value)</td></tr>
@@ -394,6 +398,18 @@ template&lt;class T &gt; </td></tr>
 <tr class="memitem:a136404a665d581518d563dc87749c17c"><td class="memItemLeft" align="right" valign="top"><a id="a136404a665d581518d563dc87749c17c"></a>
 <a class="el" href="../../d1/dd1/struct_a_b_1_1_vector.html">Vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><b>right</b> (<a class="el" href="../../d0/d3d/struct_a_b_1_1_mat4.html">Mat4</a> const &amp;matrix)</td></tr>
 <tr class="separator:a136404a665d581518d563dc87749c17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa17f52016035d354c7fba84bb25dfaf0"><td class="memItemLeft" align="right" valign="top"><a id="aa17f52016035d354c7fba84bb25dfaf0"></a>
+b8&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d9/d06/struct_a_b_1_1_mat3.html">Mat3</a> &amp;a, const <a class="el" href="../../d9/d06/struct_a_b_1_1_mat3.html">Mat3</a> &amp;b)</td></tr>
+<tr class="separator:aa17f52016035d354c7fba84bb25dfaf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf117e225e748b689ac2d5cfdfdda0ac"><td class="memItemLeft" align="right" valign="top"><a id="abf117e225e748b689ac2d5cfdfdda0ac"></a>
+b8&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d9/d06/struct_a_b_1_1_mat3.html">Mat3</a> &amp;a, const <a class="el" href="../../d9/d06/struct_a_b_1_1_mat3.html">Mat3</a> &amp;b)</td></tr>
+<tr class="separator:abf117e225e748b689ac2d5cfdfdda0ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4988b106755a7b63a9a1f3bc88924230"><td class="memItemLeft" align="right" valign="top"><a id="a4988b106755a7b63a9a1f3bc88924230"></a>
+b8&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d0/d3d/struct_a_b_1_1_mat4.html">Mat4</a> &amp;a, const <a class="el" href="../../d0/d3d/struct_a_b_1_1_mat4.html">Mat4</a> &amp;b)</td></tr>
+<tr class="separator:a4988b106755a7b63a9a1f3bc88924230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accdc98f9cd18221d1f9bcb3beafcd118"><td class="memItemLeft" align="right" valign="top"><a id="accdc98f9cd18221d1f9bcb3beafcd118"></a>
+b8&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d0/d3d/struct_a_b_1_1_mat4.html">Mat4</a> &amp;a, const <a class="el" href="../../d0/d3d/struct_a_b_1_1_mat4.html">Mat4</a> &amp;b)</td></tr>
+<tr class="separator:accdc98f9cd18221d1f9bcb3beafcd118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79984ac16c23d8fe15afc70ce9c5f7e4"><td class="memItemLeft" align="right" valign="top"><a id="a79984ac16c23d8fe15afc70ce9c5f7e4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>rndSeed</b> ()</td></tr>
 <tr class="separator:a79984ac16c23d8fe15afc70ce9c5f7e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -498,12 +514,18 @@ Variables</h2></td></tr>
 <tr class="memitem:aea83c3ae7241c6ad7da979d0eff7b591"><td class="memItemLeft" align="right" valign="top"><a id="aea83c3ae7241c6ad7da979d0eff7b591"></a>
 <a class="el" href="../../de/d3b/class_a_b_1_1_audio.html">Audio</a>&#160;</td><td class="memItemRight" valign="bottom"><b>audio</b></td></tr>
 <tr class="separator:aea83c3ae7241c6ad7da979d0eff7b591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94b140009810881e623a38e961de2f28"><td class="memItemLeft" align="right" valign="top"><a id="a94b140009810881e623a38e961de2f28"></a>
+std::vector&lt; ma_sound * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pausedSounds</b></td></tr>
+<tr class="separator:a94b140009810881e623a38e961de2f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a343872042d3e43ed45d74c02129bcf64"><td class="memItemLeft" align="right" valign="top"><a id="a343872042d3e43ed45d74c02129bcf64"></a>
 std::map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>strings</b> [LAST]</td></tr>
 <tr class="separator:a343872042d3e43ed45d74c02129bcf64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18111ecec1a79d8575e5b87222851aeb"><td class="memItemLeft" align="right" valign="top"><a id="a18111ecec1a79d8575e5b87222851aeb"></a>
 Language&#160;</td><td class="memItemRight" valign="bottom"><b>language</b></td></tr>
 <tr class="separator:a18111ecec1a79d8575e5b87222851aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e1e40c5c1c8283144da4eaee569106c"><td class="memItemLeft" align="right" valign="top"><a id="a2e1e40c5c1c8283144da4eaee569106c"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>logLevel</b> = LOG_DEBUG</td></tr>
+<tr class="separator:a2e1e40c5c1c8283144da4eaee569106c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16f006d09eb980bd7c11be1264484fb5"><td class="memItemLeft" align="right" valign="top"><a id="a16f006d09eb980bd7c11be1264484fb5"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>VERSION</b> = VERSION_STRING</td></tr>
 <tr class="separator:a16f006d09eb980bd7c11be1264484fb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -525,6 +547,9 @@ struct <a class="el" href="../../de/d1d/struct_a_b_1_1_mouse.html">AB::Mouse</a>
 <tr class="memitem:a35a8e1210b126ce3295e1bee8f7950da"><td class="memItemLeft" align="right" valign="top"><a id="a35a8e1210b126ce3295e1bee8f7950da"></a>
 std::vector&lt; <a class="el" href="../../de/d84/struct_a_b_1_1_gamepad.html">Gamepad</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>connectedGamepads</b></td></tr>
 <tr class="separator:a35a8e1210b126ce3295e1bee8f7950da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0137ed0ce544ff84b94f106cdfc8200f"><td class="memItemLeft" align="right" valign="top"><a id="a0137ed0ce544ff84b94f106cdfc8200f"></a>
+constexpr f32&#160;</td><td class="memItemRight" valign="bottom"><b>EPSILON</b> = 1e-5f</td></tr>
+<tr class="separator:a0137ed0ce544ff84b94f106cdfc8200f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7094a17788bbf208ac300cc9f031ab0"><td class="memItemLeft" align="right" valign="top"><a id="aa7094a17788bbf208ac300cc9f031ab0"></a>
 <a class="el" href="../../d4/d44/class_a_b_1_1_renderer.html">Renderer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>renderer</b></td></tr>
 <tr class="separator:aa7094a17788bbf208ac300cc9f031ab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -620,6 +645,15 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>whiteTexture</b></t
 <p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:</p>
 <ol type="1">
 <li>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would bea appreciated but is not required.</li>
+<li>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</li>
+<li>This notice may not be removed or altered from any source distribution.</li>
+</ol>
+<p>zlib License</p>
+<p>(C) 2025 Andrew Krause</p>
+<p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</p>
+<p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:</p>
+<ol type="1">
+<li>The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.</li>
 <li>Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.</li>
 <li>This notice may not be removed or altered from any source distribution.</li>
 </ol>

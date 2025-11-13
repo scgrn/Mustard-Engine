@@ -9,6 +9,7 @@ var dir_d72914fae0323345a8ce696cc32d8725 =
     [ "image.h", "d5/db2/image_8h_source.html", null ],
     [ "model.h", "dc/d51/model_8h_source.html", null ],
     [ "palette.h", "d2/d6d/palette_8h_source.html", null ],
+    [ "quadRenderer.h", "d0/d2e/quad_renderer_8h_source.html", null ],
     [ "renderer.h", "d6/d85/renderer_8h_source.html", null ],
     [ "renderLayer.h", "d7/d69/render_layer_8h_source.html", null ],
     [ "renderTarget.h", "db/d4b/render_target_8h_source.html", null ],

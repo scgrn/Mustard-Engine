@@ -26,6 +26,8 @@ var namespace_a_b =
     [ "PerlinNoise", "d6/d25/class_a_b_1_1_perlin_noise.html", "d6/d25/class_a_b_1_1_perlin_noise" ],
     [ "PerspectiveCamera", "dd/d8c/class_a_b_1_1_perspective_camera.html", "dd/d8c/class_a_b_1_1_perspective_camera" ],
     [ "Plane", "d2/d9c/class_a_b_1_1_plane.html", "d2/d9c/class_a_b_1_1_plane" ],
+    [ "Quad3d", "d9/d98/struct_a_b_1_1_quad3d.html", "d9/d98/struct_a_b_1_1_quad3d" ],
+    [ "QuadRenderer", "d8/df7/class_a_b_1_1_quad_renderer.html", "d8/df7/class_a_b_1_1_quad_renderer" ],
     [ "Quaternion", "d8/d32/class_a_b_1_1_quaternion.html", "d8/d32/class_a_b_1_1_quaternion" ],
     [ "RandomState", "dc/d97/struct_a_b_1_1_random_state.html", "dc/d97/struct_a_b_1_1_random_state" ],
     [ "Renderer", "d4/d44/class_a_b_1_1_renderer.html", "d4/d44/class_a_b_1_1_renderer" ],

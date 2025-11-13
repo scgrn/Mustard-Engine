@@ -35,9 +35,13 @@ var hierarchy =
     [ "AB::PerlinNoise", "d6/d25/class_a_b_1_1_perlin_noise.html", null ],
     [ "AB::Plane", "d2/d9c/class_a_b_1_1_plane.html", null ],
     [ "AB::RenderLayer::Quad", "d8/d9a/struct_a_b_1_1_render_layer_1_1_quad.html", null ],
+    [ "AB::Quad3d", "d9/d98/struct_a_b_1_1_quad3d.html", null ],
     [ "AB::Quaternion", "d8/d32/class_a_b_1_1_quaternion.html", null ],
     [ "AB::RandomState", "dc/d97/struct_a_b_1_1_random_state.html", null ],
-    [ "AB::RenderLayer", "d6/d65/class_a_b_1_1_render_layer.html", null ],
+    [ "AB::RenderLayer::RenderItem", "dd/d71/struct_a_b_1_1_render_layer_1_1_render_item.html", null ],
+    [ "AB::RenderLayer", "d6/d65/class_a_b_1_1_render_layer.html", [
+      [ "AB::QuadRenderer", "d8/df7/class_a_b_1_1_quad_renderer.html", null ]
+    ] ],
     [ "AB::RenderTarget", "dd/d60/class_a_b_1_1_render_target.html", null ],
     [ "AB::RingBuffer< T >", "df/df9/class_a_b_1_1_ring_buffer.html", null ],
     [ "AB::Scan", "dc/d7f/struct_a_b_1_1_scan.html", null ],

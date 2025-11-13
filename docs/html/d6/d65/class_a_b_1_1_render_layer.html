@@ -87,12 +87,20 @@ $(document).ready(function(){initNavTree('d6/d65/class_a_b_1_1_render_layer.html
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="../../db/de8/class_a_b_1_1_render_layer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">AB::RenderLayer Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for AB::RenderLayer:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../db/d66/class_a_b_1_1_render_layer__inherit__graph.png" border="0" usemap="#_a_b_1_1_render_layer_inherit__map" alt="Inheritance graph"/></div>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for AB::RenderLayer:</div>
 <div class="dyncontent">
@@ -109,6 +117,8 @@ Collaboration diagram for AB::RenderLayer:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d9a/struct_a_b_1_1_render_layer_1_1_quad.html">Quad</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d71/struct_a_b_1_1_render_layer_1_1_render_item.html">RenderItem</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -195,6 +205,58 @@ static <a class="el" href="../../d6/dd5/class_a_b_1_1_shader.html">Shader</a>&#1
 static <a class="el" href="../../da/dd5/class_a_b_1_1_texture_cache.html">TextureCache</a>&#160;</td><td class="memItemRight" valign="bottom"><b>textureCache</b></td></tr>
 <tr class="separator:a5df6b02fac45c363d4819caddc385e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a9936542e4f914c7ee2018e3326d4c6d3"><td class="memItemLeft" align="right" valign="top"><a id="a9936542e4f914c7ee2018e3326d4c6d3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>flush</b> (int begin, int end)</td></tr>
+<tr class="separator:a9936542e4f914c7ee2018e3326d4c6d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c4929130b3ee01d0b9473408af8e599"><td class="memItemLeft" align="right" valign="top"><a id="a5c4929130b3ee01d0b9473408af8e599"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>renderBatch</b> (const <a class="el" href="../../d5/d89/class_a_b_1_1_camera.html">Camera</a> &amp;camera)</td></tr>
+<tr class="separator:a5c4929130b3ee01d0b9473408af8e599"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a85000e87b700f0829690886388e08ea0"><td class="memItemLeft" align="right" valign="top"><a id="a85000e87b700f0829690886388e08ea0"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>cmp</b> (const <a class="el" href="../../d8/d9a/struct_a_b_1_1_render_layer_1_1_quad.html">Quad</a> &amp;a, const <a class="el" href="../../d8/d9a/struct_a_b_1_1_render_layer_1_1_quad.html">Quad</a> &amp;b)</td></tr>
+<tr class="separator:a85000e87b700f0829690886388e08ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eeeaa5e998f1e0a7e61f6557d6418b9"><td class="memItemLeft" align="right" valign="top"><a id="a5eeeaa5e998f1e0a7e61f6557d6418b9"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>cmpDepth</b> (const <a class="el" href="../../d8/d9a/struct_a_b_1_1_render_layer_1_1_quad.html">Quad</a> &amp;a, const <a class="el" href="../../d8/d9a/struct_a_b_1_1_render_layer_1_1_quad.html">Quad</a> &amp;b)</td></tr>
+<tr class="separator:a5eeeaa5e998f1e0a7e61f6557d6418b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a3adc63cf47ac09231880633efee4a0fe"><td class="memItemLeft" align="right" valign="top"><a id="a3adc63cf47ac09231880633efee4a0fe"></a>
+std::vector&lt; <a class="el" href="../../dd/d71/struct_a_b_1_1_render_layer_1_1_render_item.html">RenderItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>renderItems</b></td></tr>
+<tr class="separator:a3adc63cf47ac09231880633efee4a0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a851ff77d9b7a7254437237cb0bc0b0f7"><td class="memItemLeft" align="right" valign="top"><a id="a851ff77d9b7a7254437237cb0bc0b0f7"></a>
+<a class="el" href="../../dd/d71/struct_a_b_1_1_render_layer_1_1_render_item.html">RenderItem</a>&#160;</td><td class="memItemRight" valign="bottom"><b>currentRenderItem</b></td></tr>
+<tr class="separator:a851ff77d9b7a7254437237cb0bc0b0f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab16c14e75608bf01ab1261ff160d5d21"><td class="memItemLeft" align="right" valign="top"><a id="ab16c14e75608bf01ab1261ff160d5d21"></a>
+<a class="el" href="../../d1/dd1/struct_a_b_1_1_vector.html">Vec4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d65/class_a_b_1_1_render_layer.html#ab16c14e75608bf01ab1261ff160d5d21">currentColor</a></td></tr>
+<tr class="memdesc:ab16c14e75608bf01ab1261ff160d5d21"><td class="mdescLeft">&#160;</td><td class="mdescRight">what about all this stuff?/ <br /></td></tr>
+<tr class="separator:ab16c14e75608bf01ab1261ff160d5d21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbe378022e06687a045bf3430dbb1a8a"><td class="memItemLeft" align="right" valign="top"><a id="abbe378022e06687a045bf3430dbb1a8a"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>halfWidth</b></td></tr>
+<tr class="separator:abbe378022e06687a045bf3430dbb1a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4abf0f9ed2662934572b15d1cdd87f4e"><td class="memItemLeft" align="right" valign="top"><a id="a4abf0f9ed2662934572b15d1cdd87f4e"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>batchVAO</b></td></tr>
+<tr class="separator:a4abf0f9ed2662934572b15d1cdd87f4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d1832b9a7cbfbdab7afbb5535269a97"><td class="memItemLeft" align="right" valign="top"><a id="a6d1832b9a7cbfbdab7afbb5535269a97"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>batchVBO</b></td></tr>
+<tr class="separator:a6d1832b9a7cbfbdab7afbb5535269a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a977eae02217ba71f7b013295f81906c3"><td class="memItemLeft" align="right" valign="top"><a id="a977eae02217ba71f7b013295f81906c3"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>batchEBO</b></td></tr>
+<tr class="separator:a977eae02217ba71f7b013295f81906c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a482ba01407200d5ae99d4f02776e069c"><td class="memItemLeft" align="right" valign="top"><a id="a482ba01407200d5ae99d4f02776e069c"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>batchIBO</b></td></tr>
+<tr class="separator:a482ba01407200d5ae99d4f02776e069c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a025ee818bb92b615d614eb48ff7d482e"><td class="memItemLeft" align="right" valign="top"><a id="a025ee818bb92b615d614eb48ff7d482e"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>VAO</b></td></tr>
+<tr class="separator:a025ee818bb92b615d614eb48ff7d482e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46426f84b4c26239bf582ae45955f997"><td class="memItemLeft" align="right" valign="top"><a id="a46426f84b4c26239bf582ae45955f997"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>VBO</b></td></tr>
+<tr class="separator:a46426f84b4c26239bf582ae45955f997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:a4b5c22bc59d565df63f0dbc9f584b50a"><td class="memItemLeft" align="right" valign="top">static GLfloat&#160;</td><td class="memItemRight" valign="bottom"><b>quadVertices</b> []</td></tr>
@@ -249,10 +311,10 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    0.5f,  0.5f, 0.0f,</div>
 <div class="line">    0.5f, -0.5f, 0.0f,</div>
+<div class="line">    0.5f, 0.5f, 0.0f,</div>
+<div class="line">    -0.5f, 0.5f, 0.0f,</div>
 <div class="line">    -0.5f, -0.5f, 0.0f,</div>
-<div class="line">    -0.5f,  0.5f, 0.0f,</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 </div>

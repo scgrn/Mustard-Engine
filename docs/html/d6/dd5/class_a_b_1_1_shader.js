@@ -7,6 +7,7 @@ var class_a_b_1_1_shader =
     [ "getUniformLocation", "d6/dd5/class_a_b_1_1_shader.html#a14b9ab2f9307cadd7a84f377960edebe", null ],
     [ "load", "d6/dd5/class_a_b_1_1_shader.html#ab77853a74d3fd82bb7fd30780a0406ef", null ],
     [ "release", "d6/dd5/class_a_b_1_1_shader.html#a6a9608b7dae68118d60a2ac2c0aebc02", null ],
+    [ "setBool", "d6/dd5/class_a_b_1_1_shader.html#a3cc72019bcb0adca2300de407b80b87d", null ],
     [ "setFloat", "d6/dd5/class_a_b_1_1_shader.html#a205bf56ed40b41953d540a67e6aadc8a", null ],
     [ "setInt", "d6/dd5/class_a_b_1_1_shader.html#a498a5b0ebecd4029c09c04bc53a25267", null ],
     [ "setIntArray", "d6/dd5/class_a_b_1_1_shader.html#a38b43e6357d6e063e3d06c5a4d13a8a5", null ],

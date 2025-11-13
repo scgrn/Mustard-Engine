@@ -100,32 +100,36 @@ $(document).ready(function(){initNavTree('dd/d9a/texture_cache_8h_source.html','
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="comment">//    returns texture unit or -1 if no slot available</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="comment">//    will not evict textures bound after the last call to advanceFrame</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="comment">//    reserve is not currently used</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        i32 bindTexture(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> textureID, <span class="keywordtype">bool</span> reserve = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        i32 bindTexture(u32 textureID, <span class="keywordtype">bool</span> reserve = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">//  resets all slots to fair game</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">void</span> advanceFrame();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">void</span> invalidate();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> frameID;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="comment">//    meh, maybe query for max. for now the spec min is fine.</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keyword">static</span> <span class="keyword">const</span> u32 MAX_TEXTURE_UNITS = 16;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keyword">struct </span>CachedTexture {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            CachedTexture() {}</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            CachedTexture(u32 textureID, u32 lastFrame) : textureID(textureID), lastFrame(lastFrame) {}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            u32 textureID;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            u32 lastFrame;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        } textureBindings[MAX_TEXTURE_UNITS];</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="comment">//    remove a texture from the cache while unbinding it</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="comment">//    mostly for unbinding renderTargets</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="comment">//    this will not complain if the texture isn&#39;t in the cache</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">void</span> evictTexture(u32 textureID);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">void</span> invalidate();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        u32 frameID;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="comment">//    meh, maybe query for max. for now the spec min is fine.</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keyword">static</span> <span class="keyword">const</span> u32 MAX_TEXTURE_UNITS = 16;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">struct </span>CachedTexture {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            CachedTexture() {}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            CachedTexture(u32 textureID, u32 lastFrame) : textureID(textureID), lastFrame(lastFrame) {}</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            u32 textureID;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            u32 lastFrame;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        } textureBindings[MAX_TEXTURE_UNITS];</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;};</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="anamespace_a_b_html"><div class="ttname"><a href="../../db/d41/namespace_a_b.html">AB</a></div><div class="ttdef"><b>Definition:</b> audio.cpp:32</div></div>
