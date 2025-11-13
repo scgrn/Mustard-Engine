@@ -67,6 +67,7 @@ function buildDocs() {
     ldoc -o index -p "Mustard Engine" -d docs/luaAPI ./src/main/script/
     cd docs
     doxygen Doxyfile
+    pandoc -s -f markdown -t html5 manual.md -o index.html -c style.css
     cd ..
 }
 
