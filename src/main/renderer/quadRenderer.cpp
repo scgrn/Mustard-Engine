@@ -82,12 +82,7 @@ void QuadRenderer::addQuad(Quad3d& quad) {
     static const int indices[6] = { 0, 1, 2, 2, 3, 0};
 
     batches[quad.textureID].reserve(batches[quad.textureID].size() + 6);
-
-    //  compute surface normal
-    AB::Vec3 edge1 = quad.v[1] - quad.v[0];
-    AB::Vec3 edge2 = quad.v[2] - quad.v[0];
-    AB::Vec3 cross = crossProduct(edge2, edge1);
-    AB::Vec3 normal = normalize(cross);
+    quad.calculateNormal();
 
     for (u32 i = 0; i < 6; i++) {
         Vertex v;
@@ -95,9 +90,9 @@ void QuadRenderer::addQuad(Quad3d& quad) {
         v.px = quad.v[index].x;
         v.py = quad.v[index].y;
         v.pz = quad.v[index].z;
-        v.nx = normal.x;
-        v.ny = normal.y;
-        v.nz = normal.z;
+        v.nx = quad.normal.x;
+        v.ny = quad.normal.y;
+        v.nz = quad.normal.z;
         v.u = quad.uv[index].u;
         v.v = quad.uv[index].v;
         v.r = quad.color.r;

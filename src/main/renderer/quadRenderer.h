@@ -37,6 +37,29 @@ struct Quad3d {
     AB::Vec2 uv[4];
     AB::Vec4 color;
     GLuint textureID;
+    AB::Vec3 normal;
+    AB::Vec3 min, max;
+    
+    void calculateNormal() {
+        AB::Vec3 edge1 = v[1] - v[0];
+        AB::Vec3 edge2 = v[2] - v[0];
+        AB::Vec3 cross = crossProduct(edge2, edge1);
+        normal = normalize(cross);    
+    }
+
+    void calculateExtents() {
+        min = v[0];
+        max = v[0];
+        for (int i = 1; i < 4; i++) {
+            min.x = AB::min(min.x, v[i].x);
+            min.y = AB::min(min.y, v[i].y);
+            min.z = AB::min(min.z, v[i].z);
+            
+            max.x = AB::max(max.x, v[i].x);
+            max.y = AB::max(max.y, v[i].y);
+            max.z = AB::max(max.z, v[i].z);
+        }
+    }
 };
 
 class QuadRenderer : public RenderLayer {
