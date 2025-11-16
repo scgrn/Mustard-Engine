@@ -45,6 +45,8 @@ class Plane {
         f32 d;
 };
 
+Vec3 findIntersection(Plane const& p1, Plane const& p2, Plane const& p3);
+
 }   //  namespace
 
 #endif

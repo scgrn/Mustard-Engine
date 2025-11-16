@@ -23,6 +23,7 @@ freely, subject to the following restrictions:
 **/
 
 #include "plane.h"
+#include "matrix.h"
 
 namespace AB {
 
@@ -54,5 +55,35 @@ f32 Plane::getSignedDistanceToPoint(Vec3& point) {
     return dotProduct(normal, point) - d;
 }
 
-}   //  namespace
+Vec3 findIntersection(Plane const& p1, Plane const& p2, Plane const& p3) {
+    Mat4 a;
 
+    a.data2d[0][0] = p1.normal.x;
+    a.data2d[0][1] = p1.normal.y;
+    a.data2d[0][2] = p1.normal.z;
+    a.data2d[0][3] = 0;
+
+    a.data2d[1][0] = p2.normal.x;
+    a.data2d[1][1] = p2.normal.y;
+    a.data2d[1][2] = p2.normal.z;
+    a.data2d[1][3] = 0;
+
+    a.data2d[2][0] = p3.normal.x;
+    a.data2d[2][1] = p3.normal.y;
+    a.data2d[2][2] = p3.normal.z;
+    a.data2d[2][3] = 0;
+
+    a.data2d[3][0] = 0;
+    a.data2d[3][1] = 0;
+    a.data2d[3][2] = 0;
+    a.data2d[3][3] = 1;
+
+    Vec4 b(p1.d, p2.d, p3.d, 1);
+
+    Mat4 inv = inverse(a);
+    Vec4 result = inv * b;
+
+    return Vec3(result.x, result.y, result.z);
+}
+
+}   //  namespace
