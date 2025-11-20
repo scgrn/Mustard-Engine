@@ -50,6 +50,8 @@ std::map<int, RenderTarget*> canvases;
 OrthographicCamera camera2d;
 
 void startup(Application *app) {
+    PROFILE(ENGINE STARTUP)
+
     LOG("Engine Startup - %s - %s", VERSION, BUILD_STAMP);
     LOG(std::string(79, '-').c_str(), 0);
 
@@ -73,25 +75,29 @@ void startup(Application *app) {
 }
 
 void shutdown() {
-    shaders.clear(true);
-    sprites.clear(true);
-    fonts.clear(true);
-    sounds.clear(true);
-    music.clear(true);
+    {
+        PROFILE(ENGINE SHUTDOWN)
 
-    LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
+        shaders.clear(true);
+        sprites.clear(true);
+        fonts.clear(true);
+        sounds.clear(true);
+        music.clear(true);
+
+        LOG("Engine Shutdown - Total runtime %dms", SDL_GetTicks());
 
 #if defined(DEBUG) && !defined(__EMSCRIPTEN__)
-    console.shutdown();
+        console.shutdown();
 #endif
-    renderer.shutdown();
-    window.shutdown();
-    audio.shutdown();
-    input.shutdown();
-    script.shutdown();
-    fileSystem.shutdown();
+        renderer.shutdown();
+        window.shutdown();
+        audio.shutdown();
+        input.shutdown();
+        script.shutdown();
+        fileSystem.shutdown();
 
-    SDL_Quit();
+        SDL_Quit();
+    }
 
 #if defined(DEBUG) && !defined(__EMSCRIPTEN__)
     reportProfiling();

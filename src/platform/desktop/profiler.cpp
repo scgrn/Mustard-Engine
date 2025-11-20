@@ -46,7 +46,7 @@ void __cyg_profile_func_exit(void *thisFunc, void *callSite) {
 }
 }
 
-static std::unordered_map<std::string, std::vector<float>> samples;
+static std::unordered_map<std::string, std::vector<AB::f32>> samples;
 
 namespace AB {
 

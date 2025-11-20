@@ -51,10 +51,8 @@ freely, subject to the following restrictions:
 #endif  //  DEBUG
 
 //  TODO: this needs to be in common code somewhere for android, web
-// void checkOpenGLError(const char* stmt, const char* fname, int line);
-// i hate it. i seriously hate that i can't put this code in renderer.cpp.
 void checkOpenGLError(const char* stmt, const char* fname, int line) {
-    bool errorOccured = false;
+    AB::b8 errorOccured = false;
     while (GLenum errorCode = glGetError() != GL_NO_ERROR) {
         std::string error;
         switch (errorCode) {
@@ -121,7 +119,7 @@ i64 timeAverager[timeHistoryCount] = {desiredFrametime, desiredFrametime, desire
 i64 prevFrameTime = SDL_GetPerformanceCounter();
 i64 frameAccumulator = 0;
 
-//    this is some temp shit just for recording
+//    temp for recording
 i64 currentTime = SDL_GetTicks();
 i64 lastTime = currentTime;
 
@@ -176,7 +174,7 @@ void mainLoop(Application *app) {
 
                 script.shutdown();
                 script.startup();
-                
+
                 app->glContextDestroyed();
                 app->glContextCreated(canvasWidth, canvasHeight, xRes, yRes, fullscreen);
                 script.execute("AB.init()");
@@ -277,6 +275,8 @@ void mainLoop(Application *app) {
             for(i32 i = 0; i < updateMultiplicity; i++) {
 #ifdef DEBUG
                 if (!console.active) {
+                    PROFILE(APP UPDATE)
+
                     app->update();
                 }
                 input.update();
@@ -294,6 +294,7 @@ void mainLoop(Application *app) {
     }
 
     // RenderLayer::textureCache.invalidate();
+    PROFILE(APP RENDER)
     app->render();
 #ifdef DEBUG
     console.render();
@@ -301,6 +302,7 @@ void mainLoop(Application *app) {
 
 #ifdef DEBUG
     if (recording) {
+        PROFILE(FRAME CAPTURE)
         captureFrame();
     }
 #endif // DEBUG
@@ -317,21 +319,27 @@ i32 run(Application *app) {
     try {
         if (app == NULL) {
             //app = new AB::Application();
-            
+
             //    NO GAME
+            ERR("NO GAME", -1);
             return -1;
         }
 
-        app->startup();
-        script.execute("AB.init()");
+        {
+            PROFILE(CLIENT STARTUP)
+
+            app->startup();
+            script.execute("AB.init()");
+        }
 
         LOG("Entering main loop", 0);
         LOG(std::string(79, '-').c_str(), 0);
 
         while (!AB::done) {
+            PROFILE(MAIN LOOP)
             mainLoop(app);
         }
-        
+
         LOG("Shutting down engine", 0);
         LOG(std::string(79, '-').c_str(), 0);
 
