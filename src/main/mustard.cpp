@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
+#include "../pch.h"
+
 #include "mustard.h"
 #include "core/version.h"
 

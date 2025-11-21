@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
+#include "../pch.h"
+
 #include <cstring>
 
 #include "image.h"
@@ -42,11 +44,11 @@ Image::Image(u32 width, u32 height) {
 
 Image::Image(const std::string& tgaFilename) {
     u32 bpp;
-    
+
     data = loadTGA(tgaFilename, width, height, bpp);
-    
+
     //    TODO: pad alpha if 24bit. who knows what happens if we don't?
-    
+
     imageSize = width * height * 4;
 }
 

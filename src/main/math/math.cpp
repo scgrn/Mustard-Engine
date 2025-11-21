@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
+#include "../pch.h"
+
 #include "math.h"
 
 namespace AB {
