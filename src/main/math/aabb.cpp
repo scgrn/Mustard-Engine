@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
+#include "../pch.h"
+
 #include "aabb.h"
 
 namespace AB {
@@ -58,6 +60,26 @@ b8 AABB::collides(const AABB &other) {
         min.y < other.max.y &&
         max.z > other.min.z &&
         min.z < other.max.z);
+}
+
+std::array<AABB, 8> AABB::subdivide() {
+    std::array<AABB, 8> result;
+
+    for (int i = 0; i < 8; i++) {
+        result[i].min = Vec3(
+            (i & 1) ? centerPosition.x : min.x,
+            (i & 2) ? centerPosition.y : min.y,
+            (i & 4) ? centerPosition.z : min.z);
+
+        result[i].max = AB::Vec3(
+            (i & 1) ? max.x : centerPosition.x,
+            (i & 2) ? max.y : centerPosition.y,
+            (i & 4) ? max.z : centerPosition.z);
+
+        result[i].calculateCenter();
+    }
+
+    return result;
 }
 
 }   //  namespace

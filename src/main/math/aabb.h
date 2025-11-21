@@ -25,6 +25,8 @@ freely, subject to the following restrictions:
 #ifndef AB_AABB_H
 #define AB_AABB_H
 
+#include <array>
+
 #include "vector.h"
 
 namespace AB {
@@ -39,6 +41,8 @@ class AABB {
         void calculateCenter();
 
         b8 collides(const AABB &other);
+        std::array<AABB, 8> subdivide();
+
         Vec3 centerPosition, size;
         Vec3 min, max;
 
