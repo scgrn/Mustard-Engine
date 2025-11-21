@@ -35,7 +35,9 @@ class AABB {
         AABB();
         ~AABB() {}
 
-        void calculateExtents(void);
+        void calculateExtents();
+        void calculateCenter();
+
         b8 collides(const AABB &other);
         Vec3 centerPosition, size;
         Vec3 min, max;
