@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
+#include "../pch.h"
+
 #include "plane.h"
 #include "matrix.h"
 
@@ -55,7 +57,7 @@ f32 Plane::getSignedDistanceToPoint(Vec3& point) {
     return dotProduct(normal, point) - d;
 }
 
-Vec3 findIntersection(Plane const& p1, Plane const& p2, Plane const& p3) {
+bool findIntersection(Plane const& p1, Plane const& p2, Plane const& p3, Vec3& out) {
     Mat4 a;
 
     a.data2d[0][0] = p1.normal.x;
@@ -80,10 +82,15 @@ Vec3 findIntersection(Plane const& p1, Plane const& p2, Plane const& p3) {
 
     Vec4 b(p1.d, p2.d, p3.d, 1);
 
-    Mat4 inv = inverse(a);
+    Mat4 inv;
+    if (!inverse(a, inv)) {
+        return false;
+    }
     Vec4 result = inv * b;
 
-    return Vec3(result.x, result.y, result.z);
+    out = Vec3(result.x, result.y, result.z);
+
+    return true;
 }
 
 }   //  namespace
