@@ -223,7 +223,7 @@ extern Mat4 rotateX(f32 theta);
 extern Mat4 rotateY(f32 theta);
 extern Mat4 rotateZ(f32 theta);
 
-extern Mat4 inverse(Mat4 matrix);
+extern b32 inverse(Mat4 matrix, Mat4& out);
 extern Mat4 transpose(Mat4 matrix);
 extern Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up);
 

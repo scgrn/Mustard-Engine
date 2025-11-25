@@ -171,7 +171,7 @@ Mat4 transpose(Mat4 matrix) {
     return ret;
 }
 
-Mat4 inverse(Mat4 matrix) {
+b32 inverse(Mat4 matrix, Mat4& out) {
     const f32* m = matrix.data1d;
 
     f32 t0 = m[10] * m[15];
@@ -199,8 +199,7 @@ Mat4 inverse(Mat4 matrix) {
     f32 t22 = m[0] * m[5];
     f32 t23 = m[4] * m[1];
 
-    Mat4 ret;
-    f32* o = ret.data1d;
+    f32* o = out.data1d;
 
     o[0] = (t0 * m[5] + t3 * m[9] + t4 * m[13]) - (t1 * m[5] + t2 * m[9] + t5 * m[13]);
     o[1] = (t1 * m[1] + t6 * m[9] + t9 * m[13]) - (t0 * m[1] + t7 * m[9] + t8 * m[13]);
@@ -208,6 +207,10 @@ Mat4 inverse(Mat4 matrix) {
     o[3] = (t5 * m[1] + t8 * m[5] + t11 * m[9]) - (t4 * m[1] + t9 * m[5] + t10 * m[9]);
 
     f32 d = 1.0f / (m[0] * o[0] + m[4] * o[1] + m[8] * o[2] + m[12] * o[3]);
+
+    if (fabs(d) < EPSILON) {
+        return false;
+    }
 
     o[0] = d * o[0];
     o[1] = d * o[1];
@@ -226,7 +229,7 @@ Mat4 inverse(Mat4 matrix) {
     o[14] = d * ((t18 * m[6] + t23 * m[14] + t15 * m[2]) - (t22 * m[14] + t14 * m[2] + t19 * m[6]));
     o[15] = d * ((t22 * m[10] + t16 * m[2] + t21 * m[6]) - (t20 * m[6] + t23 * m[10] + t17 * m[2]));
 
-    return ret;
+    return true;
 }
 
 Mat4 lookAt(Vec3 position, Vec3 target, Vec3 up) {
