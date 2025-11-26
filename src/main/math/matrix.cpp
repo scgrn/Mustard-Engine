@@ -22,8 +22,6 @@ freely, subject to the following restrictions:
 
 **/
 
-#include "../pch.h"
-
 #include "matrix.h"
 #include "math.h"
 

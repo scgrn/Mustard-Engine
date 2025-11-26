@@ -22,8 +22,6 @@ freely, subject to the following restrictions:
 
 **/
 
-#include "../pch.h"
-
 #include "vector.h"
 
 namespace AB {

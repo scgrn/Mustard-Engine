@@ -31,7 +31,8 @@ class TestSuite {
 
 #include "test-rng.cpp"
 #include "test-vector.cpp"
-#include "test-matrix.cpp" 
+#include "test-matrix.cpp"
+#include "test-plane-intersection.cpp"
 #include "test-project-build.cpp"
 
 int main(int argc, char* argv[]) {
@@ -40,6 +41,7 @@ int main(int argc, char* argv[]) {
     testRng();
     testVector();
     testMatrix();
+    testPlaneIntersection();
     testProjectBuild();
 
     std::cout << "============= Tests complete ============" << std::endl;
