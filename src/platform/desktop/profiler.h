@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #ifdef DEBUG
 #define PROFILE(name) AB::ScopedTimer scopedTimer(#name);
 #else
-#define PROFILE(name) 
+#define PROFILE(name)
 #endif
 
 namespace AB {

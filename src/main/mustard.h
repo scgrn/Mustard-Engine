@@ -35,8 +35,8 @@ freely, subject to the following restrictions:
 #include "core/fileSystem.h"
 #include "core/window.h"
 #include "core/log.h"
-#ifdef DEBUG
 #include "../platform/desktop/profiler.h"
+#ifdef DEBUG
 #include "../platform/desktop/console.h"
 #endif
 
@@ -64,18 +64,18 @@ namespace AB {
     extern Window window;
 #ifdef DEBUG
     extern Console console;
-#endif    
+#endif
 
     void startup(Application *app);
     void shutdown();
-    
+
     extern AssetManager<Sprite> sprites;
     extern AssetManager<Shader> shaders;
     extern AssetManager<Font> fonts;
 
     extern AssetManager<Sound> sounds;
     extern AssetManager<Music> music;
-    
+
     extern OrthographicCamera camera2d;
 }
 
