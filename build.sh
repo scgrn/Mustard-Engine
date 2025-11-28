@@ -53,7 +53,7 @@ function buildWebRelease() {
 
 function buildAssetCompiler() {
     echo "Building asset compiler...."
-    
+
     mkdir -p build/assetCompiler
     cd build/assetCompiler
     cmake ../../src/assetCompiler -D CMAKE_BUILD_TYPE=Release
@@ -62,13 +62,38 @@ function buildAssetCompiler() {
 }
 
 function buildDocs() {
-    echo "Building Lua API Documentation..."
+    echo "Building documentation..."
 
-    ldoc -o index -p "Mustard Engine" -d docs/luaAPI ./src/main/script/
+    if command -v ldoc >/dev/null 2>&1; then
+        echo "Building Lua API documentation..."
+        ldoc -o index -p "Mustard Engine" -d docs/luaAPI ./src/main/script/
+    else
+        echo "Skipping Lua API documentation (ldoc not found)."
+    fi
+
     cd docs
-    doxygen Doxyfile
-    pandoc -s -f markdown -t html5 manual.md -o index.html -c style.css
+    if command -v doxygen >/dev/null 2>&1; then
+        echo "Building C++ documentation..."
+
+        if command -v dot >/dev/null 2>&1; then
+            doxygen Doxyfile
+        else
+            echo "Note: 'dot' not found - diagrams disabled."
+            DOXYGEN_OUTPUT="HAVE_DOT=NO"; doxygen Doxyfile
+        fi
+    else
+        echo "Skipping C++ documentation (doxygen not found)."
+    fi
+
+    if command -v pandoc >/dev/null 2>&1; then
+        echo "Building main documentation..."
+        pandoc -s -f markdown -t html5 manual.md -o index.html -c style.css
+    else
+        echo "Skipping main documentation (pandoc not found)."
+    fi
     cd ..
+
+    echo "Documentation build complete."
 }
 
 function buildTests() {
