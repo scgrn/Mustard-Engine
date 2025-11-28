@@ -13,3 +13,6 @@
 /projectTemplate/SDL2.dll
 /projectTemplate/dist/SDL2.dll
 
+/docs/html/
+/docs/luaAPI/
+/docs/index.html

@@ -1,8 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node0 [label="AB::Quad3d",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d9/d98/struct_a_b_1_1_quad3d.html",tooltip=" "];
-}
