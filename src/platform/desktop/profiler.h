@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 
 #include <chrono>
 
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(__EMSCRIPTEN__)
 #define PROFILE(name) AB::ScopedTimer scopedTimer(#name);
 #else
 #define PROFILE(name)
