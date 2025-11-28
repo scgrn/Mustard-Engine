@@ -99,19 +99,22 @@ Stats computeStats(const std::vector<float>& v) {
 }
 
 void reportProfiling() {
-    LOG("\n===== Profiling Report =====\n", 0);
-
+    std::string report;
     for (const auto& [name, vec] : samples) {
         Stats stats = computeStats(vec);
 
-        std::cout << name << " (" << stats.count << " sample"
-            << (stats.count > 1 ? "s" : "") << ")\n"
-            << "\tMean: " << stats.mean << " ms\n"
-            << "\tMedian: " << stats.median << " ms\n"
-            << "\tStandard deviation: " << stats.standardDeviation << " ms\n"
-            << "\tMin: " << stats.min << " ms\n"
-            << "\tMax: " << stats.max  << " ms\n\n";
+        if (stats.count > 1) {
+            report += name + " (" + std::to_string(stats.count) + " samples)\n";
+            report += "\tMean: " + std::to_string(stats.mean) + " ms\n";
+            report += "\tMedian: " + std::to_string(stats.median) + " ms\n";
+            report += "\tStandard deviation: " + std::to_string(stats.standardDeviation) + " ms\n";
+            report += "\tMin: " + std::to_string(stats.min) + " ms\n";
+            report += "\tMax: " + std::to_string(stats.max) + " ms\n\n";
+        } else {
+            report += name + ": " + std::to_string(stats.max) + " ms\n\n";
+        }
     }
+    LOG("\n\n===== Profiling Report =====\n\n%s", report.c_str());
 }
 
 }
