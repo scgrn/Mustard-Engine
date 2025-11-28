@@ -4,7 +4,7 @@ digraph "AB::Quad3d"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   Node1 [label="AB::Quad3d",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
-  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" v" ,fontname="Helvetica"];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" normal\nmin\nmax\nv" ,fontname="Helvetica"];
   Node2 [label="AB::Vector\< f32, 3 \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/dd1/struct_a_b_1_1_vector.html",tooltip=" "];
   Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" uv" ,fontname="Helvetica"];
   Node3 [label="AB::Vector\< f32, 2 \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/dd1/struct_a_b_1_1_vector.html",tooltip=" "];
