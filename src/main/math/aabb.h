@@ -41,7 +41,8 @@ class AABB {
         void calculateCenter();
 
         b8 collides(const AABB &other);
-        std::array<AABB, 8> subdivide();
+        std::array<AABB, 8> subdivideOctants();
+        std::array<AABB, 4> subdivideQuadrants();
 
         Vec3 centerPosition, size;
         Vec3 min, max;

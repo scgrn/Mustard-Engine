@@ -62,7 +62,7 @@ b8 AABB::collides(const AABB &other) {
         min.z <= other.max.z);
 }
 
-std::array<AABB, 8> AABB::subdivide() {
+std::array<AABB, 8> AABB::subdivideOctants() {
     std::array<AABB, 8> result;
 
     for (int i = 0; i < 8; i++) {
@@ -81,6 +81,27 @@ std::array<AABB, 8> AABB::subdivide() {
 
     return result;
 }
+
+std::array<AABB, 4> AABB::subdivideQuadrants() {
+    std::array<AABB, 4> result;
+
+    for (int i = 0; i < 4; i++) {
+        result[i].min = Vec3(
+            (i & 1) ? centerPosition.x : min.x,
+            min.y,
+            (i & 2) ? centerPosition.z : min.z);
+
+        result[i].max = AB::Vec3(
+            (i & 1) ? max.x : centerPosition.x,
+            max.y,
+            (i & 2) ? max.z : centerPosition.z);
+
+        result[i].calculateCenter();
+    }
+
+    return result;
+}
+
 
 }   //  namespace
 
