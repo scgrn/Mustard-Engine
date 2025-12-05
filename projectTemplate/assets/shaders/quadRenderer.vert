@@ -9,7 +9,7 @@ uniform mat4 uView;
 out vec2 vUV;
 out vec4 vColor;
 out vec3 vNormal;
-out float vDistance;
+out vec3 vViewPos;
 
 void main() {
     vUV = inUV;
@@ -17,7 +17,7 @@ void main() {
     vNormal = inNormal;
 
     vec4 viewPos = uView * vec4(inPos, 1.0);
-    vDistance = length(viewPos.xyz);
+    vViewPos = viewPos.xyz;
 
     gl_Position = uProjView * vec4(inPos, 1.0);
 }

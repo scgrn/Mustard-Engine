@@ -40,6 +40,7 @@ QuadRenderer::QuadRenderer(Shader *quadShader) {
         initialized = true;
     }
     this->quadShader = quadShader == nullptr ? &defaultQuadShader : quadShader;
+    setFog();
 
     CALL_GL(glGenVertexArrays(1, &batchVAO));
     CALL_GL(glBindVertexArray(batchVAO));
@@ -76,6 +77,11 @@ QuadRenderer::~QuadRenderer() {
 
     CALL_GL(glDeleteBuffers(1, &batchVAO));
     CALL_GL(glDeleteBuffers(1, &batchVBO));
+}
+
+void QuadRenderer::setFog(AB::Vec3 color, f32 density) {
+    quadShader->setVec3("uFogColor", color);
+    quadShader->setFloat("uFogDensity", density);
 }
 
 void QuadRenderer::addQuad(Quad3d& quad) {
