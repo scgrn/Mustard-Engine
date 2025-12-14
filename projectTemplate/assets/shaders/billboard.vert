@@ -7,18 +7,18 @@ layout (location = 5) in vec4 texCoord;
 layout (location = 6) in int textureUnit;
 layout (location = 7) in vec4 color;
 
-out vec4 Color;
-out vec2 TexCoord;
-out float vDistance;
-flat out int TextureUnit;
+uniform mat4 uProjView;
+uniform mat4 uProjection;
+uniform mat4 uView;
+uniform int uSpherical; // true = spherical, false = cylindrical
 
-uniform mat4 view;
-uniform mat4 projection;
-uniform mat4 perspectiveProjection;
-uniform int spherical; // true = spherical, false = cylindrical
+out vec4 vColor;
+out vec2 vTexCoord;
+out vec3 vViewPos;
+flat out int vTextureUnit;
 
 void main() {
-    mat3 camMat = mat3(inverse(view));
+    mat3 camMat = mat3(transpose(uView));
 
     vec3 sphericalRight = camMat[0];
     vec3 sphericalUp    = camMat[1];
@@ -26,8 +26,8 @@ void main() {
     vec3 cylindricalRight = normalize(vec3(camMat[0].x, 0.0, camMat[0].z));
     vec3 cylindricalUp    = vec3(0.0, 1.0, 0.0);
 
-    vec3 camRight = normalize(mix(cylindricalRight, sphericalRight, float(spherical)));
-    vec3 camUp = normalize(mix(cylindricalUp, sphericalUp, float(spherical)));
+    vec3 camRight = normalize(mix(cylindricalRight, sphericalRight, float(uSpherical)));
+    vec3 camUp = normalize(mix(cylindricalUp, sphericalUp, float(uSpherical)));
 
     vec2 halfSize = size * scale;
 
@@ -40,10 +40,10 @@ void main() {
         camRight * rotated.x * halfSize.x +
         camUp * rotated.y * halfSize.y;
 
-    gl_Position = perspectiveProjection * view * vec4(worldPos, 1.0);
+    gl_Position = uProjection * uView * vec4(worldPos, 1.0);
 
-    vec4 viewPos = view * vec4(vertexPosition, 1.0);
-    vDistance = length(viewPos.xyz);
+    vec4 viewPos = uView * vec4(worldPos, 1.0);
+    vViewPos = viewPos.xyz;
 
     vec2 uvs[4] = vec2[4](
         vec2(texCoord.z, texCoord.w),
@@ -51,8 +51,8 @@ void main() {
         vec2(texCoord.x, texCoord.y),
         vec2(texCoord.x, texCoord.w)
     );
-    TexCoord = uvs[gl_VertexID];
+    vTexCoord = uvs[gl_VertexID];
 
-    TextureUnit = textureUnit;
-    Color = color;
+    vTextureUnit = textureUnit;
+    vColor = color;
 }
