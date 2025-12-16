@@ -86,8 +86,8 @@ void Texture::init(Image *image) {
     width = nextPowerOfTwo(rWidth);
     height = nextPowerOfTwo(rHeight);
 
-    u2 = (f32)rWidth / (f32)width;
-    v2 = (f32)rHeight / (f32)height;
+    u2 = ((f32)rWidth - 0.01f) / (f32)width;
+    v2 = ((f32)rHeight - 0.01f) / (f32)height;
 
     //  create new image padded to ^2
     u8 *data = NULL;
