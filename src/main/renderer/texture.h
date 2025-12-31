@@ -57,15 +57,18 @@ class Texture {
         virtual ~Texture();
 
         GLuint glHandle;        //  handle to OpenGL texture object
-        GLuint textureUnit; // not used...?
+        GLuint textureUnit;     //  not used...?
 
         static void setMinFilter(GLenum filter) { Texture::minFilter = filter; }
         static void setMagFilter(GLenum filter) { Texture::magFilter = filter; }
+        
+        //  defaults to GL_REPEAT but you may also want GL_CLAMP_TO_EDGE
+        static void setWrapMode(GLenum mode) { Texture::wrapMode = mode; }
 
         u32 width, height;        //  size padded to nearest 2^
         f32 u2, v2;
 
-        static GLenum minFilter, magFilter;
+        static GLenum minFilter, magFilter, wrapMode;
 
     protected:
         void init(Image *image);
