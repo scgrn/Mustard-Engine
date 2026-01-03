@@ -49,6 +49,7 @@ b8 Window::startup(Application *app) {
 void Window::shutdown() {
     LOG("Window subsystem shutdown", 0);
     
+    SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
 }
 
