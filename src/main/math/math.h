@@ -69,6 +69,10 @@ f32 inline toDegrees(f32 val) {
     return val / (M_PI / 180.0f);
 }
 
+f32 inline normalizeAngle(f32 angle) {
+    return static_cast<f32>(std::fmod(static_cast<f64>(angle) + M_PI, 2.0 * M_PI) - M_PI);
+}
+
 //  round up to next highest power of 2
 //  from http://graphics.stanford.edu/~seander/bithacks.html
 inline i32 nextPowerOfTwo(i32 v) {
