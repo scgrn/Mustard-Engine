@@ -154,6 +154,18 @@ static int luaDistPointToLine(lua_State* luaVM) {
     return 1;
 }
 
+/// Normalizes an angle
+// @param angle Angle in radians
+// @return Angle normalized to [-math.pi .. math.pi]
+// @function AB.math.normalizeAngle
+static int luaNormalizeAngle(lua_State* luaVM) {
+    f32 angle = (f32)lua_tonumber(luaVM, 1);
+    
+    lua_pushnumber(luaVM, normalizeAngle(angle));
+    
+    return 1;
+}
+
 /// Determines if two line segments intersect in 2D space
 // @param x1 X-coordinate of first line segment first endpoint
 // @param y1 Y-coordinate of first line segment first endpoint
@@ -187,6 +199,7 @@ void registerMathFunctions() {
         { "random", luaRandom},
         { "noiseSeed", luaNoiseSeed},
         { "noise", luaNoise},
+        { "normalizeAngle", luaNormalizeAngle},
         { "distance", luaDistance},
         { "distPointToLine", luaDistPointToLine},
         { "lineSegmentIntersection", luaLineSegmentIntersection},
