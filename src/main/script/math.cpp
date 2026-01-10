@@ -114,6 +114,18 @@ static int luaNoise(lua_State* luaVM) {
     return 1;
 }
 
+/// Normalizes an angle
+// @param angle Angle in radians
+// @return Angle normalized to [-math.pi .. math.pi]
+// @function AB.math.normalizeAngle
+static int luaNormalizeAngle(lua_State* luaVM) {
+    f32 angle = (f32)lua_tonumber(luaVM, 1);
+    
+    lua_pushnumber(luaVM, normalizeAngle(angle));
+    
+    return 1;
+}
+
 /// Calculates the distance between two points in 2D space
 // @param x1 X-coordinate of first point
 // @param y1 Y-coordinate of first point
@@ -151,18 +163,6 @@ static int luaDistPointToLine(lua_State* luaVM) {
 
     lua_pushnumber(luaVM, distPointToLine(Vec2(x1, y1), Vec2(x2, y2), Vec2(x3, y3)));
 
-    return 1;
-}
-
-/// Normalizes an angle
-// @param angle Angle in radians
-// @return Angle normalized to [-math.pi .. math.pi]
-// @function AB.math.normalizeAngle
-static int luaNormalizeAngle(lua_State* luaVM) {
-    f32 angle = (f32)lua_tonumber(luaVM, 1);
-    
-    lua_pushnumber(luaVM, normalizeAngle(angle));
-    
     return 1;
 }
 
