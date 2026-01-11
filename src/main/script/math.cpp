@@ -55,8 +55,8 @@ static int luaRandomSeed(lua_State* luaVM) {
     return 0;
 }
 
-/// Generates a random f32 ing point number
-// @return A random f32 ing point number [0..1]
+/// Generates a random floating point number
+// @return A random floating point number [0..1]
 // @function AB.math.random
 
 /// Generates a random integer
