@@ -121,7 +121,7 @@ std::unordered_map<int, std::string> keyNames = {
         b8 isMousePressed(u32 button);
         b8 wasMouseReleased(u32 button);  
         u32 getMouseWheelMove();
-        Vec2 getMousePosition();
+        Vec2i getMousePosition();
         void setMousePosition(Vec2 pos);
         void showMouseCursor(b8 visible);
 

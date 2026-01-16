@@ -52,7 +52,7 @@ static Uint8 *prevKeyStates;
 static i32 numKeys;
 
 struct Mouse {
-    u32 x, y;
+    i32 x, y;
     b8 buttons[3];
     b8 prevButtons[3];
     u32 wheel;
@@ -271,8 +271,13 @@ void Input::update() {
             } else {
                 showGamepadControls = false;
             }
-            mouse.x = event->motion.x;
-            mouse.y = event->motion.y;
+            if (SDL_GetRelativeMouseMode()) {
+                mouse.x = event->motion.xrel;
+                mouse.y = event->motion.yrel;
+            } else {
+                mouse.x = event->motion.x;
+                mouse.y = event->motion.y;
+            }
             script.execute("AB.onMouseMoved(" + toString(mouse.x, false) + ", " + toString(mouse.y, false) + ")");
         }
         if (event->type ==  SDL_MOUSEWHEEL) {
@@ -475,8 +480,8 @@ u32 Input::getMouseWheelMove() {
     return mouse.wheel;
 }
 
-Vec2 Input::getMousePosition() {
-    return Vec2(mouse.x, mouse.y);
+Vec2i Input::getMousePosition() {
+    return Vec2i(mouse.x, mouse.y);
 }
 
 void Input::setMousePosition(Vec2 pos) {
@@ -486,6 +491,10 @@ void Input::setMousePosition(Vec2 pos) {
 
 void Input::showMouseCursor(b8 visible) {
     SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+    SDL_SetRelativeMouseMode((SDL_bool)!visible);
+    if (!visible) {
+        // SDL_SetHintWithPriority(SDL_HINT_MOUSE_RELATIVE_MODE_WARP, "1", SDL_HINT_OVERRIDE);
+    }
 }
 
 //-------------------------------------------------------- Gamepad functions -----------------------------------------------------

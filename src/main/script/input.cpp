@@ -343,9 +343,9 @@ static int luaShowCursor(lua_State* luaVM) {
 // @return Right mouse button
 // @usage x, y, left, middle, right = AB.input.getMouseState()
 static int luaGetMouseState(lua_State* luaVM) {
-    Vec2 pos = input.getMousePosition();
-    lua_pushinteger(luaVM, (int)pos.x);
-    lua_pushinteger(luaVM, (int)pos.y);
+    Vec2i pos = input.getMousePosition();
+    lua_pushinteger(luaVM, pos.x);
+    lua_pushinteger(luaVM, pos.y);
     
     for (int i = 0; i < 3; i++) {
         lua_pushboolean(luaVM, input.isMousePressed(i));
