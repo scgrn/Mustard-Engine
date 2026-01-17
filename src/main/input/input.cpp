@@ -64,7 +64,7 @@ struct Gamepad {
 
     f32 axis[Input::AXIS_MAX];
     f32 prevAxis[Input::AXIS_MAX];
-    u32 rawAxis[Input::AXIS_MAX];
+    i32 rawAxis[Input::AXIS_MAX];
 
     SDL_GameController *gamepad;
     SDL_Haptic *haptic;
@@ -536,7 +536,7 @@ b8 Input::gamepadWasReleased(u32 gamepadIndex, u32 button) {
     return (!connectedGamepads[gamepadIndex].buttons[button] && connectedGamepads[gamepadIndex].prevButtons[button]);
 }
 
-float Input::gamepadAxis(u32 gamepadIndex, u32 axis) {
+f32 Input::gamepadAxis(u32 gamepadIndex, u32 axis) {
     if (gamepadIndex < 0 || gamepadIndex > numGamepads) {
         return 0.0f;
     }
