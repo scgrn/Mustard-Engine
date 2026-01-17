@@ -242,6 +242,10 @@ void Input::update() {
         }
     }
 
+    if (SDL_GetRelativeMouseMode()) {
+        mouse.x = 0;
+        mouse.y = 0;
+    }
     for (std::vector<SDL_Event>::iterator event = eventQueue.begin(); event != eventQueue.end(); event++) {
         if (event->type == SDL_KEYDOWN && event->key.repeat == 0) {
             showGamepadControls = false;
@@ -272,8 +276,8 @@ void Input::update() {
                 showGamepadControls = false;
             }
             if (SDL_GetRelativeMouseMode()) {
-                mouse.x = event->motion.xrel;
-                mouse.y = event->motion.yrel;
+                mouse.x += event->motion.xrel;
+                mouse.y += event->motion.yrel;
             } else {
                 mouse.x = event->motion.x;
                 mouse.y = event->motion.y;
