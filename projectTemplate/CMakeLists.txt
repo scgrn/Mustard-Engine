@@ -107,9 +107,25 @@ else()
 
     else()
         if (CMAKE_BUILD_TYPE STREQUAL "Dist")
-            target_link_libraries(${PROJECT_NAME} libMustard-${CMAKE_HOST_SYSTEM_NAME}-Release.a ${SDL2_LIBRARIES} dl)
+            target_link_libraries(${PROJECT_NAME}
+                libMustard-${CMAKE_HOST_SYSTEM_NAME}-Release.a
+                ${SDL2_LIBRARIES}
+                dl
+                vorbis
+                vorbisfile
+                vorbisenc
+                ogg
+            )
         else()
-            target_link_libraries(${PROJECT_NAME} libMustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}.a ${SDL2_LIBRARIES} dl)
+            target_link_libraries(${PROJECT_NAME}
+                libMustard-${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_BUILD_TYPE}.a
+                ${SDL2_LIBRARIES}
+                dl
+                vorbis
+                vorbisfile
+                vorbisenc
+                ogg
+            )
         endif()
     endif()
 endif()

@@ -96,6 +96,9 @@ class Audio : public SubSystem {
 
         ma_engine engine;
         
+        //    decoder config for ogg vorbis
+        ma_decoder_config decoderConfig;
+        
     private:
         struct QueuedSound {
             Sound* sound;
@@ -105,6 +108,9 @@ class Audio : public SubSystem {
         };
         
         std::vector<QueuedSound> soundQueue;
+        
+        //    custom backend for ogg vorbis
+        ma_decoding_backend_vtable* customBackends[1];
 };
 
 }

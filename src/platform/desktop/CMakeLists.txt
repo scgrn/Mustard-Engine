@@ -142,5 +142,12 @@ if (WIN32)
         SDL2::SDL2main
     )
 else()
-    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC
+            ${SDL2_LIBRARIES}
+            vorbis
+            vorbisfile
+            vorbisenc
+            ogg
+    )
 endif()

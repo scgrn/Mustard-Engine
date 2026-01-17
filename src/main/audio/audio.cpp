@@ -27,6 +27,8 @@ freely, subject to the following restrictions:
 #define MINIAUDIO_IMPLEMENTATION
 
 #include "audio.h"
+#include "../../vendor/miniaudio/extras/decoders/libvorbis/miniaudio_libvorbis.c"
+
 #include "../core/log.h"
 
 namespace AB {
@@ -54,7 +56,9 @@ void Sound::load(std::string const& filename) {
 
     for (u32 i = 0; i < INSTANCES; i++) {
          //  initialize the decoder with the memory data
-        ma_result result = ma_decoder_init_memory(data.getData(), data.getSize(), NULL, &decoders[i]);
+        ma_result result = ma_decoder_init_memory(data.getData(), data.getSize(),
+            &audio.decoderConfig, &decoders[i]);
+            
         if (result != MA_SUCCESS) {
             ERR("Failed to initialize decoder from memory: %d", result);
         }
@@ -110,7 +114,9 @@ b8 Sound::isPlaying() {
 void Music::load(std::string const& filename) {
     data = fileSystem.loadAsset(filename);
 
-    ma_result result = ma_decoder_init_memory(data.getData(), data.getSize(), NULL, &decoder);
+    ma_result result = ma_decoder_init_memory(data.getData(), data.getSize(),
+        &audio.decoderConfig, &decoder);
+        
     if (result != MA_SUCCESS) {
         ERR("Failed to initialize decoder from memory: %d", result);
     }
@@ -189,6 +195,14 @@ b8 Audio::startup() {
     
     //    TODO: print device info
 
+    //    register custom decoder backend
+    customBackends[0] = ma_decoding_backend_libvorbis;
+
+    decoderConfig = ma_decoder_config_init_default();
+    decoderConfig.ppCustomBackendVTables = customBackends;
+    decoderConfig.customBackendCount = 1;
+    decoderConfig.pCustomBackendUserData = NULL;
+        
     initialized = true;
     
     return true;
