@@ -552,11 +552,13 @@ void Input::setDeadzone(u32 gamepadIndex, u32 axis, f32 deadZone) {
     }
 }
 
-void Input::vibrate(u32 gamepadIndex, float strength, u32 duration) {
-    if (gamepadIndex >= 0 && gamepadIndex <= numGamepads) {
-        if (connectedGamepads[gamepadIndex].haptic) {
-            if (SDL_HapticRumblePlay(connectedGamepads[gamepadIndex].haptic, strength, duration) != 0) {
-                LOG_EXP(SDL_GetError());
+void Input::vibrate(u32 gamepadIndex, float strength, u32 duration, b8 force) {
+    if (showGamepadControls || force) {
+        if (gamepadIndex >= 0 && gamepadIndex <= numGamepads) {
+            if (connectedGamepads[gamepadIndex].haptic) {
+                if (SDL_HapticRumblePlay(connectedGamepads[gamepadIndex].haptic, strength, duration) != 0) {
+                    LOG_EXP(SDL_GetError());
+                }
             }
         }
     }
