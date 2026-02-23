@@ -15,14 +15,12 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_definitions(RELEASE)
 endif()
 
-add_compile_definitions(
-    LUA_COMPAT_ALL
-)
+add_compile_definitions(LUA_COMPAT_ALL)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
     if (NOT MINGW)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -O0 -fsanitize=address -fsanitize=address")
     endif ()
 endif()
 
@@ -66,6 +64,7 @@ set(MAIN_SOURCE
     ../../main/renderer/image.cpp
     ../../main/renderer/model.cpp
     ../../main/renderer/palette.cpp
+    ../../main/renderer/particleSystem.cpp
     ../../main/renderer/quadRenderer.cpp
     ../../main/renderer/renderer.cpp
     ../../main/renderer/renderLayer.cpp

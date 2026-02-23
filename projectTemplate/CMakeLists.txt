@@ -40,7 +40,7 @@ endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG)
     if (NOT MINGW)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -O0 -fsanitize=address -fno-omit-frame-pointer")
     endif ()
 endif()
 
@@ -70,6 +70,10 @@ target_link_directories(${PROJECT_NAME} PRIVATE ${MUSTARD_DIR}/bin)
 # https://sam.hooke.me/note/2022/04/porting-a-simple-sdl2-game-to-emscripten/
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file=../../dist/${BASE_PROJECT_NAME}.dat@./${BASE_PROJECT_NAME}.dat")
+endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
 endif()
 
 if (WIN32)
