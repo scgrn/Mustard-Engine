@@ -59,5 +59,15 @@ b8 lineSegmentIntersection(Vec2 a, Vec2 b, Vec2 c, Vec2 d) {
     }
 }
 
+Vec3 randomPointOnSphere() {
+    // get random point on sphere
+    // https://mathproofs.blogspot.com/2005/04/uniform-random-distribution-on-sphere.html
+
+    f32 theta1 = M_PI * 2.0f * rnd();
+    f32 theta2 = acos(1.0f - 2.0f * rnd());
+
+    return Vec3(sin(theta1) * sin(theta2), cos(theta1) * sin(theta2), cos(theta2));
+}
+
 }    // namespace
 

@@ -95,6 +95,7 @@ T greatestCommonDevisor(T a, T b) {
 f32 distance(Vec2 a, Vec2 b);
 f32 distPointToLine(Vec2 a, Vec2 b, Vec2 c);
 b8 lineSegmentIntersection(Vec2 a, Vec2 b, Vec2 c, Vec2 d);
+Vec3 randomPointOnSphere();
 
 }    // namespace
 
