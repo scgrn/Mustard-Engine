@@ -39,6 +39,7 @@ void rndSeed(u32 seed);
 f64 rnd();
 u32 rnd(u32 n);
 i32 rnd(i32 lb, i32 ub);
+f32 rndf(f32 lb, f32 ub);
 
 }   //  namespace
 

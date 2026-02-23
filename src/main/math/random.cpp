@@ -74,7 +74,11 @@ u32 rnd(u32 n) {
 }
 
 i32 rnd(i32 lb, i32 ub) {
-  return lb + (i32)(rnd() * (ub - lb + 1));
+    return lb + (i32)(rnd() * (ub - lb + 1));
+}
+
+f32 rndf(f32 lb, f32 ub) {
+    return lb + rnd() * (ub - lb);
 }
 
 }   //  namespace
