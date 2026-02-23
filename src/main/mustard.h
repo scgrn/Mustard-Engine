@@ -42,12 +42,14 @@ freely, subject to the following restrictions:
 
 #include "renderer/renderer.h"
 #include "renderer/sprite.h"
+#include "renderer/spriteAtlas.h"
 #include "renderer/palette.h"
 #include "renderer/font.h"
 #include "renderer/renderTarget.h"
 #include "renderer/colorTransform.h"
 #include "renderer/renderLayer.h"
 #include "renderer/quadRenderer.h"
+#include "renderer/particleSystem.h"
 #include "renderer/skybox.h"
 #include "renderer/model.h"
 
