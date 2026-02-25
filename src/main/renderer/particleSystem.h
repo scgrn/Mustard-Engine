@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 namespace AB {
 
 struct ParticleParameters {
-    Vec3 pos, vel;
+    Vec3 pos, vel, acceleration;
     f32 dampening = 1.0f;
     Vec4 startColor = AB::Vec4(1.0f, 1.0f, 1.0f, 1.0f);
     Vec3 endColor = AB::Vec4(1.0f, 1.0f, 1.0f, 0.0f);
@@ -45,7 +45,7 @@ struct ParticleParameters {
 
 class ParticleSystem {
     public:
-        ParticleSystem(u32 maxParticles = 256, f32 gravity = 0.0f);
+        ParticleSystem(u32 maxParticles = 512);
 
         void emit(ParticleParameters const& parameters);
         void update();
@@ -55,7 +55,7 @@ class ParticleSystem {
 
     protected:
         struct Particle {
-            Vec3 pos, vel;
+            Vec3 pos, vel, acceleration;
             f32 dampening;
             Vec4 startColor, endColor;
             f32 startScale, endScale;

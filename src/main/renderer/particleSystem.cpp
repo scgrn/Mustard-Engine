@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-ParticleSystem::ParticleSystem(u32 maxParticles, f32 gravity) {
+ParticleSystem::ParticleSystem(u32 maxParticles) {
     particles.resize(maxParticles);
     this->maxParticles = maxParticles;
     this->gravity = gravity;
@@ -42,6 +42,7 @@ void ParticleSystem::emit(ParticleParameters const& parameters) {
 
     particle.pos = parameters.pos;
     particle.vel = parameters.vel;
+    particle.acceleration = parameters.acceleration;
     particle.dampening = parameters.dampening;
 
     particle.startColor = parameters.startColor;
@@ -72,7 +73,7 @@ void ParticleSystem::update() {
         active = true;
 
         particle.pos += particle.vel;
-        particle.vel.y += gravity;
+        particle.vel += particle.acceleration;
         particle.vel *= particle.dampening;
         particle.angle += particle.rotation;
  
