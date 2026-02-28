@@ -76,11 +76,11 @@ Texture::Texture(u32 width, u32 height) {
     this->height = height;
 }
 
-Texture::Texture(Image *image) {
+Texture::Texture(std::shared_ptr<Image> image) {
     init(image);
 }
 
-void Texture::init(Image *image) {
+void Texture::init(std::shared_ptr<Image> image) {
     u32 rWidth = image->width;
     u32 rHeight = image->height;
     width = nextPowerOfTwo(rWidth);
@@ -122,9 +122,8 @@ void Texture::init(Image *image) {
 }
 
 Texture::Texture(std::string const& filename) {
-    Image *image = new Image(filename);
+    auto image = std::make_shared<Image>(filename);
     init(image);
-    delete image;
 }
 
 Texture::~Texture() {

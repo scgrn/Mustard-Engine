@@ -43,7 +43,7 @@ void Sprite::load(std::string const& filename) {
     if (filename != ".") {
         LOG("Loading <%s>", filename.c_str());
 
-        image = new Image(filename.c_str());
+        image = std::make_shared<Image>(filename.c_str());
 
         width = image->width;
         height = image->height;
@@ -54,11 +54,6 @@ void Sprite::load(std::string const& filename) {
 }
 
 void Sprite::release() {
-    if (image) {
-        delete image;
-        image = NULL;
-    }
-
     texture.reset();
 
     if (collisionMask) {
@@ -104,28 +99,14 @@ void Sprite::uploadToGPU(b8 retainImage) {
     v1 = 0.0f;
     u2 = texture->u2;
     v2 = texture->v2;
-
-    if (!retainImage) {
-        if (image) {
-            delete image;
-            image = NULL;
-        }
-    }
 }
 
-void Sprite::adopt(std::shared_ptr<Texture> texture, f32 u1, f32 v1, f32 u2, f32 v2, b8 retainImage) {
+void Sprite::adopt(std::shared_ptr<Texture> texture, f32 u1, f32 v1, f32 u2, f32 v2) {
     this->texture = texture;
     this->u1 = u1;
     this->v1 = v1;
     this->u2 = u2;
     this->v2 = v2;
-
-    if (!retainImage) {
-        if (image) {
-            delete image;
-            image = NULL;
-        }
-    }
 }
 
 void Sprite::render(RenderLayer *renderer, Vec3 pos, f32 rotation, Vec2 scale, Vec4 color) {

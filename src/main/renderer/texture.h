@@ -51,7 +51,7 @@ class Texture {
     public:
         Texture();
         Texture(u32 width, u32 height);
-        Texture(Image *image);
+        Texture(std::shared_ptr<Image> image);
         Texture(std::string const& filename);
 
         virtual ~Texture();
@@ -71,7 +71,7 @@ class Texture {
         static GLenum minFilter, magFilter, wrapMode;
 
     protected:
-        void init(Image *image);
+        void init(std::shared_ptr<Image> image);
 };
 
 }   //  namespace

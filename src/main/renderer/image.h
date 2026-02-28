@@ -35,6 +35,9 @@ namespace AB {
 
 class Image {
     public:
+        Image(const Image&) = delete;
+        Image& operator=(const Image&) = delete;
+    
         Image(const u32 width, const u32 height);
         Image(const std::string& tgaFilename);
         ~Image();

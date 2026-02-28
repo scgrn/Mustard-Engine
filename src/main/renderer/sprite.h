@@ -46,12 +46,10 @@ class Sprite : public Asset {
         virtual void load(std::string const& filename);
         virtual void release();
 
-        Image* getImage() { return image; }
-
         /**
             This is called after a sprite has been added to a sprite atlas.
         */
-        void adopt(std::shared_ptr<Texture> texture, f32 u1, f32 v1, f32 u2, f32 v2, b8 retainImage = false);
+        void adopt(std::shared_ptr<Texture> texture, f32 u1, f32 v1, f32 u2, f32 v2);
 
         void buildCollisionMask(u32 offsetX = 0, u32 offsetY = 0);
         void uploadToGPU(b8 retainImage = false);
@@ -69,7 +67,7 @@ class Sprite : public Asset {
         i32 halfX, halfY;        //  width and height / 2
 
         b8 *collisionMask;
-        Image *image;
+        std::shared_ptr<Image> image;
 
 };
 

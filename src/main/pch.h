@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 #include <map>
 #include <stdexcept>
 #include <algorithm>
+#include <memory>
 #include <cstdarg>
 #include <sstream>
 #include <cstdio>

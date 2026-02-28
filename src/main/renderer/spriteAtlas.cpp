@@ -196,7 +196,7 @@ void buildAtlas() {
         f32 v2 = (f32)((*sprite)->atlasY + (*sprite)->height) / (f32)atlasHeight;
 
         //  draw sprite to atlas texture
-        u8 *imageData = (*sprite)->getImage()->data;
+        u8 *imageData = (*sprite)->image->data;
 
         for (u32 y = 0; y < (*sprite)->height; y++) {
             memcpy(&data[((y + (*sprite)->atlasY) * atlasWidth + (*sprite)->atlasX)* 4],
@@ -249,7 +249,7 @@ void defineSpriteFromAtlas(u32 atlasIndex, f32 u1, f32 v1, f32 u2, f32 v2, u32 s
     if (buildCollisionMask) {
         sprite->buildCollisionMask((u32)(u1 * atlasWidth), (u32)(v1 * atlasHeight));
     }
-    sprite->adopt(sprites.get(atlasIndex)->texture, u1, v1, u2, v2, true);
+    sprite->adopt(sprites.get(atlasIndex)->texture, u1, v1, u2, v2);
 }
 
 u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height, b8 buildCollisionMasks) {
@@ -282,7 +282,7 @@ u32 loadAtlas(std::string const& filename, u32 firstIndex, u32 width, u32 height
         }
         v += vIncrease;
     }
-    delete sprites.get(firstIndex)->image;
+    //delete sprites.get(firstIndex)->image;
     for (u32 i = firstIndex; i < spriteIndex; i++) {
         sprites.get(i)->image = NULL;
     }

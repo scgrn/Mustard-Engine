@@ -52,10 +52,10 @@ void Palette::load(std::string const& filename) {
     //    TODO: remove all magic numbers from up in here
     
     //    generate palette lookup images
-    Image closestColorImage(512, 512);
-    Image secondClosestColorImage(512, 512);
+    auto closestColorImage = std::make_shared<Image>(512, 512);
+    auto secondClosestColorImage = std::make_shared<Image>(512, 512);
 #ifdef AB_PALETTE_TEST
-    Image targetColorImage(512, 512);
+    auto targetColorImage = std::make_shared<Image>(512, 512);
 #endif
 
     for (u64 i = 0; i < palette.size(); i++) {
@@ -74,22 +74,22 @@ void Palette::load(std::string const& filename) {
                 i32 v = i % 512;
                 
                 i32 offset = ((v * 512) + u) * 4;
-                closestColorImage.data[offset + 0] = palette[closest].r;
-                closestColorImage.data[offset + 1] = palette[closest].g;
-                closestColorImage.data[offset + 2] = palette[closest].b;
-                closestColorImage.data[offset + 3] = 255;
+                closestColorImage->data[offset + 0] = palette[closest].r;
+                closestColorImage->data[offset + 1] = palette[closest].g;
+                closestColorImage->data[offset + 2] = palette[closest].b;
+                closestColorImage->data[offset + 3] = 255;
                 
-                secondClosestColorImage.data[offset + 0] = palette[secondClosest].r;
-                secondClosestColorImage.data[offset + 1] = palette[secondClosest].g;
-                secondClosestColorImage.data[offset + 2] = palette[secondClosest].b;
-                secondClosestColorImage.data[offset + 3] = 255;
+                secondClosestColorImage->data[offset + 0] = palette[secondClosest].r;
+                secondClosestColorImage->data[offset + 1] = palette[secondClosest].g;
+                secondClosestColorImage->data[offset + 2] = palette[secondClosest].b;
+                secondClosestColorImage->data[offset + 3] = 255;
 
 #ifdef AB_PALETTE_TEST
                 // test!
-                targetColorImage.data[offset + 0] = r * 4;
-                targetColorImage.data[offset + 1] = g * 4;
-                targetColorImage.data[offset + 2] = b * 4;
-                targetColorImage.data[offset + 3] = 255;
+                targetColorImage->data[offset + 0] = r * 4;
+                targetColorImage->data[offset + 1] = g * 4;
+                targetColorImage->data[offset + 2] = b * 4;
+                targetColorImage->data[offset + 3] = 255;
 #endif
             }
         }
@@ -105,8 +105,8 @@ void Palette::load(std::string const& filename) {
     LOG_EXP(c.b);
 #endif
     
-    closestColor = new Texture(&closestColorImage);
-    secondClosestColor = new Texture(&secondClosestColorImage);
+    closestColor = new Texture(closestColorImage);
+    secondClosestColor = new Texture(secondClosestColorImage);
 }
 
 void Palette::release() {
