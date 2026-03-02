@@ -46,9 +46,10 @@ struct ParticleParameters {
 class ParticleSystem {
     public:
         ParticleSystem(u32 maxParticles = 512);
+        virtual ~ParticleSystem() = default;
 
         void emit(ParticleParameters const& parameters);
-        void update();
+        virtual void update();
         void render(RenderLayer *renderLayer, PerspectiveCamera const& camera);
 
         b8 active;
