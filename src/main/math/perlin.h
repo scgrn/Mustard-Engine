@@ -22,16 +22,6 @@ freely, subject to the following restrictions:
 
 **/
 
-/**
-
-    @file perlin.h
-    @author Andrew Krause - contact@alienbug.net
-    @date 05.14.19
-
-    Perlin noise
-
-*/
-
 #ifndef AB_PERLIN_H
 #define AB_PERLIN_H
 

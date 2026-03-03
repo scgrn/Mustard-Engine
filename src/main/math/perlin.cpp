@@ -73,7 +73,7 @@ f32 PerlinNoise::noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence) {
 f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     const i32 SAMPLE_MASK = PerlinNoise::SAMPLE_SIZE - 1;
 
-    //  calculate nearest vertices and offset i32o cubic lattice
+    //  calculate nearest vertices and offset into cubic lattice
     i32 xi = (i32)floor(x) & SAMPLE_MASK;
     i32 yi = (i32)floor(y) & SAMPLE_MASK;
     i32 zi = (i32)floor(z) & SAMPLE_MASK;
@@ -95,7 +95,7 @@ f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     bab = p[p[p[(xi + 1)] + yi] + (zi + 1)];
     bbb = p[p[p[(xi + 1)] + (yi + 1)] + (zi + 1)];
 
-    //  i32erpolate gradients
+    //  interpolate gradients
     f32 x1, x2, y1, y2;
     x1 = lerp(grad(aaa, xf, yf, zf), grad(baa, xf - 1, yf, zf), u);
     x2 = lerp(grad(aba, xf, yf - 1, zf), grad(bba, xf - 1, yf - 1, zf), u);
