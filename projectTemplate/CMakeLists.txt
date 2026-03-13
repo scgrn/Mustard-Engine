@@ -27,7 +27,7 @@ endif()
 
 if (DEFINED EMSCRIPTEN)
     set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1 -sNO_DISABLE_EXCEPTION_CATCHING -sINVOKE_RUN=0"
+        "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1 -sUSE_OGG=1 -sUSE_VORBIS=1 -sNO_DISABLE_EXCEPTION_CATCHING -sINVOKE_RUN=0"
     )
     # set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "index")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
@@ -101,6 +101,8 @@ else()
             -sFULL_ES3=1
             -sMIN_WEBGL_VERSION=2
             -sMAX_WEBGL_VERSION=2
+            -sUSE_OGG=1
+            -sUSE_VORBIS=1
             -sALLOW_MEMORY_GROWTH=1
             -sOFFSCREEN_FRAMEBUFFER=1
             -sNO_DISABLE_EXCEPTION_CATCHING=1

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set compile flags
 set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1"
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-pragmas -Wpsabi -msse2 -msimd128 -sUSE_SDL=2 -sUSE_ZLIB=1 -sUSE_OGG=1 -sUSE_VORBIS=1"
 )
 
 add_compile_definitions(
@@ -98,6 +98,8 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC "../../main"
     PUBLIC "${VENDOR_DIR}"
     PUBLIC "${VENDOR_DIR}/lua-5.3.5/src"
+
+    PRIVATE "${EMSCRIPTEN_SYSROOT}/include"
 )
 
 # Link libraries and options
@@ -109,6 +111,8 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -s FULL_ES3=1
     -s MIN_WEBGL_VERSION=2
     -s MAX_WEBGL_VERSION=2
+    -s USE_OGG=1
+    -s USE_VORBIS=1
     -s ALLOW_MEMORY_GROWTH=1
     -s OFFSCREEN_FRAMEBUFFER=1
     -s NO_DISABLE_EXCEPTION_CATCHING=1
