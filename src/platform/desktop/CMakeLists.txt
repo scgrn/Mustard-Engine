@@ -118,6 +118,8 @@ add_library(${PROJECT_NAME} STATIC
     ${ZLIB_SOURCE}
 )
 
+target_compile_options(${PROJECT_NAME} PRIVATE -fno-exceptions -fno-rtti)
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC "../../main"
     PUBLIC "."

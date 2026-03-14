@@ -46,15 +46,17 @@ void error(int line, const char* file, const char* msg, ...) {
     va_list args;
     va_start(args, msg);
     char szBuf[4096];
-    vsprintf(szBuf, msg, args);
+    vsnprintf(szBuf, sizeof(szBuf), msg, args);
     va_end(args);
 
     std::ostringstream o;
-    // o << file << " [" << line << "] \t" << szBuf << std::endl;
-    o << "[ERROR] \t" << szBuf << std::endl;
+    o << "[ERROR] " << file << ":" << line << ": " << szBuf << std::endl;
     std::string s(o.str());
 
-    throw (std::runtime_error(s));
+    std::cerr << s;
+
+    extern void fatalError(std::string const& message, std::string const& file, i32 line);
+    fatalError(s, file, line);
 }
 
 void log(int level, int line, const char* file, const char* msg, ...) {
@@ -65,7 +67,7 @@ void log(int level, int line, const char* file, const char* msg, ...) {
     va_list args;
     va_start(args, msg);
     char szBuf[4096];
-    vsprintf(szBuf, msg, args);
+    vsnprintf(szBuf, sizeof(szBuf), msg, args);
     va_end(args);
 
     // prefix << file << " [" << line << "]";

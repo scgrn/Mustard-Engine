@@ -313,10 +313,16 @@ void mainLoop(Application *app) {
     SDL_Delay(1);
 }
 
+void fatalError(std::string const& message, std::string const& file, i32 line) {
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", message.c_str(), NULL);
+    shutdown();
+    exit(EXIT_FAILURE);
+}
+
 i32 run(Application *app) {
     i32 exitCode = EXIT_SUCCESS;
 
-    try {
+    //try {
         if (app == NULL) {
             //app = new AB::Application();
 
@@ -342,7 +348,7 @@ i32 run(Application *app) {
 
         LOG("Shutting down engine", 0);
         LOG(std::string(79, '-').c_str(), 0);
-
+/*
     } catch(std::exception &e) {
         LOG("ERROR: %s", e.what());
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", e.what(), NULL);
@@ -352,7 +358,7 @@ i32 run(Application *app) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "UNKNOWN ERROR", "Not sure", NULL);
         exitCode = EXIT_FAILURE;
     }
-
+*/
     app->glContextDestroyed();
     app->shutdown();
 

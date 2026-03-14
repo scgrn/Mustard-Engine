@@ -65,6 +65,12 @@ void quit() {
     done = true;
 }
 
+void fatalError(std::string const& message, std::string const& file, i32 line) {
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "ERROR", message.c_str(), NULL);
+    shutdown();
+    exit(EXIT_FAILURE);
+}
+
 void mainLoop() {
     // process events
     SDL_Event event;

@@ -72,7 +72,7 @@ b8 Script::startup() {
 
     luaVM = luaL_newstate();
     if (!luaVM) {
-       throw std::string("Error initializing Lua VM");
+       ERR("Error initializing Lua VM");
     }
     luaL_openlibs(luaVM);
 

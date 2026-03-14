@@ -47,20 +47,21 @@ enum {
 };
 
 namespace AB {
+
 #ifdef ANDROID
 #include <android/log.h>
-#define LOG(msg, ...) __android_log_print(ANDROID_LOG_DEBUG, "JNI", msg, __VA_ARGS__)
+#define LOG(...) __android_log_print(ANDROID_LOG_DEBUG, "JNI", __VA_ARGS__)
 #define LOG_EXP(name) __android_log_print(ANDROID_LOG_DEBUG, "JNI", "%s = %s", #name, name)
-#define ERR(msg, ...) __android_log_print(ANDROID_LOG_ERROR, "JNI", msg, __VA_ARGS__)
+#define ERR(...) __android_log_print(ANDROID_LOG_ERROR, "JNI", __VA_ARGS__)
 #else
 #ifdef DEBUG
-#define LOG(msg, ...) AB::log(LOG_DEBUG, __LINE__, __FILE__, msg, __VA_ARGS__)
+#define LOG(...) AB::log(LOG_DEBUG, __LINE__, __FILE__, __VA_ARGS__)
 #define LOG_EXP(name) AB::logExp(__LINE__, __FILE__, #name, name)
-#define ERR(msg, ...) AB::error(__LINE__, __FILE__, msg, __VA_ARGS__)
+#define ERR(...) AB::error(__LINE__, __FILE__, __VA_ARGS__)
 #else
-#define LOG(msg, ...) 
+#define LOG(...) 
 #define LOG_EXP(name) 
-#define ERR(msg, ...) 
+#define ERR(...) 
 #endif
 
 void log(int level, int line, const char* file, const char* msg, ...);
