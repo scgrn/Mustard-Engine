@@ -170,12 +170,24 @@ static int luaOpenURL(lua_State* luaVM) {
     return 0;
 }
 
-/// Returns the current operating system
+/// Returns the current operating system.
+// Will be one of [Windows, Linux, Android, Web]
 // @return OS string
 // @function AB.system.getOS
 static int luaGetOS(lua_State* luaVM) {
-    ERR("Unimplemented!", 0);
-    return 0;
+#if defined(__EMSCRIPTEN__)
+    lua_pushstring(luaVM, "Web");
+#elif defined(__ANDROID__)
+    lua_pushstring(luaVM, "Android");
+#elif defined(_WIN32)
+    lua_pushstring(luaVM, "Windows");
+#elif defined(__linux__)
+    lua_pushstring(luaVM, "Linux");
+#else
+    lua_pushstring(luaVM, "Unknown");
+#endif
+
+    return 1;
 }
 
 /// Checks if engine is running in debug mode
