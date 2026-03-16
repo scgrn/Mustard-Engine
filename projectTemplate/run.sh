@@ -3,6 +3,8 @@
 CONFIG=$1
 source project.cfg
 
+export EMSDK_QUIET=1
+
 if [ "$CONFIG" == "debug" ]; then
     bin/$PROJECT_NAME-Debug
 elif [ "$CONFIG" == "release" ]; then

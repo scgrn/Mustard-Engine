@@ -32,7 +32,6 @@ namespace AB {
 ParticleSystem::ParticleSystem(u32 maxParticles) {
     particles.resize(maxParticles);
     this->maxParticles = maxParticles;
-    this->gravity = gravity;
     nextParticle = 0;
     active = false;
 }

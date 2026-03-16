@@ -22,8 +22,8 @@ freely, subject to the following restrictions:
 
 **/
 
-#ifndef AB_H
-#define AB_H
+#ifndef AB_MUSTARD_H
+#define AB_MUSTARD_H
 
 #include "pch.h"
 
@@ -81,4 +81,4 @@ namespace AB {
     extern OrthographicCamera camera2d;
 }
 
-#endif // AB_H
+#endif // AB_MUSTARD_H

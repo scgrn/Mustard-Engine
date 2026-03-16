@@ -66,9 +66,7 @@ class ParticleSystem {
             f32 depth;
         };
         std::vector<Particle> particles;
-
         u32 maxParticles, nextParticle;
-        f32 gravity;
 
 };
 

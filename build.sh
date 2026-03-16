@@ -3,6 +3,8 @@
 set -e
 config=$1
 
+export EMSDK_QUIET=1
+
 function buildDebug() {
     echo "Building Mustard Engine in debug mode..."
 

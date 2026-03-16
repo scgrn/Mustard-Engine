@@ -109,7 +109,7 @@ void QuadRenderer::addQuad(Quad3d& quad) {
     }
 }
 
-void QuadRenderer::render(PerspectiveCamera &camera) {
+void QuadRenderer::render(const PerspectiveCamera& camera) {
     quadShader->bind();
     quadShader->setMat4("uProjView", camera.viewProjectionMatrix);
     quadShader->setMat4("uView", camera.viewMatrix);

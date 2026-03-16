@@ -64,6 +64,8 @@ struct Quad3d {
 
 class QuadRenderer : public RenderLayer {
     public:
+        using RenderLayer::render;
+
         static constexpr u32 MAX_VERTICES = 65536;
 
         QuadRenderer(Shader *quadShader = &defaultQuadShader);
@@ -72,7 +74,7 @@ class QuadRenderer : public RenderLayer {
         void setFog(AB::Vec3 color = AB::Vec3(0.0f, 0.0f, 0.0f), f32 density = 0.15f);
 
         void addQuad(Quad3d& quad);
-        void render(PerspectiveCamera &camera);
+        void render(const PerspectiveCamera& camera);
 
         Shader *quadShader;
         static AB::Shader defaultQuadShader;

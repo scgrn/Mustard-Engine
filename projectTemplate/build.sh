@@ -3,6 +3,8 @@
 config=$1
 source project.cfg
 
+export EMSDK_QUIET=1
+
 function buildDebug() {
     echo "Building $PROJECT_NAME in debug mode..."
 
