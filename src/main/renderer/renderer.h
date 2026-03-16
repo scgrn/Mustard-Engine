@@ -82,9 +82,7 @@ class Renderer : public SubSystem {
             f32 randomSeed;
         } uniforms;
         
-        struct State {
-            
-        } state;
+        // struct State {} state;
         
         //std::vector<RenderCommand> commandQueue;
 

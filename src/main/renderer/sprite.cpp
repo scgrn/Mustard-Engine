@@ -131,7 +131,7 @@ struct Scan {
     f32 x1, u1, v1, x2, u2, v2;
 };
 
-void scanEdge(Vec2 p1, f32 u1, f32 v1, Vec2 p2,
+const void scanEdge(Vec2 p1, f32 u1, f32 v1, Vec2 p2,
     f32 u2, f32 v2, Scan *scan, i32 range, f32 yMin) {
 
     if (p1.y == p2.y) return;   // hey! this a horizontal slice!! beat it!
@@ -267,7 +267,9 @@ b8 collides(Sprite *s1, Vec2 pos1, f32 angle1, f32 scaleX1, f32 scaleY1,
         u32 range = (u32)(max(yMax - yMin, 0.0f));     // height of vertical overlap
 
         //  adding yMin to array indices will yield actual screenspace y value
-        Scan scan1[range], scan2[range];
+        // Scan scan1[range], scan2[range];
+        std::vector<Scan> scan1(range);
+        std::vector<Scan> scan2(range);
 
         //  again, initialize to preposterous values
         for (u32 i = 0; i < range; i++) {

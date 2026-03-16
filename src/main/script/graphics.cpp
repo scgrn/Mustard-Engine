@@ -465,7 +465,7 @@ static i32 luaRenderLines(lua_State* luaVM) {
     }
 
     // https://dav3.co/blog/looping-through-lua-table-in-c/
-    f32 endpoints[length];
+    std::vector<f32> endpoints(length);
     for (u32 i = 0; i <= length; i++) {
         lua_pushinteger(luaVM, i + 1);
         
@@ -478,7 +478,7 @@ static i32 luaRenderLines(lua_State* luaVM) {
     }
     
     renderer.layers[layer]->setColor(currentColor);     // TODO: move this to renderer.state
-    renderer.layers[layer]->renderLines(endpoints, length / 4);
+    renderer.layers[layer]->renderLines(endpoints.data(), length / 4);
 
     return 0;
 }

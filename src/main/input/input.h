@@ -149,7 +149,7 @@ std::unordered_map<int, std::string> keyNames = {
         b8 showGamepadControls;
         
     private:
-        u32 keyBuffer[BUFFER_SIZE];
+        // u32 keyBuffer[BUFFER_SIZE];
         b8 firstMouseMotion;
 };
 
