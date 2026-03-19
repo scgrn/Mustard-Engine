@@ -35,7 +35,7 @@ struct ParticleParameters {
     Vec3 pos, vel, acceleration;
     f32 dampening = 1.0f;
     Vec4 startColor = AB::Vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    Vec3 endColor = AB::Vec4(1.0f, 1.0f, 1.0f, 0.0f);
+    Vec4 endColor = AB::Vec4(1.0f, 1.0f, 1.0f, 0.0f);
     f32 startScale, endScale;
     f32 minAngle, maxAngle;
     f32 minRotation, maxRotation;
