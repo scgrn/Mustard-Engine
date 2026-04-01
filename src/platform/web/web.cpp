@@ -130,7 +130,7 @@ i32 run(Application *application) {
             //app = new AB::Application();
 
             //    NO GAME
-            return -1;
+            ERR("NO GAME");
         }
 
         app->startup();
