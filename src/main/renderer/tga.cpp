@@ -177,7 +177,7 @@ u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
                 u8 runLength = *current - 127;
                 current++;
                 
-                for (u32 loop = 0; loop != runLength; ++loop, index += pixelSize) {
+                for (u32 loop = 0; loop != runLength; loop++, index += pixelSize) {
                     memcpy(&imageData[index], current, pixelSize);
                 }
                 
@@ -187,7 +187,7 @@ u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
                 u8 chunkLength = *current + 1;
                 current++;
                 
-                for (u32 loop = 0; loop != chunkLength; ++loop, index += pixelSize, current += pixelSize) {
+                for (u32 loop = 0; loop != chunkLength; loop++, index += pixelSize, current += pixelSize) {
                     memcpy(&imageData[index], current, pixelSize);
                 }
             }
@@ -202,7 +202,9 @@ u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
     }
 
     //    premultiply alpha
-    premultiplyAlpha(imageData, width, height, bpp);
+    if (bpp == 32) {
+        premultiplyAlpha(imageData, width, height, bpp);
+    }
 
     return imageData;
 }

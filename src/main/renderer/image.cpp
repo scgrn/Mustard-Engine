@@ -46,10 +46,19 @@ Image::Image(const std::string& tgaFilename) {
     u32 bpp;
 
     data = loadTGA(tgaFilename, width, height, bpp);
-
-    //    TODO: pad alpha if 24bit. who knows what happens if we don't?
-
     imageSize = width * height * 4;
+
+    if (bpp == 24) {
+        u8* rgba = new u8[imageSize];
+        for (u32 i = 0; i < width * height; i++) {
+            rgba[i * 4 + 0] = data[i * 3 + 0];
+            rgba[i * 4 + 1] = data[i * 3 + 1];
+            rgba[i * 4 + 2] = data[i * 3 + 2];
+            rgba[i * 4 + 3] = 255;
+        }
+        delete[] data;
+        data = rgba;
+    }
 }
 
 Image::~Image() {
