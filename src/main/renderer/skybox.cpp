@@ -116,7 +116,7 @@ Skybox::~Skybox() {
     glDeleteBuffers(1, &vao);
 }
 
-void Skybox::beginScene(const Camera& camera) {
+void Skybox::render(const PerspectiveCamera& camera) {
     shader.bind();
     
     Mat4 viewMatrix = camera.viewMatrix;
@@ -124,9 +124,7 @@ void Skybox::beginScene(const Camera& camera) {
 
     shader.setMat4("projection", camera.projectionMatrix);
     shader.setMat4("view", viewMatrix);
-}
 
-void Skybox::endScene() {
     glBindVertexArray(vao);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, glHandle);

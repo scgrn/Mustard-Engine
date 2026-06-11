@@ -29,13 +29,12 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-class Skybox : public Renderer {
+class Skybox : public RenderLayer {
     public:
         Skybox(std::vector<std::string> faces);
         virtual ~Skybox();
         
-        virtual void beginScene(const Camera& camera);
-        virtual void endScene();
+        void render(const PerspectiveCamera& camera);
         
     protected:
         Skybox() {}
