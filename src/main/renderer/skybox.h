@@ -32,6 +32,7 @@ namespace AB {
 class Skybox : public RenderLayer {
     public:
         Skybox(std::vector<std::string> faces);
+        Skybox(std::string cubemap);
         virtual ~Skybox();
         
         void render(const PerspectiveCamera& camera);

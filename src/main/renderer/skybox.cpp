@@ -109,11 +109,16 @@ Skybox::Skybox(std::vector<std::string> faces) {
     shader.bind();
     shader.setInt("skybox", 0);
 }
+
+Skybox::Skybox(std::string cubemap) {
+}
     
 Skybox::~Skybox() {
+    shader.release();
+
     glDeleteTextures(1, &glHandle);
     glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vao);
+    glDeleteBuffers(1, &vbo);
 }
 
 void Skybox::render(const PerspectiveCamera& camera) {
