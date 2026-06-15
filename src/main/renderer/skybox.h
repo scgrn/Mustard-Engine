@@ -34,6 +34,8 @@ class Skybox : public RenderLayer {
         Skybox(std::vector<std::string> faces);
         Skybox(std::string cubemap);
         virtual ~Skybox();
+
+        static void setFilter(GLenum filter) { Skybox::filter = filter; }
         
         void render(const PerspectiveCamera& camera);
         
@@ -41,12 +43,13 @@ class Skybox : public RenderLayer {
         Skybox() {}
         
     private:
-        Shader shader;
-        
-        GLuint glHandle;        //  handle to OpenGL cubemap texture
+        static GLenum filter;
 
-        GLuint vao;                //    vertex array object
-        GLuint vbo;                //    vertex buffer
+        Shader shader;
+        GLuint glHandle;       //  handle to OpenGL cubemap texture
+
+        GLuint vao;            //  vertex array object
+        GLuint vbo;            //  vertex buffer
     
 };
 
