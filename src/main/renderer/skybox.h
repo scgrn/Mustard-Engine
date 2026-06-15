@@ -45,6 +45,8 @@ class Skybox : public RenderLayer {
     private:
         static GLenum filter;
 
+        void init();
+
         Shader shader;
         GLuint glHandle;       //  handle to OpenGL cubemap texture
 
