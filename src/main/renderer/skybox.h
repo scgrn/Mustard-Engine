@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 #ifndef AB_SKYBOX_H
 #define AB_SKYBOX_H
 
-#include "renderer.h"
+#include "renderLayer.h"
 
 namespace AB {
 
