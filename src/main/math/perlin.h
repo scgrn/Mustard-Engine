@@ -33,7 +33,7 @@ class PerlinNoise {
         PerlinNoise(u32 seed);
         ~PerlinNoise();
 
-        f32 noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence);
+        f32 noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence, f32 scale = 1.0f, f32 lacunarity = 2.0f);
 
     protected:
         static const int SAMPLE_SIZE = 256;

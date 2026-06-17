@@ -52,19 +52,26 @@ f32 PerlinNoise::lerp(f32 a, f32 b, f32 x) {
     return a + x * (b - a);
 }
 
-f32 PerlinNoise::noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence) {
+f32 PerlinNoise::noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence, f32 scale, f32 lacunarity) {
     f32 total = 0.0f;
     f32 frequency = 1.0f;
     f32 amplitude = 1.0f;
     f32 maxValue = 0.0f;
 
-    for (i32 i = 0; i < octaves; i++) {
-        total += sample(x * frequency, y * frequency, z * frequency) * amplitude;
+    if (scale <= 0.0f) {
+        scale = EPSILON;
+    }
 
+    for (i32 i = 0; i < octaves; i++) {
+        f32 sampleX = (x / scale) * frequency;
+        f32 sampleY = (y / scale) * frequency;
+        f32 sampleZ = (z / scale) * frequency;
+
+        total += sample(sampleX, sampleY, sampleZ) * amplitude;
         maxValue += amplitude;
 
         amplitude *= persistence;
-        frequency *= 2.0f;
+        frequency *= lacunarity;
     }
 
     return total / maxValue;
