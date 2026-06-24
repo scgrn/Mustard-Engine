@@ -22,17 +22,36 @@ freely, subject to the following restrictions:
 
 **/
 
-/**
-    Xorshift PRNG
-    11.28.18
-*/
+//  Xorshift PRNG  11.28.18
 
 #ifndef AB_RANDOM_H
 #define AB_RANDOM_H
 
 namespace AB {
 
-void rndSeed();
+class PRNG {
+    public:
+        PRNG();
+        PRNG(u32 seed);
+
+        void reseed(u32 seed);
+
+        f64 rnd();
+        u32 rnd(u32 n);
+        i32 rnd(i32 lb, i32 ub);
+        f32 rndf(f32 lb, f32 ub);
+
+    private:
+        u32 randomUint32();
+
+        typedef struct {
+            u32 x;
+            u32 y;
+        } RandomState;
+
+        RandomState state = {2282008U, 362436069U};
+};
+
 void rndSeed(u32 seed);
 
 //  TODO: document ranges (inclusive, etc)

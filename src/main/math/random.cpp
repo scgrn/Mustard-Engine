@@ -32,23 +32,16 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
-typedef struct {
-    u32 x;
-    u32 y;
-} RandomState;
+PRNG globalPRNG;
 
-static RandomState state = {2282008U, 362436069U};
+void rndSeed(u32 seed) { globalPRNG.reseed(seed); }
 
-static u32 randomUint32() {
-    state.x = 69069U * state.x + 123U;
-    state.y ^= state.y << 13U;
-    state.y ^= state.y >> 17U;
-    state.y ^= state.y << 5U;
+f64 rnd() { return globalPRNG.rnd(); }
+u32 rnd(u32 n) { return globalPRNG.rnd(n); }
+i32 rnd(i32 lb, i32 ub) { return globalPRNG.rnd(lb, ub); }
+f32 rndf(f32 lb, f32 ub) { return globalPRNG.rndf(lb, ub); }
 
-    return state.x + state.y;
-}
-
-void rndSeed() {
+PRNG::PRNG() {
     u32 t = time(NULL);
     u32 f = 0;
 
@@ -57,27 +50,40 @@ void rndSeed() {
         f |= ((t >> i) & 1) << (31-i);
     }
 
-    rndSeed(f);
+    reseed(f);
 }
 
-void rndSeed(u32 seed) {
+PRNG::PRNG(u32 seed) {
+    reseed(seed);
+}
+
+u32 PRNG::randomUint32() {
+    state.x = 69069U * state.x + 123U;
+    state.y ^= state.y << 13U;
+    state.y ^= state.y >> 17U;
+    state.y ^= state.y << 5U;
+
+    return state.x + state.y;
+}
+
+void PRNG::reseed(u32 seed) {
     state.x = seed;
     state.y = 362436069U;
 }
 
-f64 rnd() {
+f64 PRNG::rnd() {
     return randomUint32() * (1.0 / 4294967296.0); // 2 ^ 32 − 1
 }
 
-u32 rnd(u32 n) {
-    return (u32)(rnd() * (f64)n);         // TODO: looks weird. test.
+u32 PRNG::rnd(u32 n) {
+    return (u32)(rnd() * (f64)n);
 }
 
-i32 rnd(i32 lb, i32 ub) {
+i32 PRNG::rnd(i32 lb, i32 ub) {
     return lb + (i32)(rnd() * (ub - lb + 1));
 }
 
-f32 rndf(f32 lb, f32 ub) {
+f32 PRNG::rndf(f32 lb, f32 ub) {
     return lb + rnd() * (ub - lb);
 }
 

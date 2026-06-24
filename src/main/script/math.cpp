@@ -49,7 +49,7 @@ static int luaRandomSeed(lua_State* luaVM) {
         u32 seed = (u32)lua_tointeger(luaVM, 1);
         rndSeed(seed);
     } else {
-        rndSeed();
+        rndSeed(time(NULL));
     }
 
     return 0;
