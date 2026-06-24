@@ -52,29 +52,36 @@ f32 PerlinNoise::lerp(f32 a, f32 b, f32 x) {
     return a + x * (b - a);
 }
 
-f32 PerlinNoise::noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence, f32 scale, f32 lacunarity) {
+f32 PerlinNoise::noise(Vec3 pos, NoiseParams params) {
     f32 total = 0.0f;
     f32 frequency = 1.0f;
     f32 amplitude = 1.0f;
     f32 maxValue = 0.0f;
 
-    if (scale <= 0.0f) {
-        scale = EPSILON;
+    if (params.scale <= 0.0f) {
+        params.scale = EPSILON;
     }
 
-    for (i32 i = 0; i < octaves; i++) {
-        f32 sampleX = (x / scale) * frequency;
-        f32 sampleY = (y / scale) * frequency;
-        f32 sampleZ = (z / scale) * frequency;
+    for (i32 i = 0; i < params.octaves; i++) {
+        Vec3 s;
+        s.x = (pos.x / params.scale) * frequency;
+        s.y = (pos.y / params.scale) * frequency;
+        s.z = (pos.z / params.scale) * frequency;
 
-        total += sample(sampleX, sampleY, sampleZ) * amplitude;
+        total += sample(s.x, s.y, s.z) * amplitude;
         maxValue += amplitude;
 
-        amplitude *= persistence;
-        frequency *= lacunarity;
+        amplitude *= params.persistence;
+        frequency *= params.lacunarity;
     }
 
     return total / maxValue;
+}
+
+std::vector<f32> generateNoiseMap(Vec2i size, NoiseParams params, u32 seed, Vec2 offset) {
+    std::vector<f32> ret;
+
+    return ret;
 }
 
 f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {

@@ -25,7 +25,19 @@ freely, subject to the following restrictions:
 #ifndef AB_PERLIN_H
 #define AB_PERLIN_H
 
+#include <vector>
+
+#include "vector.h"
+
 namespace AB {
+
+//  fbm
+struct NoiseParams {
+    f32 scale = 1.0f;
+    i32 octaves = 8.0f;
+    f32 persistence = 0.5f;
+    f32 lacunarity = 2.0f;
+};
 
 class PerlinNoise {
     public:
@@ -33,7 +45,8 @@ class PerlinNoise {
         PerlinNoise(u32 seed);
         ~PerlinNoise();
 
-        f32 noise(f32 x, f32 y, f32 z, i32 octaves, f32 persistence, f32 scale = 1.0f, f32 lacunarity = 2.0f);
+        f32 noise(Vec3 pos, NoiseParams params);
+        std::vector<f32> generateNoiseMap(Vec2i size, NoiseParams params, u32 seed = 0, Vec2 offset = {0, 0});
 
     protected:
         static const int SAMPLE_SIZE = 256;

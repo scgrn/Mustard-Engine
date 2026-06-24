@@ -103,13 +103,15 @@ static int luaNoiseSeed(lua_State *luaVM) {
 // @return noise
 // @function AB.math.noise
 static int luaNoise(lua_State* luaVM) {
-    f32  x = (f32 )lua_tonumber(luaVM, 1);
-    f32  y = (f32 )lua_tonumber(luaVM, 2);
-    f32  z = (f32 )lua_tonumber(luaVM, 3);
-    i32 octaves = (i32)lua_tonumber(luaVM, 4);
-    f32  persistence = (f32 )lua_tonumber(luaVM, 5);
-
-    lua_pushnumber(luaVM, perlinNoise.noise(x, y, z, octaves, persistence));
+    Vec3 pos;
+    NoiseParams params;
+    pos.x = (f32)lua_tonumber(luaVM, 1);
+    pos.y = (f32)lua_tonumber(luaVM, 2);
+    pos.z = (f32)lua_tonumber(luaVM, 3);
+    params.octaves = (i32)lua_tonumber(luaVM, 4);
+    params.persistence = (f32 )lua_tonumber(luaVM, 5);
+    
+    lua_pushnumber(luaVM, perlinNoise.noise(pos, params));
 
     return 1;
 }
