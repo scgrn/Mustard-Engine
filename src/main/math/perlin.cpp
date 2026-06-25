@@ -78,10 +78,62 @@ f32 PerlinNoise::noise(Vec3 pos, NoiseParams params) {
     return total / maxValue;
 }
 
-std::vector<f32> generateNoiseMap(Vec2i size, NoiseParams params, u32 seed, Vec2 offset) {
-    std::vector<f32> ret;
+std::vector<f32> PerlinNoise::generateNoiseMap(Vec2i size, NoiseParams params, u32 seed, Vec2 offset) {
+    std::vector<f32> map(size.x * size.y);
 
-    return ret;
+    if (params.scale <= 0.0f) {
+        params.scale = EPSILON;
+    }
+
+    PRNG prng(seed);
+    std::vector<Vec2> octaveOffsets(params.octaves);
+    for (i32 i = 0; i < params.octaves; i++) {
+        octaveOffsets[i] = Vec2{
+            (f32)prng.rnd(-100000, 100000) + offset.x,
+            (f32)prng.rnd(-100000, 100000) + offset.y
+        };
+    }
+
+    f32 halfWidth  = (f32)size.x / 2.0f;
+    f32 halfHeight = (f32)size.y / 2.0f;
+
+    f32 maxNoise = -FLT_MAX;
+    f32 minNoise =  FLT_MAX;
+
+    for (i32 y = 0; y < size.y; y++) {
+        for (i32 x = 0; x < size.x; x++) {
+            f32 amplitude = 1.0f;
+            f32 frequency = 1.0f;
+            f32 noiseHeight = 0.0f;
+            for (i32 i = 0; i < params.octaves; i++) {
+                f32 sx = ((f32)x - halfWidth)  / params.scale * frequency + octaveOffsets[i].x;
+                f32 sy = ((f32)y - halfHeight) / params.scale * frequency + octaveOffsets[i].y;
+                
+                f32 val = sample(sx, sy, 0.0f) * 2.0f - 1.0f;
+                
+                noiseHeight += val * amplitude;
+                amplitude *= params.persistence;
+                frequency *= params.lacunarity;
+            }
+            if (noiseHeight > maxNoise) {
+                maxNoise = noiseHeight;
+            }
+            if (noiseHeight < minNoise) {
+                minNoise = noiseHeight;
+            }
+            map[y * size.x + x] = noiseHeight;
+        }
+    }
+    
+    //  normalize entire map to [0,1]
+    f32 invRange = 1.0f / (maxNoise - minNoise);
+    for (i32 y = 0; y < size.y; y++) {
+        for (i32 x = 0; x < size.x; x++) {
+            map[y * size.x + x] = (map[y * size.x + x] - minNoise) * invRange;
+        }
+    }
+
+    return map;
 }
 
 f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
@@ -122,7 +174,7 @@ f32 PerlinNoise::sample(f32 x, f32 y, f32 z) {
     return (lerp(y1, y2, w) + 1.0f) / 2.0f;
 }
 
-f32 PerlinNoise::grad(i32 hash, f32 x, f32 y, f32 z) {
+f32 PerlinNoise::grad(u32 hash, f32 x, f32 y, f32 z) {
     switch (hash & 0xF) {
         case 0x0: return  x + y;
         case 0x1: return -x + y;
