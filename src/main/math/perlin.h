@@ -33,7 +33,7 @@ namespace AB {
 
 //  fbm
 struct NoiseParams {
-    f32 scale = 1.0f;
+    f32 scale = 100.0f;
     i32 octaves = 8;
     f32 persistence = 0.5f;
     f32 lacunarity = 2.0f;
