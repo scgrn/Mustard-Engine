@@ -65,13 +65,15 @@ class Texture {
         //  defaults to GL_REPEAT but you may also want GL_CLAMP_TO_EDGE
         static void setWrapMode(GLenum mode) { Texture::wrapMode = mode; }
 
-        u32 width, height;        //  size padded to nearest 2^
-        f32 u2, v2;
+        void update(std::shared_ptr<Image> image);
 
         static GLenum minFilter, magFilter, wrapMode;
 
+        u32 width, height;        //  size padded to nearest 2^
+        f32 u2, v2;
+
     protected:
-        void init(std::shared_ptr<Image> image);
+        void generate();
 };
 
 }   //  namespace

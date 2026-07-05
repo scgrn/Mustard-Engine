@@ -54,11 +54,7 @@ GLenum Texture::minFilter = GL_NEAREST;
 GLenum Texture::magFilter = GL_NEAREST;
 GLenum Texture::wrapMode = GL_REPEAT;
 
-Texture::Texture() {
-    glHandle = 0;
-}
-
-Texture::Texture(u32 width, u32 height) {
+void Texture::generate() {
     CALL_GL(glGenTextures(1, &glHandle));
     if (!glHandle) {
         ERR("Couldn't create texture!", 0);
@@ -71,16 +67,25 @@ Texture::Texture(u32 width, u32 height) {
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter));
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode));
     CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode));
+}
+
+Texture::Texture() {
+    glHandle = 0;
+}
+
+Texture::Texture(u32 width, u32 height) {
+    generate();
 
     this->width = width;
     this->height = height;
 }
 
 Texture::Texture(std::shared_ptr<Image> image) {
-    init(image);
+    generate();
+    update(image);
 }
 
-void Texture::init(std::shared_ptr<Image> image) {
+void Texture::update(std::shared_ptr<Image> image) {
     u32 rWidth = image->width;
     u32 rHeight = image->height;
     width = nextPowerOfTwo(rWidth);
@@ -93,26 +98,18 @@ void Texture::init(std::shared_ptr<Image> image) {
     u8 *data = NULL;
     data = new u8[width * height * 4];
     memset(data, 0, width * height * 4);
+
     u8 *imageData = NULL;
     imageData = image->data;
 
+    //  flip vertically
     for (u32 y = 0; y < rHeight; y++) {
         memcpy(&data[(rHeight - y - 1) * width * 4], &imageData[y * rWidth * 4], rWidth * 4);
     }
 
-    //  create OGL texture
-    CALL_GL(glGenTextures(1, &glHandle));
-    if (!glHandle) {
-        ERR("Couldn't create texture!", 0);
-    }
     CALL_GL(glBindTexture(GL_TEXTURE_2D, glHandle));
 
-    //    copy the pixel data over to the new OGL texture
-    CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter));
-    CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter));
-    CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode));
-    CALL_GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode));
-
+    //    upload image data to the GPU
     CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
 
     if (data) {
@@ -122,8 +119,10 @@ void Texture::init(std::shared_ptr<Image> image) {
 }
 
 Texture::Texture(std::string const& filename) {
+    generate();
+
     auto image = std::make_shared<Image>(filename);
-    init(image);
+    update(image);
 }
 
 Texture::~Texture() {
