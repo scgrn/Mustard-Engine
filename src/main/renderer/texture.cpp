@@ -70,6 +70,9 @@ void Texture::generate() {
 }
 
 Texture::Texture() {
+    width = 0;
+    height = 0;
+
     glHandle = 0;
 }
 
@@ -78,13 +81,21 @@ Texture::Texture(u32 width, u32 height) {
 
     this->width = width;
     this->height = height;
+
+    //  allocate GPU memory
+    CALL_GL(glBindTexture(GL_TEXTURE_2D, glHandle));
+    CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+        GL_UNSIGNED_BYTE, nullptr));
 }
 
 Texture::Texture(std::shared_ptr<Image> image) {
+    width = 0;
+    height = 0;
+
     generate();
     update(image);
 }
-
+/*
 void Texture::update(std::shared_ptr<Image> image) {
     u32 rWidth = image->width;
     u32 rHeight = image->height;
@@ -117,8 +128,56 @@ void Texture::update(std::shared_ptr<Image> image) {
         data = NULL;
     }
 }
+*/
+void Texture::update(std::shared_ptr<Image> image) {
+    u32 rWidth = image->width;
+    u32 rHeight = image->height;
+    u32 newWidth = nextPowerOfTwo(rWidth);
+    u32 newHeight = nextPowerOfTwo(rHeight);
+
+    u2 = ((f32)rWidth - 0.01f) / (f32)newWidth;
+    v2 = ((f32)rHeight - 0.01f) / (f32)newHeight;
+
+    if (newWidth == rWidth && newHeight == rHeight) {
+        //  no padding needed
+        if (newWidth == width && newHeight == height) {
+            //    upload image data to the GPU
+            CALL_GL(glBindTexture(GL_TEXTURE_2D, glHandle));
+            CALL_GL(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA,
+                GL_UNSIGNED_BYTE, image->data));
+        } else {
+            width = newWidth;
+            height = newHeight;
+
+            //    upload image data to the GPU
+            CALL_GL(glBindTexture(GL_TEXTURE_2D, glHandle));
+            CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                GL_UNSIGNED_BYTE, image->data));
+        }
+    } else {
+        width = newWidth;
+        height = newHeight;
+
+        //  create new image padded to ^2
+        u8 *data = new u8[width * height * 4];
+        memset(data, 0, width * height * 4);
+    
+        for (u32 y = 0; y < rHeight; y++) {
+            memcpy(&data[y * width * 4], &image->data[y * rWidth * 4], rWidth * 4);
+        }
+    
+        //    upload image data to the GPU
+        CALL_GL(glBindTexture(GL_TEXTURE_2D, glHandle));
+        CALL_GL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+    
+        delete [] data;
+    }
+}
 
 Texture::Texture(std::string const& filename) {
+    width = 0;
+    height = 0;
+
     generate();
 
     auto image = std::make_shared<Image>(filename);

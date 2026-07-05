@@ -197,7 +197,7 @@ u8* loadTGA(const std::string& filename, u32 &width, u32 &height, u32 &bpp) {
     swapRB(imageData, width, height, bpp);
     
     //  flip image
-    if ((data[17] & 0x10)) {
+    if (!(data[17] & 0x10)) {
         flipImage(imageData, width, height, bpp);
     }
 
