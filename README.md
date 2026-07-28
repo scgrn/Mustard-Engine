@@ -91,6 +91,7 @@ Audio:
 - WAV
 - MP3
 - FLAC
+- OGG
   
 Steamworks Integration
 -------
