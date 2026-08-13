@@ -98,7 +98,7 @@ class Font : public Asset {
         };
 
         float scaleW, scaleH;
-        int height;
+        int lineHeight, base, height;
 
     protected:
         Character* chars[256];
@@ -108,8 +108,6 @@ class Font : public Asset {
         std::shared_ptr<Texture> texture;
         
         Vec4 color;
-
-        int lineHeight, base;
 
     private:
         void build8x8Default(bool stretch);

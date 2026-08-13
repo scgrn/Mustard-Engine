@@ -164,12 +164,29 @@ static int luaSetColor(lua_State* luaVM) {
     return 0;
 }
 
+///    Gets font height, etc.
+// @param index Font index
+// @return LineHeight
+// @return Base
+// @return MaxHeight
+// @function AB.font.stringLength
+static int luaGetMetrics(lua_State* luaVM) {
+    int fontIndex = (int)lua_tonumber(luaVM, 1);
+
+    lua_pushnumber(luaVM, fonts.get(fontIndex)->lineHeight);
+    lua_pushnumber(luaVM, fonts.get(fontIndex)->base);
+    lua_pushnumber(luaVM, fonts.get(fontIndex)->height);
+    
+    return 3;
+}
+
 void registerFontFunctions() {
     static const luaL_Reg fontFuncs[] = {
         { "loadFont", luaLoadFont},
         { "printString", luaPrintString},
         { "stringLength", luaStringLength},
         { "setColor", luaSetColor},
+        { "getMetrics", luaGetMetrics},
 
         { NULL, NULL }
     };
