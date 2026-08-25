@@ -98,7 +98,7 @@ class Font : public Asset {
         };
 
         float scaleW, scaleH;
-        int lineHeight, base, height;
+        int lineHeight, base, height, maxUp, maxDown;
 
     protected:
         Character* chars[256];

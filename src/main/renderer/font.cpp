@@ -76,6 +76,8 @@ void Font::load(std::string const& filename) {
             chars[i] = 0;
         }
         height = 0;
+        maxUp = 0;
+        maxDown = 0;
 
         std::istringstream stream(input);
         std::string line;
@@ -131,6 +133,15 @@ void Font::load(std::string const& filename) {
 
                     if (h > height) {
                         height = h;
+                    }
+
+                    int up = base - yo;
+                    if (up > maxUp) {
+                        maxUp = up;                    
+                    }
+                    int down = (yo + h) - base;
+                    if (down > maxDown) {
+                        maxDown = down;
                     }
 
                     chars[id] = new Character(texture, x, y, w, h, xo, yo, xa, scaleW, scaleH);
@@ -285,6 +296,8 @@ void Font::build8x8Default(bool stretch) {
     lineHeight = stretch ? 20 : 10;
     base = charHeight;
     this->height = charHeight;
+    maxUp = charHeight;
+    maxDown = 0;
 }
 
 void Font::build3x5Default() {
@@ -382,6 +395,8 @@ void Font::build3x5Default() {
     lineHeight = 7;
     base = 5;
     this->height = 5;
+    maxUp = 5;
+    maxDown = 0;
 }
 
 void Font::printString(RenderLayer *renderer, GLfloat x, GLfloat y, GLfloat scale, Align alignment, std::string const& string) {
