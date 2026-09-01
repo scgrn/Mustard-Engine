@@ -94,6 +94,7 @@ void Sound::play(f32 volume, f32 pan, b8 loop) {
 void Sound::stop() {
     for (u32 i = 0; i < INSTANCES; i++) {
         if (ma_sound_is_playing(&sounds[i])) {
+            ma_decoder_seek_to_pcm_frame(&decoders[i], 0);
             ma_sound_stop(&sounds[i]);
         }
     }
