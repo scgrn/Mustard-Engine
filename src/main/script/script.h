@@ -49,6 +49,9 @@ class Script : public SubSystem {
         lua_State* getVM() { return luaVM; }
         
         b8 luaError = false;
+
+        //  can be set to false in createApplication() but NOT RECOMMENDED
+        b8 forceGlobalDeclaration = true;
         
     protected:
         lua_State* luaVM;

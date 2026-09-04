@@ -86,26 +86,30 @@ b8 Script::startup() {
     "function declare (name, initval) "
     "    rawset(_G, name, initval) "
     "    declaredNames[name] = true "
-    "end "
+    "end ";
 
-    "setmetatable(_G, { "
-    "    __newindex = function (t, n, v) "
-    "        if not declaredNames[n] then "
-    "            error(\"Attempt to write to undeclared var: \"..n, 2) "
-    "        else "
-    "            rawset(t, n, v) "
-    "        end "
-    "    end, "
-
-    "    __index = function (_, n) "
-    "        if not declaredNames[n] then "
-    "            error(\"Attempt to read undeclared var: \"..n, 2) "
-    "        else "
-    "            return nil "
-    "        end "
-    "    end, "
-    "}) "
+    if (forceGlobalDeclaration) {
+        script += 
+        "setmetatable(_G, { "
+        "    __newindex = function (t, n, v) "
+        "        if not declaredNames[n] then "
+        "            error(\"Attempt to write to undeclared var: \"..n, 2) "
+        "        else "
+        "            rawset(t, n, v) "
+        "        end "
+        "    end, "
     
+        "    __index = function (_, n) "
+        "        if not declaredNames[n] then "
+        "            error(\"Attempt to read undeclared var: \"..n, 2) "
+        "        else "
+        "            return nil "
+        "        end "
+        "    end, "
+        "}) ";
+    }
+
+    script += 
     "declare(\"videoConfig\", {}) "
     "declare(\"_\") ";
     execute(script);
