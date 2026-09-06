@@ -518,6 +518,28 @@ static i32 luaSetColor(lua_State* luaVM) {
     return 0;
 }
 
+///    Defines the scissor box.
+// @function AB.graphics.setScissor
+// @param x X coordinate of lower left corner of the scissor box
+// @param y Y coordinate of lower left corner of the scissor box
+// @param width Width of the scissor box
+// @param height Height of the scissor box
+static i32 luaSetScissor(lua_State* luaVM) {
+    if (lua_gettop(luaVM) >= 4) {
+        i32 x = (i32)lua_tonumber(luaVM, 1);
+        i32 y = (i32)lua_tonumber(luaVM, 2);
+        i32 width = (i32)lua_tonumber(luaVM, 3);
+        i32 height = (i32)lua_tonumber(luaVM, 4);
+
+        CALL_GL(glEnable(GL_SCISSOR_TEST));
+        CALL_GL(glScissor(x, y, width, height));
+    } else {
+        CALL_GL(glDisable(GL_SCISSOR_TEST));
+    }
+    
+    return 0;
+}
+
 ///    Creates a rendering canvas.
 // @function AB.graphics.createCanvas
 // @param width Width of canvas
@@ -839,6 +861,7 @@ void registerGraphicsFunctions() {
 
         { "setLineWidth", luaSetLineWidth},
         { "setColor", luaSetColor},
+        { "setScissor", luaSetScissor},
         { "createCanvas", luaCreateCanvas},
         { "deleteCanvas", luaDeleteCanvas},
         { "useCanvas", luaUseCanvas},
