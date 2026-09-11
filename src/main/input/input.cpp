@@ -483,7 +483,7 @@ b8 Input::wasMouseReleased(u32 button) {
     return (!mouse.buttons[button] && mouse.prevButtons[button]);
 }
 
-u32 Input::getMouseWheelMove() {
+i32 Input::getMouseWheelMove() {
     return mouse.wheel;
 }
 

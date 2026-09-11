@@ -354,6 +354,15 @@ static int luaGetMouseState(lua_State* luaVM) {
     return 5;
 }
 
+/// Gets mouse wheel movement
+// @function AB.input.getMouseWheelMovement
+// @return Mouse wheel movement
+static int luaGetMouseWheelMovement(lua_State* luaVM) {
+    lua_pushinteger(luaVM, input.getMouseWheelMove());
+
+    return 1;
+}
+
 /// Sets mouse position
 // @function AB.input.setMousePosition
 // @param x X position
@@ -747,6 +756,7 @@ static int luaMenuBack(lua_State* luaVM) {
 void registerInputFunctions() {
     static const luaL_Reg inputFuncs[] = {
         { "getMouseState", luaGetMouseState},
+        { "getMouseWheelMovement", luaGetMouseWheelMovement},
         { "showCursor", luaShowCursor},
         { "setMousePosition", luaSetMousePosition},
         { "mouseWasPressed", luaMouseWasPressed},
