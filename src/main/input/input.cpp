@@ -55,7 +55,7 @@ struct Mouse {
     i32 x, y;
     b8 buttons[3];
     b8 prevButtons[3];
-    u32 wheel;
+    i32 wheel;
 } mouse;
 
 struct Gamepad {
@@ -284,10 +284,8 @@ void Input::update() {
             }
             script.execute("AB.onMouseMoved(" + toString(mouse.x, false) + ", " + toString(mouse.y, false) + ")");
         }
-        if (event->type ==  SDL_MOUSEWHEEL) {
-            showGamepadControls = false;
-            mouse.wheel = event->wheel.y;
-            script.execute("AB.onMouseWheelMoved(" + toString(mouse.wheel, false) + ")");
+        if (event->type == SDL_MOUSEWHEEL) {
+            mouse.wheel += event->wheel.y;
         }
 
         if (event->type == SDL_MOUSEBUTTONDOWN) {
@@ -360,6 +358,11 @@ void Input::update() {
 
         //if (event->type == SDL_GAME) {   // say
         //}
+    }
+
+    if (mouse.wheel != 0) {
+        showGamepadControls = false;
+        script.execute("AB.onMouseWheelMoved(" + toString(mouse.wheel, false) + ")");
     }
 
     //    calculate gamepad axis positions compensating for deadzone
