@@ -348,17 +348,17 @@ local function regionHit(x1, y1, x2, y2)
 end
 
 function Menu:playSound(index)
-    if (self.sfx.menuMove) then
+    if (self.sfx.menuMove and self.sfx.menuMove ~= 0) then
         AB.audio.stopSound(self.sfx.menuMove) 
     end
-    if (self.sfx.menuSelect) then
+    if (self.sfx.menuSelect and self.sfx.menuSelect ~= 0) then
         AB.audio.stopSound(self.sfx.menuSelect) 
     end
-    if (self.sfx.menuBack) then
+    if (self.sfx.menuBack and self.sfx.menuBack ~= 0) then
         AB.audio.stopSound(self.sfx.menuBack) 
     end
 
-    if (index ~= 0) then
+    if (index and index ~= 0) then
         AB.audio.playSound(index)
     end
 end
