@@ -371,6 +371,10 @@ function Menu:select(item)
     if (item.type == BUTTON) then
         if (item.backButton) then
             self:playSound(self.sfx.menuBack)
+            if (self.scroll) then
+                self.scrollTarget = self.scrollMin
+                self.scrollOffset = self.scrollTarget
+            end
             self.hot = 0
         else
             self:playSound(self.sfx.menuSelect)
