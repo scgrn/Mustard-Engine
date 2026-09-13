@@ -709,12 +709,12 @@ function Menu:render()
 
     --  render all items
     if (self.scroll) then
-        local x = self.ofsX * videoConfig.xScale + videoConfig.xOffset
-        local y = self.scrollTop * videoConfig.yScale + videoConfig.yOffset
-        local w = self.width * videoConfig.xScale
-        local h = (self.scrollBottom - self.scrollTop) * videoConfig.yScale
+        local x = self.ofsX
+        local y = videoConfig.yRes / videoConfig.yScale - self.scrollBottom
+        local w = self.width
+        local h = self.scrollBottom - self.scrollTop
         AB.graphics.flushGraphics()
-        AB.graphics.setScissor(x, videoConfig.yRes - y - h, w, h)
+        AB.graphics.setScissor(x, y, w, h)
     end
     for i = 1, #self.items do
         local item = self.items[i]
