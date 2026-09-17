@@ -139,6 +139,9 @@ static i32 luaLoadSprite(lua_State* luaVM) {
     i32 index;
     if (lua_gettop(luaVM) >= 3) {
         index = (i32)lua_tonumber(luaVM, 3);
+        if (spriteHandle <= (u32)index) {
+            spriteHandle = (u32)index + 1;
+        }
     } else {
         index = spriteHandle;
         spriteHandle++;
@@ -179,6 +182,9 @@ static i32 luaLoadAtlas(lua_State* luaVM) {
     if (lua_gettop(luaVM) >= 5) {
         index = (i32)lua_tonumber(luaVM, 5);
         spritesLoaded = loadAtlas(filename, index, width, height, createMask);
+        if (spriteHandle <= (u32)index + spritesLoaded) {
+            spriteHandle = (u32)index + spritesLoaded;
+        }
     } else {
         index = spriteHandle;
         spritesLoaded = loadAtlas(filename, index, width, height, createMask);
@@ -232,6 +238,9 @@ static i32 luaDefineSpriteFromAtlas(lua_State* luaVM) {
     i32 index;
     if (lua_gettop(luaVM) >= 6) {
         index = (i32)lua_tonumber(luaVM, 6);
+        if (spriteHandle <= (u32)index) {
+            spriteHandle = (u32)index + 1;
+        }
     } else {
         index = spriteHandle;
         spriteHandle++;
@@ -239,7 +248,7 @@ static i32 luaDefineSpriteFromAtlas(lua_State* luaVM) {
 
     b8 createMask = true;
     if (lua_gettop(luaVM) >= 7) {
-        createMask = (b8)lua_toboolean(luaVM, 4);
+        createMask = (b8)lua_toboolean(luaVM, 7);
     }
 
     Sprite *atlas = sprites.get(atlasIndex);
@@ -553,6 +562,9 @@ static i32 luaCreateCanvas(lua_State* luaVM) {
     i32 index;
     if (lua_gettop(luaVM) >= 3) {
         index = (i32)lua_tonumber(luaVM, 3);
+        if (canvasHandle < (u32)index) {
+            canvasHandle = (u32)index + 1;
+        }
     } else {
         index = canvasHandle;
         canvasHandle++;
