@@ -35,6 +35,8 @@ namespace AB {
 
 extern Script script;
 
+i32 language = 0;
+
 /// Loads string definitions. Will populate AB.l10n.languages with a table of available languages.
 // @param filename csv file with string definitions
 // @function AB.l10n.init
@@ -50,8 +52,9 @@ static int luaInit(lua_State* luaVM) {
 // @param language
 // @function AB.l10n.setLanguage
 static int luaSetLanguage(lua_State* luaVM) {
-    int index = (int)lua_tointeger(luaVM, 1) - 1;
-    language = static_cast<Language>(index);
+    // int index = (int)lua_tointeger(luaVM, 1) - 1;
+    language = (int)lua_tointeger(luaVM, 1) - 1;
+    //language = static_cast<Language>(index);
 
     return 0;
 }
@@ -62,7 +65,8 @@ static int luaSetLanguage(lua_State* luaVM) {
 static int luaGetString(lua_State* luaVM) {
     std::string key = lua_tostring(luaVM, 1);
 
-    std::string s = strings[language][key];
+    // std::string s = strings[language][key];
+    std::string s = languages[language].strings[key];
     if (s.empty()) {
         s = "[STRING UNDEFINED]";
     }

@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "localization.h"
 
 #include <map>
+#include <vector>
 #include <sstream>
 
 #include "log.h"
@@ -34,37 +35,89 @@ freely, subject to the following restrictions:
 namespace AB {
 
 extern FileSystem fileSystem;
+extern Script script;
+std::vector<Language> languages;
 
-std::map<std::string, std::string> strings[LAST];
-Language language;
+static std::vector<std::string> split(std::string const& s, char delim) {
+    std::vector<std::string> ret;
+    std::string current;
+    bool inQuotes = false;
+    
+    for (u32 i = 0; i < s.size(); i++) {
+        char c = s[i];
+        if (inQuotes) {
+            if (c == '"') {
+                if (i + 1 < s.size() && s[i + 1] == '"') {
+                    current += '"';      // escaped quote
+                    i++;
+                } else {
+                    inQuotes = false;    //  closing quote
+                }
+            } else {
+                current += c;
+            }
+        } else {
+            if (c == '"') {
+                inQuotes = true;
+            } else if (c == delim) {
+                ret.push_back(current);
+                current.clear();
+            } else {
+                current += c;
+            }
+        }
+    }
 
-//  TODO: make this a lua function
+    if (!current.empty()) {
+        ret.push_back(current);
+    }
+
+    return ret;
+}
+
 void initLocalization(std::string const& filename) {
-
     //  read string table
     LOG("Loading string table from <%s>", filename.c_str());
 
     AB::DataObject stringDataObject = fileSystem.loadAsset(filename);
     std::string stringData = std::string((const char*)stringDataObject.getData(), stringDataObject.getSize());
 
+    languages.clear();
     std::istringstream ss(stringData);
+    std::string line;
 
-    std::string key, e, f, i, g, s;
-
-    // TODO: handle quotes so we can use commas
-    while (std::getline(ss, key, ',')) {
-        std::getline(ss, e, ',');
-        std::getline(ss, f, ',');
-        std::getline(ss, i, ',');
-        std::getline(ss, g, ',');
-        std::getline(ss, s);
-
-        strings[ENGLISH][key] = e;
-        strings[FRENCH][key] = f;
-        strings[ITALIAN][key] = i;
-        strings[GERMAN][key] = g;
-        strings[SPANISH][key] = s;
+    //  read header
+    if (std::getline(ss, line)) {
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();   
+        }
+        auto header = split(line, ',');
+        for (u32 i = 1; i < header.size(); i++) {
+            languages.push_back(Language{header[i], {}});
+        }
     }
+
+    //  read strings
+    while (std::getline(ss, line)) {
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();   
+        }
+        if (line.empty()) {
+            continue;
+        }
+        auto fields = split(line, ',');
+        for (u32 i = 0; i < languages.size() && i + 1 < fields.size(); i++) {
+            languages[i].strings[fields[0]] = fields[i + 1];
+        }    
+    }
+
+    //  set lua languages table
+    std::string cmd = "AB.l10n.languages = {";
+    for (auto& language : languages) {
+        cmd += "\"" + language.name + "\",";
+    }
+    cmd += "}";
+    script.execute(cmd);
 }
 
 }   //  namespace

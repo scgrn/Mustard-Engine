@@ -27,13 +27,16 @@ freely, subject to the following restrictions:
 
 #include <iostream>
 #include <map>
+#include <vector>
 
 namespace AB {
 
-enum Language {ENGLISH, FRENCH, ITALIAN, GERMAN, SPANISH, LAST};
+struct Language {
+    std::string name;
+    std::map<std::string, std::string> strings;
+};
 
-extern std::map<std::string, std::string> strings[LAST];
-extern Language language;
+extern std::vector<Language> languages;
 
 void initLocalization(std::string const& filename);
 
