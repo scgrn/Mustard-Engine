@@ -37,7 +37,8 @@ extern Script script;
 
 i32 language = 0;
 
-/// Loads string definitions. Will populate AB.l10n.languages with a table of available languages.
+/// Loads string definitions from a CSV file. Will populate AB.l10n.languages with a table of available languages.
+// The string definition file should be saved with Latin-1 (ISO/IEC 8859-1) encoding.
 // @param filename csv file with string definitions
 // @function AB.l10n.init
 static int luaInit(lua_State* luaVM) {
