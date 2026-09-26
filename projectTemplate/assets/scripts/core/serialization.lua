@@ -83,18 +83,16 @@ declare("restoreTable", function(dest, source, visited)
 
     for k, v in pairs(source) do
         local vt = type(v)
-
         if (vt == "table") then
-            if (type(dest[k])) ~= "table" then
+            if (type(dest[k]) ~= "table") then
                 dest[k] = {}
             end
-            restoreTable(dest[k], v, visited)
-
+            dest[k] = restoreTable(dest[k], v, visited)
         elseif (vt ~= "function") then
-            -- numbers, strings, booleans
             dest[k] = v
         end
     end
+    visited[source] = nil
 
     return dest
 end)
