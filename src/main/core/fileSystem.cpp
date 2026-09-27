@@ -62,6 +62,57 @@ static void crypt(u8* data, u64 size, std::string const& key) {
     }
 }
 
+i32 compress(const u8* inputData, u64 inputSize, u8** outputData, u32 &outputSize, u32 level) {
+    i32 ret;
+    u32 flush;
+    u32 have;
+    z_stream strm;
+    u8 in[CHUNK_SIZE];
+    u8 out[CHUNK_SIZE];
+
+    strm.zalloc = Z_NULL;
+    strm.zfree = Z_NULL;
+    strm.opaque = Z_NULL;
+    ret = deflateInit(&strm, level);
+    if (ret != Z_OK) {
+        return ret;
+    }
+
+    std::vector<u8> outputBuffer;
+    u64 offset = 0;
+
+    do {
+        strm.avail_in = (offset + CHUNK_SIZE > inputSize) ? inputSize - offset : CHUNK_SIZE;
+        std::memcpy(in, inputData + offset, strm.avail_in);
+        offset += strm.avail_in;
+
+        flush = (offset >= inputSize) ? Z_FINISH : Z_NO_FLUSH;
+        strm.next_in = in;
+
+        do {
+            strm.avail_out = CHUNK_SIZE;
+            strm.next_out = out;
+            ret = deflate(&strm, flush);
+            assert(ret != Z_STREAM_ERROR);
+            have = CHUNK_SIZE - strm.avail_out;
+            outputBuffer.insert(outputBuffer.end(), out, out + have);
+        } while (strm.avail_out == 0);
+        assert(strm.avail_in == 0);
+    } while (flush != Z_FINISH);
+    assert(ret == Z_STREAM_END);
+
+    deflateEnd(&strm);
+
+    *outputData = new u8[outputBuffer.size()];
+    std::copy(reinterpret_cast<const u8*>(outputBuffer.data()), 
+        reinterpret_cast<const u8*>(outputBuffer.data() + outputBuffer.size()),
+        *outputData);
+
+    outputSize = outputBuffer.size();
+
+    return Z_OK;
+}
+
 i32 decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputSize) {
     i32 ret;
     u32 have;

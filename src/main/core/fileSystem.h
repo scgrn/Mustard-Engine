@@ -43,6 +43,9 @@ freely, subject to the following restrictions:
 
 namespace AB {
 
+extern i32 compress(const u8* inputData, u64 inputSize, u8** outputData, u32 &outputSize, u32 level);
+extern i32 decompress(const u8* inputData, u64 inputSize, u8** outputData, u64 &outputSize);
+
 class DataObject {
     public:
         DataObject() : size(0), data(nullptr) {}
