@@ -69,5 +69,31 @@ Vec3 randomPointOnSphere() {
     return Vec3(sin(theta1) * sin(theta2), cos(theta1) * sin(theta2), cos(theta2));
 }
 
+b8 resolveSphereCollision(Vec3& pos1, Vec3 &vel1, Vec3& pos2, Vec3& vel2) {
+    return false;
+}
+
+Vec3 randomSpread(Vec3& d, f32 spreadAngle) {
+    Vec3 forward = normalize(d);
+
+    Vec3 reference(0.0f, 1.0f, 0.0f);
+
+    if (fabs(forward.y) > 0.999f) {
+        reference = Vec3(1.0f, 0.0f, 0.0f);
+    }
+
+    Vec3 right = crossProduct(reference, forward);
+    right = normalize(right);
+    
+    Vec3 up = crossProduct(forward, right);
+    up = normalize(up);
+
+    f32 phi = rndf(0.0f, 2.0f * M_PI);
+    f32 cosTheta = rndf(cosf(spreadAngle), 1.0f);
+    f32 sinTheta = sqrtf(1.0f - cosTheta * cosTheta);
+
+    return forward * cosTheta + right * (sinTheta * cosf(phi)) + up * (sinTheta * sinf(phi));
+}
+
 }    // namespace
 

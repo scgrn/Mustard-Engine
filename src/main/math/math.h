@@ -96,6 +96,8 @@ f32 distance(Vec2 a, Vec2 b);
 f32 distPointToLine(Vec2 a, Vec2 b, Vec2 c);
 b8 lineSegmentIntersection(Vec2 a, Vec2 b, Vec2 c, Vec2 d);
 Vec3 randomPointOnSphere();
+b8 resolveSphereCollision(Vec3& pos1, Vec3 &vel1, Vec3& pos2, Vec3& vel2);
+Vec3 randomSpread(Vec3& d, f32 spreadAngle);
 
 }    // namespace
 
