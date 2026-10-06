@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 */
 
 /**
-Font loading and rendering. Currently only supports <a href="http://www.angelcode.com/products/bmfont/">AngelCode BM font format</a> with XML descriptor
+Font loading and rendering. Currently only supports <a href="http://www.angelcode.com/products/bmfont/">AngelCode BM font format</a> with a text descriptor file. The built-in fonts should be used for debugging only, as they do not support the full Latin-1 character set.
 */
 
 #include "../pch.h"
